@@ -12,16 +12,16 @@ class Program(
     private val repository: Repository,
     private val onboardingVisibility: OnboardingVisibility,
     private val navigator: AppNavigator
-) : ElmProgram<Message, Command> {
-    override suspend fun executeProgram(cmd: Command, consumer: (Message) -> Unit) {
+) : ElmProgram<Feature.Msg, Feature.Cmd> {
+    override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
         when (cmd) {
-            is Command.FetchOnboardings -> fetchOnboardings(consumer)
-            is Command.NavigateToMainScreen -> navigateToMain()
+            is Feature.Cmd.FetchOnboardings -> fetchOnboardings(consumer)
+            is Feature.Cmd.NavigateToMainScreen -> navigateToMain()
         }
     }
 
-    private fun fetchOnboardings(consumer: (Message) -> Unit) {
-        consumer(Message.Inner.Onboardings(repository.onboardings))
+    private fun fetchOnboardings(consumer: (Feature.Msg) -> Unit) {
+        consumer(Feature.Msg.Inner.Onboardings(repository.onboardings))
     }
 
     private suspend fun navigateToMain() {

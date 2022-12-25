@@ -8,7 +8,7 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import ru.maksonic.beresta.feature.onboarding.ui.OnboardingScreen
 import ru.maksonic.beresta.feature.splash_screen.SplashScreen
 import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.screen.main.core.MainScreen
+import ru.maksonic.beresta.screen.main.ui.MainScreen
 
 /**
  * @Author maksonic on 15.12.2022

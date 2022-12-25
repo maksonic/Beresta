@@ -1,16 +1,21 @@
 package ru.maksonic.beresta.elm
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * @Author maksonic on 15.12.2022
+ * @Author maksonic on 14.11.2022
  */
+interface ElmModel
+interface ElmMessage
+interface ElmCommand
+interface ElmEffect
+
 abstract class Sandbox<T : ElmModel, M : ElmMessage, C : ElmCommand, E : ElmEffect>(
     initialModel: T,
     initialCmd: Set<C> = emptySet(),

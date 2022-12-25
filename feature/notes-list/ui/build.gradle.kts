@@ -49,6 +49,18 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Ui.Theme.path))
+    implementation(project(BaseModule.Ui.Widget.path))
+    implementation(project(BaseModule.Feature.NotesList.Api.path))
     implementation(project(BaseModule.Feature.NotesList.Domain.path))
+    implementation(project(BaseModule.Elm.path))
+
+    implementation(Lib.Compose.material)
+    implementation(Lib.Compose.ui)
+    implementation(Lib.Compose.uiPreview)
     implementation(Lib.Koin.compose)
+
+    androidTestImplementation(Lib.Test.composeJunit)
+    debugImplementation(Lib.Test.composeManifest)
+    debugImplementation(Lib.Test.composeTooling)
 }

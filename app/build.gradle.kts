@@ -55,6 +55,7 @@ android {
 
 dependencies {
     implementation(project(BaseModule.Core.path))
+    implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Navigation.GraphBuilder.path))
     implementation(project(BaseModule.Data.Common.path))
@@ -64,6 +65,19 @@ dependencies {
     implementation(project(BaseModule.Feature.Onboarding.Domain.path))
     implementation(project(BaseModule.Feature.Onboarding.Ui.path))
 
+    implementation(project(BaseModule.Feature.BottomPanel.Api.path))
+    implementation(project(BaseModule.Feature.BottomPanel.Ui.path))
+
+
+    implementation(project(BaseModule.Feature.NotesList.Api.path))
+    implementation(project(BaseModule.Feature.NotesList.Data.path))
+    implementation(project(BaseModule.Feature.NotesList.Domain.path))
+    implementation(project(BaseModule.Feature.NotesList.Ui.path))
+
+    implementation(project(BaseModule.Feature.TasksList.Api.path))
+    implementation(project(BaseModule.Feature.TasksList.Data.path))
+    implementation(project(BaseModule.Feature.TasksList.Domain.path))
+    implementation(project(BaseModule.Feature.TasksList.Ui.path))
 
     implementation(project(BaseModule.Feature.ThemeSelector.path))
     implementation(project(BaseModule.Feature.SplashScreen.path))

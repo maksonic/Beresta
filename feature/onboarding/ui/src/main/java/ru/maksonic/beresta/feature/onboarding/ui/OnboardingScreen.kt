@@ -14,8 +14,9 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.onboarding.domain.OnboardingEntity
-import ru.maksonic.beresta.feature.onboarding.ui.core.Message
+import ru.maksonic.beresta.feature.onboarding.ui.core.Feature
 import ru.maksonic.beresta.feature.onboarding.ui.core.OnboardingSandbox
+import ru.maksonic.beresta.feature.onboarding.ui.widget.OnboardingItem
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.component.dimenAnimFast
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -31,9 +32,12 @@ import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
 @Preview(showBackground = true)
 @Composable
 private fun OnboardingScreenPreview() {
+    val mock = OnboardingEntity.preview()
+        .copy(image = ru.maksonic.beresta.ui.theme.R.drawable.maksonic_logo)
+
     BerestaTheme {
         OnboardingScreenContent(
-            onboardings = arrayOf(mockOnboarding),
+            onboardings = arrayOf(mock),
             pagerState = rememberPagerState(),
             sendMsg = {}
         )
@@ -60,7 +64,7 @@ fun OnboardingScreen(sandbox: OnboardingSandbox = koinViewModel()) {
 private fun OnboardingScreenContent(
     onboardings: Array<OnboardingEntity>,
     pagerState: PagerState,
-    sendMsg: (Message) -> Unit,
+    sendMsg: (Feature.Msg) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isLastCurrentPage = pagerState.currentPage == onboardings.lastIndex
@@ -74,23 +78,22 @@ private fun OnboardingScreenContent(
         modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-       OverscrollBehavior {
-           HorizontalPager(
-               count = onboardings.count(),
-               state = pagerState,
-               modifier = modifier.weight(1f)
-           ) { page ->
-               OnboardingItem(currentItem = onboardings[page], page = page, pagerScope = this)
-           }
-       }
+        OverscrollBehavior {
+            HorizontalPager(
+                count = onboardings.count(),
+                state = pagerState,
+                modifier = modifier.weight(1f)
+            ) { page ->
+                OnboardingItem(currentItem = onboardings[page], page = page, pagerScope = this)
+            }
+        }
         PrimaryButton(
-            action = { sendMsg(Message.Ui.OnPrimaryBtnClicked) },
+            action = { sendMsg(Feature.Msg.Ui.OnPrimaryBtnClicked) },
             title = stringResource(id = titlePrimaryBtn),
         )
         Spacer(modifier = modifier.padding(bottom = dp16))
-
         TertiaryButton(
-            action = { sendMsg(Message.Ui.OnSkipSyncBtnClicked) },
+            action = { sendMsg(Feature.Msg.Ui.OnSkipSyncBtnClicked) },
             title = stringResource(R.string.btnSkipAuthTitle),
             modifier = modifier.alpha(alphaDoNotSyncBtn)
         )

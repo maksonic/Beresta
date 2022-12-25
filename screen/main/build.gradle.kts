@@ -51,6 +51,9 @@ android {
 dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
+    implementation(project(BaseModule.Feature.BottomPanel.Api.path))
+    implementation(project(BaseModule.Feature.NotesList.Api.path))
+    implementation(project(BaseModule.Feature.TasksList.Api.path))
     implementation(Lib.Accompanist.pager)
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Compose.material)

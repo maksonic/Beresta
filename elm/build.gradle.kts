@@ -33,6 +33,13 @@ android {
         jvmTarget = Config.jvmTarget
     }
 
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Config.kcExtVersion
+    }
 
     packagingOptions {
         resources {

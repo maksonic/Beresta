@@ -3,7 +3,7 @@ package ru.maksonic.beresta.elm
 import java.io.Serializable
 
 /**
- * @Author maksonic on 15.12.2022
+ * @Author maksonic on 14.11.2022
  */
 data class UpdatedModel<out A: ElmModel, out B: Set<ElmCommand>, out C: Set<ElmEffect>>(
     val model: A,

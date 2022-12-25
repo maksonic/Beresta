@@ -7,6 +7,11 @@ sealed class BaseModule(val path: String, val namespace: String) {
         namespace = "ru.maksonic.beresta",
     )
 
+    object BaseDomain : BaseModule(
+        path = ":base-domain",
+        namespace = "ru.maksonic.beresta.base_domain",
+    )
+
     object Core : BaseModule(
         path = ":core",
         namespace = "ru.maksonic.beresta.core",
@@ -26,7 +31,7 @@ sealed class BaseModule(val path: String, val namespace: String) {
 
     object Elm : BaseModule(
         path = ":elm",
-        namespace = "ru.maksonic.beresta.elm",
+        namespace = "ru.maksonic.beresta.elm"
     )
 
     object Navigation {
@@ -83,6 +88,10 @@ sealed class BaseModule(val path: String, val namespace: String) {
         )
 
         object NotesList {
+            object Api : BaseModule(
+                path = ":feature:notes-list:api",
+                namespace = "ru.maksonic.beresta.feature.notes_list.api"
+            )
             object Data : BaseModule(
                 path = ":feature:notes-list:data",
                 namespace = "ru.maksonic.beresta.feature.notes_list.data"
@@ -100,6 +109,11 @@ sealed class BaseModule(val path: String, val namespace: String) {
         }
 
         object TasksList {
+            object Api : BaseModule(
+                path = ":feature:tasks-list:api",
+                namespace = "ru.maksonic.beresta.feature.tasks_list.api"
+            )
+
             object Data : BaseModule(
                 path = ":feature:tasks-list:data",
                 namespace = "ru.maksonic.beresta.feature.tasks_list.data"
@@ -115,6 +129,20 @@ sealed class BaseModule(val path: String, val namespace: String) {
                 namespace = "ru.maksonic.beresta.feature.tasks_list.ui"
             )
         }
+
+         object BottomPanel {
+            object Api : BaseModule(
+                path = ":feature:bottom-panel:api",
+                namespace = "ru.maksonic.beresta.feature.bottom_panel.api"
+            )
+
+            object Ui : BaseModule(
+                path = ":feature:bottom-panel:ui",
+                namespace = "ru.maksonic.beresta.feature.bottom_panel.ui"
+            )
+        }
+
+
     }
 
     object Ui {

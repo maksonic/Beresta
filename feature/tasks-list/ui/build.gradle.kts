@@ -50,6 +50,14 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Feature.TasksList.Api.path))
     implementation(project(BaseModule.Feature.TasksList.Domain.path))
+    implementation(Lib.Compose.material)
+    implementation(Lib.Compose.ui)
+    implementation(Lib.Compose.uiPreview)
     implementation(Lib.Koin.compose)
+
+    androidTestImplementation(Lib.Test.composeJunit)
+    debugImplementation(Lib.Test.composeManifest)
+    debugImplementation(Lib.Test.composeTooling)
 }

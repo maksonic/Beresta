@@ -40,3 +40,8 @@ android {
         }
     }
 }
+
+dependencies {
+    implementation(project(BaseModule.BaseDomain.path))
+    implementation(Lib.JetBrains.coroutines)
+}

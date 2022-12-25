@@ -60,4 +60,8 @@ dependencies {
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
     implementation(Lib.Koin.compose)
+
+    androidTestImplementation(Lib.Test.composeJunit)
+    debugImplementation(Lib.Test.composeManifest)
+    debugImplementation(Lib.Test.composeTooling)
 }
