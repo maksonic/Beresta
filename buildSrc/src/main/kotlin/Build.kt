@@ -3,7 +3,7 @@
  */
 object Build {
     private object Version {
-        const val toolsGradle = "7.4.0-rc02"
+        const val toolsGradle = "7.4.0-rc03"
         const val kotlinGradle = Config.kotlinVersion
     }
     object Type {

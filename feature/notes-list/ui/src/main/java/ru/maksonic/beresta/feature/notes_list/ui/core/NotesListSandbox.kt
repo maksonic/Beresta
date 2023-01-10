@@ -29,11 +29,11 @@ class NotesListSandbox(
         is Feature.Msg.Ui.SelectItemForRemove -> onItemSelectedForRemove(model, msg)
         is Feature.Msg.Ui.SelectAllItems -> selectAllNotes(model)
         is Feature.Msg.Ui.OnItemLongPressed -> onItemLongPressed(model, msg)
-        is Feature.Msg.Inner.Idle -> idle(model)
         is Feature.Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
         is Feature.Msg.Inner.FetchingError -> fetchingError(model, msg)
         is Feature.Msg.Ui.RemoveSelectedItems -> afterRemoveSelectedNotes(model)
         is Feature.Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
+        is Feature.Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
     }
 
     private fun retryFetching(model: Feature.Model): UpdateResult =
@@ -68,20 +68,6 @@ class NotesListSandbox(
                     isErrorLoading = true,
                     errorMsg = msg.errorMsg
                 ),
-            )
-        )
-
-    private fun idle(model: Feature.Model): UpdateResult =
-        UpdatedModel(
-            model.copy(
-                base = model.base.copy(
-                    isLoading = false,
-                    isSuccessLoading = false,
-                    isErrorLoading = false,
-                    errorMsg = "",
-                    isIdle = true
-                ),
-                isSelectionState = false
             )
         )
 
@@ -129,4 +115,24 @@ class NotesListSandbox(
                 isSelectionState = false
             )
         )
+
+    private fun onFilterSelected(
+        model: Feature.Model,
+        msg: Feature.Msg.Ui.OnSelectNotesFilter
+    ): UpdateResult {
+       /* val filters = model.notesFilter.map { filter ->
+            if (filter.ind == msg.folderId) {
+                filter.copy(isSelected = true)
+            } else
+                filter
+        }*/
+        val filters = model.notesFilter.mapIndexed { index, filter ->
+            if (index == msg.index) {
+                filter.copy(isSelected = true)
+            } else {
+                filter
+            }
+        }
+        return UpdatedModel(model.copy(notesFilter = filters))
+    }
 }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,33 +36,31 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 @Composable
 internal fun MainTopBar(
     pagerState: PagerState,
-    isVisible: Boolean,
+    backgroundColor: () -> Color,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = slideInVertically() + expandVertically(),
-        exit = slideOutVertically() + shrinkVertically() + fadeOut()
+   /* val animatedBackgroundColor by animateColorAsState(
+        targetValue = if (isScrolledTop()) background else tertiaryContainer
+    )*/
+
+    Row(
+        modifier
+            .fillMaxWidth()
+            .height(Theme.widgetSize.topBarNormalHeight)
+            .drawBehind { drawRect(backgroundColor()) },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
+        IconAction(
+            icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings),
+            action = {},
+            modifier = modifier.padding(start = dp8)
+        )
+        TabsWidget(pagerState = pagerState, modifier)
+        Spacer(
             modifier
-                .fillMaxWidth()
-                .height(Theme.widgetSize.topBarNormalHeight)
-                .background(background),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconAction(
-                icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings),
-                action = {},
-                modifier = modifier.padding(start = dp8)
-            )
-            TabsWidget(pagerState = pagerState, modifier)
-            Spacer(
-                modifier
-                    .size(Theme.widgetSize.minimumTouchTargetSize)
-                    .padding(end = dp8)
-            )
-        }
+                .size(Theme.widgetSize.minimumTouchTargetSize)
+                .padding(end = dp8)
+        )
     }
 }

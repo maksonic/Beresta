@@ -36,7 +36,7 @@ fun BoxWithScaleInOutOnClick(
     content: @Composable () -> Unit
 ) {
     val pressedState = remember { mutableStateOf(RowClickState.UNPRESSED) }
-    val interactionSource = remember { MutableInteractionSource() }
+ //   val interactionSource = remember { MutableInteractionSource() }
     val scope = rememberCoroutineScope()
     val sizeScale by animateFloatAsState(
         if (pressedState.value == RowClickState.CLICKED) 0.85f else 1f
@@ -66,7 +66,7 @@ fun BoxWithScaleInOutOnClick(
                         pressedState.value = RowClickState.UNPRESSED
                     }
                 },
-                interactionSource = interactionSource,
+                interactionSource = MutableInteractionSource(),
                 indication = null
             ),
         contentAlignment = Alignment.Center
