@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.notes_list.api
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -9,4 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 interface NotesListFeature {
     @Composable
     fun Screen()
+
+    val state: StateFlow<NotesSharedState>
 }

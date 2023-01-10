@@ -3,7 +3,7 @@ package ru.maksonic.beresta.navigation.graph_builder
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
-import androidx.navigation.navigation
+import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.systemuicontroller.SystemUiController
 import ru.maksonic.beresta.feature.onboarding.ui.OnboardingScreen
 import ru.maksonic.beresta.feature.splash_screen.SplashScreen

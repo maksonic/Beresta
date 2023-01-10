@@ -50,6 +50,9 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
+    implementation(project(BaseModule.Ui.Theme.path))
+    implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Feature.TasksList.Api.path))
     implementation(project(BaseModule.Feature.TasksList.Domain.path))
     implementation(Lib.Compose.material)

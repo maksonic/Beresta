@@ -2,6 +2,7 @@ package ru.maksonic.beresta.screen.main.ui.widget
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -28,7 +29,11 @@ internal fun MainPager(
             state = pagerState,
             modifier = modifier.fillMaxSize()
         ) { page ->
-            Page(page = page, notesPage = notesPage, tasksPage = tasksPage)
+            Page(
+                page = page,
+                notesPage = notesPage,
+                tasksPage = tasksPage,
+            )
         }
     }
 }

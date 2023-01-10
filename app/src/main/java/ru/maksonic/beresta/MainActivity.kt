@@ -14,14 +14,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.maksonic.beresta.feature.onboarding.ui.OnboardingScreen
+import ru.maksonic.beresta.feature.splash_screen.SplashScreen
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.screen.main.ui.MainScreen
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.background
@@ -37,17 +47,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(ru.maksonic.beresta.ui.theme.R.style.Theme_Beresta_Default)
         super.onCreate(savedInstanceState)
+
         setContent {
-
             val appState = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
-            val appTheme = appState.theme.collectAsState()
             val systemUiController = rememberSystemUiController()
-
             navigator.navController = rememberAnimatedNavController()
-            val navController = navigator.navController
             val theme: @Composable (
                 content: @Composable () -> Unit
-            ) -> Unit = when (appTheme.value) {
+            ) -> Unit = when (appState.theme) {
                 AppTheme.SYSTEM -> { content -> AppTheme(isSystemInDarkTheme(), content = content) }
                 AppTheme.DARK -> { content -> AppTheme(darkTheme = true, content) }
                 AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, content = content) }
@@ -55,10 +62,10 @@ class MainActivity : ComponentActivity() {
             }
             theme.invoke {
                 SystemComponentColor(systemUiController = systemUiController)
-                
+
                 Scaffold(backgroundColor = background) { padding ->
                     AnimatedNavHost(
-                        navController = navController,
+                        navController = navigator.navController,
                         startDestination = Destination.route,
                         modifier = Modifier
                             .padding(paddingValues = padding)
@@ -67,12 +74,20 @@ class MainActivity : ComponentActivity() {
                     ) {
                         graphBuilder.buildGraph(
                             graphBuilder = this,
-                            systemUiController = systemUiController,
+                            systemUiController,
                             startDestination = appState.startScreen.route
                         )
                     }
                 }
             }
+        }
+    }
+
+    //On some Chinese devices, when launching app or switching the theme, a blank screen appears.
+    private fun fixChinesVendorEmptyScreen() {
+        lifecycleScope.launch {
+            delay(50)
+            window.setBackgroundDrawableResource(android.R.color.transparent)
         }
     }
 }

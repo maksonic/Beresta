@@ -70,10 +70,7 @@ class BerestaApp : Application() {
         single<Repository> { OnboardingRepository }
     }
 
-    private val mainScreenModule = module {
-
-
-    }
+    private val mainScreenModule = module { }
 
     private val notesListFeatureModule = module {
         single<NotesListFeature> { NotesListScreen() }

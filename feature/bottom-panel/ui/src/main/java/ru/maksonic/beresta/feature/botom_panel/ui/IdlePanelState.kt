@@ -29,7 +29,7 @@ private val leftButtons = arrayOf(
         action = {},
     ),
     BottomPanelWidget.BottomItem(
-        iconId = R.drawable.ic_create_new_folder,
+        iconId = R.drawable.ic_folder_open,
         action = {}
     ),
     BottomPanelWidget.BottomItem(

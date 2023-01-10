@@ -24,7 +24,7 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 @Composable
 private fun NoteItemPreview() {
     BerestaTheme {
-        NoteItem(note = NoteUi.preview(), isSelectionState = false, msg = {})
+        NoteItem(note = NoteUi.Companion.Preview.note, isSelectionState = false, msg = {})
     }
 }
 
@@ -50,7 +50,7 @@ internal fun NoteItem(
         },
         backgroundColor = if (note.isSelected) secondaryContainer else primaryContainer,
         shape = Shape.cornerBig,
-        modifier = modifier.padding(bottom = dp12, start = dp16, end = dp16)
+        modifier = modifier.padding(top = dp12, start = dp16, end = dp16)
 
     ) {
         Column(
