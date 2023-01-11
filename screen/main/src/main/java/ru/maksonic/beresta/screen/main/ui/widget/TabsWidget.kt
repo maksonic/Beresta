@@ -31,11 +31,8 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 24.12.2022
  */
-@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabsWidget(pagerState: PagerState, modifier: Modifier) {
-    val scope = rememberCoroutineScope()
-    val currentPage = pagerState.currentPage
+fun TabsWidget(currentPage: Int, slidePage: (page: Int) -> Unit, modifier: Modifier) {
     val tabBarHeight = 35.dp
     val firstTabTitleColor = animateColorAsState(
         targetValue = setTabTitleColor(
@@ -59,7 +56,7 @@ fun TabsWidget(pagerState: PagerState, modifier: Modifier) {
             .height(tabBarHeight)
             .clip(Shape.cornerRound)
             .background(secondaryContainer)
-            .noRippleClickable { setCurrentPage(pagerState, scope) },
+            .noRippleClickable { setCurrentPage(currentPage, slidePage) },
         contentAlignment = alignmentFromTabState
     ) {
         Box(
@@ -92,14 +89,11 @@ fun TabsWidget(pagerState: PagerState, modifier: Modifier) {
     }
 }
 
-
-@OptIn(ExperimentalPagerApi::class)
-private fun setCurrentPage(pagerState: PagerState, scope: CoroutineScope) {
-    val page = if (pagerState.currentPage == PageItem.NOTES.pageValue) PageItem.TASKS.pageValue
+private fun setCurrentPage(currentPage: Int, slidePage: (page: Int) -> Unit) {
+    val page = if (currentPage == PageItem.NOTES.pageValue) PageItem.TASKS.pageValue
     else PageItem.NOTES.pageValue
-    scope.launch {
-        pagerState.animateScrollToPage(page)
-    }
+    slidePage(page)
+
 }
 
 private fun setAlignment(page: Int): Alignment =

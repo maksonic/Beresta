@@ -4,14 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -42,15 +46,16 @@ class MainActivity : ComponentActivity() {
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
 
-
     @OptIn(ExperimentalAnimationApi::class, ExperimentalLifecycleComposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(ru.maksonic.beresta.ui.theme.R.style.Theme_Beresta_Default)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
+        fixChinesVendorEmptyScreen()
         setContent {
             val appState = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
             val systemUiController = rememberSystemUiController()
+            val windowModifier: Modifier = Modifier
             navigator.navController = rememberAnimatedNavController()
             val theme: @Composable (
                 content: @Composable () -> Unit
@@ -63,24 +68,46 @@ class MainActivity : ComponentActivity() {
             theme.invoke {
                 SystemComponentColor(systemUiController = systemUiController)
 
-                Scaffold(backgroundColor = background) { padding ->
-                    AnimatedNavHost(
-                        navController = navigator.navController,
-                        startDestination = Destination.route,
-                        modifier = Modifier
-                            .padding(paddingValues = padding)
-                            .systemBarsPadding()
-                            .fillMaxSize()
-                    ) {
-                        graphBuilder.buildGraph(
-                            graphBuilder = this,
-                            systemUiController,
-                            startDestination = appState.startScreen.route
-                        )
+                Scaffold(backgroundColor = background) { paddings ->
+                    Column {
+                   //     SystemStatusBar(windowModifier)
+                        AnimatedNavHost(
+                            navController = navigator.navController,
+                            startDestination = Destination.route,
+                            modifier = windowModifier
+                                .padding(paddingValues = paddings)
+                                .weight(1f)
+                        ) {
+                            graphBuilder.buildGraph(
+                                graphBuilder = this,
+                                systemUiController,
+                                startDestination = appState.startScreen.route
+                            )
+                        }
+                  //      SystemNavigationBottomBar(windowModifier)
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    fun SystemStatusBar(modifier: Modifier) {
+        val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+        Box(modifier = modifier
+            .fillMaxWidth()
+            .height(statusBarHeight)
+            .background(Color.Red))
+    }
+
+    @Composable
+    fun SystemNavigationBottomBar(modifier: Modifier) {
+        val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        Box(modifier = modifier
+            .fillMaxWidth()
+            .height(navigationBarHeight)
+            .background(Color.Red))
+
     }
 
     //On some Chinese devices, when launching app or switching the theme, a blank screen appears.

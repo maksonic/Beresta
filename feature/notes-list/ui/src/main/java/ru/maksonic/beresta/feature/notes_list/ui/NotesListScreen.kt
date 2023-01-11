@@ -12,6 +12,7 @@ import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
+import ru.maksonic.beresta.ui.widget.functional.isScrolledTop
 
 /**
  * @Author maksonic on 24.12.2022
@@ -25,41 +26,50 @@ class NotesListScreen : NotesListFeature {
     override fun Screen() {
         val sandbox: NotesListSandbox = koinViewModel()
         val model = sandbox.model.collectAsState().value
-        val notesScrollState = rememberLazyListState()
-        val isScrolledTop =
-            remember { derivedStateOf { notesScrollState.firstVisibleItemScrollOffset > 0 } }
-
+        // TODO: Изменить определение позиции по оффсету, а не индексу.
+        //  Сейчас по оффсету баг -> при скролле списка мерцает заданный цвет.
+       /* val isScrolledTop =
+            remember { derivedStateOf { notesScrollState.firstVisibleItemIndex == 0 } }
         SideEffect {
             mutableSharedNotesState.update { state ->
-                state.copy(isTopListScrollState = !isScrolledTop.value)
+                state.copy(isTopListScrollState = isScrolledTop.value)
             }
-        }
+        }*/
         HandleEffects(effects = sandbox.effects)
 
-        Content(model = model, msg = sandbox::sendMsg, notesScrollState, !isScrolledTop.value)
+        Content(
+            model = model,
+            msg = sandbox::sendMsg,
+            //isScrolledTop = { isScrolledTop.value },
+        )
     }
 
     @Composable
     private fun Content(
         model: Feature.Model,
         msg: (Feature.Msg) -> Unit,
-        notesScrollState: LazyListState,
-        isScrolledTop: Boolean
+       // isScrolledTop: () -> Boolean,
     ) {
-
         when {
-            model.base.isLoading -> LoadingViewState()
-            model.notes.isEmpty() -> EmptyNotesViewState()
+            model.base.isLoading -> {
+                LoadingViewState()
+            }
+            model.notes.isEmpty() -> {
+                EmptyNotesViewState()
+            }
             model.base.isSuccessLoading -> {
                 SuccessViewState(
                     notes = model.notes,
                     filters = model.notesFilter,
-                    notesScrollState = notesScrollState,
-                    isScrolledTop = { isScrolledTop },
+                   // isScrolledTop = isScrolledTop,
                     onFilterClick = {/* index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) */ },
                     msg = msg,
                     isSelectionState = model.isSelectionState,
-                    // updateBackgroundColor = { isTopScroll -> updateBackgroundColor(isTopScroll) },
+                    updateState = {
+                            mutableSharedNotesState.update { state ->
+                                state.copy(isVisibleFirstNote = it)
+                        }
+                    }
                 )
             }
         }

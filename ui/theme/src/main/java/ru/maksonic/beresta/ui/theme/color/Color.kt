@@ -36,7 +36,8 @@ data class AppColor(
     val surfaceVariant: Color,
     val onSurfaceVariant: Color,
     val outline: Color,
-    val shadow: Color
+    val shadow: Color,
+    val transparent: Color
 )
 
 val primary: Color @Composable get() = Theme.color.primary
@@ -63,3 +64,4 @@ val surfaceVariant: Color @Composable get() = Theme.color.surfaceVariant
 val onSurfaceVariant: Color @Composable get() = Theme.color.onSurfaceVariant
 val outline: Color @Composable get() = Theme.color.outline
 val shadow: Color @Composable get() = Theme.color.shadow
+val transparent: Color @Composable get() = Theme.color.transparent

@@ -7,6 +7,6 @@ import androidx.compose.ui.graphics.Color
  */
 data class NotesSharedState(
     val isTopListScrollState: Boolean = true,
-    val isVisibleFirstNote: Boolean = false,
+    val isVisibleFirstNote: Boolean = true,
     val backgroundColor: Color = Color.White
 )

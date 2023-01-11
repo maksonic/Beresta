@@ -38,7 +38,7 @@ class BottomPanelWidget : BottomPanelFeature {
     }
 
     @Composable
-    fun Content(modifier: Modifier = Modifier) {
+    private fun Content(modifier: Modifier = Modifier) {
         Row(
             modifier
                 .fillMaxWidth()

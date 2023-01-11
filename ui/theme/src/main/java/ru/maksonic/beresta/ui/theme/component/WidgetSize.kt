@@ -17,6 +17,7 @@ data class AppWidgetSize(
     val topBarNormalHeight: Dp,
     val bottomPanelHeightIdle: Dp,
     val bottomPanelHeightSelected: Dp,
+    val filterChipHeight: Dp,
     val minimumTouchTargetSize: Dp
 )
 
@@ -26,5 +27,6 @@ val widgetsSize = AppWidgetSize(
     topBarNormalHeight = 56.dp,
     bottomPanelHeightIdle = 72.dp,
     bottomPanelHeightSelected = 120.dp,
+    filterChipHeight = 42.dp,
     minimumTouchTargetSize = 48.dp
 )
