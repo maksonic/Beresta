@@ -32,17 +32,13 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 17.12.2022
  */
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun MainTopBar(
-    pagerState: PagerState,
+    currentPage: Int,
+    slidePage: (page: Int) -> Unit,
     backgroundColor: () -> Color,
     modifier: Modifier = Modifier,
 ) {
-   /* val animatedBackgroundColor by animateColorAsState(
-        targetValue = if (isScrolledTop()) background else tertiaryContainer
-    )*/
-
     Row(
         modifier
             .fillMaxWidth()
@@ -56,7 +52,7 @@ internal fun MainTopBar(
             action = {},
             modifier = modifier.padding(start = dp8)
         )
-        TabsWidget(pagerState = pagerState, modifier)
+        TabsWidget(currentPage, slidePage, modifier)
         Spacer(
             modifier
                 .size(Theme.widgetSize.minimumTouchTargetSize)

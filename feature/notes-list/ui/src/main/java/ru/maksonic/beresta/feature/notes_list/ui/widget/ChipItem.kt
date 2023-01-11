@@ -13,15 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.ui.theme.BerestaTheme
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
-import ru.maksonic.beresta.ui.theme.component.Shape
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 25.12.2022
@@ -45,29 +46,35 @@ private fun ChipItemPreview() {
 @Composable
 internal fun ChipItem(
     chipFilter: NoteUi.Filter,
-  //  index: Int,
- //   selected: Boolean,
-    //onChipClick: (Int) -> Unit,
-    isScrolledTop: () -> Boolean,
+    index: Int,
+    selected: Boolean,
+    onChipClick: (Int) -> Unit,
+    chipBackgroundColor: () -> Color,
     modifier: Modifier = Modifier
 ) {
-  //  val color = if (selected) primary else primaryContainer
-   // val selectedBorder = if (selected) 2.dp else 0.dp
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isScrolledTop()) primaryContainer else tertiary
-    )
+    /*val chipBackgroundColor = if (selected && isVisibleFirstNote()) secondaryContainer else {
+        if (selected && !isVisibleFirstNote()) primary
+        else {
+            if (isVisibleFirstNote()) primaryContainer else tertiary
+        }
+    }*/
+
+    val color = if (selected) primary else primaryContainer
+    val selectedBorder = if (selected) 2.dp else 0.dp
     Row(
         modifier
+            .noRippleClickable { onChipClick(index) }
+            .height(Theme.widgetSize.filterChipHeight)
             .clip(Shape.cornerNormal)
-         //   .border(width = 2.dp, color = onPrimaryContainer, shape = Shape.cornerNormal)
-            .background(primaryContainer),
+            .border(selectedBorder, color, Shape.cornerNormal)
+            .drawBehind { drawRect(chipBackgroundColor()) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = chipFilter.title,
             style = TextDesign.caption,
-            modifier = modifier.padding(dp16)
+            modifier = modifier.padding(start = dp16, end = dp16)
         )
     }
 }
