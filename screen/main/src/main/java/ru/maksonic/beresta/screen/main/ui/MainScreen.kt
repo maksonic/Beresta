@@ -1,21 +1,17 @@
 package ru.maksonic.beresta.screen.main.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
@@ -24,8 +20,8 @@ import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 
 /**
@@ -54,22 +50,24 @@ private fun MainScreenContent(
     tasksPage: TasksListFeature = get(),
 ) {
     val mainPagerState = rememberPagerState()
-    //   val topBarVisibility = rememberSaveable { mutableStateOf(true) }
-    val isVisibleFirstNote = rememberSaveable { mutableStateOf(true) }
-    // val notesFeature = notesPage.state.collectAsState().value
-    val scope = rememberCoroutineScope()
     val notesFeature = notesPage.state.collectAsState().value
+    val isVisibleFirstNote = rememberSaveable { mutableStateOf(true) }
+    val isVisibleBottomPanel = rememberSaveable { mutableStateOf(true) }
+    val topBarColor = if (isVisibleFirstNote.value) background else tertiaryContainer
+    val animatedTopBarColor by animateColorAsState(targetValue = topBarColor)
+    val systemNavBarColor = if (isVisibleBottomPanel.value) tertiaryContainer else background
+    val animatedSystemNavBarColor by animateColorAsState(targetValue = systemNavBarColor)
 
-    val changingBackgroundColor = if (isVisibleFirstNote.value) background else tertiaryContainer
-    val topBarColor by animateColorAsState(targetValue = changingBackgroundColor)
-
-    LaunchedEffect(!notesFeature.isVisibleFirstNote) {
-        isVisibleFirstNote.value = notesFeature.isVisibleFirstNote
+    LaunchedEffect(!notesFeature.isTopScrollState) {
+        isVisibleFirstNote.value = notesFeature.isTopScrollState
+    }
+    LaunchedEffect(notesFeature.isScrollUp) {
+        isVisibleBottomPanel.value = notesFeature.isScrollUp
     }
 
-  /* SideEffect {
-        systemUiController.setStatusBarColor(color = changingBackgroundColor)
-    }*/
+    /* SideEffect {
+          systemUiController.setStatusBarColor(color = changingBackgroundColor)
+      }*/
 
     /*SideEffect {
         systemUiController.setStatusBarColor(color = changingBackgroundColor)
@@ -97,25 +95,24 @@ private fun MainScreenContent(
 
     Box(
         modifier
-            .fillMaxSize()
-            .systemBarsPadding(),
+            .fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
         Column(modifier.fillMaxSize()) {
-            SystemStatusBar(modifier)
+            SystemStatusBar(changeableBackgroundColor = { animatedTopBarColor })
             MainTopBar(
-                currentPage = mainPagerState.currentPage,
-                slidePage = { page ->
-                    scope.launch {
-                        mainPagerState.animateScrollToPage(page)
-                    }
-                },
-                backgroundColor = { topBarColor },
+                pagerState = mainPagerState,
+                backgroundColor = { animatedTopBarColor },
                 modifier = modifier
             )
-
-            MainPager(mainPagerState, notesPage, tasksPage)
+            MainPager(pagerState = { mainPagerState }, notesPage, tasksPage)
         }
-        bottomPanel.Widget()
+        Column {
+            /*AnimatedVisibility(visible = isVisibleBottomPanel.value) {
+                bottomPanel.Widget()
+            }*/
+            bottomPanel.Widget()
+            SystemNavigationBar(changeableBackgroundColor = { animatedSystemNavBarColor })
+        }
     }
 }

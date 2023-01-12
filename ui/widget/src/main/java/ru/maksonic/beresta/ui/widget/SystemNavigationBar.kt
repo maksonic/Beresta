@@ -7,11 +7,11 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 
 /**
- * @Author maksonic on 11.01.2023
+ * @Author maksonic on 12.01.2023
  */
 @Composable
-fun SystemStatusBar(changeableBackgroundColor: () -> Color, modifier: Modifier = Modifier) {
-    val height = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+fun SystemNavigationBar(changeableBackgroundColor: () -> Color, modifier: Modifier = Modifier) {
+    val height = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(modifier = modifier
         .fillMaxWidth()
         .height(height)

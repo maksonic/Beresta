@@ -14,7 +14,7 @@ object Lib {
         const val splashScreen = "1.0.0"
         //compose
         const val compose = Config.composeVersion
-        const val composeUi = "1.3.2"
+        const val composeUi = "1.4.0-alpha04"
         const val activityCompose = "1.6.1"
         const val composeLifecycle = "2.6.0-alpha03"
         //coroutines

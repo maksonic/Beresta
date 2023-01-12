@@ -17,16 +17,6 @@ data class NoteUi(
     )
 
     companion object {
-        fun defaultFilters() = listOf(
-            Filter(0, "Все", true),
-            Filter(1, "Просто папка", false),
-            Filter(2, "Fake folder", false),
-            Filter(3, "Some folder", false),
-            Filter(4, "Favorites", false),
-            Filter(5, "Test folder", false),
-            Filter(6, "Best notes", false),
-            Filter(7, "Maksonic", false),
-        )
 
         object Preview {
             val note = NoteUi(
@@ -35,7 +25,16 @@ data class NoteUi(
                 message = "Note message preview",
                 dateCreation = "12:00 AM - 1 January 1970"
             )
-            val filters = listOf("Все", "Maksonic", "Test", "Created", "New notes", "Work")
+            val filters = listOf(
+                Filter(0, "Все", true),
+                Filter(1, "Просто папка", false),
+                Filter(2, "Fake folder", false),
+                Filter(3, "Some folder", false),
+                Filter(4, "Favorites", false),
+                Filter(5, "Test folder", false),
+                Filter(6, "Best notes", false),
+                Filter(7, "Maksonic", false),
+            )
         }
     }
 }
