@@ -82,6 +82,7 @@ dependencies {
     implementation(project(BaseModule.Feature.ThemeSelector.path))
     implementation(project(BaseModule.Feature.SplashScreen.path))
     implementation(project(BaseModule.Ui.Theme.path))
+    implementation(project(BaseModule.Ui.Widget.path))
 
     implementation(project(BaseModule.Screen.Main.path))
     

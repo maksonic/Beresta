@@ -13,7 +13,7 @@ object Feature {
     data class Model(
         val base: BaseModel,
         val notes: List<NoteUi> = emptyList(),
-        val notesFilter: List<NoteUi.Filter> = NoteUi.defaultFilters(),
+        val notesFilter: List<NoteUi.Filter> = NoteUi.Companion.Preview.filters,
         val selectedNotes: MutableSet<Long> = mutableSetOf(),
         val errorMsg: String = "",
         val isSelectionState: Boolean = false,

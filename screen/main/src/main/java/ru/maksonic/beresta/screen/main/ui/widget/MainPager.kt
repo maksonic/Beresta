@@ -18,7 +18,7 @@ import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun MainPager(
-    pagerState: PagerState,
+    pagerState: () -> PagerState,
     notesPage: NotesListFeature,
     tasksPage: TasksListFeature,
     modifier: Modifier = Modifier
@@ -26,7 +26,7 @@ internal fun MainPager(
     OverscrollBehavior {
         HorizontalPager(
             count = 2,
-            state = pagerState,
+            state = pagerState(),
             modifier = modifier.fillMaxSize()
         ) { page ->
             Page(

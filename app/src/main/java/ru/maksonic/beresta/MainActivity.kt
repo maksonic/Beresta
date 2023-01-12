@@ -4,49 +4,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.navigation
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import ru.maksonic.beresta.feature.onboarding.ui.OnboardingScreen
-import ru.maksonic.beresta.feature.splash_screen.SplashScreen
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.screen.main.ui.MainScreen
 import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel()
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
 
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalLifecycleComposeApi::class)
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(ru.maksonic.beresta.ui.theme.R.style.Theme_Beresta_Default)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -55,7 +39,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val appState = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
             val systemUiController = rememberSystemUiController()
-            val windowModifier: Modifier = Modifier
+            val modifier: Modifier = Modifier
             navigator.navController = rememberAnimatedNavController()
             val theme: @Composable (
                 content: @Composable () -> Unit
@@ -66,17 +50,14 @@ class MainActivity : ComponentActivity() {
                 AppTheme.HIGH_CONTRAST -> { content -> AppTheme(content = content) }
             }
             theme.invoke {
-                SystemComponentColor(systemUiController = systemUiController)
-
                 Scaffold(backgroundColor = background) { paddings ->
-                    Column {
-                   //     SystemStatusBar(windowModifier)
+                    Box {
                         AnimatedNavHost(
                             navController = navigator.navController,
                             startDestination = Destination.route,
-                            modifier = windowModifier
+                            modifier = modifier
                                 .padding(paddingValues = paddings)
-                                .weight(1f)
+                                .fillMaxSize()
                         ) {
                             graphBuilder.buildGraph(
                                 graphBuilder = this,
@@ -84,30 +65,10 @@ class MainActivity : ComponentActivity() {
                                 startDestination = appState.startScreen.route
                             )
                         }
-                  //      SystemNavigationBottomBar(windowModifier)
                     }
                 }
             }
         }
-    }
-
-    @Composable
-    fun SystemStatusBar(modifier: Modifier) {
-        val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-        Box(modifier = modifier
-            .fillMaxWidth()
-            .height(statusBarHeight)
-            .background(Color.Red))
-    }
-
-    @Composable
-    fun SystemNavigationBottomBar(modifier: Modifier) {
-        val navigationBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        Box(modifier = modifier
-            .fillMaxWidth()
-            .height(navigationBarHeight)
-            .background(Color.Red))
-
     }
 
     //On some Chinese devices, when launching app or switching the theme, a blank screen appears.

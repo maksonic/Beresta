@@ -1,8 +1,7 @@
 package ru.maksonic.beresta.feature.notes_list.ui
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.*
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
@@ -12,7 +11,6 @@ import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.isScrolledTop
 
 /**
  * @Author maksonic on 24.12.2022
@@ -26,29 +24,16 @@ class NotesListScreen : NotesListFeature {
     override fun Screen() {
         val sandbox: NotesListSandbox = koinViewModel()
         val model = sandbox.model.collectAsState().value
-        // TODO: Изменить определение позиции по оффсету, а не индексу.
-        //  Сейчас по оффсету баг -> при скролле списка мерцает заданный цвет.
-       /* val isScrolledTop =
-            remember { derivedStateOf { notesScrollState.firstVisibleItemIndex == 0 } }
-        SideEffect {
-            mutableSharedNotesState.update { state ->
-                state.copy(isTopListScrollState = isScrolledTop.value)
-            }
-        }*/
+
         HandleEffects(effects = sandbox.effects)
 
-        Content(
-            model = model,
-            msg = sandbox::sendMsg,
-            //isScrolledTop = { isScrolledTop.value },
-        )
+        Content(model = model, msg = sandbox::sendMsg)
     }
 
     @Composable
     private fun Content(
         model: Feature.Model,
         msg: (Feature.Msg) -> Unit,
-       // isScrolledTop: () -> Boolean,
     ) {
         when {
             model.base.isLoading -> {
@@ -61,27 +46,24 @@ class NotesListScreen : NotesListFeature {
                 SuccessViewState(
                     notes = model.notes,
                     filters = model.notesFilter,
-                   // isScrolledTop = isScrolledTop,
                     onFilterClick = {/* index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) */ },
                     msg = msg,
                     isSelectionState = model.isSelectionState,
-                    updateState = {
-                            mutableSharedNotesState.update { state ->
-                                state.copy(isVisibleFirstNote = it)
+                    updateState = { currentScrollState ->
+                        mutableSharedNotesState.update { state ->
+                            state.copy(isTopScrollState = currentScrollState)
+                        }
+                    },
+                    updateIsScrollUpState = { scrollDirection ->
+                        mutableSharedNotesState.update { state ->
+                            state.copy(isScrollUp = scrollDirection)
                         }
                     }
                 )
             }
         }
     }
-
-    private fun updateBackgroundColor(isScrolledTop: Boolean) {
-        mutableSharedNotesState.update { state ->
-            state.copy(isTopListScrollState = isScrolledTop)
-        }
-    }
 }
-
 
 @Composable
 private fun HandleEffects(effects: Flow<Feature.Eff>) {
