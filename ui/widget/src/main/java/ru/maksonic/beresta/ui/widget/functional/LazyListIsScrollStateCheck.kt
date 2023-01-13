@@ -7,6 +7,15 @@ import androidx.compose.runtime.*
  * @Author maksonic on 26.12.2022
  */
 @Composable
+fun LazyListState.isVisibleFirstItem(): State<Boolean> {
+    return remember { derivedStateOf { this.firstVisibleItemIndex == 0  } }
+}
+@Composable
+fun LazyListState.isInvisibleFirstItem(): State<Boolean> {
+    return remember { derivedStateOf { this.firstVisibleItemIndex > 0  } }
+}
+
+@Composable
 fun LazyListState.isScrollUp(): Boolean {
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
     var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }

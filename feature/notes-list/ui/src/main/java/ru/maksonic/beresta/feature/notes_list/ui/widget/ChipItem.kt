@@ -1,12 +1,9 @@
 package ru.maksonic.beresta.feature.notes_list.ui.widget
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,29 +16,33 @@ import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
-import ru.maksonic.beresta.ui.theme.component.*
-import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
+import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.primaryContainer
+import ru.maksonic.beresta.ui.theme.component.Shape
+import ru.maksonic.beresta.ui.theme.component.TextDesign
+import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 25.12.2022
  */
 
-/*@Preview
+@Preview
 @Composable
 private fun ChipItemPreview() {
     BerestaTheme {
         val selectedState = remember { mutableStateOf(false) }
+        val chipBackground = primaryContainer
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             ChipItem(
-                chipFilter = NoteUi.,
+                chipFilter = NoteUi.Companion.Preview.filters.first(),
                 index = 0,
-                selected = { selectedState.value },
-                onChipClick = { selectedState.value = !selectedState.value })
+                selected = selectedState.value,
+                onChipClick = { selectedState.value = !selectedState.value },
+                chipBackgroundColor = { chipBackground })
         }
     }
-}*/
+}
 
 @Composable
 internal fun ChipItem(
@@ -52,13 +53,6 @@ internal fun ChipItem(
     chipBackgroundColor: () -> Color,
     modifier: Modifier = Modifier
 ) {
-    /*val chipBackgroundColor = if (selected && isVisibleFirstNote()) secondaryContainer else {
-        if (selected && !isVisibleFirstNote()) primary
-        else {
-            if (isVisibleFirstNote()) primaryContainer else tertiary
-        }
-    }*/
-
     val color = if (selected) primary else primaryContainer
     val selectedBorder = if (selected) 2.dp else 0.dp
     Row(

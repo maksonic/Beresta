@@ -54,9 +54,9 @@ class NotesListScreen : NotesListFeature {
                             state.copy(isTopScrollState = currentScrollState)
                         }
                     },
-                    updateIsScrollUpState = { scrollDirection ->
+                    updateBottomPanelVisibilityState = { bottomPanelVisibilityState ->
                         mutableSharedNotesState.update { state ->
-                            state.copy(isScrollUp = scrollDirection)
+                            state.copy(isVisibleBottomPanel = bottomPanelVisibilityState)
                         }
                     }
                 )
