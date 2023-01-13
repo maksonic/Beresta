@@ -14,7 +14,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -38,7 +37,6 @@ class MainActivity : ComponentActivity() {
         fixChinesVendorEmptyScreen()
         setContent {
             val appState = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
-            val systemUiController = rememberSystemUiController()
             val modifier: Modifier = Modifier
             navigator.navController = rememberAnimatedNavController()
             val theme: @Composable (
@@ -61,7 +59,6 @@ class MainActivity : ComponentActivity() {
                         ) {
                             graphBuilder.buildGraph(
                                 graphBuilder = this,
-                                systemUiController,
                                 startDestination = appState.startScreen.route
                             )
                         }

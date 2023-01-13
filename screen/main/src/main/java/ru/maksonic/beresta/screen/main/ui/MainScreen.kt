@@ -1,17 +1,18 @@
 package ru.maksonic.beresta.screen.main.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.systemuicontroller.SystemUiController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.androidx.compose.get
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
@@ -19,6 +20,7 @@ import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
 import ru.maksonic.beresta.ui.theme.BerestaTheme
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.widget.SystemNavigationBar
@@ -31,20 +33,19 @@ import ru.maksonic.beresta.ui.widget.SystemStatusBar
 @Composable
 private fun MainScreenPreview() {
     BerestaTheme {
-        MainScreenContent(systemUiController = rememberSystemUiController())
+        MainScreenContent()
     }
 }
 
 @Composable
-fun MainScreen(systemUiController: SystemUiController) {
-    MainScreenContent(systemUiController = systemUiController)
+fun MainScreen() {
+    MainScreenContent()
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun MainScreenContent(
     modifier: Modifier = Modifier,
-    systemUiController: SystemUiController,
     bottomPanel: BottomPanelFeature = get(),
     notesPage: NotesListFeature = get(),
     tasksPage: TasksListFeature = get(),
@@ -57,41 +58,22 @@ private fun MainScreenContent(
     val animatedTopBarColor by animateColorAsState(targetValue = topBarColor)
     val systemNavBarColor = if (isVisibleBottomPanel.value) tertiaryContainer else background
     val animatedSystemNavBarColor by animateColorAsState(targetValue = systemNavBarColor)
+    val bottomPanelTransition =
+        animateDpAsState(
+            targetValue = if (isVisibleBottomPanel.value) 0.dp
+            else
+                Theme.widgetSize.bottomPanelHeightIdle,
+        )
+    val bottomPanelAlpha =
+        animateFloatAsState(targetValue = if (isVisibleBottomPanel.value) 1f else 0f)
 
-    LaunchedEffect(!notesFeature.isTopScrollState) {
+
+    LaunchedEffect(notesFeature.isTopScrollState) {
         isVisibleFirstNote.value = notesFeature.isTopScrollState
     }
-    LaunchedEffect(notesFeature.isScrollUp) {
-        isVisibleBottomPanel.value = notesFeature.isScrollUp
+    LaunchedEffect(notesFeature.isVisibleBottomPanel) {
+        isVisibleBottomPanel.value = notesFeature.isVisibleBottomPanel
     }
-
-    /* SideEffect {
-          systemUiController.setStatusBarColor(color = changingBackgroundColor)
-      }*/
-
-    /*SideEffect {
-        systemUiController.setStatusBarColor(color = changingBackgroundColor)
-    }*/
-
-    // val scope = rememberCoroutineScope()
-
-    /* SideEffect {
-         colorChecker.value = notesFeature.isTopListScrollState
-     }*/
-    /*LaunchedEffect(notesPage.state.value.isTopListScrollState) {
-        Log.e("AAA", "${notesFeature.value.isTopListScrollState}")
-        colorChecker.value = notesFeature.value.isTopListScrollState
-    }*/
-    /* SideEffect {
-        scope.launch {
-            notesPage.state.collect {
-                colorChecker.value = it.isTopListScrollState
-            }
-        }
-     }*/
-    /* val animatedBackgroundColor by animateColorAsState(
-         targetValue = if (isNotesListTopScrollState.value) background else tertiaryContainer
-     )*/
 
     Box(
         modifier
@@ -108,10 +90,10 @@ private fun MainScreenContent(
             MainPager(pagerState = { mainPagerState }, notesPage, tasksPage)
         }
         Column {
-            /*AnimatedVisibility(visible = isVisibleBottomPanel.value) {
-                bottomPanel.Widget()
-            }*/
-            bottomPanel.Widget()
+            bottomPanel.Widget(modifier.graphicsLayer {
+                alpha = bottomPanelAlpha.value
+                translationY = bottomPanelTransition.value.toPx()
+            })
             SystemNavigationBar(changeableBackgroundColor = { animatedSystemNavBarColor })
         }
     }
