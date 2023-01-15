@@ -10,6 +10,11 @@ import androidx.compose.runtime.*
 fun LazyListState.isVisibleFirstItem(): State<Boolean> {
     return remember { derivedStateOf { this.firstVisibleItemIndex == 0  } }
 }
+
+@Composable
+fun LazyListState.isVisibleFirstItemOffset(): State<Boolean> {
+    return remember { derivedStateOf { this.firstVisibleItemScrollOffset == 0  } }
+}
 @Composable
 fun LazyListState.isInvisibleFirstItem(): State<Boolean> {
     return remember { derivedStateOf { this.firstVisibleItemIndex > 0  } }

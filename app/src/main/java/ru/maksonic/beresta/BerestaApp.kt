@@ -29,6 +29,7 @@ import ru.maksonic.beresta.feature.onboarding.domain.OnboardingVisibility
 import ru.maksonic.beresta.feature.onboarding.domain.Repository
 import ru.maksonic.beresta.feature.onboarding.ui.core.OnboardingSandbox
 import ru.maksonic.beresta.feature.onboarding.ui.core.Program
+import ru.maksonic.beresta.feature.splash_screen.SplashViewModel
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.feature.tasks_list.ui.TasksListScreen
 import ru.maksonic.beresta.feature.theme_selector.ThemeSelector
@@ -58,6 +59,10 @@ class BerestaApp : Application() {
 
     private val themeSelectorFeatureModule = module {
         single<ThemeSelector> { ThemeSelector.Feature(datastore = get()) }
+    }
+
+    private val splashScreenModule = module {
+        viewModel { SplashViewModel(navigator = get(), isOnboarding = get()) }
     }
 
     private val onboardingFeatureModule = module {
@@ -99,9 +104,19 @@ class BerestaApp : Application() {
     }
 
     private val modules = listOf(
-        appModule, navigationModule, databaseModule, onboardingDataModule, onboardingFeatureModule,
-        mainScreenModule, notesListFeatureDataModule, notesListFeatureModule,
-        tasksListFeatureModule, themeSelectorFeatureModule, coreModule, bottomPanelModule
+        appModule,
+        splashScreenModule,
+        navigationModule,
+        databaseModule,
+        onboardingDataModule,
+        onboardingFeatureModule,
+        mainScreenModule,
+        notesListFeatureDataModule,
+        notesListFeatureModule,
+        tasksListFeatureModule,
+        themeSelectorFeatureModule,
+        coreModule,
+        bottomPanelModule
     )
 
     override fun onCreate() {

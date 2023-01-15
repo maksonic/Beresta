@@ -50,7 +50,14 @@ android {
 
 dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
+    implementation(project(BaseModule.Navigation.Router.path))
+    implementation(project(BaseModule.Feature.Onboarding.Domain.path))
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
+    implementation(Lib.Koin.compose)
+
+    androidTestImplementation(Lib.Test.composeJunit)
+    debugImplementation(Lib.Test.composeManifest)
+    debugImplementation(Lib.Test.composeTooling)
 }

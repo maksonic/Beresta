@@ -36,37 +36,32 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fixChinesVendorEmptyScreen()
         setContent {
-            val appState = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
-            val modifier: Modifier = Modifier
             navigator.navController = rememberAnimatedNavController()
-            val theme: @Composable (
-                content: @Composable () -> Unit
-            ) -> Unit = when (appState.theme) {
-                AppTheme.SYSTEM -> { content -> AppTheme(isSystemInDarkTheme(), content = content) }
-                AppTheme.DARK -> { content -> AppTheme(darkTheme = true, content) }
-                AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, content = content) }
-                AppTheme.HIGH_CONTRAST -> { content -> AppTheme(content = content) }
-            }
-            theme.invoke {
+            val appTheme = viewModel.theme.collectAsStateWithLifecycle(lifecycle).value
+
+            initTheme(appTheme).invoke {
                 Scaffold(backgroundColor = background) { paddings ->
-                    Box {
-                        AnimatedNavHost(
-                            navController = navigator.navController,
-                            startDestination = Destination.route,
-                            modifier = modifier
-                                .padding(paddingValues = paddings)
-                                .fillMaxSize()
-                        ) {
-                            graphBuilder.buildGraph(
-                                graphBuilder = this,
-                                startDestination = appState.startScreen.route
-                            )
-                        }
+                    AnimatedNavHost(
+                        navController = navigator.navController,
+                        startDestination = Destination.route,
+                        modifier = Modifier
+                            .padding(paddingValues = paddings)
+                            .fillMaxSize()
+                    ) {
+                        graphBuilder.buildGraph(graphBuilder = this)
                     }
                 }
             }
         }
     }
+
+    private fun initTheme(theme: AppTheme): @Composable (content: @Composable () -> Unit) -> Unit =
+        when (theme) {
+            AppTheme.SYSTEM -> { content -> AppTheme(isSystemInDarkTheme(), content = content) }
+            AppTheme.DARK -> { content -> AppTheme(darkTheme = true, content) }
+            AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, content = content) }
+            AppTheme.HIGH_CONTRAST -> { content -> AppTheme(content = content) }
+        }
 
     //On some Chinese devices, when launching app or switching the theme, a blank screen appears.
     private fun fixChinesVendorEmptyScreen() {
