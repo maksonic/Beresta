@@ -1,7 +1,5 @@
 package ru.maksonic.beresta.navigation.router
 
-import ru.maksonic.beresta.navigation.router.AbstractRoute
-
 /**
  * @Author maksonic on 15.11.2022
  */

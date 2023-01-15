@@ -13,14 +13,14 @@ import ru.maksonic.beresta.screen.main.ui.MainScreen
  * @Author maksonic on 15.12.2022
  */
 interface GraphBuilder {
-    fun buildGraph(graphBuilder: NavGraphBuilder, startDestination: String)
+    fun buildGraph(graphBuilder: NavGraphBuilder)
 
     class Builder : GraphBuilder {
         @OptIn(ExperimentalAnimationApi::class)
-        override fun buildGraph(graphBuilder: NavGraphBuilder, startDestination: String) {
+        override fun buildGraph(graphBuilder: NavGraphBuilder) {
             graphBuilder.navigation(
                 route = Destination.route,
-                startDestination = startDestination
+                startDestination = Destination.Splash.route
             ) {
                 composable(route = Destination.Splash.route) {
                     SplashScreen()

@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.ui.theme.BerestaTheme
-import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onSurface
 
@@ -26,7 +26,7 @@ private fun SplashScreenPreview() {
 }
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen(modifier: Modifier = Modifier, viewModel: SplashViewModel = koinViewModel()) {
     /**
      * @see [size] and [padding] compare with [ru.maksonic.beresta.feature.splash_screen.R.drawable.splash_bg]
      */
@@ -37,7 +37,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     ) {
         Spacer(modifier.weight(1f))
         Image(
-            painter = painterResource(ru.maksonic.beresta.feature.splash_screen.R.drawable.logo_beresta_foreground),
+            painter = painterResource(R.drawable.logo_beresta_foreground),
             contentDescription = "",
             modifier = modifier
                 .padding(top = 60.dp)
