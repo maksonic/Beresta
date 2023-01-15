@@ -19,7 +19,7 @@ class SplashViewModel(
         viewModelScope.launch {
             isOnboarding.currentState.collect { isShow ->
                 val destination = if (isShow) Destination.Onboarding else Destination.Main
-                navigator.navigate(destination.route)
+                navigator.navigate(destination.route, isPopUp = false)
             }
         }
     }
