@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui.widget
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -10,17 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.primaryContainer
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
@@ -31,15 +31,23 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 @Composable
 private fun ChipItemPreview() {
     BerestaTheme {
-        val selectedState = remember { mutableStateOf(false) }
-        val chipBackground = primaryContainer
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        val selectedState = remember { mutableStateOf(true) }
+        Row {
             ChipItem(
-                chipFilter = NoteUi.Companion.Preview.filters.first(),
+                chipFilter = NoteUi.Companion.Preview.filters.random(),
                 index = 0,
                 selected = selectedState.value,
                 onChipClick = { selectedState.value = !selectedState.value },
-                chipBackgroundColor = { chipBackground })
+                isVisibleFirstNote = { false }
+            )
+            Spacer(Modifier.size(dp8))
+            ChipItem(
+                chipFilter = NoteUi.Companion.Preview.filters.random(),
+                index = 0,
+                selected = !selectedState.value,
+                onChipClick = { selectedState.value = !selectedState.value },
+                isVisibleFirstNote = { true },
+            )
         }
     }
 }
@@ -50,18 +58,24 @@ internal fun ChipItem(
     index: Int,
     selected: Boolean,
     onChipClick: (Int) -> Unit,
-    chipBackgroundColor: () -> Color,
+    isVisibleFirstNote: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
-    val color = if (selected) primary else primaryContainer
     val selectedBorder = if (selected) 2.dp else 0.dp
+    val borderColor = if (selected) primary else {
+        if (isVisibleFirstNote()) primaryContainer else tertiary
+    }
+    val backgroundColor = animateColorAsState(
+        targetValue = if (isVisibleFirstNote()) primaryContainer else tertiary
+    )
+
     Row(
         modifier
             .noRippleClickable { onChipClick(index) }
             .height(Theme.widgetSize.filterChipHeight)
             .clip(Shape.cornerNormal)
-            .border(selectedBorder, color, Shape.cornerNormal)
-            .drawBehind { drawRect(chipBackgroundColor()) },
+            .border(selectedBorder, borderColor, Shape.cornerNormal)
+            .drawBehind { drawRect(backgroundColor.value) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {

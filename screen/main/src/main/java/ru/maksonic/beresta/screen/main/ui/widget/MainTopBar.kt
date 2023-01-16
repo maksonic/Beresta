@@ -1,12 +1,15 @@
 package ru.maksonic.beresta.screen.main.ui.widget
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import ru.maksonic.beresta.ui.theme.Theme
@@ -21,14 +24,25 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 internal fun MainTopBar(
     pagerState: PagerState,
     backgroundColor: () -> Color,
+    isVisible: () -> Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val topTabTransition = animateDpAsState(
+        targetValue = if (isVisible()) 0.dp else -Theme.widgetSize.bottomPanelHeightIdle
+    )
+
+    val topBarHeight = animateDpAsState(
+        targetValue = if (isVisible()) Theme.widgetSize.topBarNormalHeight else 0.dp,
+    )
+
     Row(
         modifier
             .fillMaxWidth()
-            .height(Theme.widgetSize.topBarNormalHeight)
-            .drawBehind { drawRect(backgroundColor()) },
-        verticalAlignment = Alignment.CenterVertically,
+            .height(topBarHeight.value)
+            .drawBehind { drawRect(backgroundColor()) }
+            .graphicsLayer {
+                translationY = topTabTransition.value.toPx()
+            }, verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconAction(

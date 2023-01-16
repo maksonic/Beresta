@@ -49,14 +49,19 @@ class NotesListScreen : NotesListFeature {
                     onFilterClick = {/* index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) */ },
                     msg = msg,
                     isSelectionState = model.isSelectionState,
-                    updateState = { currentScrollState ->
+                    showMainTopBar = { isShow ->
                         mutableSharedNotesState.update { state ->
-                            state.copy(isTopScrollState = currentScrollState)
+                            state.copy(isShowMainToolbar = isShow)
                         }
                     },
-                    updateBottomPanelVisibilityState = { bottomPanelVisibilityState ->
+                    showBottomPanel = { isShow ->
                         mutableSharedNotesState.update { state ->
-                            state.copy(isVisibleBottomPanel = bottomPanelVisibilityState)
+                            state.copy(isShowBottomPanel = isShow)
+                        }
+                    },
+                    isColoredTopBar = { isColored ->
+                        mutableSharedNotesState.update { state ->
+                            state.copy(isColoredTopBar = isColored)
                         }
                     }
                 )
