@@ -1,10 +1,9 @@
 package ru.maksonic.beresta.feature.notes_list.ui.core
 
-import android.text.format.Time
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
-import java.util.GregorianCalendar
+import java.util.*
 import kotlin.random.Random
 
 /**

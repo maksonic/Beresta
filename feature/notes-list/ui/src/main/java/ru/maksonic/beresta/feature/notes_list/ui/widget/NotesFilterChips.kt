@@ -3,18 +3,16 @@ package ru.maksonic.beresta.feature.notes_list.ui.widget
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
@@ -30,47 +28,38 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
  */
 @Preview
 @Composable
-fun NotesFilterChipsPreview() {
+private fun NotesFilterChipsPreview() {
     BerestaTheme {
-        NotesFilterChips(
-            filters = NoteUi.Companion.Preview.filters,
-            isTopScrollState = { true }
-        )
+        val previewData = remember { mutableStateOf(NoteUi.Companion.Preview.filters) }
+        NotesFilterChips(filters = previewData, isVisibleFirstNote = { false })
     }
 }
 
 @Composable
 internal fun NotesFilterChips(
     modifier: Modifier = Modifier,
-    filters: List<NoteUi.Filter>,
-    isTopScrollState: () -> Boolean,
+    isVisibleFirstNote: () -> Boolean,
+    filters: MutableState<List<NoteUi.Filter>>,
 ) {
     val lazyRowState = rememberLazyListState()
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isTopScrollState()) background else tertiaryContainer
-    )
-    val chipBackgroundColor by animateColorAsState(
-        targetValue = if (isTopScrollState()) primaryContainer else tertiary
-    )
     var selectedIndex by remember { mutableStateOf(0) }
     val onItemClick = { index: Int ->
         selectedIndex = index
     }
+    val backgroundColor = animateColorAsState(
+        targetValue = if (isVisibleFirstNote()) background else tertiaryContainer
+    )
 
     Row(
         modifier
             .fillMaxWidth()
             .noRippleClickable { }
             .height(Theme.widgetSize.topBarNormalHeight)
-            .graphicsLayer {
-                shape =
-                    RoundedCornerShape(bottomStart = 16.dp.toPx(), bottomEnd = 16.dp.toPx())
-                clip = true
-            }
-            .drawBehind { drawRect(backgroundColor) }
+            .drawBehind { drawRect(backgroundColor.value) }
             .padding(start = dp16, end = dp16, top = dp8, bottom = dp8),
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         OverscrollBehavior {
             LazyRow(
                 state = lazyRowState,
@@ -79,15 +68,16 @@ internal fun NotesFilterChips(
                     .padding(end = dp8),
                 horizontalArrangement = Arrangement.spacedBy(dp8)
             ) {
-                filters.forEachIndexed { index, filter ->
-                    item {
-                        ChipItem(
-                            chipFilter = filter, chipBackgroundColor = { chipBackgroundColor },
-                            index = index,
-                            selected = selectedIndex == index,
-                            onChipClick = onItemClick
-                        )
-                    }
+                itemsIndexed(filters.value,
+                    key = { _, filter -> filter.id }
+                ) { index, filter ->
+                    ChipItem(
+                        chipFilter = filter,
+                        index = index,
+                        selected = selectedIndex == index,
+                        onChipClick = onItemClick,
+                        isVisibleFirstNote = isVisibleFirstNote
+                    )
                 }
             }
         }
@@ -96,10 +86,14 @@ internal fun NotesFilterChips(
             shape = Theme.shape.cornerNormal,
             color = transparent
         ) {
+            val btnColor = animateColorAsState(
+                targetValue = if (isVisibleFirstNote()) primaryContainer else tertiary
+            )
+
             Box(
                 modifier
                     .clickAction { }
-                    .drawBehind { drawRect(chipBackgroundColor) }
+                    .drawBehind { drawRect(btnColor.value) }
                     .size(Theme.widgetSize.filterChipHeight),
                 contentAlignment = Alignment.Center
             ) {

@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui.state
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,7 +8,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
@@ -16,7 +16,6 @@ import ru.maksonic.beresta.feature.notes_list.ui.widget.NoteItem
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
-import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isScrolledBottom
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
@@ -24,6 +23,7 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 25.12.2022
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
     notes: List<NoteUi>,
@@ -31,61 +31,61 @@ internal fun SuccessViewState(
     onFilterClick: (Int) -> Unit,
     msg: (Feature.Msg) -> Unit,
     isSelectionState: Boolean,
-    updateState: (Boolean) -> Unit,
-    updateBottomPanelVisibilityState: (Boolean) -> Unit,
+    showMainTopBar: (Boolean) -> Unit,
+    showBottomPanel: (Boolean) -> Unit,
+    isColoredTopBar: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val notesScrollState = rememberLazyListState()
-    val isVisibleFirstNote = notesScrollState.isVisibleFirstItem()
-    val isScrolledUp = notesScrollState.isScrollUp()
-    val isScrolledBottom = notesScrollState.isScrolledBottom()
+    val notesList = remember { mutableStateOf(notes) }
+    val filtersList = remember { mutableStateOf(filters) }
+    val firstVisibleNote = notesScrollState.isVisibleFirstItem()
+    val isScrollUp = notesScrollState.isScrollUp()
+    val isScrolledEnd = notesScrollState.isScrolledBottom()
 
     LaunchedEffect(notesScrollState) {
         snapshotFlow { notesScrollState.firstVisibleItemIndex }
             .map { index -> index == 0 }
             .distinctUntilChanged()
             .collect {
-                updateState(it)
+                isColoredTopBar(it)
             }
     }
 
-    if (isScrolledUp) {
+    LaunchedEffect(isScrollUp) {
+        showMainTopBar(isScrollUp)
+        showBottomPanel(isScrollUp)
+    }
+    if (isScrolledEnd) {
         LaunchedEffect(Unit) {
-            updateBottomPanelVisibilityState(true)
-        }
-    } else {
-        LaunchedEffect(Unit) {
-            updateBottomPanelVisibilityState(false)
+            showBottomPanel(true)
         }
     }
 
-    if (isScrolledBottom) {
-        LaunchedEffect(Unit) {
-            updateBottomPanelVisibilityState(true)
+    LazyColumn(
+        modifier
+            .navigationBarsPadding()
+            .fillMaxSize(),
+        state = notesScrollState,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        stickyHeader {
+            NotesFilterChips(filters = filtersList, isVisibleFirstNote = { firstVisibleNote.value })
         }
-    }
-
-    Box(modifier.fillMaxSize().navigationBarsPadding()) {
-        val notesList = remember { mutableStateOf(notes) }
-        LazyColumn(
-            modifier
-                .padding(top = Theme.widgetSize.topBarNormalHeight)
-                .fillMaxSize(),
-            state = notesScrollState,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(notesList.value, key = { note ->
-                note.id
-            }
-            ) { note ->
-                NoteItem(note, msg = msg, isSelectionState = isSelectionState)
-            }
-
-            item() {
-                val bottomPadding = Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
-                Spacer(modifier.fillMaxWidth().height(bottomPadding))
-            }
+        items(notesList.value, key = { note ->
+            note.id
         }
-        NotesFilterChips(filters = filters, isTopScrollState = { isVisibleFirstNote.value })
+        ) { note ->
+            NoteItem(note, msg = msg, isSelectionState = isSelectionState)
+        }
+
+        item() {
+            val bottomPadding = Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
+            Spacer(
+                modifier
+                    .fillMaxWidth()
+                    .height(bottomPadding)
+            )
+        }
     }
 }

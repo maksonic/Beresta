@@ -38,7 +38,6 @@ fun TabsWidget(pagerState: PagerState, modifier: Modifier = Modifier) {
     val currentPage = pagerState.currentPage
     val tabAlignment = if (isNoteTab(currentPage)) Alignment.CenterStart else Alignment.CenterEnd
     val selectTabWithAlignmentAnimation by animateAlignmentAsState(tabAlignment)
-
     val firstTabTitleColor = animateColorAsState(
         targetValue = setTabTitleColor(
             page = currentPage,
