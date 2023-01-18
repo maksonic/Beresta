@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.ui.SendMessage
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.primaryContainer
@@ -19,36 +20,22 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 /**
  * @Author maksonic on 25.12.2022
  */
-
-@Preview
-@Composable
-private fun NoteItemPreview() {
-    BerestaTheme {
-        NoteItem(note = NoteUi.Companion.Preview.note, isSelectionState = false, msg = {})
-    }
-}
-
 @Composable
 internal fun NoteItem(
     note: NoteUi,
-    isSelectionState: Boolean,
-    msg: (Feature.Msg) -> Unit,
+    msg: SendMessage,
     modifier: Modifier = Modifier
 ) {
+    val backgroundColor = if (note.isSelected) secondaryContainer else primaryContainer
+
     BoxWithScaleInOutOnClick(
         onClick = {
-            if (isSelectionState) {
-                val updated = note.copy(isSelected = !note.isSelected)
-                msg(Feature.Msg.Ui.SelectItemForRemove(note.id, updated.isSelected))
-            } else {
-                msg(Feature.Msg.Ui.OnItemClicked(note.id))
-            }
+            msg(Feature.Msg.Ui.OnNoteClicked(note.id))
         },
         onLongClick = {
-            val updated = note.copy(isSelected = !note.isSelected)
-            msg(Feature.Msg.Ui.SelectItemForRemove(note.id, updated.isSelected))
+            msg(Feature.Msg.Ui.OnNoteLongClicked(note.id))
         },
-        backgroundColor = if (note.isSelected) secondaryContainer else primaryContainer,
+        backgroundColor = { backgroundColor },
         shape = Shape.cornerBig,
         modifier = modifier.padding(top = dp12, start = dp16, end = dp16)
 
@@ -75,4 +62,10 @@ internal fun NoteItem(
             )
         }
     }
+}
+
+@Preview
+@Composable
+private fun NoteItemPreview() {
+    BerestaTheme { NoteItem(note = NoteUi.Preview, msg = {}) }
 }

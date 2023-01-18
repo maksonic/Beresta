@@ -51,6 +51,8 @@ android {
 dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
+    implementation(project(BaseModule.Elm.path))
+    implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Feature.BottomPanel.Api.path))
     implementation(project(BaseModule.Feature.NotesList.Api.path))
     implementation(project(BaseModule.Feature.TasksList.Api.path))

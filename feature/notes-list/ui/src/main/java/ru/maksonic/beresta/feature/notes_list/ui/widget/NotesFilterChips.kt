@@ -14,37 +14,29 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
-import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.rippleClickable
 
 /**
  * @Author maksonic on 25.12.2022
  */
-@Preview
-@Composable
-private fun NotesFilterChipsPreview() {
-    BerestaTheme {
-        val previewData = remember { mutableStateOf(NoteUi.Companion.Preview.filters) }
-        NotesFilterChips(filters = previewData, isVisibleFirstNote = { false })
-    }
-}
-
 @Composable
 internal fun NotesFilterChips(
     modifier: Modifier = Modifier,
     isVisibleFirstNote: () -> Boolean,
-    filters: MutableState<List<NoteUi.Filter>>,
+    filters: FilterChipsCollection,
 ) {
     val lazyRowState = rememberLazyListState()
-    var selectedIndex by remember { mutableStateOf(0) }
+    val selectedIndex = remember { mutableStateOf(0) }
     val onItemClick = { index: Int ->
-        selectedIndex = index
+        selectedIndex.value = index
     }
     val backgroundColor = animateColorAsState(
         targetValue = if (isVisibleFirstNote()) background else tertiaryContainer
@@ -53,7 +45,6 @@ internal fun NotesFilterChips(
     Row(
         modifier
             .fillMaxWidth()
-            .noRippleClickable { }
             .height(Theme.widgetSize.topBarNormalHeight)
             .drawBehind { drawRect(backgroundColor.value) }
             .padding(start = dp16, end = dp16, top = dp8, bottom = dp8),
@@ -68,13 +59,13 @@ internal fun NotesFilterChips(
                     .padding(end = dp8),
                 horizontalArrangement = Arrangement.spacedBy(dp8)
             ) {
-                itemsIndexed(filters.value,
+                itemsIndexed(filters.chips,
                     key = { _, filter -> filter.id }
                 ) { index, filter ->
                     ChipItem(
-                        chipFilter = filter,
+                        filterChip = filter,
                         index = index,
-                        selected = selectedIndex == index,
+                        selected = selectedIndex.value == index,
                         onChipClick = onItemClick,
                         isVisibleFirstNote = isVisibleFirstNote
                     )
@@ -92,7 +83,7 @@ internal fun NotesFilterChips(
 
             Box(
                 modifier
-                    .clickAction { }
+                    .rippleClickable(rippleColor = primary) { }
                     .drawBehind { drawRect(btnColor.value) }
                     .size(Theme.widgetSize.filterChipHeight),
                 contentAlignment = Alignment.Center
@@ -106,5 +97,13 @@ internal fun NotesFilterChips(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun NotesFilterChipsPreview() {
+    BerestaTheme {
+        NotesFilterChips(filters = FilterChipsCollection.Preview, isVisibleFirstNote = { false })
     }
 }

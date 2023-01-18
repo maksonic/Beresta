@@ -8,6 +8,7 @@ import ru.maksonic.beresta.feature.onboarding.ui.OnboardingScreen
 import ru.maksonic.beresta.feature.splash_screen.SplashScreen
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.screen.main.ui.MainScreen
+import ru.maksonic.beresta.screen.settings.SettingsScreen
 
 /**
  * @Author maksonic on 15.12.2022
@@ -30,6 +31,9 @@ interface GraphBuilder {
                 }
                 composable(route = Destination.Main.route) {
                     MainScreen()
+                }
+                composable(route = Destination.Settings.route) {
+                    SettingsScreen()
                 }
             }
         }

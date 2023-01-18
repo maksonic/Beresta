@@ -10,7 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import ru.maksonic.beresta.feature.notes_list.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
+import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NoteItem
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
@@ -26,19 +27,16 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
-    notes: List<NoteUi>,
-    filters: List<NoteUi.Filter>,
+    notes: NotesCollection,
+    filters: FilterChipsCollection,
     onFilterClick: (Int) -> Unit,
     msg: (Feature.Msg) -> Unit,
-    isSelectionState: Boolean,
     showMainTopBar: (Boolean) -> Unit,
     showBottomPanel: (Boolean) -> Unit,
     isColoredTopBar: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val notesScrollState = rememberLazyListState()
-    val notesList = remember { mutableStateOf(notes) }
-    val filtersList = remember { mutableStateOf(filters) }
     val firstVisibleNote = notesScrollState.isVisibleFirstItem()
     val isScrollUp = notesScrollState.isScrollUp()
     val isScrolledEnd = notesScrollState.isScrolledBottom()
@@ -69,14 +67,16 @@ internal fun SuccessViewState(
         state = notesScrollState,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         stickyHeader {
-            NotesFilterChips(filters = filtersList, isVisibleFirstNote = { firstVisibleNote.value })
+            NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote.value })
         }
-        items(notesList.value, key = { note ->
-            note.id
-        }
+
+        items(
+            items = notes.notes,
+            key = { note -> note.id }
         ) { note ->
-            NoteItem(note, msg = msg, isSelectionState = isSelectionState)
+            NoteItem(note = note, msg = msg)
         }
 
         item() {

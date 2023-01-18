@@ -9,10 +9,16 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
+import ru.maksonic.beresta.screen.main.ui.SendMessage
+import ru.maksonic.beresta.screen.main.ui.core.Screen
+import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.IconAction
 
@@ -22,6 +28,7 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun MainTopBar(
+    msg: SendMessage,
     pagerState: PagerState,
     backgroundColor: () -> Color,
     isVisible: () -> Boolean,
@@ -47,7 +54,7 @@ internal fun MainTopBar(
     ) {
         IconAction(
             icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings),
-            action = {},
+            action = { msg(Screen.Msg.Ui.OnSettingsClicked) },
             modifier = modifier.padding(start = dp8)
         )
         TabsWidget(pagerState, modifier)
@@ -56,5 +63,19 @@ internal fun MainTopBar(
                 .size(Theme.widgetSize.minimumTouchTargetSize)
                 .padding(end = dp8)
         )
+    }
+}
+
+@Preview
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun MainTopBarPreview() {
+    BerestaTheme {
+        val bg = background
+        MainTopBar(
+            msg = {},
+            pagerState = rememberPagerState(),
+            backgroundColor = { bg },
+            isVisible = { true })
     }
 }

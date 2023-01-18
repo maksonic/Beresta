@@ -35,6 +35,8 @@ import ru.maksonic.beresta.feature.tasks_list.ui.TasksListScreen
 import ru.maksonic.beresta.feature.theme_selector.ThemeSelector
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AppNavigator
+import ru.maksonic.beresta.screen.main.ui.core.MainNavigationProgram
+import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
 
 /**
  * @Author maksonic on 15.12.2022
@@ -75,7 +77,17 @@ class BerestaApp : Application() {
         single<Repository> { OnboardingRepository }
     }
 
-    private val mainScreenModule = module { }
+    private val mainScreenModule = module {
+        single { MainNavigationProgram(navigator = get()) }
+        viewModel {
+            MainSandbox(
+                navigationProgram = get(),
+                notesListFeature = get(),
+                tasksListFeature = get(),
+                bottomPanelFeature = get()
+            )
+        }
+    }
 
     private val notesListFeatureModule = module {
         single<NotesListFeature> { NotesListScreen() }

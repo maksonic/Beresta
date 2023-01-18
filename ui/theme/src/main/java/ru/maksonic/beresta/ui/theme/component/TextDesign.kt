@@ -24,6 +24,13 @@ object TextDesign {
             fontWeight = FontWeight.Medium,
             color = Theme.color.onPrimaryContainer
         )
+    val topBar: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Medium,
+            color = Theme.color.onPrimaryContainer
+        )
 
     val body: TextStyle
         @Composable

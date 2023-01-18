@@ -85,8 +85,8 @@ class TasksListScreen : TasksListFeature {
                 showBottomPanel(true)
             }
         }
-
-        LazyColumn(
+        EmptyTasksViewState()
+        /*LazyColumn(
             modifier
                 .fillMaxSize()
                 .navigationBarsPadding(),
@@ -114,6 +114,6 @@ class TasksListScreen : TasksListFeature {
                         .height(bottomPadding)
                 )
             }
-        }
+        }*/
     }
 }
