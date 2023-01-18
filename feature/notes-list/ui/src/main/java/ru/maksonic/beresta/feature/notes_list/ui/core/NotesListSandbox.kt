@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.notes_list.ui.core
 import ru.maksonic.beresta.elm.BaseModel
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
+import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 
 
 /**
@@ -22,13 +23,9 @@ class NotesListSandbox(
         model: Feature.Model
     ): UpdateResult = when (msg) {
         is Feature.Msg.Ui.RetryFetching -> retryFetching(model)
-        is Feature.Msg.Ui.OnItemClicked -> UpdatedModel(
-            model,
-            effects = setOf(Feature.Eff.ShowNoteForEdit)
-        )
-        is Feature.Msg.Ui.SelectItemForRemove -> onItemSelectedForRemove(model, msg)
+        is Feature.Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
         is Feature.Msg.Ui.SelectAllItems -> selectAllNotes(model)
-        is Feature.Msg.Ui.OnItemLongPressed -> onItemLongPressed(model, msg)
+        is Feature.Msg.Ui.OnNoteLongClicked -> onItemLongPressed(model, msg)
         is Feature.Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
         is Feature.Msg.Inner.FetchingError -> fetchingError(model, msg)
         is Feature.Msg.Ui.RemoveSelectedItems -> afterRemoveSelectedNotes(model)
@@ -85,27 +82,42 @@ class NotesListSandbox(
         val isSelected = notes.map { it.isSelected }.contains(true)
         return UpdatedModel(model.copy(notes = notes, isSelectionState = isSelected))
     }
-    private fun onItemSelectedForRemove(
+
+    private fun onNoteClicked(
         model: Feature.Model,
-        msg: Feature.Msg.Ui.SelectItemForRemove
+        msg: Feature.Msg.Ui.OnNoteClicked
     ): UpdateResult {
-        val notes = model.notes.map { note ->
-            if (note.id == msg.id) {
-                note.copy(isSelected = msg.isSelected)
-            } else
-                note
+        var afterSelectedNotes = emptyList<NoteUi>()
+        val isSelected = model.notes.map { it.isSelected }.contains(true)
+
+        afterSelectedNotes = if (isSelected) {
+            model.notes.map { oldNote ->
+                if (oldNote.id == msg.id) {
+                    oldNote.copy(isSelected = !oldNote.isSelected)
+                } else {
+                    oldNote
+                }
+            }
+        } else {
+            model.notes
         }
-        val isSelected = notes.map { it.isSelected }.contains(true)
-        return UpdatedModel(model.copy(notes = notes, isSelectionState = isSelected))
+        return UpdatedModel(model.copy(notes = afterSelectedNotes))
     }
 
     private fun onItemLongPressed(
         model: Feature.Model,
-        msg: Feature.Msg.Ui.OnItemLongPressed
+        msg: Feature.Msg.Ui.OnNoteLongClicked
     ): UpdateResult {
-        val selectedList = model.selectedNotes
-        selectedList.add(msg.id)
-        return UpdatedModel(model.copy(selectedNotes = selectedList))
+
+        val afterSelectedNotes = model.notes.map { oldNote ->
+            if (oldNote.id == msg.id) {
+                oldNote.copy(isSelected = !oldNote.isSelected)
+            } else {
+                oldNote
+            }
+        }
+        val isSelected = model.notes.map { it.isSelected }.contains(true)
+        return UpdatedModel(model.copy(notes = afterSelectedNotes, isSelectionState = isSelected))
     }
 
     private fun cancelNotesSelection(model: Feature.Model): UpdateResult =
@@ -120,19 +132,19 @@ class NotesListSandbox(
         model: Feature.Model,
         msg: Feature.Msg.Ui.OnSelectNotesFilter
     ): UpdateResult {
-       /* val filters = model.notesFilter.map { filter ->
-            if (filter.ind == msg.folderId) {
-                filter.copy(isSelected = true)
-            } else
-                filter
-        }*/
-        val filters = model.notesFilter.mapIndexed { index, filter ->
+        /* val filters = model.notesFilter.map { filter ->
+             if (filter.ind == msg.folderId) {
+                 filter.copy(isSelected = true)
+             } else
+                 filter
+         }*/
+        val filters = model.chipsNotesFilter.mapIndexed { index, filter ->
             if (index == msg.index) {
                 filter.copy(isSelected = true)
             } else {
                 filter
             }
         }
-        return UpdatedModel(model.copy(notesFilter = filters))
+        return UpdatedModel(model.copy(chipsNotesFilter = filters))
     }
 }

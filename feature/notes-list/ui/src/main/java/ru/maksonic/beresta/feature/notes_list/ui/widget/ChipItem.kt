@@ -13,48 +13,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.feature.notes_list.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.api.FilterChip
+import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.primaryContainer
+import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 
 /**
  * @Author maksonic on 25.12.2022
  */
-
-@Preview
-@Composable
-private fun ChipItemPreview() {
-    BerestaTheme {
-        val selectedState = remember { mutableStateOf(true) }
-        Row {
-            ChipItem(
-                chipFilter = NoteUi.Companion.Preview.filters.random(),
-                index = 0,
-                selected = selectedState.value,
-                onChipClick = { selectedState.value = !selectedState.value },
-                isVisibleFirstNote = { false }
-            )
-            Spacer(Modifier.size(dp8))
-            ChipItem(
-                chipFilter = NoteUi.Companion.Preview.filters.random(),
-                index = 0,
-                selected = !selectedState.value,
-                onChipClick = { selectedState.value = !selectedState.value },
-                isVisibleFirstNote = { true },
-            )
-        }
-    }
-}
-
 @Composable
 internal fun ChipItem(
-    chipFilter: NoteUi.Filter,
+    filterChip: FilterChip,
     index: Int,
     selected: Boolean,
     onChipClick: (Int) -> Unit,
@@ -68,21 +45,50 @@ internal fun ChipItem(
     val backgroundColor = animateColorAsState(
         targetValue = if (isVisibleFirstNote()) primaryContainer else tertiary
     )
-
-    Row(
-        modifier
-            .noRippleClickable { onChipClick(index) }
-            .height(Theme.widgetSize.filterChipHeight)
-            .clip(Shape.cornerNormal)
-            .border(selectedBorder, borderColor, Shape.cornerNormal)
-            .drawBehind { drawRect(backgroundColor.value) },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+    BoxWithScaleInOutOnClick(
+        onClick = {
+            onChipClick(index)
+        }
     ) {
-        Text(
-            text = chipFilter.title,
-            style = TextDesign.caption,
-            modifier = modifier.padding(start = dp16, end = dp16)
-        )
+        Row(
+            modifier
+                .height(Theme.widgetSize.filterChipHeight)
+                .clip(Shape.cornerNormal)
+                .border(selectedBorder, borderColor, Shape.cornerNormal)
+                .drawBehind { drawRect(backgroundColor.value) },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = filterChip.title,
+                style = TextDesign.caption,
+                modifier = modifier.padding(start = dp16, end = dp16)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ChipItemPreview() {
+    BerestaTheme {
+        val selectedState = remember { mutableStateOf(true) }
+        Row {
+            ChipItem(
+                filterChip = FilterChip.Preview,
+                index = 0,
+                selected = selectedState.value,
+                onChipClick = { selectedState.value = !selectedState.value },
+                isVisibleFirstNote = { false }
+            )
+            Spacer(Modifier.size(dp8))
+            ChipItem(
+                filterChip = FilterChip.Preview,
+                index = 0,
+                selected = !selectedState.value,
+                onChipClick = { selectedState.value = !selectedState.value },
+                isVisibleFirstNote = { true },
+            )
+        }
     }
 }

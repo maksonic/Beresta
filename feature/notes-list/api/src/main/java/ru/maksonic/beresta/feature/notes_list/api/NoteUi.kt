@@ -10,31 +10,12 @@ data class NoteUi(
     val dateCreation: String = "",
     val isSelected: Boolean = false
 ) {
-    data class Filter(
-        val id: Long,
-        val title: String,
-        val isSelected: Boolean,
-    )
-
     companion object {
-
-        object Preview {
-            val note = NoteUi(
-                id = 0,
-                title = "Note title preview",
-                message = "Note message preview",
-                dateCreation = "12:00 AM - 1 January 1970"
-            )
-            val filters = listOf(
-                Filter(0, "Все", true),
-                Filter(1, "Просто папка", false),
-                Filter(2, "Fake folder", false),
-                Filter(3, "Some folder", false),
-                Filter(4, "Favorites", false),
-                Filter(5, "Test folder", false),
-                Filter(6, "Best notes", false),
-                Filter(7, "Maksonic", false),
-            )
-        }
+        val Preview = NoteUi(
+            id = 0,
+            title = "Note title preview",
+            message = "Note message preview",
+            dateCreation = "12:00 AM - 1 January 1970"
+        )
     }
 }

@@ -2,7 +2,6 @@ package ru.maksonic.beresta.ui.widget.button
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -11,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -31,12 +31,11 @@ fun BoxWithScaleInOutOnClick(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
-    backgroundColor: Color = Color.Transparent,
+    backgroundColor: () -> Color = { Color.Transparent },
     shape: Shape = RoundedCornerShape(0.dp),
     content: @Composable () -> Unit
 ) {
     val pressedState = remember { mutableStateOf(RowClickState.UNPRESSED) }
- //   val interactionSource = remember { MutableInteractionSource() }
     val scope = rememberCoroutineScope()
     val sizeScale by animateFloatAsState(
         if (pressedState.value == RowClickState.CLICKED) 0.85f else 1f
@@ -48,7 +47,7 @@ fun BoxWithScaleInOutOnClick(
                 scaleY = sizeScale
             )
             .clip(shape)
-            .background(backgroundColor)
+            .drawBehind { drawRect(backgroundColor()) }
             .combinedClickable(
                 onClick = {
                     scope.launch {

@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.onBackground
+import ru.maksonic.beresta.ui.theme.color.onPrimary
 import ru.maksonic.beresta.ui.theme.color.onTertiary
 import ru.maksonic.beresta.ui.theme.color.primary
 
@@ -15,10 +18,9 @@ import ru.maksonic.beresta.ui.theme.color.primary
 fun IconAction(
     modifier: Modifier = Modifier,
     icon: Painter,
-    rippleColor: Color = primary,
     action: () -> Unit
 ) {
-    BaseClickableIcon(onClick = action, rippleColor = rippleColor, modifier = modifier) {
-        Icon(painter = icon, contentDescription = "", tint = onTertiary)
+    BaseClickableIcon(onClick = action, rippleColor = primary, modifier = modifier) {
+        Icon(painter = icon, contentDescription = "", tint = onBackground)
     }
 }

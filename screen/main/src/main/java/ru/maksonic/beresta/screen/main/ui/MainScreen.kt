@@ -4,21 +4,17 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
-import org.koin.androidx.compose.get
-import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
-import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
+import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
+import ru.maksonic.beresta.screen.main.ui.core.Screen
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
-import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
@@ -28,34 +24,24 @@ import ru.maksonic.beresta.ui.widget.SystemStatusBar
 /**
  * @Author maksonic on 15.12.2022
  */
-@Preview
-@Composable
-private fun MainScreenPreview() {
-    BerestaTheme {
-        MainScreenContent()
-    }
-}
+typealias SendMessage = (Screen.Msg) -> Unit
 
 @Composable
-fun MainScreen() {
-    MainScreenContent()
+fun MainScreen(sandbox: MainSandbox = koinViewModel()) {
+    val model = sandbox.model.collectAsState().value
+    MainScreenContent(model = model, msg = sandbox::sendMsg)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun MainScreenContent(
     modifier: Modifier = Modifier,
-    bottomPanel: BottomPanelFeature = get(),
-    notesPage: NotesListFeature = get(),
-    tasksPage: TasksListFeature = get(),
+    model: Screen.Model,
+    msg: SendMessage,
 ) {
     val mainPagerState = rememberPagerState()
-    val notesFeature = notesPage.state.collectAsState().value
-    val tasksFeature = tasksPage.state.collectAsState().value
-    val isVisibleTopBar = rememberSaveable { mutableStateOf(true) }
-    val isColoredTopBar = rememberSaveable { mutableStateOf(false) }
-    val isVisibleBottomPanel = rememberSaveable { mutableStateOf(true) }
-
+    val notesSharedState = model.notesListFeature.state.collectAsState().value
+    val tasksSharedState = model.tasksListFeature.state.collectAsState().value
 
     Box(
         modifier
@@ -68,40 +54,37 @@ private fun MainScreenContent(
         ) {
             val topBarColor =
                 animateColorAsState(
-                    targetValue = if (isColoredTopBar.value) tertiaryContainer else background
+                    targetValue = if (model.isColoredTopBar) tertiaryContainer else background
                 )
 
             SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
             // TODO: Check count of recomposition.
             MainTopBar(
+                msg = msg,
                 pagerState = mainPagerState,
-                backgroundColor = { topBarColor.value }, isVisible = { isVisibleTopBar.value })
+                backgroundColor = { topBarColor.value }, isVisible = { model.isVisibleTopBar })
 
             MainPager(
-                notesPage = notesPage,
-                tasksPage = tasksPage,
-                pagerState = { mainPagerState },
-                notesFeature = notesFeature,
-                tasksFeature = tasksFeature,
-                isVisibleBottomPanel = { isVisibleBottomPanel },
-                isColoredTopBar = { isColoredTopBar },
-                isVisibleTopBar = { isVisibleTopBar },
+                msg = msg,
+                pagerState = mainPagerState,
+                notes = Pair({ model.notesListFeature.Screen() }, notesSharedState),
+                tasks = Pair({ model.tasksListFeature.Screen() }, tasksSharedState),
             )
         }
         Column {
             val systemNavBarColor =
-                if (isVisibleBottomPanel.value) tertiaryContainer else background
+                if (model.isVisibleBottomBar) tertiaryContainer else background
             val animatedSystemNavBarColor by animateColorAsState(targetValue = systemNavBarColor)
             val bottomPanelTransition =
                 animateDpAsState(
-                    targetValue = if (isVisibleBottomPanel.value) 0.dp
+                    targetValue = if (model.isVisibleBottomBar) 0.dp
                     else
                         Theme.widgetSize.bottomPanelHeightIdle,
                 )
             val bottomPanelAlpha =
-                animateFloatAsState(targetValue = if (isVisibleBottomPanel.value) 1f else 0f)
+                animateFloatAsState(targetValue = if (model.isVisibleBottomBar) 1f else 0f)
 
-            bottomPanel.Widget(modifier.graphicsLayer {
+            model.bottomPanelFeature.Widget(modifier.graphicsLayer {
                 alpha = bottomPanelAlpha.value
                 translationY = bottomPanelTransition.value.toPx()
             })

@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.*
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
+import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
@@ -15,6 +17,8 @@ import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 /**
  * @Author maksonic on 24.12.2022
  */
+internal typealias SendMessage = (Feature.Msg) -> Unit
+
 class NotesListScreen : NotesListFeature {
     private val mutableSharedNotesState = MutableStateFlow(NotesSharedState())
     override val state: StateFlow<NotesSharedState>
@@ -44,11 +48,10 @@ class NotesListScreen : NotesListFeature {
             }
             model.base.isSuccessLoading -> {
                 SuccessViewState(
-                    notes = model.notes,
-                    filters = model.notesFilter,
+                    notes = NotesCollection(model.notes),
+                    filters = FilterChipsCollection(model.chipsNotesFilter),
                     onFilterClick = {/* index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) */ },
                     msg = msg,
-                    isSelectionState = model.isSelectionState,
                     showMainTopBar = { isShow ->
                         mutableSharedNotesState.update { state ->
                             state.copy(isShowMainToolbar = isShow)
@@ -63,19 +66,18 @@ class NotesListScreen : NotesListFeature {
                         mutableSharedNotesState.update { state ->
                             state.copy(isColoredTopBar = isColored)
                         }
-                    }
-                )
+                    })
             }
         }
     }
-}
 
-@Composable
-private fun HandleEffects(effects: Flow<Feature.Eff>) {
-    HandleEffectsWithLifecycle(effects) { eff ->
-        when (eff) {
-            is Feature.Eff.ShowNoteForEdit -> {
+    @Composable
+    private fun HandleEffects(effects: Flow<Feature.Eff>) {
+        HandleEffectsWithLifecycle(effects) { eff ->
+            when (eff) {
+                is Feature.Eff.ShowNoteForEdit -> {
 
+                }
             }
         }
     }
