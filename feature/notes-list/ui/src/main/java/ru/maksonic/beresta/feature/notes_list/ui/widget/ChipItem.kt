@@ -14,7 +14,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.FilterChip
-import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
@@ -61,7 +60,7 @@ internal fun ChipItem(
         ) {
             Text(
                 text = filterChip.title,
-                style = TextDesign.caption,
+                style = TextDesign.captionSmall,
                 modifier = modifier.padding(start = dp16, end = dp16)
             )
         }

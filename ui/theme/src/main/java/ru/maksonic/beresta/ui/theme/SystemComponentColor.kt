@@ -1,11 +1,9 @@
 package ru.maksonic.beresta.ui.theme
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
 import com.google.accompanist.systemuicontroller.SystemUiController
-import ru.maksonic.beresta.ui.theme.color.background
 
 /**
  * @Author maksonic on 08.11.2022
@@ -13,21 +11,20 @@ import ru.maksonic.beresta.ui.theme.color.background
 @Composable
 fun SystemComponentColor(
     systemUiController: SystemUiController,
-    systemStatusBarColor: Color = background,
-    systemNavigationBar: Color = background,
+    useDarkIcons: Boolean,
 ) {
-    val minLuminanceForDarkIcons = .5f
-
-    SideEffect {
+    DisposableEffect(systemUiController, useDarkIcons) {
         systemUiController.setStatusBarColor(
-            color = systemStatusBarColor,
-            darkIcons = systemStatusBarColor.luminance() > minLuminanceForDarkIcons
+            color = Color.Transparent,
+            darkIcons = !useDarkIcons
         )
 
         systemUiController.setNavigationBarColor(
-            color = systemNavigationBar,
-            darkIcons = systemNavigationBar.luminance() > minLuminanceForDarkIcons,
+            color = Color.Transparent,
+            darkIcons = !useDarkIcons,
             navigationBarContrastEnforced = false
         )
+
+        onDispose { }
     }
 }

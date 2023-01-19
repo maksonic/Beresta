@@ -2,9 +2,7 @@ package ru.maksonic.beresta.feature.notes_list.ui.widget
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,54 +25,51 @@ internal fun SelectedNotesCounter(
     modifier: Modifier = Modifier
 ) {
 
-    AnimatedVisibility(
-        visible = isSelectionState(),
-        enter = fadeIn() + slideInVertically(),
-        exit = fadeOut() + shrinkVertically()
-    ) {
-
-        Surface(
-            modifier.padding(top = Theme.widgetSize.topBarNormalHeight.plus(dp6)),
-            shape = Theme.shape.cornerNormal,
-        ) {
-            Row(
-                modifier.background(tertiaryContainer),
-                verticalAlignment = Alignment.CenterVertically
+    AnimatedContent(targetState = isSelectionState()) { isShowCounter ->
+        if (isShowCounter) {
+            Surface(
+                modifier.padding(top = dp6),
+                shape = Theme.shape.cornerNormal,
             ) {
-                Text(
-                    text = stringResource(R.string.txt_helper_select_notes_count),
-                    style = TextDesign.caption,
-                    modifier = modifier
-                        .padding(start = dp8, top = dp4, bottom = dp4),
-                )
+                Row(
+                    modifier
+                        .background(tertiaryContainer)
+                        .animateContentSize(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.txt_helper_select_notes_count),
+                        style = TextDesign.captionNormal,
+                        modifier = modifier.padding(start = dp8, top = dp4, bottom = dp4)
+                    )
 
-                AnimatedContent(
-                    targetState = countNotes(),
-                    transitionSpec = {
-                        // Compare the incoming number with the previous number.
-                        if (targetState > initialState) {
-                            // If the target number is larger, it slides up and fades in
-                            // while the initial (smaller) number slides up and fades out.
-                            slideInVertically { height -> height } + fadeIn() with
-                                    slideOutVertically { height -> -height } + fadeOut()
-                        } else {
-                            // If the target number is smaller, it slides down and fades in
-                            // while the initial number slides down and fades out.
-                            slideInVertically { height -> -height } + fadeIn() with
-                                    slideOutVertically { height -> height } + fadeOut()
-                        }.using(
-                            // Disable clipping since the faded slide-in/out should
-                            // be displayed out of bounds.
-                            SizeTransform(clip = false)
+                    AnimatedContent(
+                        targetState = countNotes(),
+                        transitionSpec = {
+                            // Compare the incoming number with the previous number.
+                            if (targetState > initialState) {
+                                // If the target number is larger, it slides up and fades in
+                                // while the initial (smaller) number slides up and fades out.
+                                slideInVertically { height -> height } + fadeIn() with
+                                        slideOutVertically { height -> -height } + fadeOut()
+                            } else {
+                                // If the target number is smaller, it slides down and fades in
+                                // while the initial number slides down and fades out.
+                                slideInVertically { height -> -height } + fadeIn() with
+                                        slideOutVertically { height -> height } + fadeOut()
+                            }.using(
+                                // Disable clipping since the faded slide-in/out should
+                                // be displayed out of bounds.
+                                SizeTransform(clip = false)
+                            )
+                        }
+                    ) { targetCount ->
+                        Text(
+                            text = "$targetCount",
+                            style = TextDesign.captionNormal,
+                            modifier = modifier.padding(end = dp8)
                         )
                     }
-                ) { targetCount ->
-                    Text(
-                        text = "$targetCount",
-                        style = TextDesign.caption,
-                        modifier = modifier
-                            .padding(end = dp8),
-                    )
                 }
             }
         }

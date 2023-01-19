@@ -40,10 +40,17 @@ object TextDesign {
             color = Theme.color.onPrimaryContainer
         )
 
-    val caption: TextStyle
+    val captionSmall: TextStyle
         @Composable
         get() = TextStyle(
             fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = Theme.color.onPrimaryContainer
+        )
+    val captionNormal: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = Theme.color.onPrimaryContainer
         )

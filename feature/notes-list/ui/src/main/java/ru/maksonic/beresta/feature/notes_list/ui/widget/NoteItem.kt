@@ -57,7 +57,7 @@ internal fun NoteItem(
             )
             Text(
                 text = note.dateCreation,
-                style = TextDesign.caption.copy(color = secondary),
+                style = TextDesign.captionSmall.copy(color = secondary),
                 modifier = modifier.padding(top = dp16, bottom = dp16)
             )
         }

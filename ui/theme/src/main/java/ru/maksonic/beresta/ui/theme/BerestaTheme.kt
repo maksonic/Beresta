@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.ui.theme
 
+import android.view.WindowInsetsController
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.baseDarkPalette
 import ru.maksonic.beresta.ui.theme.color.baseLightPalette
@@ -28,8 +30,14 @@ fun BerestaTheme(
 @Composable
 fun AppTheme(
     darkTheme: Boolean = false,
+   // initControllerCompat: () -> Unit,
     content: @Composable () -> Unit
 ) {
+
+  /*  SideEffect {
+        initControllerCompat()
+    }*/
+
     BerestaTheme(
         lightPalette = baseLightPalette,
         darkPalette = baseDarkPalette,

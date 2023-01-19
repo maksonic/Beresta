@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.*
@@ -39,6 +40,10 @@ class NotesListScreen : NotesListFeature {
         msg: (Feature.Msg) -> Unit,
     ) {
         msg(Feature.Msg.Inner.SelectPanelVisibility(model.isSelectionState))
+
+        BackHandler(model.isSelectionState) {
+            msg(Feature.Msg.Ui.CancelNotesSelection)
+        }
 
         when {
             model.base.isLoading -> {
