@@ -9,4 +9,6 @@ import androidx.compose.ui.Modifier
 interface BottomPanelFeature {
     @Composable
     fun Widget(modifier: Modifier)
+
+    val state: BottomPanelSharedState
 }

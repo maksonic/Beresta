@@ -14,6 +14,7 @@ class NotesListProgram : ElmProgram<Feature.Msg, Feature.Cmd> {
     override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
         when (cmd) {
             is Feature.Cmd.FetchData -> fetchNotes(consumer)
+            else -> {}
         }
     }
 
