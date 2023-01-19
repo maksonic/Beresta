@@ -30,7 +30,6 @@ class NotesListScreen : NotesListFeature {
         val model = sandbox.model.collectAsState().value
 
         HandleEffects(effects = sandbox.effects)
-
         Content(model = model, msg = sandbox::sendMsg)
     }
 
@@ -39,6 +38,8 @@ class NotesListScreen : NotesListFeature {
         model: Feature.Model,
         msg: (Feature.Msg) -> Unit,
     ) {
+        msg(Feature.Msg.Inner.SelectPanelVisibility(model.isSelectionState))
+
         when {
             model.base.isLoading -> {
                 LoadingViewState()
@@ -50,7 +51,7 @@ class NotesListScreen : NotesListFeature {
                 SuccessViewState(
                     notes = NotesCollection(model.notes),
                     filters = FilterChipsCollection(model.chipsNotesFilter),
-                    onFilterClick = {/* index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) */ },
+                    onFilterClick = { index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) },
                     msg = msg,
                     showMainTopBar = { isShow ->
                         mutableSharedNotesState.update { state ->
@@ -66,9 +67,13 @@ class NotesListScreen : NotesListFeature {
                         mutableSharedNotesState.update { state ->
                             state.copy(isColoredTopBar = isColored)
                         }
-                    })
+                    },
+                    isSelectionState = { model.isSelectionState },
+                    selectedCounter = { model.selectedCount }
+                )
             }
         }
+
     }
 
     @Composable

@@ -49,5 +49,6 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
     implementation(Lib.Koin.compose)
 }

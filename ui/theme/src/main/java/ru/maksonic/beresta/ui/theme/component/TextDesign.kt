@@ -43,7 +43,7 @@ object TextDesign {
     val caption: TextStyle
         @Composable
         get() = TextStyle(
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = Theme.color.onPrimaryContainer
         )

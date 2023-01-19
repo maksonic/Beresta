@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui.state
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NoteItem
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
+import ru.maksonic.beresta.feature.notes_list.ui.widget.SelectedNotesCounter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
@@ -34,6 +36,8 @@ internal fun SuccessViewState(
     showMainTopBar: (Boolean) -> Unit,
     showBottomPanel: (Boolean) -> Unit,
     isColoredTopBar: (Boolean) -> Unit,
+    isSelectionState: () -> Boolean,
+    selectedCounter: () -> Int,
     modifier: Modifier = Modifier
 ) {
     val notesScrollState = rememberLazyListState()
@@ -50,9 +54,16 @@ internal fun SuccessViewState(
             }
     }
 
+    LaunchedEffect(isSelectionState) {
+        showBottomPanel(true)
+    }
     LaunchedEffect(isScrollUp) {
         showMainTopBar(isScrollUp)
-        showBottomPanel(isScrollUp)
+        if (isSelectionState()) {
+            showBottomPanel(true)
+        } else {
+            showBottomPanel(isScrollUp)
+        }
     }
     if (isScrolledEnd) {
         LaunchedEffect(Unit) {
@@ -60,32 +71,47 @@ internal fun SuccessViewState(
         }
     }
 
-    LazyColumn(
-        modifier
-            .navigationBarsPadding()
-            .fillMaxSize(),
-        state = notesScrollState,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Box(contentAlignment = Alignment.TopCenter) {
+       // val selectedCounter = mutableListOf<Int>()
 
-        stickyHeader {
-            NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote.value })
-        }
+        LazyColumn(
+            modifier
+                .navigationBarsPadding()
+                .fillMaxSize(),
+            state = notesScrollState,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        items(
-            items = notes.notes,
-            key = { note -> note.id }
-        ) { note ->
-            NoteItem(note = note, msg = msg)
-        }
+            stickyHeader {
+                NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote.value })
+            }
 
-        item() {
-            val bottomPadding = Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
-            Spacer(
-                modifier
-                    .fillMaxWidth()
-                    .height(bottomPadding)
-            )
+            items(
+                items = notes.notes,
+                key = { note -> note.id }
+            ) { note ->
+                NoteItem(note = note, msg = msg)
+            }
+
+            item() {
+                val bottomPadding = Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
+                Spacer(
+                    modifier
+                        .fillMaxWidth()
+                        .height(bottomPadding)
+                )
+            }
         }
+        SelectedNotesCounter(
+            countNotes = { selectedCounter()
+               /* selectedCounter.clear()
+                notes.notes.mapIndexed { index, note ->
+                    if (note.isSelected) {
+                        selectedCounter.add(index)
+                    }
+                }*/
+                //selectedCounter.count()
+            }, isSelectionState
+        )
     }
 }

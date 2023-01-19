@@ -10,9 +10,12 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.core.CoroutineDispatchers
+import ru.maksonic.beresta.core.MutableSharedState
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
+import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
+import ru.maksonic.beresta.feature.botom_panel.api.PanelSharedState
 import ru.maksonic.beresta.feature.botom_panel.ui.BottomPanelWidget
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.data.NotesRepositoryImpl
@@ -20,8 +23,9 @@ import ru.maksonic.beresta.feature.notes_list.data.cache.NoteCacheMapper
 import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
 import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.domain.NotesRepository
-import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListProgram
 import ru.maksonic.beresta.feature.notes_list.ui.NotesListScreen
+import ru.maksonic.beresta.feature.notes_list.ui.core.BottomPanelActionProgram
+import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListProgram
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.onboarding.data.OnboardingRepository
 import ru.maksonic.beresta.feature.onboarding.data.OnboardingVisibilityDatastore
@@ -92,7 +96,14 @@ class BerestaApp : Application() {
     private val notesListFeatureModule = module {
         single<NotesListFeature> { NotesListScreen() }
         single { NotesListProgram() }
-        viewModel { NotesListSandbox(notesListProgram = get()) }
+        single { BottomPanelActionProgram(feature = get()) }
+        viewModel {
+            NotesListSandbox(
+                notesListProgram = get(),
+                bottomPanelActionProgram = get(),
+                bottomPanelFeature = get()
+            )
+        }
     }
 
     private val notesListFeatureDataModule = module {
@@ -112,7 +123,8 @@ class BerestaApp : Application() {
     }
 
     private val bottomPanelModule = module {
-        single<BottomPanelFeature> { BottomPanelWidget() }
+        single { BottomPanelSharedState() }
+        single<BottomPanelFeature> { BottomPanelWidget(panelSharedState = get()) }
     }
 
     private val modules = listOf(
