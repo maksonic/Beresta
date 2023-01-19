@@ -71,8 +71,44 @@ internal fun SuccessViewState(
         }
     }
 
+    LazyColumn(
+        modifier
+            .navigationBarsPadding()
+            .fillMaxSize(),
+        state = notesScrollState,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        stickyHeader {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote.value })
+                SelectedNotesCounter(countNotes = { selectedCounter() }, isSelectionState)
+            }
+        }
+
+        items(
+            items = notes.notes,
+            key = { note -> note.id }
+        ) { note ->
+            NoteItem(note = note, msg = msg)
+        }
+
+        item() {
+            val bottomPadding = Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
+            Spacer(
+                modifier
+                    .fillMaxWidth()
+                    .height(bottomPadding)
+            )
+        }
+    }
+}
+
+
+/*
+*
+*
     Box(contentAlignment = Alignment.TopCenter) {
-       // val selectedCounter = mutableListOf<Int>()
 
         LazyColumn(
             modifier
@@ -102,16 +138,5 @@ internal fun SuccessViewState(
                 )
             }
         }
-        SelectedNotesCounter(
-            countNotes = { selectedCounter()
-               /* selectedCounter.clear()
-                notes.notes.mapIndexed { index, note ->
-                    if (note.isSelected) {
-                        selectedCounter.add(index)
-                    }
-                }*/
-                //selectedCounter.count()
-            }, isSelectionState
-        )
-    }
-}
+        SelectedNotesCounter(countNotes = { selectedCounter() }, isSelectionState)
+    }*/

@@ -75,7 +75,7 @@ private fun OnboardingScreenContent(
     )
 
     Column(
-        modifier.fillMaxSize(),
+        modifier.fillMaxSize().systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OverscrollBehavior {
