@@ -7,7 +7,8 @@ import ru.maksonic.beresta.core.MutableSharedState
  */
 data class PanelSharedState(
     val state: BottomPanel.State = BottomPanel.State.IDLE,
-    val action: BottomPanel.Action = BottomPanel.Action.NOTHING
+    val action: BottomPanel.Action = BottomPanel.Action.NOTHING,
+    val selectedCount: Int = 0
 )
 
 class BottomPanelSharedState : MutableSharedState<PanelSharedState>(PanelSharedState())

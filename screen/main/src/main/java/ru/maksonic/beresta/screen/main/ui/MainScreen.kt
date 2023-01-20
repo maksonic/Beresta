@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.botom_panel.api.BottomPanel
 import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
 import ru.maksonic.beresta.screen.main.ui.core.Screen
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
@@ -80,7 +79,7 @@ private fun MainScreenContent(
                 animateDpAsState(
                     targetValue = if (model.isVisibleBottomBar) 0.dp
                     else
-                        Theme.widgetSize.bottomPanelHeightIdle,
+                        Theme.widgetSize.bottomPanelHeightDefault,
                 )
             val bottomPanelAlpha =
                 animateFloatAsState(targetValue = if (model.isVisibleBottomBar) 1f else 0f)

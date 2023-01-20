@@ -38,7 +38,7 @@ fun LazyListState.isScrollUp(): Boolean {
     }.value
 }
 
-fun LazyListState.isScrolledBottom() =
+fun LazyListState.isScrolledEnd() =
     layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
 
 fun LazyListState.isScrolledTop() =

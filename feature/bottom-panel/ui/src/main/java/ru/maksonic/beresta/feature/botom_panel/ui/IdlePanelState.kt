@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.botom_panel.ui
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -10,7 +11,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.R
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.button.IconPrimaryAction
 
@@ -20,34 +23,20 @@ import ru.maksonic.beresta.ui.widget.button.IconPrimaryAction
 @Composable
 internal fun IdlePanelState(modifier: Modifier = Modifier) {
     val leftButtons = arrayOf(
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_trash,
-            action = {},
-        ),
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_folder_open,
-            action = {}
-        ),
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_search,
-            action = {}
-        ),
+        PanelItem(iconId = R.drawable.ic_trash, action = {}),
+        PanelItem(iconId = R.drawable.ic_folder_open, action = {}),
+        PanelItem(iconId = R.drawable.ic_search, action = {}),
     )
     val rightButtons = arrayOf(
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_favorite_outlined,
-            action = {}
-        ),
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_sorting,
-            action = {}
-        ),
-        BottomPanelWidget.BottomItem(
-            iconId = R.drawable.ic_grid_view,
-            action = {}
-        ),
+        PanelItem(iconId = R.drawable.ic_favorite_outlined, action = {}),
+        PanelItem(iconId = R.drawable.ic_sorting, action = {}),
+        PanelItem(iconId = R.drawable.ic_grid_view, action = {}),
     )
-    Row(modifier.padding(dp4),
+
+    Row(
+        modifier
+            .height(Theme.widgetSize.bottomPanelHeightIdle)
+            .padding(start = dp4, end = dp4),
         verticalAlignment = Alignment.CenterVertically
     ) {
         leftButtons.forEach { item ->
