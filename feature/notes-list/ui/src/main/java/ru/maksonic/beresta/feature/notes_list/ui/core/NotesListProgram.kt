@@ -21,7 +21,7 @@ class NotesListProgram : ElmProgram<Feature.Msg, Feature.Cmd> {
     private suspend fun fetchNotes(consumer: (Feature.Msg) -> Unit) {
         val date = GregorianCalendar.getInstance().time
         val fakeData = buildList {
-            repeat(100) { add(NoteUi(
+            repeat(15) { add(NoteUi(
                 id = Random.nextLong(),
                 title = "Title note $it",
                 message = "Message note $it of random generation",

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_empty_notes">Нет заметок</string>
-    <string name="txt_helper_select_notes_count">Выбрано заметок:" "</string>
 </resources>

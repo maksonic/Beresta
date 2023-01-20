@@ -118,7 +118,8 @@ class NotesListSandbox(
             model.copy(
                 notes = afterSelectedNotes,
                 selectedCount = selectedCount,
-                isSelectionState = isSelected
+                isSelectionState = isSelected,
+                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
             )
         )
     }
@@ -145,7 +146,8 @@ class NotesListSandbox(
             model.copy(
                 notes = afterSelectedNotes,
                 selectedCount = selectedCount,
-                isSelectionState = isSelected
+                isSelectionState = isSelected,
+                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
             )
         )
     }
@@ -170,7 +172,8 @@ class NotesListSandbox(
             model.copy(
                 notes = notes,
                 selectedCount = selectedCount,
-                isSelectionState = isSelected
+                isSelectionState = isSelected,
+                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
             )
         )
     }
@@ -181,7 +184,8 @@ class NotesListSandbox(
             model.copy(
                 notes = unselectedAll,
                 selectedCount = 0,
-                isSelectionState = false
+                isSelectionState = false,
+                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
             )
         )
     }

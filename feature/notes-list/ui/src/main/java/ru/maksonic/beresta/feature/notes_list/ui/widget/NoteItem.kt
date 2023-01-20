@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui.widget
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +27,9 @@ internal fun NoteItem(
     msg: SendMessage,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (note.isSelected) secondaryContainer else primaryContainer
+    val backgroundColor = animateColorAsState(
+        targetValue = if (note.isSelected) secondaryContainer else primaryContainer
+    )
 
     BoxWithScaleInOutOnClick(
         onClick = {
@@ -35,7 +38,7 @@ internal fun NoteItem(
         onLongClick = {
             msg(Feature.Msg.Ui.OnNoteLongClicked(note.id))
         },
-        backgroundColor = { backgroundColor },
+        backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
         modifier = modifier.padding(top = dp12, start = dp16, end = dp16)
 

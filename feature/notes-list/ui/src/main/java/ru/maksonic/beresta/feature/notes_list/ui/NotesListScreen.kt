@@ -54,27 +54,12 @@ class NotesListScreen : NotesListFeature {
             }
             model.base.isSuccessLoading -> {
                 SuccessViewState(
+                    msg = msg,
                     notes = NotesCollection(model.notes),
                     filters = FilterChipsCollection(model.chipsNotesFilter),
+                    mutableSharedNotesState = mutableSharedNotesState,
                     onFilterClick = { index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) },
-                    msg = msg,
-                    showMainTopBar = { isShow ->
-                        mutableSharedNotesState.update { state ->
-                            state.copy(isShowMainToolbar = isShow)
-                        }
-                    },
-                    showBottomPanel = { isShow ->
-                        mutableSharedNotesState.update { state ->
-                            state.copy(isShowBottomPanel = isShow)
-                        }
-                    },
-                    isColoredTopBar = { isColored ->
-                        mutableSharedNotesState.update { state ->
-                            state.copy(isColoredTopBar = isColored)
-                        }
-                    },
                     isSelectionState = { model.isSelectionState },
-                    selectedCounter = { model.selectedCount }
                 )
             }
         }
