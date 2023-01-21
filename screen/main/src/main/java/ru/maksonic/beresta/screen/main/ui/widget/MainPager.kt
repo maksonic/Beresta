@@ -21,6 +21,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 internal fun MainPager(
     msg: SendMessage,
     pagerState: PagerState,
+    userScrollEnabled: Boolean,
     notes: Pair<@Composable () -> Unit, NotesSharedState>,
     tasks: Pair<@Composable () -> Unit, TasksSharedState>,
     modifier: Modifier = Modifier
@@ -29,6 +30,7 @@ internal fun MainPager(
         HorizontalPager(
             count = 2,
             state = pagerState,
+            userScrollEnabled = userScrollEnabled,
             modifier = modifier.fillMaxSize()
         ) { page ->
             Page(
