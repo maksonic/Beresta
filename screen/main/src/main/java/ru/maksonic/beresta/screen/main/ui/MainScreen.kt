@@ -43,7 +43,7 @@ private fun MainScreenContent(
     val notesSharedState = model.notesListFeature.state.collectAsState().value
     val tasksSharedState = model.tasksListFeature.state.collectAsState().value
     val bottomPanelSharedState = model.bottomPanelFeature.state.state.collectAsState().value
-
+    val isSelectedState = bottomPanelSharedState.selectedCount > 0
     Box(
         modifier
             .fillMaxSize(),
@@ -58,6 +58,9 @@ private fun MainScreenContent(
                     targetValue = if (model.isColoredTopBar) tertiaryContainer else background
                 )
 
+            /*LaunchedEffect(isSelectedState) {
+                mainPagerState.
+            }*/
             SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
             // TODO: Check count of recomposition.
             MainTopBar(
@@ -65,11 +68,12 @@ private fun MainScreenContent(
                 pagerState = mainPagerState,
                 backgroundColor = { topBarColor.value },
                 isVisible = { model.isVisibleTopBar },
-                isSelectionState = { bottomPanelSharedState.selectedCount > 0})
+                isSelectionState = { isSelectedState })
 
             MainPager(
                 msg = msg,
                 pagerState = mainPagerState,
+                userScrollEnabled = !isSelectedState,
                 notes = Pair({ model.notesListFeature.Screen() }, notesSharedState),
                 tasks = Pair({ model.tasksListFeature.Screen() }, tasksSharedState),
             )
