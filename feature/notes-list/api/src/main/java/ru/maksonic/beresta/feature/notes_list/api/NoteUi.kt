@@ -8,7 +8,8 @@ data class NoteUi(
     val title: String = "",
     val message: String = "",
     val dateCreation: String = "",
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
+    val isPinned: Boolean = false
 ) {
     companion object {
         val Preview = NoteUi(

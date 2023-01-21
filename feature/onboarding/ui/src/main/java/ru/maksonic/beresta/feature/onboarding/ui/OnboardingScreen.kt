@@ -22,7 +22,7 @@ import ru.maksonic.beresta.ui.theme.component.dimenAnimFast
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.button.TertiaryButton
-import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
+import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
  * @Author maksonic on 15.12.2022

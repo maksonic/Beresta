@@ -11,6 +11,7 @@ import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
 import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
+import ru.maksonic.beresta.feature.notes_list.ui.state.EmptyNotesViewState
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
@@ -50,7 +51,8 @@ class NotesListScreen : NotesListFeature {
                 LoadingViewState()
             }
             model.notes.isEmpty() -> {
-                EmptyNotesViewState()
+
+                EmptyNotesViewState(mutableSharedNotesState)
             }
             model.base.isSuccessLoading -> {
                 SuccessViewState(

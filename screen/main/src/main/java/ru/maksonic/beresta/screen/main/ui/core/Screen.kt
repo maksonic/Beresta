@@ -24,6 +24,7 @@ object Screen {
     sealed class Msg : ElmMessage {
         sealed class Ui : Msg() {
             object OnSettingsClicked : Ui()
+            object OnShareSelectedNotes : Ui()
         }
 
         sealed class Inner : Msg() {

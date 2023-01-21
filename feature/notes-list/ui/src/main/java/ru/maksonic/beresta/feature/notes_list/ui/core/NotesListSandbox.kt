@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.ui.core
 
+import androidx.compose.runtime.mutableStateOf
 import ru.maksonic.beresta.elm.BaseModel
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
@@ -24,10 +25,7 @@ class NotesListSandbox(
     initialCmd = setOf(Feature.Cmd.FetchData, Feature.Cmd.ListenBottomPanelActions),
     subscriptions = listOf(notesListProgram, bottomPanelActionProgram)
 ) {
-    override fun update(
-        msg: Feature.Msg,
-        model: Feature.Model
-    ): UpdateResult = when (msg) {
+    override fun update(msg: Feature.Msg, model: Feature.Model): UpdateResult = when (msg) {
         is Feature.Msg.Ui.RetryFetching -> retryFetching(model)
         is Feature.Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
         is Feature.Msg.Ui.SelectAllNotes -> selectAllNotes(model)
@@ -36,6 +34,8 @@ class NotesListSandbox(
         is Feature.Msg.Inner.FetchingError -> fetchingError(model, msg)
         is Feature.Msg.Ui.RemoveSelectedItems -> afterRemoveSelectedNotes(model)
         is Feature.Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
+        is Feature.Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
+        is Feature.Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
         is Feature.Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
         is Feature.Msg.Inner.SelectPanelVisibility -> selectPanelVisibilityState(model, msg)
     }
@@ -88,17 +88,25 @@ class NotesListSandbox(
         model: Feature.Model,
     ): UpdateResult {
         val notes = model.notes.filter { !it.isSelected }
-        return UpdatedModel(model.copy(notes = notes, isSelectionState = false))
+        val bottomDrawerState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
+        return UpdatedModel(
+            model.copy(
+                notes = notes,
+                isSelectionState = false,
+                bottomPanelState = bottomDrawerState
+            )
+        )
     }
 
     private fun onNoteClicked(
         model: Feature.Model,
         msg: Feature.Msg.Ui.OnNoteClicked
     ): UpdateResult {
+        val isShowUnpinButton = mutableStateOf(false)
         var afterSelectedNotes: List<NoteUi> = model.notes
-        var selectedCount = model.selectedCount
+        var selectedCount = model.bottomPanelState.mutableState.value.selectedCount
         if (model.isSelectionState) {
-            afterSelectedNotes = model.notes.mapIndexed { index, note ->
+            afterSelectedNotes = model.notes.map { note ->
                 if (note.id == msg.id) {
                     val updatedNote = note.copy(isSelected = !note.isSelected)
                     if (updatedNote.isSelected) {
@@ -113,14 +121,20 @@ class NotesListSandbox(
         } else {
             // TODO: Action onClick note item
         }
+
         val isSelected = afterSelectedNotes.map { it.isSelected }.contains(true)
+        val selectedNotes = afterSelectedNotes.filter { it.isSelected }
+        isShowUnpinButton.value = !selectedNotes.map { !it.isPinned }.contains(true)
+
         return UpdatedModel(
             model.copy(
                 notes = afterSelectedNotes,
-                selectedCount = selectedCount,
                 isSelectionState = isSelected,
-                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
-            )
+                bottomPanelState = model.bottomPanelState.update {
+                    it.copy(selectedCount = selectedCount)
+                }
+            ),
+            commands = setOf(Feature.Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton.value))
         )
     }
 
@@ -128,8 +142,9 @@ class NotesListSandbox(
         model: Feature.Model,
         msg: Feature.Msg.Ui.OnNoteLongClicked
     ): UpdateResult {
-        var selectedCount = model.selectedCount
-        val afterSelectedNotes = model.notes.mapIndexed { index, note ->
+        val isShowUnpinButton = mutableStateOf(false)
+        var selectedCount = model.bottomPanelState.mutableState.value.selectedCount
+        val afterSelectedNotes = model.notes.map { note ->
             if (note.id == msg.id) {
                 val updatedNote = note.copy(isSelected = !note.isSelected)
                 if (updatedNote.isSelected) {
@@ -142,13 +157,18 @@ class NotesListSandbox(
                 note
         }
         val isSelected = afterSelectedNotes.map { it.isSelected }.contains(true)
+        val selectedNotes = afterSelectedNotes.filter { it.isSelected }
+        isShowUnpinButton.value = !selectedNotes.map { !it.isPinned }.contains(true)
+
         return UpdatedModel(
             model.copy(
                 notes = afterSelectedNotes,
-                selectedCount = selectedCount,
                 isSelectionState = isSelected,
-                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
-            )
+                bottomPanelState = model.bottomPanelState.update {
+                    it.copy(selectedCount = selectedCount)
+                }
+            ),
+            commands = setOf(Feature.Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton.value))
         )
     }
 
@@ -156,12 +176,12 @@ class NotesListSandbox(
         var selectedCount = 0
         val predicate: (NoteUi) -> Boolean = { note -> note.isSelected }
         val notes = if (model.notes.all(predicate)) {
-            model.notes.mapIndexed { index, note ->
+            model.notes.map { note ->
                 selectedCount = 0
                 note.copy(isSelected = false)
             }
         } else {
-            model.notes.mapIndexed { index, note ->
+            model.notes.map { note ->
                 selectedCount++
                 note.copy(isSelected = true)
             }
@@ -171,9 +191,10 @@ class NotesListSandbox(
         return UpdatedModel(
             model.copy(
                 notes = notes,
-                selectedCount = selectedCount,
                 isSelectionState = isSelected,
-                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = selectedCount) }
+                bottomPanelState = model.bottomPanelState.update {
+                    it.copy(selectedCount = selectedCount)
+                }
             )
         )
     }
@@ -183,11 +204,44 @@ class NotesListSandbox(
         return UpdatedModel(
             model.copy(
                 notes = unselectedAll,
-                selectedCount = 0,
                 isSelectionState = false,
                 bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
             )
         )
+    }
+
+    private fun pinSelectedNotesToTopList(model: Feature.Model): UpdateResult {
+        val selected = model.notes.filter { it.isSelected }
+        val pinned = selected.filter { it.isPinned }
+
+        val notes = model.notes.map { note ->
+
+            if (selected.count() > pinned.count()) {
+                if (note.isSelected) {
+                    return@map note.copy(isPinned = true)
+                } else {
+                    return@map note
+                }
+            } else {
+                if (note.isSelected) {
+                    return@map note.copy(isPinned = !note.isPinned)
+                } else {
+                    return@map note
+                }
+            }
+        }.sortedWith(comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id })
+
+        return UpdatedModel(
+            model.copy(notes = notes)
+        )
+    }
+
+    private fun replaceSelectedNotesToFolder(
+        model: Feature.Model,
+        msg: Feature.Msg.Ui.ReplaceSelectedNotes
+    ): UpdateResult {
+
+        return UpdatedModel(model)
     }
 
     private fun onFilterSelected(

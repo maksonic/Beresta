@@ -20,11 +20,11 @@ import ru.maksonic.beresta.feature.notes_list.api.isColoredMainTopBar
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleBottomPanel
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleMainTopBar
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
-import ru.maksonic.beresta.feature.notes_list.ui.widget.NoteItem
+import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
-import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
+import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isScrolledEnd
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
@@ -94,7 +94,7 @@ internal fun SuccessViewState(
 
         LazyColumn(
             state = notesScrollState,
-            modifier = modifier.navigationBarsPadding(),
+            modifier = modifier.fillMaxSize().navigationBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             stickyHeader {
@@ -105,7 +105,7 @@ internal fun SuccessViewState(
                 items = notes.notes,
                 key = { note -> note.id }
             ) { note ->
-                NoteItem(note = note, msg = msg)
+                NoteItem(note = note, msg = msg, modifier.animateItemPlacement())
             }
             item {
                 Spacer(

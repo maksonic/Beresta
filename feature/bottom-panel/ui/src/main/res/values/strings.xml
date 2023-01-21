@@ -2,6 +2,7 @@
 <resources>
     <string name="item_selected_lock">Скрыть</string>
     <string name="item_selected_pin">Закрепить</string>
+    <string name="item_selected_unpin">Открепить</string>
     <string name="item_selected_replace">Переместить</string>
     <string name="item_selected_remove">Удалить</string>
     <string name="txt_helper_select_notes_count">Выбрано заметок:" "</string>

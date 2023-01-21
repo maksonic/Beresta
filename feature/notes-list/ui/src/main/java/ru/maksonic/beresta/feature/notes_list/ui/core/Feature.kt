@@ -19,7 +19,6 @@ object Feature {
         val notes: List<NoteUi> = emptyList(),
         val chipsNotesFilter: List<FilterChip> = FilterChipsCollection.Preview.chips,
         val isSelectionState: Boolean = false,
-        val selectedCount: Int = 0,
         val errorMsg: String = "",
         val bottomPanelState: MutableSharedState<PanelSharedState>,
     ) : ElmModel
@@ -27,11 +26,13 @@ object Feature {
     sealed class Msg : ElmMessage {
         sealed class Ui : Msg() {
             object RetryFetching : Msg()
-            object RemoveSelectedItems : Ui()
             data class OnNoteClicked(val id: Long) : Ui()
             data class OnNoteLongClicked(val id: Long) : Ui()
             object SelectAllNotes : Ui()
             object CancelNotesSelection : Ui()
+            object RemoveSelectedItems : Ui()
+            data class ReplaceSelectedNotes(val selected: List<NoteUi>) : Ui()
+            object PinSelectedNotes : Ui()
             data class OnSelectNotesFilter(val index: Int) : Ui()
         }
 
@@ -45,6 +46,7 @@ object Feature {
     sealed class Cmd : ElmCommand {
         object FetchData : Cmd()
         object ListenBottomPanelActions : Cmd()
+        data class PassPinNotesStateToBottomPanel(val isShowUnpinBtn: Boolean) : Cmd()
     }
 
     sealed class Eff : ElmEffect {

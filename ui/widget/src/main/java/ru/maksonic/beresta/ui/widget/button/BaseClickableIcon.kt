@@ -29,8 +29,6 @@ fun BaseClickableIcon(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit
 ) {
-    val rippleRadius = 24.dp
-
     Box(
         modifier = modifier
             .size(Theme.widgetSize.minimumTouchTargetSize)
@@ -39,7 +37,7 @@ fun BaseClickableIcon(
                 enabled = enabled,
                 role = Role.Button,
                 interactionSource = interactionSource,
-                indication = rememberRipple(color = rippleColor, bounded = false, radius = rippleRadius)
+                indication = rememberRipple(color = rippleColor, bounded = false, radius = 24.dp)
             ),
         contentAlignment = Alignment.Center
     ) {

@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Elm.path))
