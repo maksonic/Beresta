@@ -23,7 +23,7 @@ import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.widget.functional.animateAlignmentAsState
+import ru.maksonic.beresta.ui.widget.functional.animation.animateAlignmentAsState
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.functional.tintSimply
 

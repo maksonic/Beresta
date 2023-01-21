@@ -32,6 +32,7 @@ class MainSandbox(
         is Screen.Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
         is Screen.Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
         is Screen.Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
+        is Screen.Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
     }
 
 
@@ -55,4 +56,7 @@ class MainSandbox(
 
     private fun onSettingsClicked(model: Screen.Model): UpdateResult =
         UpdatedModel(model, commands = setOf(Screen.Cmd.NavigateToSettingsScreen))
+
+    private fun onShareSelectedNotesClicked(model: Screen.Model): UpdateResult =
+        UpdatedModel(model)
 }

@@ -42,6 +42,7 @@ private fun MainScreenContent(
     val mainPagerState = rememberPagerState()
     val notesSharedState = model.notesListFeature.state.collectAsState().value
     val tasksSharedState = model.tasksListFeature.state.collectAsState().value
+    val bottomPanelSharedState = model.bottomPanelFeature.state.state.collectAsState().value
 
     Box(
         modifier
@@ -62,7 +63,9 @@ private fun MainScreenContent(
             MainTopBar(
                 msg = msg,
                 pagerState = mainPagerState,
-                backgroundColor = { topBarColor.value }, isVisible = { model.isVisibleTopBar })
+                backgroundColor = { topBarColor.value },
+                isVisible = { model.isVisibleTopBar },
+                isSelectionState = { bottomPanelSharedState.selectedCount > 0})
 
             MainPager(
                 msg = msg,

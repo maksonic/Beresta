@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.ui.widget.functional
+package ru.maksonic.beresta.ui.widget.functional.animation
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.runtime.*

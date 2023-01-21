@@ -8,6 +8,6 @@ sealed class BottomPanel {
         IDLE, SELECTED
     }
     enum class Action {
-        NOTHING, CANCEL, SELECT_ALL,
+        NOTHING, CANCEL, SELECT_ALL, REMOVE, REPLACE, PIN, HIDE
     }
 }

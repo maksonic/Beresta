@@ -29,41 +29,19 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 /**
  * @Author maksonic on 19.01.2023
  */
+
 @Composable
 fun SelectPanelState(state: BottomPanelSharedState) {
-    val items = arrayOf(
-        PanelItem(
-            iconId = drawable.ic_lock,
-            title = stringResource(id = R.string.item_selected_lock),
-            action = {}
-        ),
-        PanelItem(
-            iconId = drawable.ic_pin,
-            title = stringResource(id = R.string.item_selected_pin),
-            action = {}
-        ),
-        PanelItem(
-            iconId = drawable.ic_move,
-            title = stringResource(id = R.string.item_selected_replace),
-            action = {}
-        ),
-        PanelItem(
-            iconId = drawable.ic_remove,
-            title = stringResource(id = R.string.item_selected_remove),
-            action = {}
-        ),
-    )
     Column {
-
         AbovePanelWithCounter(state)
 
         BottomNavigation(backgroundColor = tertiaryContainer, elevation = Theme.elevation.disable) {
-            items.forEach { item ->
+            arrayBottomItems(state).forEach { item ->
                 BottomNavigationItem(
                     icon = { Icon(painterResource(item.iconId), contentDescription = null) },
-                    label = { Text(item.title) },
+                    label = { Text(stringResource(id = requireNotNull(item.titleId))) },
                     selected = false,
-                    onClick = { item.action },
+                    onClick = { item.action() },
                     unselectedContentColor = onTertiary,
                     selectedContentColor = primary,
                 )
@@ -78,7 +56,8 @@ private fun AbovePanelWithCounter(state: BottomPanelSharedState, modifier: Modif
 
     Row(
         modifier
-            .height(Theme.widgetSize.bottomPanelHeightDefault).padding(start = dp8, end = dp8)
+            .height(Theme.widgetSize.bottomPanelHeightDefault)
+            .padding(start = dp8, end = dp8)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -95,7 +74,7 @@ private fun AbovePanelWithCounter(state: BottomPanelSharedState, modifier: Modif
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun SelectedNotesCount(countNotes: () -> Int, modifier: Modifier = Modifier) {
+private fun SelectedNotesCount(countNotes: () -> Int, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(R.string.txt_helper_select_notes_count),
@@ -131,6 +110,43 @@ fun SelectedNotesCount(countNotes: () -> Int, modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Composable
+private fun arrayBottomItems(state: BottomPanelSharedState): Array<PanelItem> {
+    val current = state.state.collectAsState().value
+
+    return arrayOf(
+        PanelItem(
+            iconId = drawable.ic_lock,
+            titleId = R.string.item_selected_lock,
+            action = {}
+        ),
+        PanelItem(
+            iconId = if (current.isShowUnpinButton) drawable.ic_unpin else drawable.ic_pin,
+            titleId = if (current.isShowUnpinButton)
+                R.string.item_selected_unpin
+            else
+                R.string.item_selected_pin,
+            action = {
+                state.mutableState.update { it.copy(action = BottomPanel.Action.PIN) }
+            }
+        ),
+        PanelItem(
+            iconId = drawable.ic_move,
+            titleId = R.string.item_selected_replace,
+            action = {
+                state.mutableState.update { it.copy(action = BottomPanel.Action.REPLACE) }
+            }
+        ),
+        PanelItem(
+            iconId = drawable.ic_remove,
+            titleId = R.string.item_selected_remove,
+            action = {
+                state.mutableState.update { it.copy(action = BottomPanel.Action.REMOVE) }
+            }
+        ),
+    )
 }
 
 

@@ -5,14 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.*
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
-import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.feature.tasks_list.api.TasksSharedState
 import ru.maksonic.beresta.screen.main.ui.PageItem
 import ru.maksonic.beresta.screen.main.ui.SendMessage
 import ru.maksonic.beresta.screen.main.ui.core.Screen
-import ru.maksonic.beresta.ui.widget.functional.OverscrollBehavior
+import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
  * @Author maksonic on 20.12.2022

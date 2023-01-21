@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.*
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
+import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
  * @Author maksonic on 15.12.2022

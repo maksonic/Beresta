@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.ui.widget.functional
+package ru.maksonic.beresta.ui.widget.functional.animation
 
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
