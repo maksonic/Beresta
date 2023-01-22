@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -19,9 +21,10 @@ import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.api.isColoredMainTopBar
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleBottomPanel
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleMainTopBar
+import ru.maksonic.beresta.feature.notes_list.ui.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
-import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
+import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
@@ -49,7 +52,8 @@ internal fun SuccessViewState(
     val firstVisibleNote = notesScrollState.isVisibleFirstItem()
     val isScrollUp = notesScrollState.isScrollUp()
     val isScrolledEnd = notesScrollState.isScrolledEnd()
-
+    val openDialog = remember { mutableStateOf(true) }
+    val removeWithoutTrashCheckState = remember { mutableStateOf(true) }
     LaunchedEffect(notesScrollState) {
         snapshotFlow { notesScrollState.firstVisibleItemIndex }
             .map { index -> index == 0 }
@@ -83,6 +87,16 @@ internal fun SuccessViewState(
         }
     }
 
+    if (openDialog.value) {
+        Dialog(onDismissRequest = { openDialog.value = false }) {
+            RemoveAllNotesDialog(
+                cancelAction = { openDialog.value = false },
+                removeAllAction = {},
+                checkedState = removeWithoutTrashCheckState
+            )
+        }
+    }
+
     OverscrollBehavior {
         val bottomPaddingHeight = animateDpAsState(
             targetValue = if (isSelectionState()) {
@@ -94,7 +108,9 @@ internal fun SuccessViewState(
 
         LazyColumn(
             state = notesScrollState,
-            modifier = modifier.fillMaxSize().navigationBarsPadding(),
+            modifier = modifier
+                .fillMaxSize()
+                .navigationBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             stickyHeader {
@@ -115,6 +131,8 @@ internal fun SuccessViewState(
                 )
             }
         }
+
+
     }
 }
 
