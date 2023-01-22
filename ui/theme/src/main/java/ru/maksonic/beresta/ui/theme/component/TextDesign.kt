@@ -20,7 +20,7 @@ object TextDesign {
     val title: TextStyle
         @Composable
         get() = TextStyle(
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             color = Theme.color.onPrimaryContainer
         )

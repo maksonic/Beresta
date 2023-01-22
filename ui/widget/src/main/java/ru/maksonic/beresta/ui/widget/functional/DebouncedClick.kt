@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
  * @Author maksonic on 15.11.2022
  */
 fun Modifier.clickAction(
+    rippleColor: Color = Color.Black,
     timeOut: Long = 300,
     onClick: () -> Unit,
 ) = composed(
@@ -32,7 +33,7 @@ fun Modifier.clickAction(
     val coroutineScope = rememberCoroutineScope()
     val currentClickListener by rememberUpdatedState(onClick)
 
-    Modifier.rippleClickable(isEnabled) {
+    Modifier.rippleClickable(isEnabled, rippleColor = rippleColor) {
         coroutineScope.launch {
             isEnabled = false
             currentClickListener.invoke()
