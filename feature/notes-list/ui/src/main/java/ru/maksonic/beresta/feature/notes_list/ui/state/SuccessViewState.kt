@@ -11,19 +11,18 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
 import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
-import ru.maksonic.beresta.feature.notes_list.api.isColoredMainTopBar
-import ru.maksonic.beresta.feature.notes_list.api.isVisibleBottomPanel
-import ru.maksonic.beresta.feature.notes_list.api.isVisibleMainTopBar
-import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
+import ru.maksonic.beresta.feature.notes_list.api.feature.isColoredMainTopBar
+import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleBottomPanel
+import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleMainTopBar
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
+import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
@@ -35,8 +34,6 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 25.12.2022
  */
-
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
@@ -53,6 +50,7 @@ internal fun SuccessViewState(
     val isScrollUp = notesScrollState.isScrollUp()
     val isScrolledEnd = notesScrollState.isScrolledEnd()
     val removeWithoutTrashCheckState = remember { mutableStateOf(false) }
+
     LaunchedEffect(notesScrollState) {
         snapshotFlow { notesScrollState.firstVisibleItemIndex }
             .map { index -> index == 0 }
@@ -124,8 +122,6 @@ internal fun SuccessViewState(
                 )
             }
         }
-
-
     }
 }
 

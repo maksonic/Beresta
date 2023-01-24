@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.BaseDomain.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Navigation.Router.path))
@@ -82,6 +83,7 @@ dependencies {
     implementation(project(BaseModule.Feature.ThemeSelector.path))
     implementation(project(BaseModule.Feature.SplashScreen.path))
 
+    implementation(project(BaseModule.Feature.TrashList.Domain.path))
     implementation(project(BaseModule.Feature.TrashList.Ui.path))
 
     implementation(project(BaseModule.Ui.Theme.path))

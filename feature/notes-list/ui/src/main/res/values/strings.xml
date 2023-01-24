@@ -6,4 +6,5 @@
     <string name="checkbox_caption_remove_all_notes">Удалить все заметки насовсем.</string>
     <string name="body_dialog_remove_all_notes">Заметки будут перенесены в корзину c возможностью восстановления, но вы можете удалить их насовсем.</string>
     <string name="title_dialog_remove_all_notes">Удалить все заметки?</string>
+    <string name="error_fetching_notes">Не удалось получить список заметок.</string>
 </resources>

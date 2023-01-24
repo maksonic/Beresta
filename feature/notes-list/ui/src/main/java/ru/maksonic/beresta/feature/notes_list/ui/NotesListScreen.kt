@@ -6,9 +6,9 @@ import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.*
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
-import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.EmptyNotesViewState
@@ -47,13 +47,8 @@ class NotesListScreen : NotesListFeature {
         }
 
         when {
-            model.base.isLoading -> {
-                LoadingViewState()
-            }
-            model.notes.isEmpty() -> {
-
-                EmptyNotesViewState(mutableSharedNotesState)
-            }
+            model.base.isLoading -> LoadingViewState()
+            model.notes.isEmpty() -> EmptyNotesViewState(mutableSharedNotesState)
             model.base.isSuccessLoading -> {
                 SuccessViewState(
                     model = model,

@@ -20,7 +20,7 @@ object Feature {
         val chipsNotesFilter: List<FilterChip> = FilterChipsCollection.Preview.chips,
         val isSelectionState: Boolean = false,
         val isVisibleRemoveAllNotesDialog: Boolean = false,
-        val errorMsg: String = "",
+        val errorMsg: String = "Неизвестная ошибка",
         val bottomPanelState: MutableSharedState<PanelSharedState>,
     ) : ElmModel
 

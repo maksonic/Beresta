@@ -8,15 +8,17 @@ data class NoteUi(
     val title: String = "",
     val message: String = "",
     val dateCreation: String = "",
+    val currentFolder: String = "",
     val isSelected: Boolean = false,
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
+    val isMovedToTrash: Boolean = false
 ) {
     companion object {
         val Preview = NoteUi(
             id = 0,
             title = "Note title preview",
             message = "Note message preview",
-            dateCreation = "12:00 AM - 1 January 1970"
+            dateCreation = "12:00 AM - 1 January 1970",
         )
     }
 }

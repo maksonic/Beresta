@@ -14,4 +14,5 @@ data class NoteDomain(
     val title: String = "",
     val message: String = "",
     val dateCreation: Calendar = Calendar.getInstance(),
+    val isMovedToTrash: Boolean = false
 )

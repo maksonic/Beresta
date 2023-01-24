@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes_list.api
+package ru.maksonic.beresta.feature.notes_list.api.feature
 
 import androidx.compose.runtime.Composable
 import kotlinx.coroutines.flow.StateFlow

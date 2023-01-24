@@ -1,14 +1,23 @@
 package ru.maksonic.beresta.feature.notes_list.ui.core
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import ru.maksonic.beresta.core.ResourceProvider
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.api.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
+import ru.maksonic.beresta.feature.notes_list.ui.R
 import java.util.*
 
 /**
  * @Author maksonic on 25.12.2022
  */
-class NotesListProgram : ElmProgram<Feature.Msg, Feature.Cmd> {
+class NotesListProgram(
+    private val notesUseCase: FetchNotesUseCase,
+    private val mapper: NoteUiMapper,
+    private val resourceProvider: ResourceProvider
+) : ElmProgram<Feature.Msg, Feature.Cmd> {
 
     override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
         when (cmd) {
@@ -18,16 +27,15 @@ class NotesListProgram : ElmProgram<Feature.Msg, Feature.Cmd> {
     }
 
     private suspend fun fetchNotes(consumer: (Feature.Msg) -> Unit) {
-        val date = GregorianCalendar.getInstance().time
-        val fakeData = buildList {
-            repeat(15) { add(NoteUi(
-                id = it.toLong(),
-                title = "Title note $it",
-                message = "Message note $it of random generation",
-                dateCreation = "$date"
-            ))}
+        runCatching {
+            notesUseCase().collect { notesDomain ->
+                val notes = mapper.mapListTo(notesDomain)
+                consumer(Feature.Msg.Inner.FetchingSuccess(notes))
+            }
+        }.onFailure { fail ->
+            val message =
+                fail.localizedMessage ?: resourceProvider.getString(R.string.error_fetching_notes)
+            consumer(Feature.Msg.Inner.FetchingError(message))
         }
-        delay(1000)
-        consumer(Feature.Msg.Inner.FetchingSuccess(fakeData))
     }
 }

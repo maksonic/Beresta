@@ -73,7 +73,7 @@ internal fun NoteItem(
 }
 
 @Composable
-fun TopPanelIndication(isPinned: () -> Boolean, modifier: Modifier = Modifier) {
+private fun TopPanelIndication(isPinned: () -> Boolean, modifier: Modifier = Modifier) {
 
     Row(
         modifier
