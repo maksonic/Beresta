@@ -3,7 +3,7 @@ package ru.maksonic.beresta.screen.main.ui.core
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 
 /**

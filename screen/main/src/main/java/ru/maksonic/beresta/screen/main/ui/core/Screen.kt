@@ -1,13 +1,10 @@
 package ru.maksonic.beresta.screen.main.ui.core
 
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import ru.maksonic.beresta.elm.*
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 
 /**

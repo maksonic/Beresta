@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BaseModule.Feature.Onboarding.Ui.path))
     implementation(project(BaseModule.Feature.SplashScreen.path))
     implementation(project(BaseModule.Feature.TrashList.Ui.path))
+    implementation(project(BaseModule.Feature.EditNote.Ui.path))
     implementation(project(BaseModule.Screen.Main.path))
     implementation(project(BaseModule.Screen.Settings.path))
     implementation(Lib.Accompanist.navigation)

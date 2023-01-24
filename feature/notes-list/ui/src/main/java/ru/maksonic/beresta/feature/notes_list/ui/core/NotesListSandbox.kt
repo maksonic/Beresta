@@ -92,7 +92,13 @@ class NotesListSandbox(
         model: Feature.Model,
     ): UpdateResult {
         val notRemove = model.notes
-        val notes = model.notes.filter { !it.isSelected }
+        val removed = model.notes.map {note ->
+            if (note.isSelected)
+                return@map note.copy(isMovedToTrash = true)
+            else
+                return@map note.copy(isMovedToTrash = false)
+        }
+        val notes = removed.filter { !it.isMovedToTrash }
         val isAllSelected = notes.all { it.isSelected }
         val bottomDrawerState = model.bottomPanelState.update { panelState ->
             panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)

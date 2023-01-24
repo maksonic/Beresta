@@ -9,13 +9,16 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ru.maksonic.beresta.base_domain.DateFormatter
 import ru.maksonic.beresta.core.CoroutineDispatchers
+import ru.maksonic.beresta.core.ResourceProvider
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
 import ru.maksonic.beresta.feature.botom_panel.ui.BottomPanelWidget
-import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
+import ru.maksonic.beresta.feature.notes_list.api.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.data.NotesRepositoryImpl
 import ru.maksonic.beresta.feature.notes_list.data.cache.NoteCacheMapper
 import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
@@ -23,6 +26,7 @@ import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.ui.NotesListScreen
 import ru.maksonic.beresta.feature.notes_list.ui.core.BottomPanelActionsProgram
+import ru.maksonic.beresta.feature.notes_list.ui.core.NotesUiMapperImpl
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListProgram
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.onboarding.data.OnboardingRepository
@@ -35,6 +39,7 @@ import ru.maksonic.beresta.feature.splash_screen.SplashViewModel
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.feature.tasks_list.ui.TasksListScreen
 import ru.maksonic.beresta.feature.theme_selector.ThemeSelector
+import ru.maksonic.beresta.feature.trash_list.domain.FetchMovedToTrashNotesUseCase
 import ru.maksonic.beresta.feature.trash_list.ui.core.TrashProgram
 import ru.maksonic.beresta.feature.trash_list.ui.core.TrashSandbox
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
@@ -56,10 +61,11 @@ class BerestaApp : Application() {
 
     private val settingsModule = module {
         single { SettingsProgram() }
-        viewModel { SettingsSandbox(program = get())}
+        viewModel { SettingsSandbox(program = get()) }
     }
 
     private val coreModule = module {
+        single<ResourceProvider> { ResourceProvider.Core(androidContext()) }
         single(named(CoroutineDispatchers.IO)) { Dispatchers.IO }
         single(named(CoroutineDispatchers.DEFAULT)) { Dispatchers.Default }
         single(named(CoroutineDispatchers.MAIN)) { Dispatchers.Main }
@@ -101,8 +107,9 @@ class BerestaApp : Application() {
     }
 
     private val notesListFeatureModule = module {
+        single<NoteUiMapper> { NotesUiMapperImpl(dateFormatter = DateFormatter) }
         single<NotesListFeature> { NotesListScreen() }
-        single { NotesListProgram() }
+        single { NotesListProgram(notesUseCase = get(), mapper = get(), resourceProvider = get()) }
         single { BottomPanelActionsProgram(feature = get()) }
         viewModel {
             NotesListSandbox(
@@ -135,7 +142,8 @@ class BerestaApp : Application() {
     }
 
     private val trashModule = module {
-        single { TrashProgram() }
+        single { FetchMovedToTrashNotesUseCase(repository = get()) }
+        single { TrashProgram(useCase = get(), mapper = get()) }
         viewModel { TrashSandbox(trashProgram = get()) }
     }
 

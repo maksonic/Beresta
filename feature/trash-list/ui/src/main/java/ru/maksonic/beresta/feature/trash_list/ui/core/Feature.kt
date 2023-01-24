@@ -11,11 +11,13 @@ object Feature {
     @Stable
     data class Model(
         val base: BaseModel = BaseModel(),
-        val notes: List<NoteUi> = emptyList(),
+        val removedNotes: List<NoteUi> = emptyList(),
     ) : ElmModel
 
     sealed class Msg : ElmMessage {
         sealed class Ui : Msg() {
+            data class OnNoteClicked(val id: Long) : Ui()
+            data class OnNoteLongClicked(val id: Long) : Ui()
             object TopBarBackPressed : Ui()
         }
 

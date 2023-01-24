@@ -53,7 +53,7 @@ internal fun NotesFilterChips(
             LazyRow(
                 state = lazyRowState,
                 modifier = modifier
-                    .weight(1f)
+                    .weight(1f, false)
                     .padding(end = dp8),
                 horizontalArrangement = Arrangement.spacedBy(dp8)
             ) {
@@ -73,7 +73,7 @@ internal fun NotesFilterChips(
         Surface(
             elevation = Theme.elevation.dp2,
             shape = Theme.shape.cornerNormal,
-            color = transparent
+            color = transparent,
         ) {
             val btnColor = animateColorAsState(
                 targetValue = if (isVisibleFirstNote()) primaryContainer else tertiary

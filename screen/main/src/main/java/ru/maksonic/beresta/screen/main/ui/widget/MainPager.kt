@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.*
-import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
 import ru.maksonic.beresta.feature.tasks_list.api.TasksSharedState
 import ru.maksonic.beresta.screen.main.ui.PageItem
 import ru.maksonic.beresta.screen.main.ui.SendMessage

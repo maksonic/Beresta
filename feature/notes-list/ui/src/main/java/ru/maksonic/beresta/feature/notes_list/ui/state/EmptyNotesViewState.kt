@@ -14,9 +14,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.maksonic.beresta.feature.notes_list.api.NotesSharedState
-import ru.maksonic.beresta.feature.notes_list.api.isColoredMainTopBar
-import ru.maksonic.beresta.feature.notes_list.api.isVisibleMainTopBar
+import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
+import ru.maksonic.beresta.feature.notes_list.api.feature.isColoredMainTopBar
+import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleMainTopBar
 import ru.maksonic.beresta.feature.notes_list.ui.R
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.component.TextDesign

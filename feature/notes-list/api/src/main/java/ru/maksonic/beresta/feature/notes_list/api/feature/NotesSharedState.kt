@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes_list.api
+package ru.maksonic.beresta.feature.notes_list.api.feature
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

@@ -49,5 +49,8 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
+    implementation(project(BaseModule.BaseDomain.path))
+    implementation(project(BaseModule.Feature.NotesList.Domain.path))
     implementation(Lib.Koin.compose)
 }
