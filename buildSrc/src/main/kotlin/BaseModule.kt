@@ -131,6 +131,18 @@ sealed class BaseModule(val path: String, val namespace: String) {
             )
         }
 
+        object TrashList {
+            object Domain : BaseModule(
+                path = ":feature:trash-list:domain",
+                namespace = "ru.maksonic.beresta.feature.trash_list.domain"
+            )
+
+            object Ui : BaseModule(
+                path = ":feature:trash-list:ui",
+                namespace = "ru.maksonic.beresta.feature.trash_list.ui"
+            )
+        }
+
         object BottomPanel {
             object Api : BaseModule(
                 path = ":feature:bottom-panel:api",

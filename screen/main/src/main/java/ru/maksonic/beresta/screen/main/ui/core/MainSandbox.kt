@@ -12,7 +12,7 @@ import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 private typealias UpdateResult = UpdatedModel<Screen.Model, Set<Screen.Cmd>, Set<Screen.Eff>>
 
 class MainSandbox(
-    navigationProgram: MainNavigationProgram,
+    bottomPanelActionsMainProgram: BottomPanelActionsMainProgram,
     notesListFeature: NotesListFeature,
     tasksListFeature: TasksListFeature,
     bottomPanelFeature: BottomPanelFeature
@@ -22,17 +22,18 @@ class MainSandbox(
         tasksListFeature = tasksListFeature,
         bottomPanelFeature = bottomPanelFeature
     ),
-    subscriptions = listOf(navigationProgram)
+    initialCmd = setOf(Screen.Cmd.ListenBottomPanelActions),
+    subscriptions = listOf(bottomPanelActionsMainProgram)
 ) {
-    override fun update(
-        msg: Screen.Msg,
-        model: Screen.Model
-    ): UpdateResult = when (msg) {
+    override fun update(msg: Screen.Msg, model: Screen.Model): UpdateResult = when (msg) {
+        is Screen.Msg.Inner.FetchNavEntry -> UpdatedModel(model.copy(entry = msg.from))
         is Screen.Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
         is Screen.Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
         is Screen.Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
         is Screen.Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
         is Screen.Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
+        is Screen.Msg.Ui.OnTrashClicked -> onTrashClicked(model)
+        is Screen.Msg.Ui.OnSearchClicked -> onSearchClicked(model)
     }
 
 
@@ -55,8 +56,12 @@ class MainSandbox(
         UpdatedModel(model.copy(isColoredTopBar = msg.value))
 
     private fun onSettingsClicked(model: Screen.Model): UpdateResult =
-        UpdatedModel(model, commands = setOf(Screen.Cmd.NavigateToSettingsScreen))
+        UpdatedModel(model, effects = setOf(Screen.Eff.NavigateToSettings))
 
-    private fun onShareSelectedNotesClicked(model: Screen.Model): UpdateResult =
-        UpdatedModel(model)
+    private fun onShareSelectedNotesClicked(model: Screen.Model): UpdateResult = UpdatedModel(model)
+
+    private fun onTrashClicked(model: Screen.Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Screen.Eff.NavigateToTrash))
+
+    private fun onSearchClicked(model: Screen.Model): UpdateResult = UpdatedModel(model)
 }

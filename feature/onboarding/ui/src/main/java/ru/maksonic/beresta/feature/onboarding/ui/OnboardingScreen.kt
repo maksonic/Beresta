@@ -17,6 +17,7 @@ import ru.maksonic.beresta.feature.onboarding.domain.OnboardingEntity
 import ru.maksonic.beresta.feature.onboarding.ui.core.Feature
 import ru.maksonic.beresta.feature.onboarding.ui.core.OnboardingSandbox
 import ru.maksonic.beresta.feature.onboarding.ui.widget.OnboardingItem
+import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.component.dimenAnimFast
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -27,35 +28,18 @@ import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 /**
  * @Author maksonic on 15.12.2022
  */
-
-@OptIn(ExperimentalPagerApi::class)
-@Preview(showBackground = true)
-@Composable
-private fun OnboardingScreenPreview() {
-    val mock = OnboardingEntity.preview()
-        .copy(image = ru.maksonic.beresta.ui.theme.R.drawable.maksonic_logo)
-
-    BerestaTheme {
-        OnboardingScreenContent(
-            onboardings = arrayOf(mock),
-            pagerState = rememberPagerState(),
-            sendMsg = {}
-        )
-    }
-}
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OnboardingScreen(sandbox: OnboardingSandbox = koinViewModel()) {
+fun OnboardingScreen(router: OnboardingRouter, sandbox: OnboardingSandbox = koinViewModel()) {
     val model = sandbox.model.collectAsState().value
     val pagerState = rememberPagerState()
 
-    HandleUiEffects(sandbox.effects, pagerState) {}
+    HandleUiEffects(sandbox.effects, pagerState, onGoogleAuthClicked = {}, router)
 
     OnboardingScreenContent(
         onboardings = model.onboardings,
         pagerState = pagerState,
-        sendMsg = sandbox::sendMsg
+        msg = sandbox::sendMsg,
     )
 }
 
@@ -64,7 +48,7 @@ fun OnboardingScreen(sandbox: OnboardingSandbox = koinViewModel()) {
 private fun OnboardingScreenContent(
     onboardings: Array<OnboardingEntity>,
     pagerState: PagerState,
-    sendMsg: (Feature.Msg) -> Unit,
+    msg: (Feature.Msg) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isLastCurrentPage = pagerState.currentPage == onboardings.lastIndex
@@ -75,7 +59,9 @@ private fun OnboardingScreenContent(
     )
 
     Column(
-        modifier.fillMaxSize().systemBarsPadding(),
+        modifier
+            .fillMaxSize()
+            .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OverscrollBehavior {
@@ -88,15 +74,31 @@ private fun OnboardingScreenContent(
             }
         }
         PrimaryButton(
-            action = { sendMsg(Feature.Msg.Ui.OnPrimaryBtnClicked) },
+            action = { msg(Feature.Msg.Ui.OnPrimaryBtnClicked) },
             title = stringResource(id = titlePrimaryBtn),
         )
         Spacer(modifier = modifier.padding(bottom = dp16))
         TertiaryButton(
-            action = { sendMsg(Feature.Msg.Ui.OnSkipSyncBtnClicked) },
+            action = { msg(Feature.Msg.Ui.OnSkipSyncBtnClicked) },
             title = stringResource(R.string.btnSkipAuthTitle),
             modifier = modifier.alpha(alphaDoNotSyncBtn)
         )
         Spacer(modifier = modifier.padding(bottom = dp16))
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun OnboardingScreenPreview() {
+    val mock = OnboardingEntity.preview()
+        .copy(image = ru.maksonic.beresta.ui.theme.R.drawable.maksonic_logo)
+
+    BerestaTheme {
+        OnboardingScreenContent(
+            onboardings = arrayOf(mock),
+            pagerState = rememberPagerState(),
+            msg = {},
+        )
     }
 }

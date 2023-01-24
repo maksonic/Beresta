@@ -2,7 +2,7 @@ package ru.maksonic.beresta.feature.splash_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -10,6 +10,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onSurface
@@ -21,12 +22,22 @@ import ru.maksonic.beresta.ui.theme.color.onSurface
 @Composable
 private fun SplashScreenPreview() {
     BerestaTheme {
-        SplashScreen()
+        SplashScreen(router = SplashScreenRouter { })
     }
 }
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier, viewModel: SplashViewModel = koinViewModel()) {
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SplashViewModel = koinViewModel(),
+    router: SplashScreenRouter
+) {
+    val state = viewModel.destination.collectAsState().value
+
+    SideEffect {
+        if (state.isNavigate) router.toOnboardingOrMain(state.route)
+    }
+
     /**
      * @see [size] and [padding] compare with [ru.maksonic.beresta.feature.splash_screen.R.drawable.splash_bg]
      */

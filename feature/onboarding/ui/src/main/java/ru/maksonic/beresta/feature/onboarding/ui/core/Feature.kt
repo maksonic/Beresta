@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.onboarding.ui.core
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
@@ -14,10 +14,7 @@ import ru.maksonic.beresta.feature.onboarding.domain.OnboardingEntity
 object Feature {
 
     @Stable
-    @Immutable
-    data class Model(
-        val onboardings: Array<OnboardingEntity> = emptyArray()
-    ) : ElmModel {
+    data class Model(val onboardings: Array<OnboardingEntity> = emptyArray()) : ElmModel {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -47,12 +44,13 @@ object Feature {
     }
 
     sealed class Cmd : ElmCommand {
-        object NavigateToMainScreen : Cmd()
         object FetchOnboardings : Cmd()
+        object NotShowAgain : Cmd()
     }
 
     sealed class Eff : ElmEffect {
         object SlideNextPage : Eff()
+        object NavigateToMain : Eff()
     }
 
 

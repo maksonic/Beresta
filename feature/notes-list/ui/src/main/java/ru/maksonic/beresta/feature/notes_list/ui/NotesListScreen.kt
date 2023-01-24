@@ -56,16 +56,15 @@ class NotesListScreen : NotesListFeature {
             }
             model.base.isSuccessLoading -> {
                 SuccessViewState(
+                    model = model,
                     msg = msg,
                     notes = NotesCollection(model.notes),
                     filters = FilterChipsCollection(model.chipsNotesFilter),
                     mutableSharedNotesState = mutableSharedNotesState,
                     onFilterClick = { index -> msg(Feature.Msg.Ui.OnSelectNotesFilter(index)) },
-                    isSelectionState = { model.isSelectionState },
                 )
             }
         }
-
     }
 
     @Composable

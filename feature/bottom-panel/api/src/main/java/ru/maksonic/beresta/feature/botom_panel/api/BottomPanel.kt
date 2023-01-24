@@ -7,7 +7,17 @@ sealed class BottomPanel {
     enum class State {
         IDLE, SELECTED
     }
-    enum class Action {
-        NOTHING, CANCEL, SELECT_ALL, REMOVE, REPLACE, PIN, HIDE
+
+    sealed class Action {
+        sealed class Notes : Action() {
+            enum class Idle {
+                TRASH, FOLDERS, SEARCH, ADD_NOTE, FAVORITES, SORT_BY, SWITCH_VIEW_STATE
+            }
+
+            enum class Select {
+                NOTHING, CANCEL, SELECT_ALL, REMOVE, REPLACE, PIN, HIDE
+            }
+        }
+
     }
 }

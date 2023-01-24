@@ -3,9 +3,10 @@ package ru.maksonic.beresta.navigation.router
 /**
  * @Author maksonic on 15.11.2022
  */
-object Destination : AbstractRoute("root") {
-    object Splash : AbstractRoute("splash")
-    object Onboarding : AbstractRoute("onboarding")
-    object Main : AbstractRoute("main")
-    object Settings : AbstractRoute("settings")
+object Destination : AbstractDestination("root") {
+    object Splash : AbstractDestination("splash")
+    object Onboarding : AbstractDestination("onboarding")
+    object Main : AbstractDestination("main")
+    object Settings : AbstractDestination("settings")
+    object TrashList : AbstractDestination("trash_list")
 }

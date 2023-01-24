@@ -10,12 +10,10 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.core.CoroutineDispatchers
-import ru.maksonic.beresta.core.MutableSharedState
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
-import ru.maksonic.beresta.feature.botom_panel.api.PanelSharedState
 import ru.maksonic.beresta.feature.botom_panel.ui.BottomPanelWidget
 import ru.maksonic.beresta.feature.notes_list.api.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.data.NotesRepositoryImpl
@@ -24,7 +22,7 @@ import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
 import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.ui.NotesListScreen
-import ru.maksonic.beresta.feature.notes_list.ui.core.BottomPanelActionProgram
+import ru.maksonic.beresta.feature.notes_list.ui.core.BottomPanelActionsProgram
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListProgram
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.onboarding.data.OnboardingRepository
@@ -37,10 +35,14 @@ import ru.maksonic.beresta.feature.splash_screen.SplashViewModel
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.feature.tasks_list.ui.TasksListScreen
 import ru.maksonic.beresta.feature.theme_selector.ThemeSelector
+import ru.maksonic.beresta.feature.trash_list.ui.core.TrashProgram
+import ru.maksonic.beresta.feature.trash_list.ui.core.TrashSandbox
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
-import ru.maksonic.beresta.navigation.router.AppNavigator
-import ru.maksonic.beresta.screen.main.ui.core.MainNavigationProgram
+import ru.maksonic.beresta.navigation.graph_builder.AppNavigator
+import ru.maksonic.beresta.screen.main.ui.core.BottomPanelActionsMainProgram
 import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
+import ru.maksonic.beresta.screen.settings.core.SettingsProgram
+import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
 
 /**
  * @Author maksonic on 15.12.2022
@@ -52,6 +54,11 @@ class BerestaApp : Application() {
         viewModelOf(::MainViewModel)
     }
 
+    private val settingsModule = module {
+        single { SettingsProgram() }
+        viewModel { SettingsSandbox(program = get())}
+    }
+
     private val coreModule = module {
         single(named(CoroutineDispatchers.IO)) { Dispatchers.IO }
         single(named(CoroutineDispatchers.DEFAULT)) { Dispatchers.Default }
@@ -59,7 +66,7 @@ class BerestaApp : Application() {
     }
 
     private val navigationModule = module {
-        single<GraphBuilder> { GraphBuilder.Builder() }
+        single<GraphBuilder> { GraphBuilder.Builder(navigator = get()) }
         single { AppNavigator() }
     }
 
@@ -68,11 +75,11 @@ class BerestaApp : Application() {
     }
 
     private val splashScreenModule = module {
-        viewModel { SplashViewModel(navigator = get(), isOnboarding = get()) }
+        viewModel { SplashViewModel(onboardingVisibility = get()) }
     }
 
     private val onboardingFeatureModule = module {
-        single { Program(repository = get(), onboardingVisibility = get(), navigator = get()) }
+        single { Program(repository = get(), onboardingVisibility = get()) }
         viewModel { OnboardingSandbox(program = get()) }
     }
 
@@ -82,13 +89,13 @@ class BerestaApp : Application() {
     }
 
     private val mainScreenModule = module {
-        single { MainNavigationProgram(navigator = get()) }
+        single { BottomPanelActionsMainProgram(feature = get()) }
         viewModel {
             MainSandbox(
-                navigationProgram = get(),
+                bottomPanelActionsMainProgram = get(),
                 notesListFeature = get(),
                 tasksListFeature = get(),
-                bottomPanelFeature = get()
+                bottomPanelFeature = get(),
             )
         }
     }
@@ -96,11 +103,11 @@ class BerestaApp : Application() {
     private val notesListFeatureModule = module {
         single<NotesListFeature> { NotesListScreen() }
         single { NotesListProgram() }
-        single { BottomPanelActionProgram(feature = get()) }
+        single { BottomPanelActionsProgram(feature = get()) }
         viewModel {
             NotesListSandbox(
                 notesListProgram = get(),
-                bottomPanelActionProgram = get(),
+                bottomPanelActionsProgram = get(),
                 bottomPanelFeature = get()
             )
         }
@@ -127,8 +134,14 @@ class BerestaApp : Application() {
         single<BottomPanelFeature> { BottomPanelWidget(panelSharedState = get()) }
     }
 
+    private val trashModule = module {
+        single { TrashProgram() }
+        viewModel { TrashSandbox(trashProgram = get()) }
+    }
+
     private val modules = listOf(
         appModule,
+        settingsModule,
         splashScreenModule,
         navigationModule,
         databaseModule,
@@ -140,7 +153,8 @@ class BerestaApp : Application() {
         tasksListFeatureModule,
         themeSelectorFeatureModule,
         coreModule,
-        bottomPanelModule
+        bottomPanelModule,
+        trashModule
     )
 
     override fun onCreate() {

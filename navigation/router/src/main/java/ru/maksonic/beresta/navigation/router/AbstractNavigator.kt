@@ -1,17 +1,31 @@
 package ru.maksonic.beresta.navigation.router
 
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 
 /**
- * @Author maksonic on 15.11.2022
+ * @Author maksonic on 24.01.2023
  */
 abstract class AbstractNavigator {
     lateinit var navController: NavHostController
 
-    fun backPressed() = navController.popBackStack()
+    fun navigate(
+        from: NavBackStackEntry,
+        destination: String,
+        isPopUp: Boolean = true,
+        popUpRoute: String = Destination.Onboarding.route
+    ) {
+        if (from.lifecycleIsResumed())
+            navController.navigate(destination) {
+                isPopUpTo(isPopUp, popUpRoute)
+            }
+    }
 
-    private fun NavOptionsBuilder.isPopUpTo(isPopUp: Boolean, route: String ) {
+    fun backPressed() = navController.navigateUp()
+
+    private fun NavOptionsBuilder.isPopUpTo(isPopUp: Boolean, route: String) {
         if (isPopUp) {
             popUpTo(route) {
                 inclusive = true
@@ -21,17 +35,8 @@ abstract class AbstractNavigator {
         }
     }
 
-    fun navigate(
-        destination: String,
-        isPopUp: Boolean = true,
-        popUpRoute: String = Destination.Onboarding.route
-    ) {
-        if (destination != navController.currentDestination?.route)
-            navController.navigate(destination) {
-               isPopUpTo(isPopUp, popUpRoute)
-            }
-        else return
-    }
+    private fun NavBackStackEntry.lifecycleIsResumed() =
+        this.lifecycle.currentState == Lifecycle.State.RESUMED
 
     fun getStringArgument(key: String): String =
         navController.currentBackStackEntry?.arguments?.getString(key) ?: ""

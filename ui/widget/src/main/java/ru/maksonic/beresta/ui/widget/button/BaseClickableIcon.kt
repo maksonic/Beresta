@@ -12,10 +12,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.component.Shape
 
 /**
  * @Author maksonic on 21.11.2022
@@ -25,13 +28,14 @@ fun BaseClickableIcon(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    rippleColor: Color = Color.White,
+    rippleColor: Color = primary,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit
 ) {
     Box(
         modifier = modifier
             .size(Theme.widgetSize.minimumTouchTargetSize)
+            .clip(Shape.cornerRound)
             .clickable(
                 onClick = onClick,
                 enabled = enabled,

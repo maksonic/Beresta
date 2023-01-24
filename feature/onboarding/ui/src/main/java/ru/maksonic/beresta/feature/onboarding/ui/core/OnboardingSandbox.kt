@@ -34,5 +34,9 @@ class OnboardingSandbox(
         UpdatedModel(model, effects = setOf(Feature.Eff.SlideNextPage))
 
     private fun onSkipBtnClicked(model: Feature.Model): UpdateResult =
-        UpdatedModel(model, commands = setOf(Feature.Cmd.NavigateToMainScreen))
+        UpdatedModel(
+            model = model,
+            commands = setOf(Feature.Cmd.NotShowAgain),
+            effects = setOf(Feature.Eff.NavigateToMain)
+        )
 }

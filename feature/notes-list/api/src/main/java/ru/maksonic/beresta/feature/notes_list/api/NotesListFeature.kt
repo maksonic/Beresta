@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
  * @Author maksonic on 22.12.2022
  */
 interface NotesListFeature {
+
     @Composable
     fun Screen()
 

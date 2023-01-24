@@ -81,11 +81,15 @@ dependencies {
 
     implementation(project(BaseModule.Feature.ThemeSelector.path))
     implementation(project(BaseModule.Feature.SplashScreen.path))
+
+    implementation(project(BaseModule.Feature.TrashList.Ui.path))
+
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
 
     implementation(project(BaseModule.Screen.Main.path))
-    
+    implementation(project(BaseModule.Screen.Settings.path))
+
     implementation(Lib.Accompanist.navigation)
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Android.coreKtx)

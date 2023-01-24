@@ -21,7 +21,7 @@ import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.api.isColoredMainTopBar
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleBottomPanel
 import ru.maksonic.beresta.feature.notes_list.api.isVisibleMainTopBar
-import ru.maksonic.beresta.feature.notes_list.ui.RemoveAllNotesDialog
+import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
 import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
@@ -40,20 +40,19 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
+    model: Feature.Model,
     msg: (Feature.Msg) -> Unit,
     notes: NotesCollection,
     filters: FilterChipsCollection,
     mutableSharedNotesState: MutableStateFlow<NotesSharedState>,
     onFilterClick: (Int) -> Unit,
-    isSelectionState: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
     val notesScrollState = rememberLazyListState()
     val firstVisibleNote = notesScrollState.isVisibleFirstItem()
     val isScrollUp = notesScrollState.isScrollUp()
     val isScrolledEnd = notesScrollState.isScrolledEnd()
-    val openDialog = remember { mutableStateOf(true) }
-    val removeWithoutTrashCheckState = remember { mutableStateOf(true) }
+    val removeWithoutTrashCheckState = remember { mutableStateOf(false) }
     LaunchedEffect(notesScrollState) {
         snapshotFlow { notesScrollState.firstVisibleItemIndex }
             .map { index -> index == 0 }
@@ -63,14 +62,14 @@ internal fun SuccessViewState(
             }
     }
 
-    LaunchedEffect(isSelectionState) {
+    LaunchedEffect(model.isSelectionState) {
         mutableSharedNotesState.isVisibleBottomPanel(true)
     }
 
     LaunchedEffect(isScrollUp) {
         mutableSharedNotesState.isVisibleMainTopBar(isScrollUp)
 
-        if (isSelectionState()) {
+        if (model.isSelectionState) {
             mutableSharedNotesState.isVisibleBottomPanel(true)
         } else {
             if (isScrolledEnd) {
@@ -87,19 +86,13 @@ internal fun SuccessViewState(
         }
     }
 
-    if (openDialog.value) {
-        Dialog(onDismissRequest = { openDialog.value = false }) {
-            RemoveAllNotesDialog(
-                cancelAction = { openDialog.value = false },
-                removeAllAction = {},
-                checkedState = removeWithoutTrashCheckState
-            )
-        }
+    if (model.isVisibleRemoveAllNotesDialog) {
+        RemoveAllNotesDialog(msg = msg, checkedState = removeWithoutTrashCheckState)
     }
 
     OverscrollBehavior {
         val bottomPaddingHeight = animateDpAsState(
-            targetValue = if (isSelectionState()) {
+            targetValue = if (model.isSelectionState) {
                 Theme.widgetSize.bottomPanelHeightSelected.plus(dp12)
             } else {
                 Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)

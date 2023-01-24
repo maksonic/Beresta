@@ -19,6 +19,7 @@ object Feature {
         val notes: List<NoteUi> = emptyList(),
         val chipsNotesFilter: List<FilterChip> = FilterChipsCollection.Preview.chips,
         val isSelectionState: Boolean = false,
+        val isVisibleRemoveAllNotesDialog: Boolean = false,
         val errorMsg: String = "",
         val bottomPanelState: MutableSharedState<PanelSharedState>,
     ) : ElmModel
@@ -34,6 +35,8 @@ object Feature {
             data class ReplaceSelectedNotes(val selected: List<NoteUi>) : Ui()
             object PinSelectedNotes : Ui()
             data class OnSelectNotesFilter(val index: Int) : Ui()
+            object OnDialogSelectAllCancelClicked : Ui()
+            object OnRemoveWithoutRecoveryClicked : Ui()
         }
 
         sealed class Inner : Msg() {
