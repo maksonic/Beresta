@@ -51,6 +51,9 @@ android {
 dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
+    implementation(project(BaseModule.Elm.path))
+    implementation(project(BaseModule.Navigation.Router.path))
+
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)

@@ -16,14 +16,14 @@ private typealias UpdateResult = UpdatedModel<Feature.Model, Set<Feature.Cmd>, S
 
 class NotesListSandbox(
     notesListProgram: NotesListProgram,
-    bottomPanelActionProgram: BottomPanelActionProgram,
+    bottomPanelActionsProgram: BottomPanelActionsProgram,
     bottomPanelFeature: BottomPanelFeature
 ) : Sandbox<Feature.Model, Feature.Msg, Feature.Cmd, Feature.Eff>(
     initialModel = Feature.Model(
         base = BaseModel(isLoading = true), bottomPanelState = bottomPanelFeature.state
     ),
     initialCmd = setOf(Feature.Cmd.FetchData, Feature.Cmd.ListenBottomPanelActions),
-    subscriptions = listOf(notesListProgram, bottomPanelActionProgram)
+    subscriptions = listOf(notesListProgram, bottomPanelActionsProgram)
 ) {
     override fun update(msg: Feature.Msg, model: Feature.Model): UpdateResult = when (msg) {
         is Feature.Msg.Ui.RetryFetching -> retryFetching(model)
@@ -32,12 +32,16 @@ class NotesListSandbox(
         is Feature.Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Feature.Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
         is Feature.Msg.Inner.FetchingError -> fetchingError(model, msg)
-        is Feature.Msg.Ui.RemoveSelectedItems -> afterRemoveSelectedNotes(model)
+        is Feature.Msg.Ui.RemoveSelectedItems -> onBottomPanelRemoveNotesClicked(model)
         is Feature.Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
         is Feature.Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
         is Feature.Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
         is Feature.Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
         is Feature.Msg.Inner.SelectPanelVisibility -> selectPanelVisibilityState(model, msg)
+        is Feature.Msg.Ui.OnDialogSelectAllCancelClicked -> onDialogSelectNotesCancelClicked(model)
+        is Feature.Msg.Ui.OnRemoveWithoutRecoveryClicked -> {
+            onDialogSelectNotesRemoveWithoutRecoveryClicked(model)
+        }
     }
 
     private fun selectPanelVisibilityState(
@@ -84,15 +88,20 @@ class NotesListSandbox(
             )
         )
 
-    private fun afterRemoveSelectedNotes(
+    private fun onBottomPanelRemoveNotesClicked(
         model: Feature.Model,
     ): UpdateResult {
+        val notRemove = model.notes
         val notes = model.notes.filter { !it.isSelected }
-        val bottomDrawerState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
+        val isAllSelected = notes.all { it.isSelected }
+        val bottomDrawerState = model.bottomPanelState.update { panelState ->
+            panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)
+        }
         return UpdatedModel(
             model.copy(
-                notes = notes,
-                isSelectionState = false,
+                notes = if (isAllSelected) notRemove else notes,
+                isSelectionState = isAllSelected,
+                isVisibleRemoveAllNotesDialog = isAllSelected,
                 bottomPanelState = bottomDrawerState
             )
         )
@@ -255,5 +264,23 @@ class NotesListSandbox(
                 filter
         }
         return UpdatedModel(model.copy(chipsNotesFilter = filters))
+    }
+
+    private fun onDialogSelectNotesCancelClicked(model: Feature.Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleRemoveAllNotesDialog = false))
+
+    private fun onDialogSelectNotesRemoveWithoutRecoveryClicked(
+        model: Feature.Model
+    ): UpdateResult {
+        val notes = model.notes.filter { !it.isSelected }
+        val bottomDrawerState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
+        return UpdatedModel(
+            model.copy(
+                notes = notes,
+                isSelectionState = false,
+                bottomPanelState = bottomDrawerState,
+                isVisibleRemoveAllNotesDialog = false
+            )
+        )
     }
 }

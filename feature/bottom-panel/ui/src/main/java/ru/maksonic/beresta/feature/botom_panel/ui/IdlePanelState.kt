@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import ru.maksonic.beresta.feature.botom_panel.api.BottomPanel
+import ru.maksonic.beresta.feature.botom_panel.api.PanelSharedState
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
@@ -21,16 +23,29 @@ import ru.maksonic.beresta.ui.widget.button.IconPrimaryAction
  * @Author maksonic on 25.12.2022
  */
 @Composable
-internal fun IdlePanelState(modifier: Modifier = Modifier) {
+internal fun IdlePanelState(panelState: PanelSharedState, modifier: Modifier = Modifier) {
+
     val leftButtons = arrayOf(
-        PanelItem(iconId = R.drawable.ic_trash, action = {}),
-        PanelItem(iconId = R.drawable.ic_folder_open, action = {}),
-        PanelItem(iconId = R.drawable.ic_search, action = {}),
+        PanelItem(iconId = R.drawable.ic_trash, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.TRASH]?.invoke()
+        }),
+        PanelItem(iconId = R.drawable.ic_folder_open, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.FOLDERS]?.invoke()
+        }),
+        PanelItem(iconId = R.drawable.ic_search, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.SEARCH]?.invoke()
+        }),
     )
     val rightButtons = arrayOf(
-        PanelItem(iconId = R.drawable.ic_favorite_outlined, action = {}),
-        PanelItem(iconId = R.drawable.ic_sorting, action = {}),
-        PanelItem(iconId = R.drawable.ic_grid_view, action = {}),
+        PanelItem(iconId = R.drawable.ic_favorite_outlined, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.FAVORITES]?.invoke()
+        }),
+        PanelItem(iconId = R.drawable.ic_sorting, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.SORT_BY]?.invoke()
+        }),
+        PanelItem(iconId = R.drawable.ic_grid_view, action = {
+            panelState.idleActions[BottomPanel.Action.Notes.Idle.SWITCH_VIEW_STATE]?.invoke()
+        }),
     )
 
     Row(
@@ -66,6 +81,6 @@ internal fun IdlePanelState(modifier: Modifier = Modifier) {
 @Composable
 private fun IdlePanelStatePreview() {
     BerestaTheme {
-        IdlePanelState()
+        IdlePanelState(panelState = PanelSharedState())
     }
 }

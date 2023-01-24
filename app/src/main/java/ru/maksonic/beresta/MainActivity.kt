@@ -10,7 +10,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -21,7 +20,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
-import ru.maksonic.beresta.navigation.router.AppNavigator
+import ru.maksonic.beresta.navigation.graph_builder.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
@@ -36,11 +35,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(ru.maksonic.beresta.ui.theme.R.style.Theme_Beresta_Default)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         super.onCreate(savedInstanceState)
         fixChinesVendorEmptyScreen()
+
         setContent {
             navigator.navController = rememberAnimatedNavController()
+
             val appTheme = viewModel.theme.collectAsStateWithLifecycle(lifecycle).value
             val systemUiController = rememberSystemUiController()
             val isDarkTheme = isSystemInDarkTheme()

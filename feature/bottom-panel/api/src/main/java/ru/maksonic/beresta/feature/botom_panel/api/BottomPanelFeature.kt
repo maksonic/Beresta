@@ -10,5 +10,13 @@ interface BottomPanelFeature {
     @Composable
     fun Widget(modifier: Modifier)
 
+    @Composable
+    fun PanelWithSelectCounter(
+        onSelectAction: () -> Unit,
+        onCancelAction: () -> Unit,
+        countValue: () -> Int,
+        modifier: Modifier
+    )
+
     val state: BottomPanelSharedState
 }

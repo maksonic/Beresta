@@ -7,19 +7,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.Flow
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
 import ru.maksonic.beresta.screen.main.ui.core.Screen
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
+import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
+import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 
 /**
  * @Author maksonic on 15.12.2022
@@ -27,8 +33,11 @@ import ru.maksonic.beresta.ui.widget.SystemStatusBar
 typealias SendMessage = (Screen.Msg) -> Unit
 
 @Composable
-fun MainScreen(sandbox: MainSandbox = koinViewModel()) {
+fun MainScreen(router: MainScreenRouter, sandbox: MainSandbox = koinViewModel()) {
     val model = sandbox.model.collectAsState().value
+
+    HandleUiEffects(sandbox.effects, router)
+
     MainScreenContent(model = model, msg = sandbox::sendMsg)
 }
 
@@ -44,6 +53,8 @@ private fun MainScreenContent(
     val tasksSharedState = model.tasksListFeature.state.collectAsState().value
     val bottomPanelSharedState = model.bottomPanelFeature.state.state.collectAsState().value
     val isSelectedState = bottomPanelSharedState.selectedCount > 0
+
+
     Box(
         modifier
             .fillMaxSize(),
@@ -58,17 +69,17 @@ private fun MainScreenContent(
                     targetValue = if (model.isColoredTopBar) tertiaryContainer else background
                 )
 
-            /*LaunchedEffect(isSelectedState) {
-                mainPagerState.
-            }*/
             SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
-            // TODO: Check count of recomposition.
+
             MainTopBar(
-                msg = msg,
                 pagerState = mainPagerState,
                 backgroundColor = { topBarColor.value },
                 isVisible = { model.isVisibleTopBar },
-                isSelectionState = { isSelectedState })
+                isSelectionState = { isSelectedState },
+                onSettingsClicked = { msg(Screen.Msg.Ui.OnSettingsClicked)
+                },
+                onShareClicked = { msg(Screen.Msg.Ui.OnShareSelectedNotes) }
+            )
 
             MainPager(
                 msg = msg,
@@ -98,5 +109,28 @@ private fun MainScreenContent(
                 })
             SystemNavigationBar(changeableBackgroundColor = { animatedSystemNavBarColor })
         }
+    }
+}
+
+@Composable
+private fun HandleUiEffects(effects: Flow<Screen.Eff>, router: MainScreenRouter) {
+    HandleEffectsWithLifecycle(effects) { eff ->
+        when (eff) {
+            is Screen.Eff.NavigateToSettings -> router.toSettings()
+            is Screen.Eff.NavigateToTrash -> router.toTrash()
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    BerestaTheme {
+        val model = Screen.Model(
+            bottomPanelFeature = get(),
+            notesListFeature = get(),
+            tasksListFeature = get()
+        )
+        MainScreenContent(model = model, msg = {})
     }
 }

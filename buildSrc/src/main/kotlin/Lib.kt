@@ -47,6 +47,7 @@ object Lib {
         const val lifecycle =
             "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycle}"
         const val material = "androidx.compose.material:material:${Version.compose}"
+        const val navigation = "androidx.navigation:navigation-compose:${Version.navigation}"
         const val ui = "androidx.compose.ui:ui:${Version.composeUi}"
         const val uiPreview = "androidx.compose.ui:ui-tooling-preview:${Version.compose}"
     }

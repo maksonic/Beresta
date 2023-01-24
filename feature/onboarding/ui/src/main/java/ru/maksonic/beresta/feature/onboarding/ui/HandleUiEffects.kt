@@ -12,6 +12,7 @@ import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import ru.maksonic.beresta.feature.onboarding.ui.core.Feature
+import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 
@@ -25,7 +26,8 @@ private const val LAST_PAGE = 1
 internal fun HandleUiEffects(
     effects: Flow<Feature.Eff>,
     pagerState: PagerState,
-    onGoogleAuthClicked: () -> Unit
+    onGoogleAuthClicked: () -> Unit,
+    router: OnboardingRouter
 ) {
     val scope = rememberCoroutineScope()
     val slideDuration = Theme.dimen.durationAnimOnboarding
@@ -49,6 +51,7 @@ internal fun HandleUiEffects(
                     }
                 }
             }
+            is Feature.Eff.NavigateToMain -> router.toMain()
         }
     }
 }
