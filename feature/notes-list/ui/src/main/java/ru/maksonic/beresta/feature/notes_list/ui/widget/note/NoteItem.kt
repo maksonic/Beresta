@@ -11,7 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.feature.notes_list.ui.SendMessage
-import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
+import ru.maksonic.beresta.feature.notes_list.ui.core.Msg
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.color.primary
@@ -27,8 +27,8 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
  */
 @Composable
 internal fun NoteItem(
+    send: SendMessage,
     note: NoteUi,
-    msg: SendMessage,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = animateColorAsState(
@@ -36,12 +36,8 @@ internal fun NoteItem(
     )
 
     BoxWithScaleInOutOnClick(
-        onClick = {
-            msg(Feature.Msg.Ui.OnNoteClicked(note.id))
-        },
-        onLongClick = {
-            msg(Feature.Msg.Ui.OnNoteLongClicked(note.id))
-        },
+        onClick = { send(Msg.Ui.OnNoteClicked(note.id)) },
+        onLongClick = { send(Msg.Ui.OnNoteLongClicked(note.id)) },
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
         modifier = modifier.padding(top = dp12, start = dp16, end = dp16)
@@ -111,5 +107,5 @@ fun BottomPanelIndication(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun NoteItemPreview() {
-    BerestaTheme { NoteItem(note = NoteUi.Preview, msg = {}) }
+    BerestaTheme { NoteItem({}, NoteUi.Preview) }
 }

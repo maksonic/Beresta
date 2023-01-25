@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import ru.maksonic.beresta.feature.notes_list.ui.R
 import ru.maksonic.beresta.feature.notes_list.ui.SendMessage
-import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
+import ru.maksonic.beresta.feature.notes_list.ui.core.Msg
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.primary
@@ -30,11 +30,11 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  */
 @Composable
 fun RemoveAllNotesDialog(
-    msg: SendMessage,
+    send: SendMessage,
     checkedState: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    Dialog(onDismissRequest = { msg(Feature.Msg.Ui.OnDialogSelectAllCancelClicked) }) {
+    Dialog(onDismissRequest = { send(Msg.Ui.OnDialogSelectAllCancelClicked) }) {
         Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
                 modifier
@@ -78,13 +78,13 @@ fun RemoveAllNotesDialog(
 
                 Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(dp16)) {
                     DialogButton(
-                        action = { msg(Feature.Msg.Ui.OnDialogSelectAllCancelClicked) },
+                        action = { send(Msg.Ui.OnDialogSelectAllCancelClicked) },
                         title = stringResource(R.string.title_dialog_cancel_remove_notes),
                         isDismiss = true,
                         modifier = modifier.weight(1f)
                     )
                     DialogButton(
-                        action = { msg(Feature.Msg.Ui.OnRemoveWithoutRecoveryClicked) },
+                        action = { send(Msg.Ui.OnRemoveWithoutRecoveryClicked) },
                         title = stringResource(R.string.title_dialog_remove_notes),
                         isDismiss = false,
                         modifier = modifier.weight(1f)

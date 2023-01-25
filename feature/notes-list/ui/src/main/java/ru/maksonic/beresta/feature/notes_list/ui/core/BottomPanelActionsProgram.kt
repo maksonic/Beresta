@@ -10,36 +10,36 @@ import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
  */
 class BottomPanelActionsProgram(
     private val feature: BottomPanelFeature
-) : ElmProgram<Feature.Msg, Feature.Cmd> {
+) : ElmProgram<Msg, Cmd> {
 
-    override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
+    override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Feature.Cmd.ListenBottomPanelActions -> {
+            is Cmd.ListenBottomPanelActions -> {
                 executePanelActions(consumer)
             }
-            is Feature.Cmd.PassPinNotesStateToBottomPanel -> {
+            is Cmd.PassPinNotesStateToBottomPanel -> {
                 isShowUnpinButtonOnBottomPanel(cmd.isShowUnpinBtn)
             }
             else -> {}
         }
     }
 
-    private fun executePanelActions(consumer: (Feature.Msg) -> Unit) {
+    private fun executePanelActions(consumer: (Msg) -> Unit) {
         val bottomPanelActions = mapOf(
             BottomPanel.Action.Notes.Select.CANCEL to {
-                consumer(Feature.Msg.Ui.CancelNotesSelection)
+                consumer(Msg.Ui.CancelNotesSelection)
             },
             BottomPanel.Action.Notes.Select.SELECT_ALL to {
-                consumer(Feature.Msg.Ui.SelectAllNotes)
+                consumer(Msg.Ui.SelectAllNotes)
             },
             BottomPanel.Action.Notes.Select.HIDE to { },
             BottomPanel.Action.Notes.Select.PIN to {
-                consumer(Feature.Msg.Ui.PinSelectedNotes)
-                consumer(Feature.Msg.Ui.CancelNotesSelection)
+                consumer(Msg.Ui.PinSelectedNotes)
+                consumer(Msg.Ui.CancelNotesSelection)
             },
             BottomPanel.Action.Notes.Select.REPLACE to { },
             BottomPanel.Action.Notes.Select.REMOVE to {
-                consumer(Feature.Msg.Ui.RemoveSelectedItems)
+                consumer(Msg.Ui.RemoveSelectedItems)
             }
         )
 

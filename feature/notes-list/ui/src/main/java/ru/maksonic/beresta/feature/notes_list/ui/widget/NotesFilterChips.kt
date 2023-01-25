@@ -20,6 +20,7 @@ import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.functional.rippleClickable
 
 /**
@@ -44,6 +45,7 @@ internal fun NotesFilterChips(
         modifier
             .fillMaxWidth()
             .height(Theme.widgetSize.topBarNormalHeight)
+            .noRippleClickable {  }
             .drawBehind { drawRect(backgroundColor.value) }
             .padding(start = dp16, end = dp16, top = dp8, bottom = dp8),
         verticalAlignment = Alignment.CenterVertically
