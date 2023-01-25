@@ -35,7 +35,10 @@ private fun EmptyNotesViewStatePreview() {
 }
 
 @Composable
-internal fun EmptyNotesViewState(mutableSharedNotesState: MutableStateFlow<NotesSharedState>, modifier: Modifier = Modifier) {
+internal fun EmptyNotesViewState(
+    mutableSharedNotesState: MutableStateFlow<NotesSharedState>,
+    modifier: Modifier = Modifier
+) {
     LaunchedEffect(Unit) {
         mutableSharedNotesState.apply {
             isColoredMainTopBar(true)

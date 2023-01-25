@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.notes_list.ui.core
 
-import androidx.compose.runtime.mutableStateOf
 import ru.maksonic.beresta.elm.BaseModel
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
@@ -12,73 +11,62 @@ import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 /**
  * @Author maksonic on 25.12.2022
  */
-private typealias UpdateResult = UpdatedModel<Feature.Model, Set<Feature.Cmd>, Set<Feature.Eff>>
+private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class NotesListSandbox(
     notesListProgram: NotesListProgram,
     bottomPanelActionsProgram: BottomPanelActionsProgram,
     bottomPanelFeature: BottomPanelFeature
-) : Sandbox<Feature.Model, Feature.Msg, Feature.Cmd, Feature.Eff>(
-    initialModel = Feature.Model(
+) : Sandbox<Model, Msg, Cmd, Eff>(
+    initialModel = Model(
         base = BaseModel(isLoading = true), bottomPanelState = bottomPanelFeature.state
     ),
-    initialCmd = setOf(Feature.Cmd.FetchData, Feature.Cmd.ListenBottomPanelActions),
+    initialCmd = setOf(Cmd.FetchData, Cmd.ListenBottomPanelActions),
     subscriptions = listOf(notesListProgram, bottomPanelActionsProgram)
 ) {
-    override fun update(msg: Feature.Msg, model: Feature.Model): UpdateResult = when (msg) {
-        is Feature.Msg.Ui.RetryFetching -> retryFetching(model)
-        is Feature.Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
-        is Feature.Msg.Ui.SelectAllNotes -> selectAllNotes(model)
-        is Feature.Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
-        is Feature.Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
-        is Feature.Msg.Inner.FetchingError -> fetchingError(model, msg)
-        is Feature.Msg.Ui.RemoveSelectedItems -> onBottomPanelRemoveNotesClicked(model)
-        is Feature.Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
-        is Feature.Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
-        is Feature.Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
-        is Feature.Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
-        is Feature.Msg.Inner.SelectPanelVisibility -> selectPanelVisibilityState(model, msg)
-        is Feature.Msg.Ui.OnDialogSelectAllCancelClicked -> onDialogSelectNotesCancelClicked(model)
-        is Feature.Msg.Ui.OnRemoveWithoutRecoveryClicked -> {
+    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Ui.RetryFetching -> retryFetching(model)
+        is Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
+        is Msg.Ui.SelectAllNotes -> selectAllNotes(model)
+        is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
+        is Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
+        is Msg.Inner.FetchingError -> fetchingError(model, msg)
+        is Msg.Ui.RemoveSelectedItems -> onBottomPanelRemoveNotesClicked(model)
+        is Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
+        is Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
+        is Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
+        is Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
+        is Msg.Inner.SelectPanelVisibility -> selectPanelVisibilityState(model, msg)
+        is Msg.Ui.OnDialogSelectAllCancelClicked -> onDialogSelectNotesCancelClicked(model)
+        is Msg.Ui.OnRemoveWithoutRecoveryClicked -> {
             onDialogSelectNotesRemoveWithoutRecoveryClicked(model)
         }
     }
 
     private fun selectPanelVisibilityState(
-        model: Feature.Model,
-        msg: Feature.Msg.Inner.SelectPanelVisibility
+        model: Model, msg: Msg.Inner.SelectPanelVisibility
     ): UpdateResult {
         val state = if (msg.isVisible) BottomPanel.State.SELECTED else BottomPanel.State.IDLE
         val panelState = model.bottomPanelState.update { old -> old.copy(state = state) }
         return UpdatedModel(model.copy(bottomPanelState = panelState))
     }
 
-    private fun retryFetching(model: Feature.Model): UpdateResult =
-        UpdatedModel(
-            model.copy(base = model.base.copy(isLoading = true)),
-            commands = setOf(Feature.Cmd.FetchData)
-        )
+    private fun retryFetching(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(base = model.base.copy(isLoading = true)),
+        commands = setOf(Cmd.FetchData)
+    )
 
-    private fun fetchingSuccess(
-        model: Feature.Model,
-        msg: Feature.Msg.Inner.FetchingSuccess
-    ): UpdateResult =
+    private fun fetchingSuccess(model: Model, msg: Msg.Inner.FetchingSuccess): UpdateResult =
         UpdatedModel(
-            model.copy(
-                base = model.base.copy(
-                    isLoading = false,
-                    isSuccessLoading = true
-                ),
+            model = model.copy(
+                base = model.base.copy(isLoading = false, isSuccessLoading = true),
                 notes = msg.notes
             )
         )
 
-    private fun fetchingError(
-        model: Feature.Model,
-        msg: Feature.Msg.Inner.FetchingError
-    ): UpdateResult =
+    private fun fetchingError(model: Model, msg: Msg.Inner.FetchingError): UpdateResult =
         UpdatedModel(
-            model.copy(
+            model = model.copy(
                 base = model.base.copy(
                     isLoading = false,
                     isSuccessLoading = false,
@@ -88,136 +76,65 @@ class NotesListSandbox(
             )
         )
 
-    private fun onBottomPanelRemoveNotesClicked(
-        model: Feature.Model,
-    ): UpdateResult {
-        val notRemove = model.notes
-        val removed = model.notes.map {note ->
-            if (note.isSelected)
-                return@map note.copy(isMovedToTrash = true)
-            else
-                return@map note.copy(isMovedToTrash = false)
-        }
-        val notes = removed.filter { !it.isMovedToTrash }
-        val isAllSelected = notes.all { it.isSelected }
-        val bottomDrawerState = model.bottomPanelState.update { panelState ->
+    private fun onBottomPanelRemoveNotesClicked(model: Model): UpdateResult {
+        val beforeRemove = model.notes
+        val remove = model.notes.map { note ->
+            return@map note.copy(isMovedToTrash = note.isSelected)
+        }.filter { !it.isMovedToTrash }
+
+        val isAllSelected = remove.all { it.isSelected }
+        val bottomPanelState = model.bottomPanelState.update { panelState ->
             panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)
         }
         return UpdatedModel(
             model.copy(
-                notes = if (isAllSelected) notRemove else notes,
+                notes = if (isAllSelected) beforeRemove else remove,
                 isSelectionState = isAllSelected,
                 isVisibleRemoveAllNotesDialog = isAllSelected,
-                bottomPanelState = bottomDrawerState
+                bottomPanelState = bottomPanelState
             )
         )
     }
 
-    private fun onNoteClicked(
-        model: Feature.Model,
-        msg: Feature.Msg.Ui.OnNoteClicked
-    ): UpdateResult {
-        val isShowUnpinButton = mutableStateOf(false)
-        var afterSelectedNotes: List<NoteUi> = model.notes
-        var selectedCount = model.bottomPanelState.mutableState.value.selectedCount
-        if (model.isSelectionState) {
-            afterSelectedNotes = model.notes.map { note ->
-                if (note.id == msg.id) {
-                    val updatedNote = note.copy(isSelected = !note.isSelected)
-                    if (updatedNote.isSelected) {
-                        selectedCount++
-                    } else {
-                        selectedCount--
-                    }
-                    updatedNote
-                } else
-                    note
-            }
+    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult {
+        return if (model.isSelectionState) {
+            baseOnNoteAction(model, msg.id)
         } else {
-            // TODO: Action onClick note item
+            UpdatedModel(model)
         }
-
-        val isSelected = afterSelectedNotes.map { it.isSelected }.contains(true)
-        val selectedNotes = afterSelectedNotes.filter { it.isSelected }
-        isShowUnpinButton.value = !selectedNotes.map { !it.isPinned }.contains(true)
-
-        return UpdatedModel(
-            model.copy(
-                notes = afterSelectedNotes,
-                isSelectionState = isSelected,
-                bottomPanelState = model.bottomPanelState.update {
-                    it.copy(selectedCount = selectedCount)
-                }
-            ),
-            commands = setOf(Feature.Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton.value))
-        )
     }
 
-    private fun onNoteLongClicked(
-        model: Feature.Model,
-        msg: Feature.Msg.Ui.OnNoteLongClicked
-    ): UpdateResult {
-        val isShowUnpinButton = mutableStateOf(false)
-        var selectedCount = model.bottomPanelState.mutableState.value.selectedCount
-        val afterSelectedNotes = model.notes.map { note ->
-            if (note.id == msg.id) {
-                val updatedNote = note.copy(isSelected = !note.isSelected)
-                if (updatedNote.isSelected) {
-                    selectedCount++
-                } else {
-                    selectedCount--
-                }
-                updatedNote
-            } else
-                note
-        }
-        val isSelected = afterSelectedNotes.map { it.isSelected }.contains(true)
-        val selectedNotes = afterSelectedNotes.filter { it.isSelected }
-        isShowUnpinButton.value = !selectedNotes.map { !it.isPinned }.contains(true)
-
-        return UpdatedModel(
-            model.copy(
-                notes = afterSelectedNotes,
-                isSelectionState = isSelected,
-                bottomPanelState = model.bottomPanelState.update {
-                    it.copy(selectedCount = selectedCount)
-                }
-            ),
-            commands = setOf(Feature.Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton.value))
-        )
+    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult {
+        return baseOnNoteAction(model, msg.id)
     }
 
-    private fun selectAllNotes(model: Feature.Model): UpdateResult {
+    private fun selectAllNotes(model: Model): UpdateResult {
         var selectedCount = 0
-        val predicate: (NoteUi) -> Boolean = { note -> note.isSelected }
-        val notes = if (model.notes.all(predicate)) {
-            model.notes.map { note ->
-                selectedCount = 0
-                note.copy(isSelected = false)
-            }
-        } else {
-            model.notes.map { note ->
-                selectedCount++
-                note.copy(isSelected = true)
-            }
-        }
+        val isAllSelected = model.notes.all { note -> note.isSelected }
+        val notes = model.notes.map { note ->
+            selectedCount = if (isAllSelected) 0 else model.notes.map { it.isSelected }.count()
+            return@map note.copy(isSelected = !isAllSelected)
 
+        }
         val isSelected = notes.map { it.isSelected }.contains(true)
+        val isShowUnpinButton = notes.all { note -> note.isPinned }
+
         return UpdatedModel(
-            model.copy(
+            model = model.copy(
                 notes = notes,
                 isSelectionState = isSelected,
                 bottomPanelState = model.bottomPanelState.update {
                     it.copy(selectedCount = selectedCount)
                 }
-            )
+            ),
+            commands = setOf(Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton))
         )
     }
 
-    private fun cancelNotesSelection(model: Feature.Model): UpdateResult {
+    private fun cancelNotesSelection(model: Model): UpdateResult {
         val unselectedAll = model.notes.map { it.copy(isSelected = false) }
         return UpdatedModel(
-            model.copy(
+            model = model.copy(
                 notes = unselectedAll,
                 isSelectionState = false,
                 bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
@@ -225,44 +142,23 @@ class NotesListSandbox(
         )
     }
 
-    private fun pinSelectedNotesToTopList(model: Feature.Model): UpdateResult {
-        val selected = model.notes.filter { it.isSelected }
-        val pinned = selected.filter { it.isPinned }
-
+    private fun pinSelectedNotesToTopList(model: Model): UpdateResult {
+        val selectedNotes = model.notes.filter { it.isSelected }
+        val isSelectedContainsUnpinnedNotes = selectedNotes.map { it.isPinned }.contains(false)
         val notes = model.notes.map { note ->
+            val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
 
-            if (selected.count() > pinned.count()) {
-                if (note.isSelected) {
-                    return@map note.copy(isPinned = true)
-                } else {
-                    return@map note
-                }
-            } else {
-                if (note.isSelected) {
-                    return@map note.copy(isPinned = !note.isPinned)
-                } else {
-                    return@map note
-                }
-            }
+            return@map if (note.isSelected) note.copy(isPinned = isPinned) else note
         }.sortedWith(comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id })
 
-        return UpdatedModel(
-            model.copy(notes = notes)
-        )
+        return UpdatedModel(model = model.copy(notes = notes))
     }
 
     private fun replaceSelectedNotesToFolder(
-        model: Feature.Model,
-        msg: Feature.Msg.Ui.ReplaceSelectedNotes
-    ): UpdateResult {
+        model: Model, msg: Msg.Ui.ReplaceSelectedNotes
+    ): UpdateResult = UpdatedModel(model)
 
-        return UpdatedModel(model)
-    }
-
-    private fun onFilterSelected(
-        model: Feature.Model,
-        msg: Feature.Msg.Ui.OnSelectNotesFilter
-    ): UpdateResult {
+    private fun onFilterSelected(model: Model, msg: Msg.Ui.OnSelectNotesFilter): UpdateResult {
         val filters = model.chipsNotesFilter.mapIndexed { index, filter ->
             if (index == msg.index)
                 filter.copy(isSelected = true)
@@ -272,21 +168,41 @@ class NotesListSandbox(
         return UpdatedModel(model.copy(chipsNotesFilter = filters))
     }
 
-    private fun onDialogSelectNotesCancelClicked(model: Feature.Model): UpdateResult =
+    private fun onDialogSelectNotesCancelClicked(model: Model): UpdateResult =
         UpdatedModel(model.copy(isVisibleRemoveAllNotesDialog = false))
 
-    private fun onDialogSelectNotesRemoveWithoutRecoveryClicked(
-        model: Feature.Model
-    ): UpdateResult {
+    private fun onDialogSelectNotesRemoveWithoutRecoveryClicked(model: Model): UpdateResult {
         val notes = model.notes.filter { !it.isSelected }
-        val bottomDrawerState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
+        val bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
         return UpdatedModel(
             model.copy(
                 notes = notes,
                 isSelectionState = false,
-                bottomPanelState = bottomDrawerState,
+                bottomPanelState = bottomPanelState,
                 isVisibleRemoveAllNotesDialog = false
             )
+        )
+    }
+
+    private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {
+        var counter = model.bottomPanelState.mutableState.value.selectedCount
+        val updateCounter = { isSelected: Boolean -> if (isSelected) counter++ else counter-- }
+        val afterSelectNotes = model.notes.map { note ->
+            if (note.id == noteId) updateCounter(!note.isSelected)
+            return@map if (note.id == noteId) note.copy(isSelected = !note.isSelected) else note
+        }
+        val isSelected = afterSelectNotes.map { it.isSelected }.contains(true)
+        val selectedNotes = afterSelectNotes.filter { it.isSelected }
+        val isShowUnpinButton = !selectedNotes.map { it.isPinned }.contains(false)
+        val bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = counter) }
+
+        return UpdatedModel(
+            model.copy(
+                notes = afterSelectNotes,
+                isSelectionState = isSelected,
+                bottomPanelState = bottomPanelState
+            ),
+            commands = setOf(Cmd.PassPinNotesStateToBottomPanel(isShowUnpinButton))
         )
     }
 }

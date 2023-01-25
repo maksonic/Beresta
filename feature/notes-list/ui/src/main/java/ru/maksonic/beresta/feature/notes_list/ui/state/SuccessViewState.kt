@@ -20,7 +20,8 @@ import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
 import ru.maksonic.beresta.feature.notes_list.api.feature.isColoredMainTopBar
 import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleBottomPanel
 import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleMainTopBar
-import ru.maksonic.beresta.feature.notes_list.ui.core.Feature
+import ru.maksonic.beresta.feature.notes_list.ui.core.Model
+import ru.maksonic.beresta.feature.notes_list.ui.core.Msg
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
 import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
@@ -34,15 +35,17 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 25.12.2022
  */
+interface SuccessMessages {
+    fun onRemoveAllNotesCancelClicked(): () -> Unit
+}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
-    model: Feature.Model,
-    msg: (Feature.Msg) -> Unit,
+    model: Model,
+    send: (Msg) -> Unit,
     notes: NotesCollection,
     filters: FilterChipsCollection,
     mutableSharedNotesState: MutableStateFlow<NotesSharedState>,
-    onFilterClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val notesScrollState = rememberLazyListState()
@@ -85,7 +88,7 @@ internal fun SuccessViewState(
     }
 
     if (model.isVisibleRemoveAllNotesDialog) {
-        RemoveAllNotesDialog(msg = msg, checkedState = removeWithoutTrashCheckState)
+        RemoveAllNotesDialog(send = send, checkedState = removeWithoutTrashCheckState)
     }
 
     OverscrollBehavior {
@@ -112,7 +115,11 @@ internal fun SuccessViewState(
                 items = notes.notes,
                 key = { note -> note.id }
             ) { note ->
-                NoteItem(note = note, msg = msg, modifier.animateItemPlacement())
+                NoteItem(
+                    send = send,
+                    note = note,
+                    modifier = modifier.animateItemPlacement()
+                )
             }
             item {
                 Spacer(
