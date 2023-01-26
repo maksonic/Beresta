@@ -20,18 +20,12 @@ class BottomPanelActionsMainProgram(
     private fun executePanelActions(consumer: (Msg) -> Unit) {
         val bottomPanelActions = mapOf(
             BottomPanel.Action.Notes.Idle.TRASH to { consumer(Msg.Ui.OnTrashClicked) },
-            BottomPanel.Action.Notes.Idle.FOLDERS to {
-            },
+            BottomPanel.Action.Notes.Idle.FOLDERS to {},
             BottomPanel.Action.Notes.Idle.SEARCH to { consumer(Msg.Ui.OnSearchClicked) },
-            BottomPanel.Action.Notes.Idle.ADD_NOTE to {
-            },
-            BottomPanel.Action.Notes.Idle.FAVORITES to {
-
-            },
-            BottomPanel.Action.Notes.Idle.SORT_BY to {
-            },
-            BottomPanel.Action.Notes.Idle.SWITCH_VIEW_STATE to {
-            }
+            BottomPanel.Action.Notes.Idle.ADD_NOTE to { consumer(Msg.Ui.CreateNewNote) },
+            BottomPanel.Action.Notes.Idle.FAVORITES to {},
+            BottomPanel.Action.Notes.Idle.SORT_BY to {},
+            BottomPanel.Action.Notes.Idle.SWITCH_VIEW_STATE to {}
         )
 
         feature.state.mutableState.update { panelState ->

@@ -24,6 +24,7 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
+        object CreateNewNote : Ui()
         object OnSettingsClicked : Ui()
         object OnTrashClicked : Ui()
         object OnSearchClicked : Ui()
@@ -31,7 +32,6 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class FetchNavEntry(val from: NavBackStackEntry?): Inner()
         data class SetTopBarVisibility(val value: Boolean) : Inner()
         data class SetColoredTopBar(val value: Boolean) : Inner()
         data class SetBottomVisibility(val value: Boolean) : Inner()
@@ -43,6 +43,7 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
+    object NavigateNoEditNote : Eff()
     object NavigateToSettings : Eff()
     object NavigateToTrash : Eff()
 }

@@ -17,10 +17,10 @@ import ru.maksonic.beresta.ui.theme.color.primary
 @Composable
 fun IconAction(
     modifier: Modifier = Modifier,
-    icon: Painter,
+    icon: @Composable () -> Painter,
     action: () -> Unit
 ) {
     BaseClickableIcon(onClick = action, rippleColor = primary, modifier = modifier) {
-        Icon(painter = icon, contentDescription = "", tint = onBackground)
+        Icon(painter = icon(), contentDescription = "", tint = onBackground)
     }
 }

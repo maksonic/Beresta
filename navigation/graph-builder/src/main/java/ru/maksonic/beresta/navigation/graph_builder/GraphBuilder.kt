@@ -31,6 +31,7 @@ interface GraphBuilder {
                    mainScreen(this)
                    settingsScreen(this, DEF_ANIM_SPEED)
                    trashListScreen(this, DEF_ANIM_SPEED)
+                   editNoteScreen(this)
                }
             }
         }

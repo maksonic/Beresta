@@ -26,7 +26,7 @@ class MainSandbox(
     subscriptions = listOf(bottomPanelActionsMainProgram)
 ) {
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.FetchNavEntry -> UpdatedModel(model.copy(entry = msg.from))
+        is Msg.Ui.CreateNewNote -> onAddNoteClicked(model)
         is Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
         is Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
         is Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
@@ -35,6 +35,9 @@ class MainSandbox(
         is Msg.Ui.OnTrashClicked -> onTrashClicked(model)
         is Msg.Ui.OnSearchClicked -> onSearchClicked(model)
     }
+
+    private fun onAddNoteClicked(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.NavigateNoEditNote))
 
     private fun setTopBarVisibility(
         model: Model,

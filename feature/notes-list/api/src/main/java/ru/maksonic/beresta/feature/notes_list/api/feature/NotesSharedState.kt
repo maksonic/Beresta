@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.api.feature
 
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -19,6 +20,7 @@ fun MutableStateFlow<NotesSharedState>.isVisibleBottomPanel(isVisible: Boolean) 
 }
 
 fun MutableStateFlow<NotesSharedState>.isVisibleMainTopBar(isVisible: Boolean) {
+    Log.e("AAA", "${isVisible}")
     this.update { update ->
         update.copy(isShowMainToolbar = isVisible)
     }

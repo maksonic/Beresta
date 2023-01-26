@@ -56,7 +56,7 @@ internal fun MainTopBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         IconAction(
-            icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings),
+            icon = { painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings) },
             action = { send(Msg.Ui.OnSettingsClicked) },
             modifier = modifier.padding(start = dp8)
         )
@@ -71,7 +71,7 @@ internal fun MainTopBar(
 }
 
 @Composable
-fun ShareSelectedNotesActionButton(
+private fun ShareSelectedNotesActionButton(
     onShare: () -> Unit,
     isSelectionState: Boolean,
     modifier: Modifier = Modifier
@@ -91,7 +91,7 @@ fun ShareSelectedNotesActionButton(
             }
 
             IconAction(
-                icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_share),
+                icon = { painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_share) },
                 action = onShare,
                 modifier = modifier
                     .size(Theme.widgetSize.minimumTouchTargetSize)

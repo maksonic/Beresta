@@ -23,13 +23,18 @@ class AppNavigator : BaseNavigator() {
     override fun mainRouter(entry: NavBackStackEntry) = MainScreenRouter(
         toSettings = { navigate(entry, Destination.Settings.route) },
         toTrash = { navigate(entry, Destination.TrashList.route) },
+        toCreateNewNote = { navigate(entry, Destination.EditNote.route) }
     )
 
     override fun settingsRouter(entry: NavBackStackEntry) = SettingsScreenRouter(
-        onBack = { backPressed() }
+        onBack = ::backPressed
     )
 
     override fun trashRouter(entry: NavBackStackEntry) = TrashScreenRouter(
-        onBack = { backPressed() }
+        onBack = ::backPressed
+    )
+
+    override fun editNoteRouter(entry: NavBackStackEntry) = EditNoteRouter(
+        onBack = ::backPressed
     )
 }

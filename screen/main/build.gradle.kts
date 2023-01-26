@@ -60,6 +60,7 @@ dependencies {
     implementation(Lib.Accompanist.pager)
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Compose.material)
+    implementation(Lib.Compose.material3)
     implementation(Lib.Compose.navigation)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
