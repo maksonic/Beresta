@@ -14,6 +14,7 @@ object Lib {
         const val splashScreen = "1.0.0"
         //compose
         const val compose = Config.composeVersion
+        const val composeMaterial3 = "1.1.0-alpha04"
         const val composeUi = "1.4.0-alpha04"
         const val activityCompose = "1.6.1"
         const val composeLifecycle = "2.6.0-alpha03"
@@ -47,6 +48,7 @@ object Lib {
         const val lifecycle =
             "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycle}"
         const val material = "androidx.compose.material:material:${Version.compose}"
+        const val material3 = "androidx.compose.material3:material3:${Version.composeMaterial3}"
         const val navigation = "androidx.navigation:navigation-compose:${Version.navigation}"
         const val ui = "androidx.compose.ui:ui:${Version.composeUi}"
         const val uiPreview = "androidx.compose.ui:ui-tooling-preview:${Version.compose}"

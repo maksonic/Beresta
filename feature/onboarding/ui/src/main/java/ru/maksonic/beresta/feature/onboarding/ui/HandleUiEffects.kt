@@ -11,7 +11,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.maksonic.beresta.feature.onboarding.ui.core.Feature
+import ru.maksonic.beresta.feature.onboarding.ui.core.Eff
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
@@ -24,7 +24,7 @@ private const val LAST_PAGE = 1
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun HandleUiEffects(
-    effects: Flow<Feature.Eff>,
+    effects: Flow<Eff>,
     pagerState: PagerState,
     onGoogleAuthClicked: () -> Unit,
     router: OnboardingRouter
@@ -36,7 +36,7 @@ internal fun HandleUiEffects(
 
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Feature.Eff.SlideNextPage -> {
+            is Eff.SlideNextPage -> {
                 val slidePage = pageWidthPx + pagerState.pageCount
 
                 scope.launch {
@@ -51,7 +51,7 @@ internal fun HandleUiEffects(
                     }
                 }
             }
-            is Feature.Eff.NavigateToMain -> router.toMain()
+            is Eff.NavigateToMain -> router.toMain()
         }
     }
 }

@@ -18,14 +18,6 @@ import ru.maksonic.beresta.ui.theme.color.onSurface
 /**
  * @Author maksonic on 15.12.2022
  */
-@Preview(showBackground = true)
-@Composable
-private fun SplashScreenPreview() {
-    BerestaTheme {
-        SplashScreen(router = SplashScreenRouter { })
-    }
-}
-
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
@@ -34,9 +26,7 @@ fun SplashScreen(
 ) {
     val state = viewModel.destination.collectAsState().value
 
-    SideEffect {
-        if (state.isNavigate) router.toOnboardingOrMain(state.route)
-    }
+    SideEffect { if (state.isNavigate) router.toOnboardingOrMain(state.route) }
 
     /**
      * @see [size] and [padding] compare with [ru.maksonic.beresta.feature.splash_screen.R.drawable.splash_bg]
@@ -63,5 +53,13 @@ fun SplashScreen(
                 .padding(bottom = 60.dp)
                 .size(125.dp, 45.dp)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SplashScreenPreview() {
+    BerestaTheme {
+        SplashScreen(router = SplashScreenRouter { })
     }
 }

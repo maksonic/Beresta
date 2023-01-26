@@ -2,7 +2,6 @@ package ru.maksonic.beresta.ui.widget.bar
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,16 +24,6 @@ fun TopAppBarNormal(
     backAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    /*TopAppBar(
-        title = { Text(text = title, style = TextDesign.title) },
-        navigationIcon = {
-           *//* IconAction(
-                icon = painterResource(id = R.drawable.ic_arrow_back), action = backAction
-            )*//*
-        },
-        backgroundColor = backgroundColor(),
-        elevation = Theme.elevation.disable
-    )*/
     Row(
         modifier
             .fillMaxWidth()
@@ -43,21 +32,7 @@ fun TopAppBarNormal(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier.size(dp8))
-        IconAction(icon = painterResource(id = R.drawable.ic_arrow_back), action = backAction)
+        IconAction(icon = { painterResource(id = R.drawable.ic_arrow_back) }, action = backAction)
         Text(text = title, style = TextDesign.topBar, modifier = modifier.padding(start = dp8))
     }
 }
-
-/*@Composable
-fun TopAppBarNormal(title: String, backgroundColor: () -> Color, backAction: () -> Unit) {
-    TopAppBar(
-        title = { Text(text = title, style = TextDesign.title) },
-        navigationIcon = {
-            IconAction(
-                icon = painterResource(id = R.drawable.ic_arrow_back), action = backAction
-            )
-        },
-        backgroundColor = backgroundColor(),
-        elevation = Theme.elevation.disable
-    )
-}*/

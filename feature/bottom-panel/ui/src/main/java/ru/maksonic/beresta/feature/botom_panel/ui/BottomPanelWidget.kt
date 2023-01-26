@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.get
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanel
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
@@ -70,12 +69,12 @@ class BottomPanelWidget(private val panelSharedState: BottomPanelSharedState) : 
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconAction(
-                icon = painterResource(id = R.drawable.ic_select_all),
+                icon = { painterResource(id = R.drawable.ic_select_all) },
                 action = { onSelectAction() }
             )
             SelectedNotesCount(countNotes = { countValue() })
             IconAction(
-                icon = painterResource(id = R.drawable.ic_close),
+                icon = { painterResource(id = R.drawable.ic_close) },
                 action = { onCancelAction() }
             )
         }

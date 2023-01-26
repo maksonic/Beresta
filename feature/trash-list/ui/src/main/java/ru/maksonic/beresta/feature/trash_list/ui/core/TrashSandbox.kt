@@ -7,32 +7,29 @@ import ru.maksonic.beresta.elm.UpdatedModel
 /**
  * @Author maksonic on 23.01.2023
  */
-private typealias UpdateResult = UpdatedModel<Feature.Model, Set<Feature.Cmd>, Set<Feature.Eff>>
+private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class TrashSandbox(trashProgram: TrashProgram) :
-    Sandbox<Feature.Model, Feature.Msg, Feature.Cmd, Feature.Eff>(
-        initialModel = Feature.Model(base = BaseModel(isLoading = true)),
-        initialCmd = setOf(Feature.Cmd.FetchRemovedNotes),
-        subscriptions = listOf(trashProgram)
-    ) {
+class TrashSandbox(trashProgram: TrashProgram) : Sandbox<Model, Msg, Cmd, Eff>(
+    initialModel = Model(base = BaseModel(isLoading = true)),
+    initialCmd = setOf(Cmd.FetchRemovedNotes),
+    subscriptions = listOf(trashProgram)
+) {
 
-    override fun update(msg: Feature.Msg, model: Feature.Model): UpdateResult = when (msg) {
-        is Feature.Msg.Inner.FetchingResult -> fetchRemovedNotes(model, msg)
-        is Feature.Msg.Ui.TopBarBackPressed -> onTopBarBackPressed(model)
-        is Feature.Msg.Ui.OnNoteClicked -> UpdatedModel(model)
-        is Feature.Msg.Ui.OnNoteLongClicked -> UpdatedModel(model)
+    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchingResult -> fetchRemovedNotes(model, msg)
+        is Msg.Ui.TopBarBackPressed -> onTopBarBackPressed(model)
+        is Msg.Ui.OnNoteClicked -> UpdatedModel(model)
+        is Msg.Ui.OnNoteLongClicked -> UpdatedModel(model)
     }
 
-    private fun fetchRemovedNotes(
-        model: Feature.Model,
-        msg: Feature.Msg.Inner.FetchingResult
-    ): UpdateResult = UpdatedModel(
-        model.copy(
-            base = model.base.copy(isLoading = false),
-            removedNotes = msg.notes
+    private fun fetchRemovedNotes(model: Model, msg: Msg.Inner.FetchingResult): UpdateResult =
+        UpdatedModel(
+            model.copy(
+                base = model.base.copy(isLoading = false),
+                removedNotes = msg.notes
+            )
         )
-    )
 
-    private fun onTopBarBackPressed(model: Feature.Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Feature.Eff.NavigateBack))
+    private fun onTopBarBackPressed(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.NavigateBack))
 }

@@ -52,6 +52,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(Lib.Accompanist.pager)
     implementation(Lib.Compose.material)
+    implementation(Lib.Compose.material3)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
     implementation(Lib.Koin.compose)

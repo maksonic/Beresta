@@ -14,10 +14,7 @@ fun SystemComponentColor(
     useDarkIcons: Boolean,
 ) {
     DisposableEffect(systemUiController, useDarkIcons) {
-        systemUiController.setStatusBarColor(
-            color = Color.Transparent,
-            darkIcons = !useDarkIcons
-        )
+        systemUiController.setStatusBarColor(color = Color.Transparent, darkIcons = !useDarkIcons)
 
         systemUiController.setNavigationBarColor(
             color = Color.Transparent,

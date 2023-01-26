@@ -1,11 +1,19 @@
 package ru.maksonic.beresta.feature.tasks_list.ui
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.*
 import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 import ru.maksonic.beresta.feature.tasks_list.api.TasksSharedState
+import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isScrolledEnd
 
@@ -78,7 +86,7 @@ class TasksListScreen : TasksListFeature {
             }
         }
         EmptyTasksViewState()
-        /*LazyColumn(
+       /* LazyColumn(
             modifier
                 .fillMaxSize()
                 .navigationBarsPadding(),

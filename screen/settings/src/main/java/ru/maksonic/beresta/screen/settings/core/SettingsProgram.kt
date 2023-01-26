@@ -5,9 +5,9 @@ import ru.maksonic.beresta.elm.ElmProgram
 /**
  * @Author maksonic on 23.01.2023
  */
-class SettingsProgram: ElmProgram<Screen.Msg, Screen.Cmd> {
+class SettingsProgram: ElmProgram<Msg, Cmd> {
 
-    override suspend fun executeProgram(cmd: Screen.Cmd, consumer: (Screen.Msg) -> Unit) {
+    override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
 
     }
 }

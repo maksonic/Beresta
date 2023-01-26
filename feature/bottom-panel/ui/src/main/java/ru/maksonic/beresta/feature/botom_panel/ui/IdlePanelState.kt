@@ -15,7 +15,6 @@ import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.button.IconPrimaryAction
 
@@ -57,7 +56,7 @@ internal fun IdlePanelState(panelState: PanelSharedState, modifier: Modifier = M
         leftButtons.forEach { item ->
 
             IconAction(
-                icon = painterResource(id = item.iconId),
+                icon = { painterResource(id = item.iconId) },
                 action = item.action,
                 modifier = modifier.padding(start = dp4)
             )
@@ -69,7 +68,7 @@ internal fun IdlePanelState(panelState: PanelSharedState, modifier: Modifier = M
 
         rightButtons.forEach { item ->
             IconAction(
-                icon = painterResource(id = item.iconId),
+                icon = { painterResource(id = item.iconId) },
                 action = item.action,
                 modifier = modifier.padding(end = dp4)
             )

@@ -12,10 +12,7 @@ import ru.maksonic.beresta.navigation.router.Destination
 /**
  * @Author maksonic on 15.01.2023
  */
-data class SplashState(
-    val route: String = "",
-    val isNavigate: Boolean = false
-)
+data class SplashState(val route: String = "", val isNavigate: Boolean = false)
 
 class SplashViewModel(
     private val onboardingVisibility: OnboardingVisibility

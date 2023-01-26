@@ -6,25 +6,23 @@ import ru.maksonic.beresta.elm.*
 /**
  * @Author maksonic on 23.01.2023
  */
-object Screen {
-    @Stable
-    data class Model(
-        val base: BaseModel = BaseModel()
-    ) : ElmModel
+@Stable
+data class Model(
+    val base: BaseModel = BaseModel()
+) : ElmModel
 
-    sealed class Msg : ElmMessage {
-        sealed class Ui : Msg() {
-            object TopBarBackPressed : Ui()
-        }
-
-        sealed class Inner : Msg() {
-        }
+sealed class Msg : ElmMessage {
+    sealed class Ui : Msg() {
+        object TopBarBackPressed : Ui()
     }
 
-    sealed class Cmd : ElmCommand {
+    sealed class Inner : Msg() {
     }
+}
 
-    sealed class Eff : ElmEffect {
-        object NavigateBack : Eff()
-    }
+sealed class Cmd : ElmCommand {
+}
+
+sealed class Eff : ElmEffect {
+    object NavigateBack : Eff()
 }

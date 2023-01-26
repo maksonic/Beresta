@@ -10,22 +10,22 @@ import ru.maksonic.beresta.feature.trash_list.domain.FetchMovedToTrashNotesUseCa
 class TrashProgram(
     private val useCase: FetchMovedToTrashNotesUseCase,
     private val mapper: NoteUiMapper
-) : ElmProgram<Feature.Msg, Feature.Cmd> {
+) : ElmProgram<Msg, Cmd> {
 
-    override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
+    override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Feature.Cmd.FetchRemovedNotes -> fetchRemovedNotes(consumer)
+            is Cmd.FetchRemovedNotes -> fetchRemovedNotes(consumer)
         }
     }
 
-    suspend fun fetchRemovedNotes(consumer: (Feature.Msg) -> Unit) {
+    private suspend fun fetchRemovedNotes(consumer: (Msg) -> Unit) {
         runCatching {
             useCase().collect { domainNotes ->
                 val removed = mapper.mapListTo(domainNotes)
-                consumer(Feature.Msg.Inner.FetchingResult(removed))
+                consumer(Msg.Inner.FetchingResult(removed))
             }
         }.onFailure {
-            consumer(Feature.Msg.Inner.FetchingResult(emptyList()))
+            consumer(Msg.Inner.FetchingResult(emptyList()))
         }
     }
 }

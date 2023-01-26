@@ -12,4 +12,5 @@ abstract class BaseNavigator : AbstractNavigator() {
     abstract fun mainRouter(entry: NavBackStackEntry): MainScreenRouter
     abstract fun settingsRouter(entry: NavBackStackEntry): SettingsScreenRouter
     abstract fun trashRouter(entry: NavBackStackEntry): TrashScreenRouter
+    abstract fun editNoteRouter(entry: NavBackStackEntry): EditNoteRouter
 }

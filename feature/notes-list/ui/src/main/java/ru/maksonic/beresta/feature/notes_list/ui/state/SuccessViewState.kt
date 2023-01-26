@@ -11,6 +11,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -26,6 +28,8 @@ import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
 import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
@@ -35,9 +39,6 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 25.12.2022
  */
-interface SuccessMessages {
-    fun onRemoveAllNotesCancelClicked(): () -> Unit
-}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SuccessViewState(
@@ -55,10 +56,8 @@ internal fun SuccessViewState(
     val removeWithoutTrashCheckState = remember { mutableStateOf(false) }
 
     LaunchedEffect(notesScrollState) {
-        snapshotFlow { notesScrollState.firstVisibleItemIndex }
-            .map { index -> index == 0 }
-            .distinctUntilChanged()
-            .collect { isColoredTopBar ->
+        snapshotFlow { notesScrollState.firstVisibleItemIndex }.map { index -> index == 0 }
+            .distinctUntilChanged().collect { isColoredTopBar ->
                 mutableSharedNotesState.isColoredMainTopBar(isColoredTopBar)
             }
     }
@@ -69,7 +68,6 @@ internal fun SuccessViewState(
 
     LaunchedEffect(isScrollUp) {
         mutableSharedNotesState.isVisibleMainTopBar(isScrollUp)
-
         if (model.isSelectionState) {
             mutableSharedNotesState.isVisibleBottomPanel(true)
         } else {
@@ -81,10 +79,8 @@ internal fun SuccessViewState(
         }
     }
 
-    if (isScrolledEnd) {
-        LaunchedEffect(Unit) {
-            mutableSharedNotesState.isVisibleBottomPanel(true)
-        }
+    LaunchedEffect(isScrolledEnd) {
+        mutableSharedNotesState.isVisibleBottomPanel(true)
     }
 
     if (model.isVisibleRemoveAllNotesDialog) {
@@ -92,43 +88,76 @@ internal fun SuccessViewState(
     }
 
     OverscrollBehavior {
-        val bottomPaddingHeight = animateDpAsState(
-            targetValue = if (model.isSelectionState) {
-                Theme.widgetSize.bottomPanelHeightSelected.plus(dp12)
-            } else {
-                Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
-            }
-        )
-
-        LazyColumn(
-            state = notesScrollState,
-            modifier = modifier
+        Box(
+            modifier
                 .fillMaxSize()
-                .navigationBarsPadding(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .systemBarsPadding()
         ) {
-            stickyHeader {
-                NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote.value })
-            }
+            val bottomPaddingHeight = animateDpAsState(
+                targetValue = if (model.isSelectionState) {
+                    Theme.widgetSize.bottomPanelHeightSelected.plus(dp12)
+                } else {
+                    Theme.widgetSize.bottomPanelHeightIdle.plus(dp12)
+                }
+            )
 
-            items(
-                items = notes.notes,
-                key = { note -> note.id }
-            ) { note ->
-                NoteItem(
-                    send = send,
-                    note = note,
-                    modifier = modifier.animateItemPlacement()
-                )
+            LazyColumn(
+                state = notesScrollState,
+                modifier = modifier.padding(top = Theme.widgetSize.topBarNormalHeight),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    Box(
+                        modifier
+                            .fillMaxWidth()
+                            .height(Theme.widgetSize.topBarNormalHeight)
+                    )
+                }
+                items(items = notes.notes, key = { note -> note.id }) { note ->
+                    NoteItem(
+                        send = send, note = note, modifier = modifier.animateItemPlacement()
+                    )
+                }
+                item {
+                    Spacer(
+                        modifier
+                            .fillMaxWidth()
+                            .height(bottomPaddingHeight.value)
+                    )
+                }
             }
-            item {
-                Spacer(
-                    modifier
-                        .fillMaxWidth()
-                        .height(bottomPaddingHeight.value)
-                )
-            }
+            Header(
+                filters = filters,
+                isScrollUp = { isScrollUp },
+                firstVisibleNote = { firstVisibleNote.value },
+                modifier = modifier
+            )
         }
     }
 }
 
+@Composable
+private fun Header(
+    filters: FilterChipsCollection,
+    isScrollUp: () -> Boolean,
+    firstVisibleNote: () -> Boolean,
+    modifier: Modifier
+) {
+    val height = animateDpAsState(
+        targetValue = if (isScrollUp()) Theme.widgetSize.topBarNormalHeight else 0.dp
+    )
+
+    Column {
+        val backgroundColor = animateColorAsState(
+            targetValue = if (firstVisibleNote()) background
+            else tertiaryContainer
+        )
+
+        Box(
+            modifier
+                .fillMaxWidth()
+                .height(height.value)
+                .drawBehind { drawRect(backgroundColor.value) })
+        NotesFilterChips(filters = filters, isVisibleFirstNote = { firstVisibleNote() })
+    }
+}

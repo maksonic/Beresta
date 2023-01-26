@@ -10,15 +10,15 @@ import ru.maksonic.beresta.feature.onboarding.domain.Repository
 class Program(
     private val repository: Repository,
     private val onboardingVisibility: OnboardingVisibility,
-) : ElmProgram<Feature.Msg, Feature.Cmd> {
-    override suspend fun executeProgram(cmd: Feature.Cmd, consumer: (Feature.Msg) -> Unit) {
+) : ElmProgram<Msg, Cmd> {
+    override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Feature.Cmd.FetchOnboardings -> fetchOnboardings(consumer)
-            is Feature.Cmd.NotShowAgain -> onboardingVisibility.notShowAgain()
+            is Cmd.FetchOnboardings -> fetchOnboardings(consumer)
+            is Cmd.NotShowAgain -> onboardingVisibility.notShowAgain()
         }
     }
 
-    private fun fetchOnboardings(consumer: (Feature.Msg) -> Unit) {
-        consumer(Feature.Msg.Inner.Onboardings(repository.onboardings))
+    private fun fetchOnboardings(consumer: (Msg) -> Unit) {
+        consumer(Msg.Inner.Onboardings(repository.onboardings))
     }
 }

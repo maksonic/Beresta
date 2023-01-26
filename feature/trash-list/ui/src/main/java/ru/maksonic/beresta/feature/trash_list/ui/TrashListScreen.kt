@@ -7,17 +7,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
-import ru.maksonic.beresta.feature.trash_list.ui.core.Feature
+import ru.maksonic.beresta.feature.trash_list.ui.core.Eff
+import ru.maksonic.beresta.feature.trash_list.ui.core.Model
+import ru.maksonic.beresta.feature.trash_list.ui.core.Msg
 import ru.maksonic.beresta.feature.trash_list.ui.core.TrashSandbox
 import ru.maksonic.beresta.navigation.router.router.TrashScreenRouter
 import ru.maksonic.beresta.ui.theme.color.background
@@ -32,7 +31,7 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 23.01.2023
  */
-internal typealias SendMessage = (Feature.Msg) -> Unit
+internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
 fun TrashListScreen(router: TrashScreenRouter, sandbox: TrashSandbox = koinViewModel()) {
@@ -40,11 +39,11 @@ fun TrashListScreen(router: TrashScreenRouter, sandbox: TrashSandbox = koinViewM
 
     HandleUiEffects(sandbox.effects, router)
 
-    Content(model, msg = sandbox::sendMsg)
+    Content(model, send = sandbox::sendMsg)
 }
 
 @Composable
-fun Content(model: Feature.Model, msg: SendMessage, modifier: Modifier = Modifier) {
+fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifier) {
     val trashScreenState = rememberLazyListState()
     val isVisibleFirstItem = trashScreenState.isVisibleFirstItem()
 
@@ -52,20 +51,20 @@ fun Content(model: Feature.Model, msg: SendMessage, modifier: Modifier = Modifie
         animateColorAsState(targetValue = if (isVisibleFirstItem.value) background else tertiaryContainer)
 
     val bottomBarColor =
-        animateColorAsState(targetValue = if (true) background else tertiaryContainer)
+        animateColorAsState(targetValue = background)
 
     Column(modifier.fillMaxSize()) {
         SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
         TopAppBarNormal(
             title = stringResource(R.string.title_scr_trash),
             backgroundColor = { topBarColor.value },
-            backAction = { msg(Feature.Msg.Ui.TopBarBackPressed) }
+            backAction = { send(Msg.Ui.TopBarBackPressed) }
         )
 
         when {
             model.base.isLoading -> LoadingViewState()
             model.removedNotes.isEmpty() -> EmptyTrashViewState()
-            else -> FetchedViewState(state = trashScreenState, NotesCollection(model.removedNotes), msg, modifier.weight(1f))
+            else -> FetchedViewState(state = trashScreenState, NotesCollection(model.removedNotes), send, modifier.weight(1f))
         }
 
         SystemNavigationBar(changeableBackgroundColor = { bottomBarColor.value })
@@ -89,10 +88,10 @@ fun FetchedViewState(
 }
 
 @Composable
-fun HandleUiEffects(effects: Flow<Feature.Eff>, router: TrashScreenRouter) {
+fun HandleUiEffects(effects: Flow<Eff>, router: TrashScreenRouter) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Feature.Eff.NavigateBack -> router.onBack()
+            is Eff.NavigateBack -> router.onBack()
         }
     }
 }
