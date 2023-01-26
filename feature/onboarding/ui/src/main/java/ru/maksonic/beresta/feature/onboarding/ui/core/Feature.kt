@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.onboarding.ui.core
 
 import androidx.compose.runtime.Stable
-import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
@@ -11,47 +10,42 @@ import ru.maksonic.beresta.feature.onboarding.domain.OnboardingEntity
 /**
  * @Author maksonic on 24.12.2022
  */
-object Feature {
+@Stable
+data class Model(val onboardings: Array<OnboardingEntity> = emptyArray()) : ElmModel {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    @Stable
-    data class Model(val onboardings: Array<OnboardingEntity> = emptyArray()) : ElmModel {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+        other as Model
 
-            other as Model
+        if (!onboardings.contentEquals(other.onboardings)) return false
 
-            if (!onboardings.contentEquals(other.onboardings)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            return onboardings.contentHashCode()
-        }
+        return true
     }
 
-    sealed class Msg : ElmMessage {
-        sealed class Ui : Msg() {
-            object OnPrimaryBtnClicked : Ui()
-            object OnSkipSyncBtnClicked : Ui()
-            object OnGoogleAuthClicked : Ui()
-        }
+    override fun hashCode(): Int {
+        return onboardings.contentHashCode()
+    }
+}
 
-        sealed class Inner : Msg() {
-            data class Onboardings(val data: Array<OnboardingEntity>) : Inner()
-        }
+sealed class Msg : ElmMessage {
+    sealed class Ui : Msg() {
+        object OnPrimaryBtnClicked : Ui()
+        object OnSkipSyncBtnClicked : Ui()
+        object OnGoogleAuthClicked : Ui()
     }
 
-    sealed class Cmd : ElmCommand {
-        object FetchOnboardings : Cmd()
-        object NotShowAgain : Cmd()
+    sealed class Inner : Msg() {
+        data class Onboardings(val data: Array<OnboardingEntity>) : Inner()
     }
+}
 
-    sealed class Eff : ElmEffect {
-        object SlideNextPage : Eff()
-        object NavigateToMain : Eff()
-    }
+sealed class Cmd : ElmCommand {
+    object FetchOnboardings : Cmd()
+    object NotShowAgain : Cmd()
+}
 
-
+sealed class Eff : ElmEffect {
+    object SlideNextPage : Eff()
+    object NavigateToMain : Eff()
 }

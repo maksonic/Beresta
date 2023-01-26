@@ -34,13 +34,5 @@ interface ThemeSelector {
             }
             emit(currentTheme.value)
         }
-        }
-    /*override fun readTheme(): Flow<AppTheme> {
-            datastore.datastore.data.map { preferences ->
-                preferences[key] ?: AppTheme.SYSTEM.name
-            }.map {
-                currentTheme.value = AppTheme.valueOf(it)
-            }
-            return currentTheme
-        }*/
     }
+}

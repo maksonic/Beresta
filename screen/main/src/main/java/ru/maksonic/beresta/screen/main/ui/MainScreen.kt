@@ -15,8 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
-import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
-import ru.maksonic.beresta.screen.main.ui.core.Screen
+import ru.maksonic.beresta.screen.main.ui.core.*
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
 import ru.maksonic.beresta.ui.theme.BerestaTheme
@@ -30,7 +29,7 @@ import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 /**
  * @Author maksonic on 15.12.2022
  */
-typealias SendMessage = (Screen.Msg) -> Unit
+typealias SendMessage = (Msg) -> Unit
 
 @Composable
 fun MainScreen(router: MainScreenRouter, sandbox: MainSandbox = koinViewModel()) {
@@ -38,16 +37,12 @@ fun MainScreen(router: MainScreenRouter, sandbox: MainSandbox = koinViewModel())
 
     HandleUiEffects(sandbox.effects, router)
 
-    MainScreenContent(model = model, msg = sandbox::sendMsg)
+    MainScreenContent(model = model, send = sandbox::sendMsg)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun MainScreenContent(
-    modifier: Modifier = Modifier,
-    model: Screen.Model,
-    msg: SendMessage,
-) {
+private fun MainScreenContent(modifier: Modifier = Modifier, model: Model, send: SendMessage) {
     val mainPagerState = rememberPagerState()
     val notesSharedState = model.notesListFeature.state.collectAsState().value
     val tasksSharedState = model.tasksListFeature.state.collectAsState().value
@@ -72,17 +67,15 @@ private fun MainScreenContent(
             SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
 
             MainTopBar(
+                send = send,
                 pagerState = mainPagerState,
                 backgroundColor = { topBarColor.value },
                 isVisible = { model.isVisibleTopBar },
                 isSelectionState = { isSelectedState },
-                onSettingsClicked = { msg(Screen.Msg.Ui.OnSettingsClicked)
-                },
-                onShareClicked = { msg(Screen.Msg.Ui.OnShareSelectedNotes) }
             )
 
             MainPager(
-                msg = msg,
+                send = send,
                 pagerState = mainPagerState,
                 userScrollEnabled = !isSelectedState,
                 notes = Pair({ model.notesListFeature.Screen() }, notesSharedState),
@@ -113,11 +106,11 @@ private fun MainScreenContent(
 }
 
 @Composable
-private fun HandleUiEffects(effects: Flow<Screen.Eff>, router: MainScreenRouter) {
+private fun HandleUiEffects(effects: Flow<Eff>, router: MainScreenRouter) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Screen.Eff.NavigateToSettings -> router.toSettings()
-            is Screen.Eff.NavigateToTrash -> router.toTrash()
+            is Eff.NavigateToSettings -> router.toSettings()
+            is Eff.NavigateToTrash -> router.toTrash()
         }
     }
 }
@@ -126,11 +119,11 @@ private fun HandleUiEffects(effects: Flow<Screen.Eff>, router: MainScreenRouter)
 @Composable
 fun MainScreenPreview() {
     BerestaTheme {
-        val model = Screen.Model(
+        val model = Model(
             bottomPanelFeature = get(),
             notesListFeature = get(),
             tasksListFeature = get()
         )
-        MainScreenContent(model = model, msg = {})
+        MainScreenContent(model = model, send = {})
     }
 }

@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import ru.maksonic.beresta.screen.main.ui.SendMessage
+import ru.maksonic.beresta.screen.main.ui.core.Msg
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
@@ -28,12 +30,11 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun MainTopBar(
+    send: SendMessage,
     pagerState: PagerState,
     backgroundColor: () -> Color,
     isVisible: () -> Boolean,
     isSelectionState: () -> Boolean,
-    onSettingsClicked: () -> Unit,
-    onShareClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val topTabTransition = animateDpAsState(
@@ -56,12 +57,16 @@ internal fun MainTopBar(
     ) {
         IconAction(
             icon = painterResource(id = ru.maksonic.beresta.ui.theme.R.drawable.ic_settings),
-            action = onSettingsClicked,
+            action = { send(Msg.Ui.OnSettingsClicked) },
             modifier = modifier.padding(start = dp8)
         )
+
         TabsWidget(pagerState, modifier)
 
-        ShareSelectedNotesActionButton(onShareClicked, isSelectionState())
+        ShareSelectedNotesActionButton(
+            onShare = { send(Msg.Ui.OnShareSelectedNotes) },
+            isSelectionState = isSelectionState()
+        )
     }
 }
 
@@ -105,12 +110,11 @@ private fun MainTopBarPreview() {
     BerestaTheme {
         val bg = background
         MainTopBar(
+            send = {},
             pagerState = rememberPagerState(),
             backgroundColor = { bg },
             isVisible = { true },
             isSelectionState = { true },
-            onSettingsClicked = {},
-            onShareClicked = {}
         )
     }
 }

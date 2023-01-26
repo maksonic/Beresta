@@ -13,8 +13,7 @@ import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.navigation.router.router.SettingsScreenRouter
-import ru.maksonic.beresta.screen.settings.core.Screen
-import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
+import ru.maksonic.beresta.screen.settings.core.*
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -26,7 +25,7 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 /**
  * @Author maksonic on 16.01.2023
  */
-internal typealias SendMessage = (Screen.Msg) -> Unit
+internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
 fun SettingsScreen(router: SettingsScreenRouter, sandbox: SettingsSandbox = koinViewModel()) {
@@ -38,7 +37,7 @@ fun SettingsScreen(router: SettingsScreenRouter, sandbox: SettingsSandbox = koin
 }
 
 @Composable
-private fun Content(model: Screen.Model, msg: SendMessage, modifier: Modifier = Modifier) {
+private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifier) {
     val scrollState = rememberLazyListState()
     val firstVisibleItem = scrollState.isVisibleFirstItem()
     val topBarColor = animateColorAsState(
@@ -50,7 +49,7 @@ private fun Content(model: Screen.Model, msg: SendMessage, modifier: Modifier = 
         TopAppBarNormal(
             title = stringResource(id = R.string.txt_title_setting),
             backgroundColor = { topBarColor.value },
-            backAction = { msg(Screen.Msg.Ui.TopBarBackPressed) }
+            backAction = { send(Msg.Ui.TopBarBackPressed) }
         )
         LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
             items(50) {
@@ -61,10 +60,10 @@ private fun Content(model: Screen.Model, msg: SendMessage, modifier: Modifier = 
 }
 
 @Composable
-private fun HandleUiEffects(effects: Flow<Screen.Eff>, router: SettingsScreenRouter) {
+private fun HandleUiEffects(effects: Flow<Eff>, router: SettingsScreenRouter) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Screen.Eff.NavigateBack -> router.onBack()
+            is Eff.NavigateBack -> router.onBack()
         }
     }
 }

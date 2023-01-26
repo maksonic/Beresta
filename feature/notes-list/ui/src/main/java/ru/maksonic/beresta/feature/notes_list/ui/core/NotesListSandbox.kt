@@ -96,17 +96,15 @@ class NotesListSandbox(
         )
     }
 
-    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult {
-        return if (model.isSelectionState) {
+    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
+        if (model.isSelectionState)
             baseOnNoteAction(model, msg.id)
-        } else {
+        else
             UpdatedModel(model)
-        }
-    }
 
-    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult {
-        return baseOnNoteAction(model, msg.id)
-    }
+
+    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult =
+        baseOnNoteAction(model, msg.id)
 
     private fun selectAllNotes(model: Model): UpdateResult {
         var selectedCount = 0
@@ -133,13 +131,11 @@ class NotesListSandbox(
 
     private fun cancelNotesSelection(model: Model): UpdateResult {
         val unselectedAll = model.notes.map { it.copy(isSelected = false) }
-        return UpdatedModel(
-            model = model.copy(
-                notes = unselectedAll,
-                isSelectionState = false,
-                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
-            )
-        )
+        return UpdatedModel(model = model.copy(
+            notes = unselectedAll,
+            isSelectionState = false,
+            bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
+        ))
     }
 
     private fun pinSelectedNotesToTopList(model: Model): UpdateResult {

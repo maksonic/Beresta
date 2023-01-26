@@ -6,37 +6,32 @@ import ru.maksonic.beresta.elm.UpdatedModel
 /**
  * @Author maksonic on 15.12.2022
  */
-private typealias UpdateResult = UpdatedModel<Feature.Model, Set<Feature.Cmd>, Set<Feature.Eff>>
+private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class OnboardingSandbox(
     program: Program
-) : Sandbox<Feature.Model, Feature.Msg, Feature.Cmd, Feature.Eff>(
-    initialModel = Feature.Model(),
-    initialCmd = setOf(Feature.Cmd.FetchOnboardings),
+) : Sandbox<Model, Msg, Cmd, Eff>(
+    initialModel = Model(),
+    initialCmd = setOf(Cmd.FetchOnboardings),
     initialEff = setOf(),
     subscriptions = listOf(program)
 ) {
-    override fun update(msg: Feature.Msg, model: Feature.Model): UpdateResult =
-        when (msg) {
-            is Feature.Msg.Ui.OnGoogleAuthClicked -> UpdatedModel(model)
-            is Feature.Msg.Ui.OnPrimaryBtnClicked -> onPrimaryBtnClicked(model)
-            is Feature.Msg.Ui.OnSkipSyncBtnClicked -> onSkipBtnClicked(model)
-            is Feature.Msg.Inner.Onboardings -> fetchedData(model, msg)
-        }
+    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Ui.OnGoogleAuthClicked -> UpdatedModel(model)
+        is Msg.Ui.OnPrimaryBtnClicked -> onPrimaryBtnClicked(model)
+        is Msg.Ui.OnSkipSyncBtnClicked -> onSkipBtnClicked(model)
+        is Msg.Inner.Onboardings -> fetchedData(model, msg)
+    }
 
-    private fun fetchedData(
-        model: Feature.Model,
-        msg: Feature.Msg.Inner.Onboardings
-    ): UpdateResult =
+    private fun fetchedData(model: Model, msg: Msg.Inner.Onboardings): UpdateResult =
         UpdatedModel(model.copy(onboardings = msg.data))
 
-    private fun onPrimaryBtnClicked(model: Feature.Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Feature.Eff.SlideNextPage))
+    private fun onPrimaryBtnClicked(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.SlideNextPage))
 
-    private fun onSkipBtnClicked(model: Feature.Model): UpdateResult =
-        UpdatedModel(
-            model = model,
-            commands = setOf(Feature.Cmd.NotShowAgain),
-            effects = setOf(Feature.Eff.NavigateToMain)
-        )
+    private fun onSkipBtnClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model,
+        commands = setOf(Cmd.NotShowAgain),
+        effects = setOf(Eff.NavigateToMain)
+    )
 }

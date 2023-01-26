@@ -9,7 +9,7 @@ import ru.maksonic.beresta.feature.notes_list.api.feature.NotesSharedState
 import ru.maksonic.beresta.feature.tasks_list.api.TasksSharedState
 import ru.maksonic.beresta.screen.main.ui.PageItem
 import ru.maksonic.beresta.screen.main.ui.SendMessage
-import ru.maksonic.beresta.screen.main.ui.core.Screen
+import ru.maksonic.beresta.screen.main.ui.core.Msg
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
@@ -19,7 +19,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun MainPager(
-    msg: SendMessage,
+    send: SendMessage,
     pagerState: PagerState,
     userScrollEnabled: Boolean,
     notes: Pair<@Composable () -> Unit, NotesSharedState>,
@@ -34,7 +34,7 @@ internal fun MainPager(
             modifier = modifier.fillMaxSize()
         ) { page ->
             Page(
-                msg = msg,
+                send = send,
                 page = { page },
                 pagerState = pagerState,
                 notes = notes,
@@ -47,7 +47,7 @@ internal fun MainPager(
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun Page(
-    msg: SendMessage,
+    send: SendMessage,
     page: () -> Int,
     pagerState: PagerState,
     notes: Pair<@Composable () -> Unit, NotesSharedState>,
@@ -56,28 +56,28 @@ internal fun Page(
 
     if (pagerState.currentPage == PageItem.NOTES.pageValue) {
         LaunchedEffect(notes.second.isShowMainToolbar) {
-            msg(Screen.Msg.Inner.SetTopBarVisibility(notes.second.isShowMainToolbar))
+            send(Msg.Inner.SetTopBarVisibility(notes.second.isShowMainToolbar))
         }
 
         LaunchedEffect(notes.second.isColoredTopBar) {
-            msg(Screen.Msg.Inner.SetColoredTopBar(!notes.second.isColoredTopBar))
+            send(Msg.Inner.SetColoredTopBar(!notes.second.isColoredTopBar))
         }
 
         LaunchedEffect(notes.second.isShowBottomPanel) {
-            msg(Screen.Msg.Inner.SetBottomVisibility(notes.second.isShowBottomPanel))
+            send(Msg.Inner.SetBottomVisibility(notes.second.isShowBottomPanel))
         }
     }
     if (pagerState.currentPage == PageItem.TASKS.pageValue) {
         LaunchedEffect(tasks.second.isShowMainToolbar) {
-            msg(Screen.Msg.Inner.SetTopBarVisibility(tasks.second.isShowMainToolbar))
+            send(Msg.Inner.SetTopBarVisibility(tasks.second.isShowMainToolbar))
         }
 
         LaunchedEffect(tasks.second.isColoredTopBar) {
-            msg(Screen.Msg.Inner.SetColoredTopBar(!tasks.second.isColoredTopBar))
+            send(Msg.Inner.SetColoredTopBar(!tasks.second.isColoredTopBar))
         }
 
         LaunchedEffect(tasks.second.isShowBottomPanel) {
-            msg(Screen.Msg.Inner.SetBottomVisibility(tasks.second.isShowBottomPanel))
+            send(Msg.Inner.SetBottomVisibility(tasks.second.isShowBottomPanel))
         }
     }
 

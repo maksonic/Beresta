@@ -9,59 +9,54 @@ import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
 /**
  * @Author maksonic on 16.01.2023
  */
-private typealias UpdateResult = UpdatedModel<Screen.Model, Set<Screen.Cmd>, Set<Screen.Eff>>
+private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class MainSandbox(
     bottomPanelActionsMainProgram: BottomPanelActionsMainProgram,
     notesListFeature: NotesListFeature,
     tasksListFeature: TasksListFeature,
     bottomPanelFeature: BottomPanelFeature
-) : Sandbox<Screen.Model, Screen.Msg, Screen.Cmd, Screen.Eff>(
-    initialModel = Screen.Model(
+) : Sandbox<Model, Msg, Cmd, Eff>(
+    initialModel = Model(
         notesListFeature = notesListFeature,
         tasksListFeature = tasksListFeature,
         bottomPanelFeature = bottomPanelFeature
     ),
-    initialCmd = setOf(Screen.Cmd.ListenBottomPanelActions),
+    initialCmd = setOf(Cmd.ListenBottomPanelActions),
     subscriptions = listOf(bottomPanelActionsMainProgram)
 ) {
-    override fun update(msg: Screen.Msg, model: Screen.Model): UpdateResult = when (msg) {
-        is Screen.Msg.Inner.FetchNavEntry -> UpdatedModel(model.copy(entry = msg.from))
-        is Screen.Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
-        is Screen.Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
-        is Screen.Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
-        is Screen.Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
-        is Screen.Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
-        is Screen.Msg.Ui.OnTrashClicked -> onTrashClicked(model)
-        is Screen.Msg.Ui.OnSearchClicked -> onSearchClicked(model)
+    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchNavEntry -> UpdatedModel(model.copy(entry = msg.from))
+        is Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
+        is Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
+        is Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
+        is Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
+        is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
+        is Msg.Ui.OnTrashClicked -> onTrashClicked(model)
+        is Msg.Ui.OnSearchClicked -> onSearchClicked(model)
     }
 
-
     private fun setTopBarVisibility(
-        model: Screen.Model,
-        msg: Screen.Msg.Inner.SetTopBarVisibility
+        model: Model,
+        msg: Msg.Inner.SetTopBarVisibility
     ): UpdateResult =
         UpdatedModel(model.copy(isVisibleTopBar = msg.value))
 
     private fun setBottomBarVisibility(
-        model: Screen.Model,
-        msg: Screen.Msg.Inner.SetBottomVisibility
+        model: Model, msg: Msg.Inner.SetBottomVisibility
     ): UpdateResult =
         UpdatedModel(model.copy(isVisibleBottomBar = msg.value))
 
-    private fun setColoredTopBar(
-        model: Screen.Model,
-        msg: Screen.Msg.Inner.SetColoredTopBar
-    ): UpdateResult =
+    private fun setColoredTopBar(model: Model, msg: Msg.Inner.SetColoredTopBar): UpdateResult =
         UpdatedModel(model.copy(isColoredTopBar = msg.value))
 
-    private fun onSettingsClicked(model: Screen.Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Screen.Eff.NavigateToSettings))
+    private fun onSettingsClicked(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.NavigateToSettings))
 
-    private fun onShareSelectedNotesClicked(model: Screen.Model): UpdateResult = UpdatedModel(model)
+    private fun onShareSelectedNotesClicked(model: Model): UpdateResult = UpdatedModel(model)
 
-    private fun onTrashClicked(model: Screen.Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Screen.Eff.NavigateToTrash))
+    private fun onTrashClicked(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.NavigateToTrash))
 
-    private fun onSearchClicked(model: Screen.Model): UpdateResult = UpdatedModel(model)
+    private fun onSearchClicked(model: Model): UpdateResult = UpdatedModel(model)
 }

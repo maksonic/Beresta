@@ -14,7 +14,7 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.onboarding.domain.OnboardingEntity
-import ru.maksonic.beresta.feature.onboarding.ui.core.Feature
+import ru.maksonic.beresta.feature.onboarding.ui.core.Msg
 import ru.maksonic.beresta.feature.onboarding.ui.core.OnboardingSandbox
 import ru.maksonic.beresta.feature.onboarding.ui.widget.OnboardingItem
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
@@ -39,7 +39,7 @@ fun OnboardingScreen(router: OnboardingRouter, sandbox: OnboardingSandbox = koin
     OnboardingScreenContent(
         onboardings = model.onboardings,
         pagerState = pagerState,
-        msg = sandbox::sendMsg,
+        send = sandbox::sendMsg,
     )
 }
 
@@ -48,7 +48,7 @@ fun OnboardingScreen(router: OnboardingRouter, sandbox: OnboardingSandbox = koin
 private fun OnboardingScreenContent(
     onboardings: Array<OnboardingEntity>,
     pagerState: PagerState,
-    msg: (Feature.Msg) -> Unit,
+    send: (Msg) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isLastCurrentPage = pagerState.currentPage == onboardings.lastIndex
@@ -74,12 +74,12 @@ private fun OnboardingScreenContent(
             }
         }
         PrimaryButton(
-            action = { msg(Feature.Msg.Ui.OnPrimaryBtnClicked) },
+            action = { send(Msg.Ui.OnPrimaryBtnClicked) },
             title = stringResource(id = titlePrimaryBtn),
         )
         Spacer(modifier = modifier.padding(bottom = dp16))
         TertiaryButton(
-            action = { msg(Feature.Msg.Ui.OnSkipSyncBtnClicked) },
+            action = { send(Msg.Ui.OnSkipSyncBtnClicked) },
             title = stringResource(R.string.btnSkipAuthTitle),
             modifier = modifier.alpha(alphaDoNotSyncBtn)
         )
@@ -98,7 +98,7 @@ private fun OnboardingScreenPreview() {
         OnboardingScreenContent(
             onboardings = arrayOf(mock),
             pagerState = rememberPagerState(),
-            msg = {},
+            send = {},
         )
     }
 }
