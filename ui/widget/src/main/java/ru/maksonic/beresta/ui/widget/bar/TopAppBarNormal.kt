@@ -19,10 +19,12 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
  */
 @Composable
 fun TopAppBarNormal(
+    modifier: Modifier = Modifier,
     title: String,
     backgroundColor: () -> Color,
     backAction: () -> Unit,
-    modifier: Modifier = Modifier
+    menuActions: @Composable () -> Unit = {},
+
 ) {
     Row(
         modifier
@@ -34,5 +36,9 @@ fun TopAppBarNormal(
         Spacer(modifier.size(dp8))
         IconAction(icon = { painterResource(id = R.drawable.ic_arrow_back) }, action = backAction)
         Text(text = title, style = TextDesign.topBar, modifier = modifier.padding(start = dp8))
+        Spacer(modifier.weight(1f))
+        menuActions()
+        Spacer(modifier.size(dp8))
+
     }
 }

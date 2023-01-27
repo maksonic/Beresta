@@ -49,7 +49,7 @@ private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifi
         TopAppBarNormal(
             title = stringResource(id = R.string.txt_title_setting),
             backgroundColor = { topBarColor.value },
-            backAction = { send(Msg.Ui.TopBarBackPressed) }
+            backAction = { send(Msg.Ui.OnTopBarBackPressed) }
         )
         LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
             items(50) {

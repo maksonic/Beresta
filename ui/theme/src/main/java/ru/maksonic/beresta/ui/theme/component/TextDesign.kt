@@ -13,7 +13,7 @@ object TextDesign {
     val header: TextStyle
         @Composable
         get() = TextStyle(
-            fontSize = 28.sp,
+            fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             color = Theme.color.onPrimaryContainer
         )
@@ -37,6 +37,15 @@ object TextDesign {
         get() = TextStyle(
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal,
+            color = Theme.color.onPrimaryContainer
+        )
+
+    val main: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 28.0.sp,
             color = Theme.color.onPrimaryContainer
         )
 

@@ -13,7 +13,7 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object TopBarBackPressed : Ui()
+        object OnTopBarBackPressed : Ui()
     }
 
     sealed class Inner : Msg() {

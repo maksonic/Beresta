@@ -19,4 +19,7 @@ abstract class NoteDao : BaseDao<NoteCache>() {
     @Transaction
     @Query("SELECT * FROM notes WHERE id = :itemId")
     abstract fun fetchCacheOneItemById(itemId: Long): Flow<NoteCache>
+
+    @Query("SELECT EXISTS(SELECT * FROM notes WHERE id = :id)")
+    abstract fun isNoteIsExist(id : Long) : Boolean
 }

@@ -86,6 +86,9 @@ dependencies {
     implementation(project(BaseModule.Feature.TrashList.Domain.path))
     implementation(project(BaseModule.Feature.TrashList.Ui.path))
 
+    implementation(project(BaseModule.Feature.EditNote.Domain.path))
+    implementation(project(BaseModule.Feature.EditNote.Ui.path))
+
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
 

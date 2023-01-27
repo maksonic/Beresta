@@ -1,14 +1,14 @@
-package ru.maksonic.beresta.navigation.graph_builder
+package ru.maksonic.beresta.navigation.router.navigator
 
 import androidx.navigation.NavBackStackEntry
-import ru.maksonic.beresta.navigation.router.BaseNavigator
 import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.navigation.router.Router
 import ru.maksonic.beresta.navigation.router.router.*
 
 /**
  * @Author maksonic on 15.11.2022
  */
-class AppNavigator : BaseNavigator() {
+class AppNavigator : AbstractNavigator(), Router {
 
     override fun splashRouter(entry: NavBackStackEntry) = SplashScreenRouter(
         toOnboardingOrMain = { verifiedDestination ->
@@ -23,7 +23,10 @@ class AppNavigator : BaseNavigator() {
     override fun mainRouter(entry: NavBackStackEntry) = MainScreenRouter(
         toSettings = { navigate(entry, Destination.Settings.route) },
         toTrash = { navigate(entry, Destination.TrashList.route) },
-        toCreateNewNote = { navigate(entry, Destination.EditNote.route) }
+        toNoteEditor = { passedId ->
+            val noteId = passedId ?: 0L
+            navigate(entry, Destination.EditNote.route.plus(Destination.EditNote.id(noteId)))        }
+
     )
 
     override fun settingsRouter(entry: NavBackStackEntry) = SettingsScreenRouter(

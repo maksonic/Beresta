@@ -16,7 +16,7 @@ class SettingsSandbox(
 ) {
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Ui.TopBarBackPressed -> topBarBackPressed(model)
+        is Msg.Ui.OnTopBarBackPressed -> topBarBackPressed(model)
     }
 
     private fun topBarBackPressed(model: Model): UpdateResult =

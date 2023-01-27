@@ -18,4 +18,7 @@ data class NoteCache(
     val title: String = "",
     val message: String = "",
     val dateCreation: Calendar = Calendar.getInstance(),
+    val currentFolder: String = "",
+    val isPinned: Boolean = false,
+    val isMovedToTrash: Boolean = false
 )

@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes_list.data.cache
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.data.common.BaseCacheSource
 
 /**
@@ -15,4 +16,7 @@ class NotesCacheSource(
 
     fun fetchItemById(itemId: Long): NoteCacheItem =
         noteDao.fetchCacheOneItemById(itemId).flowOn(dispatcher)
+
+    suspend fun isNoteIsExist(itemId: Long): Boolean =
+        withContext(dispatcher) { noteDao.isNoteIsExist(itemId) }
 }

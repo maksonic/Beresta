@@ -43,7 +43,7 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
-    object NavigateNoEditNote : Eff()
+    object NavigateToAddNewNote : Eff()
     object NavigateToSettings : Eff()
     object NavigateToTrash : Eff()
 }

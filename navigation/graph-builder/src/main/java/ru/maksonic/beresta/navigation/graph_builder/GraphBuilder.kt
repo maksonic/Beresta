@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.navigation
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 
 /**

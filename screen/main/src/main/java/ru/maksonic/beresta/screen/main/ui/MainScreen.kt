@@ -3,25 +3,13 @@ package ru.maksonic.beresta.screen.main.ui
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +19,6 @@ import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.ui.core.*
 import ru.maksonic.beresta.screen.main.ui.widget.MainPager
 import ru.maksonic.beresta.screen.main.ui.widget.MainTopBar
-import ru.maksonic.beresta.screen.main.ui.widget.TabsWidget
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
@@ -39,7 +26,6 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 
 /**
  * @Author maksonic on 15.12.2022
@@ -52,12 +38,17 @@ fun MainScreen(router: MainScreenRouter, sandbox: MainSandbox = koinViewModel())
 
     HandleUiEffects(sandbox.effects, router)
 
-    MainScreenContent(model = model, send = sandbox::sendMsg)
+    MainScreenContent(model = model, send = sandbox::sendMsg, router = router)
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun MainScreenContent(modifier: Modifier = Modifier, model: Model, send: SendMessage) {
+private fun MainScreenContent(
+    modifier: Modifier = Modifier,
+    model: Model,
+    send: SendMessage,
+    router: MainScreenRouter
+) {
     val mainPagerState = rememberPagerState()
     val notesSharedState = model.notesListFeature.state.collectAsState().value
     val tasksSharedState = model.tasksListFeature.state.collectAsState().value
@@ -71,14 +62,14 @@ private fun MainScreenContent(modifier: Modifier = Modifier, model: Model, send:
         contentAlignment = Alignment.BottomCenter
     ) {
 
-            MainPager(
-                send = send,
-                pagerState = mainPagerState,
-                userScrollEnabled = !isSelectedState,
-                notes = Pair({ model.notesListFeature.Screen() }, notesSharedState),
-                tasks = Pair({ model.tasksListFeature.Screen() }, tasksSharedState),
-                modifier = modifier.fillMaxSize()
-            )
+        MainPager(
+            send = send,
+            pagerState = mainPagerState,
+            userScrollEnabled = !isSelectedState,
+            notes = Pair({ model.notesListFeature.Screen(router) }, notesSharedState),
+            tasks = Pair({ model.tasksListFeature.Screen() }, tasksSharedState),
+            modifier = modifier.fillMaxSize()
+        )
 
 
         Column(modifier.fillMaxSize()) {
@@ -122,7 +113,7 @@ private fun MainScreenContent(modifier: Modifier = Modifier, model: Model, send:
 private fun HandleUiEffects(effects: Flow<Eff>, router: MainScreenRouter) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Eff.NavigateNoEditNote -> router.toCreateNewNote()
+            is Eff.NavigateToAddNewNote -> router.toNoteEditor(0)
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToTrash -> router.toTrash()
         }
@@ -138,7 +129,7 @@ fun MainScreenPreview() {
             notesListFeature = get(),
             tasksListFeature = get()
         )
-        MainScreenContent(model = model, send = {})
+        MainScreenContent(model = model, send = {}, router = MainScreenRouter({}, {}, {}))
     }
 }
 

@@ -17,7 +17,7 @@ sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
-        object TopBarBackPressed : Ui()
+        object OnTopBarBackPressed : Ui()
     }
 
     sealed class Inner : Msg() {

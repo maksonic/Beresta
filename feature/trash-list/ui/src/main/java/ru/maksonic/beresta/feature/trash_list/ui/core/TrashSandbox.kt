@@ -17,7 +17,7 @@ class TrashSandbox(trashProgram: TrashProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchingResult -> fetchRemovedNotes(model, msg)
-        is Msg.Ui.TopBarBackPressed -> onTopBarBackPressed(model)
+        is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnNoteClicked -> UpdatedModel(model)
         is Msg.Ui.OnNoteLongClicked -> UpdatedModel(model)
     }

@@ -31,7 +31,7 @@ class NotesListSandbox(
         is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
         is Msg.Inner.FetchingError -> fetchingError(model, msg)
-        is Msg.Ui.RemoveSelectedItems -> onBottomPanelRemoveNotesClicked(model)
+        is Msg.Ui.RemoveSelectedItems -> onBottomPanelReplaceToTrashClicked(model)
         is Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
         is Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
         is Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
@@ -76,7 +76,7 @@ class NotesListSandbox(
             )
         )
 
-    private fun onBottomPanelRemoveNotesClicked(model: Model): UpdateResult {
+    private fun onBottomPanelReplaceToTrashClicked(model: Model): UpdateResult {
         val beforeRemove = model.notes
         val remove = model.notes.map { note ->
             return@map note.copy(isMovedToTrash = note.isSelected)
@@ -95,12 +95,31 @@ class NotesListSandbox(
             )
         )
     }
+    /*  private fun onBottomPanelReplaceToTrashClicked(model: Model): UpdateResult {
+        val beforeRemove = model.notes
+        val remove = model.notes.map { note ->
+            return@map note.copy(isMovedToTrash = note.isSelected)
+        }.filter { !it.isMovedToTrash }
+
+        val isAllSelected = remove.all { it.isSelected }
+        val bottomPanelState = model.bottomPanelState.update { panelState ->
+            panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)
+        }
+        return UpdatedModel(
+            model.copy(
+                notes = if (isAllSelected) beforeRemove else remove,
+                isSelectionState = isAllSelected,
+                isVisibleRemoveAllNotesDialog = isAllSelected,
+                bottomPanelState = bottomPanelState
+            )
+        )
+    }*/
 
     private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
         if (model.isSelectionState)
             baseOnNoteAction(model, msg.id)
         else
-            UpdatedModel(model)
+            UpdatedModel(model, effects = setOf(Eff.ShowNoteForEdit(msg.id)))
 
 
     private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult =
