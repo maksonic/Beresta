@@ -52,6 +52,7 @@ dependencies {
     implementation(project(BaseModule.BaseDomain.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Elm.path))
+    implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Feature.BottomPanel.Api.path))

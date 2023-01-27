@@ -6,5 +6,5 @@ package ru.maksonic.beresta.navigation.router.router
 data class MainScreenRouter(
     val toSettings: () -> Unit,
     val toTrash: () -> Unit,
-    val toCreateNewNote: () -> Unit
+    val toNoteEditor: (id: Long?) -> Unit
 )

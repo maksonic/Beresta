@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
-import ru.maksonic.beresta.navigation.graph_builder.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.background

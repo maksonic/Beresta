@@ -17,11 +17,15 @@ import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
 import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
 import ru.maksonic.beresta.feature.botom_panel.ui.BottomPanelWidget
+import ru.maksonic.beresta.feature.edit_note.domain.EditNoteInteractor
+import ru.maksonic.beresta.feature.edit_note.ui.core.core.EditNoteProgram
+import ru.maksonic.beresta.feature.edit_note.ui.core.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.notes_list.api.NoteUiMapper
 import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
 import ru.maksonic.beresta.feature.notes_list.data.NotesRepositoryImpl
 import ru.maksonic.beresta.feature.notes_list.data.cache.NoteCacheMapper
 import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
+import ru.maksonic.beresta.feature.notes_list.domain.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.ui.NotesListScreen
@@ -43,7 +47,7 @@ import ru.maksonic.beresta.feature.trash_list.domain.FetchMovedToTrashNotesUseCa
 import ru.maksonic.beresta.feature.trash_list.ui.core.TrashProgram
 import ru.maksonic.beresta.feature.trash_list.ui.core.TrashSandbox
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
-import ru.maksonic.beresta.navigation.graph_builder.AppNavigator
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.screen.main.ui.core.BottomPanelActionsMainProgram
 import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
 import ru.maksonic.beresta.screen.settings.core.SettingsProgram
@@ -109,7 +113,7 @@ class BerestaApp : Application() {
     private val notesListFeatureModule = module {
         single<NoteUiMapper> { NotesUiMapperImpl(dateFormatter = DateFormatter) }
         single<NotesListFeature> { NotesListScreen() }
-        single { NotesListProgram(notesUseCase = get(), mapper = get(), resourceProvider = get()) }
+        single { NotesListProgram(fetchingUseCase = get(), mapper = get(), resourceProvider = get()) }
         single { BottomPanelActionsProgram(feature = get()) }
         viewModel {
             NotesListSandbox(
@@ -130,6 +134,7 @@ class BerestaApp : Application() {
         }
         single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
         single { FetchNotesUseCase(repository = get()) }
+        single { FetchNoteByIdUseCase(repository = get()) }
     }
 
     private val tasksListFeatureModule = module {
@@ -147,6 +152,20 @@ class BerestaApp : Application() {
         viewModel { TrashSandbox(trashProgram = get()) }
     }
 
+
+    private val editNoteFeatureModule = module {
+        single<EditNoteInteractor> { EditNoteInteractor.Impl(repository = get()) }
+        single {
+            EditNoteProgram(
+                interactor = get(),
+                fetchNoteByIdUseCase = get(),
+                mapper = get(),
+                navigator = get()
+            )
+        }
+        viewModel { EditNoteSandbox(program = get()) }
+    }
+
     private val modules = listOf(
         appModule,
         settingsModule,
@@ -162,7 +181,8 @@ class BerestaApp : Application() {
         themeSelectorFeatureModule,
         coreModule,
         bottomPanelModule,
-        trashModule
+        trashModule,
+        editNoteFeatureModule
     )
 
     override fun onCreate() {

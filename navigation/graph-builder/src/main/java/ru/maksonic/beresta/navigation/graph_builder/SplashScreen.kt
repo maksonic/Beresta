@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import ru.maksonic.beresta.feature.splash_screen.SplashScreen
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 
 /**

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import ru.maksonic.beresta.feature.trash_list.ui.TrashListScreen
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 
 /**

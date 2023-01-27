@@ -37,7 +37,7 @@ class MainSandbox(
     }
 
     private fun onAddNoteClicked(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.NavigateNoEditNote))
+        UpdatedModel(model, effects = setOf(Eff.NavigateToAddNewNote))
 
     private fun setTopBarVisibility(
         model: Model,

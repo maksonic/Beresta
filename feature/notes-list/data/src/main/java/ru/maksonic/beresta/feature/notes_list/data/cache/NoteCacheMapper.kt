@@ -11,14 +11,20 @@ class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
         id = i.id,
         title = i.title,
         message = i.message,
-        dateCreation = i.dateCreation
+        dateCreation = i.dateCreation,
+        currentFolder = i.currentFolder,
+        isPinned = i.isPinned,
+        isMovedToTrash = i.isMovedToTrash
     )
 
     override fun domainToData(o: NoteDomain) = NoteCache(
         id = o.id,
         title = o.title,
         message = o.message,
-        dateCreation = o.dateCreation
+        dateCreation = o.dateCreation,
+        currentFolder = o.currentFolder,
+        isPinned = o.isPinned,
+        isMovedToTrash = o.isMovedToTrash
     )
 
 }

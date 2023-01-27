@@ -18,6 +18,7 @@ import ru.maksonic.beresta.feature.notes_list.ui.core.Msg
 import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.EmptyNotesViewState
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
+import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 
@@ -32,11 +33,11 @@ class NotesListScreen : NotesListFeature {
         get() = mutableSharedNotesState.asStateFlow()
 
     @Composable
-    override fun Screen() {
+    override fun Screen(router: MainScreenRouter) {
         val sandbox: NotesListSandbox = koinViewModel()
         val model = sandbox.model.collectAsState().value
 
-        HandleEffects(effects = sandbox.effects)
+        HandleEffects(effects = sandbox.effects, router)
         Content(model = model, send = sandbox::sendMsg)
     }
 
@@ -64,12 +65,10 @@ class NotesListScreen : NotesListFeature {
     }
 
     @Composable
-    private fun HandleEffects(effects: Flow<Eff>) {
+    private fun HandleEffects(effects: Flow<Eff>, router: MainScreenRouter) {
         HandleEffectsWithLifecycle(effects) { eff ->
             when (eff) {
-                is Eff.ShowNoteForEdit -> {
-
-                }
+                is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
             }
         }
     }

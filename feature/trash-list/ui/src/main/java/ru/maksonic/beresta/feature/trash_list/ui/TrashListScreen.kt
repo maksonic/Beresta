@@ -58,7 +58,7 @@ fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifier) {
         TopAppBarNormal(
             title = stringResource(R.string.title_scr_trash),
             backgroundColor = { topBarColor.value },
-            backAction = { send(Msg.Ui.TopBarBackPressed) }
+            backAction = { send(Msg.Ui.OnTopBarBackPressed) }
         )
 
         when {

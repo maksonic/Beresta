@@ -48,10 +48,11 @@ sealed class Msg: ElmMessage {
 
 sealed class Cmd : ElmCommand {
     object FetchData : Cmd()
+    data class MoveSelectedToTrash(val notes: List<NoteUi>): Cmd()
     object ListenBottomPanelActions : Cmd()
     data class PassPinNotesStateToBottomPanel(val isShowUnpinBtn: Boolean) : Cmd()
 }
 
 sealed class Eff : ElmEffect {
-    object ShowNoteForEdit : Eff()
+    data class ShowNoteForEdit(val id: Long) : Eff()
 }

@@ -63,7 +63,9 @@ internal fun IdlePanelState(panelState: PanelSharedState, modifier: Modifier = M
         }
 
         Spacer(modifier.weight(1f))
-        IconPrimaryAction(action = { })
+        IconPrimaryAction(
+            action = { panelState.idleActions[BottomPanel.Action.Notes.Idle.ADD_NOTE]?.invoke() }
+        )
         Spacer(modifier.weight(1f))
 
         rightButtons.forEach { item ->

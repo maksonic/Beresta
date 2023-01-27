@@ -1,6 +1,7 @@
 plugins {
     androidLibrary()
     kotlinAndroid()
+    parcelize()
 }
 
 android {
@@ -52,5 +53,6 @@ dependencies {
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.BaseDomain.path))
     implementation(project(BaseModule.Feature.NotesList.Domain.path))
+    implementation(project(BaseModule.Navigation.Router.path))
     implementation(Lib.Koin.compose)
 }
