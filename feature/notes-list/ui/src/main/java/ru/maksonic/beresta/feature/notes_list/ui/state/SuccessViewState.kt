@@ -25,7 +25,6 @@ import ru.maksonic.beresta.feature.notes_list.api.feature.isVisibleMainTopBar
 import ru.maksonic.beresta.feature.notes_list.ui.core.Model
 import ru.maksonic.beresta.feature.notes_list.ui.core.Msg
 import ru.maksonic.beresta.feature.notes_list.ui.widget.NotesFilterChips
-import ru.maksonic.beresta.feature.notes_list.ui.widget.dialogs.RemoveAllNotesDialog
 import ru.maksonic.beresta.feature.notes_list.ui.widget.note.NoteItem
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
@@ -53,7 +52,6 @@ internal fun SuccessViewState(
     val firstVisibleNote = notesScrollState.isVisibleFirstItem()
     val isScrollUp = notesScrollState.isScrollUp()
     val isScrolledEnd = notesScrollState.isScrolledEnd()
-    val removeWithoutTrashCheckState = remember { mutableStateOf(false) }
 
     LaunchedEffect(notesScrollState) {
         snapshotFlow { notesScrollState.firstVisibleItemIndex }.map { index -> index == 0 }
@@ -83,10 +81,6 @@ internal fun SuccessViewState(
         mutableSharedNotesState.isVisibleBottomPanel(true)
     }
 
-    if (model.isVisibleRemoveAllNotesDialog) {
-        RemoveAllNotesDialog(send = send, checkedState = removeWithoutTrashCheckState)
-    }
-
     OverscrollBehavior {
         Box(
             modifier
@@ -113,6 +107,7 @@ internal fun SuccessViewState(
                             .height(Theme.widgetSize.topBarNormalHeight)
                     )
                 }
+
                 items(items = notes.notes, key = { note -> note.id }) { note ->
                     NoteItem(
                         send = send, note = note, modifier = modifier.animateItemPlacement()

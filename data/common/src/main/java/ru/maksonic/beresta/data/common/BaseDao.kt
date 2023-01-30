@@ -26,6 +26,10 @@ abstract class BaseDao<T> {
     abstract suspend fun updateItem(item: T)
 
     @Transaction
+    @Update
+    abstract suspend fun updateAll(items: List<T>)
+
+    @Transaction
     @Delete
     abstract suspend fun deleteAll(data: List<T>)
 

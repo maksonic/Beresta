@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.notes_list.data
 
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.transform
 import ru.maksonic.beresta.feature.notes_list.data.cache.NoteCacheMapper
 import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
@@ -26,6 +25,12 @@ class NotesRepositoryImpl(
     override fun fetchItem(itemId: Long): NoteDomainItem = cache.fetchItemById(itemId)
         .transform { cacheNoteItem -> emit(mapper.dataToDomain(cacheNoteItem)) }
 
+    override suspend fun fetchTrashNotes(): NotesDomainList = cache.fetchCachedTrashNotes()
+        .transform { cacheNotesList ->
+            val notes = mapper.listDataToDomain(cacheNotesList)
+            emit(notes)
+        }
+
     override suspend fun addNewItem(item: NoteDomain) {
         if (item.title.isNotBlank() || item.message.isNotBlank()) {
             val cacheNote = mapper.domainToData(item)
@@ -36,6 +41,11 @@ class NotesRepositoryImpl(
     override suspend fun updateItem(item: NoteDomain) {
         val cacheNoteItem = mapper.domainToData(item)
         cache.updateItem(cacheNoteItem)
+    }
+
+    override suspend fun updateAllItems(items: List<NoteDomain>) {
+        val list = mapper.listDomainToData(items)
+        cache.updateAll(list)
     }
 
     override suspend fun removeEmptyItem(item: NoteDomain) {
@@ -51,5 +61,8 @@ class NotesRepositoryImpl(
         cache.removeItem(cacheNote)
     }
 
-    override fun fetchNotesMovedToTrash(): NotesDomainList = flow { emit(emptyList()) }
+    override suspend fun clearItemsList(items: List<NoteDomain>) {
+        val cacheList = mapper.listDomainToData(items)
+        cache.clearCache(cacheList)
+    }
 }

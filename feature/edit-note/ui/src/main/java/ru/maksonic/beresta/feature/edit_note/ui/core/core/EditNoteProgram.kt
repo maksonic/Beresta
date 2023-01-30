@@ -1,17 +1,17 @@
 package ru.maksonic.beresta.feature.edit_note.ui.core.core
 
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.edit_note.domain.EditNoteInteractor
 import ru.maksonic.beresta.feature.notes_list.api.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.NoteUiMapper
 import ru.maksonic.beresta.feature.notes_list.domain.FetchNoteByIdUseCase
+import ru.maksonic.beresta.feature.notes_list.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 
 /**
  * @Author maksonic on 26.01.2023
  */
 class EditNoteProgram(
-    private val interactor: EditNoteInteractor,
+    private val interactor: RefactorNoteInteractor,
     private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
     private val mapper: NoteUiMapper,
     private val navigator: AppNavigator
