@@ -3,11 +3,13 @@ package ru.maksonic.beresta.feature.notes_list.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
 import ru.maksonic.beresta.feature.notes_list.api.collection.FilterChipsCollection
 import ru.maksonic.beresta.feature.notes_list.api.collection.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
@@ -19,6 +21,7 @@ import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.ui.state.EmptyNotesViewState
 import ru.maksonic.beresta.feature.notes_list.ui.state.SuccessViewState
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
+import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 
@@ -46,7 +49,7 @@ class NotesListScreen : NotesListFeature {
         send(Msg.Inner.SelectPanelVisibility(model.isSelectionState))
 
         BackHandler(model.isSelectionState) {
-            send(Msg.Ui.CancelNotesSelection)
+            send(Msg.Ui.CancelSelection)
         }
 
         when {
@@ -72,4 +75,13 @@ class NotesListScreen : NotesListFeature {
             }
         }
     }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun NotesListScreenPreview() {
+        BerestaTheme {
+            NotesListScreen().Content(model = Model(bottomPanelState = BottomPanelSharedState()), {} )
+        }
+    }
 }
+

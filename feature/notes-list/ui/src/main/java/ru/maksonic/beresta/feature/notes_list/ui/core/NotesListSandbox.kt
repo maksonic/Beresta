@@ -27,20 +27,17 @@ class NotesListSandbox(
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.RetryFetching -> retryFetching(model)
         is Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
-        is Msg.Ui.SelectAllNotes -> selectAllNotes(model)
+        is Msg.Ui.SelectAll -> selectAllNotes(model)
         is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Msg.Inner.FetchingSuccess -> fetchingSuccess(model, msg)
         is Msg.Inner.FetchingError -> fetchingError(model, msg)
-        is Msg.Ui.RemoveSelectedItems -> onBottomPanelReplaceToTrashClicked(model)
-        is Msg.Ui.CancelNotesSelection -> cancelNotesSelection(model)
-        is Msg.Ui.PinSelectedNotes -> pinSelectedNotesToTopList(model)
-        is Msg.Ui.ReplaceSelectedNotes -> replaceSelectedNotesToFolder(model, msg)
-        is Msg.Ui.OnSelectNotesFilter -> onFilterSelected(model, msg)
+        is Msg.Ui.RemoveSelectedItems -> onBottomPanelRemoveClicked(model)
+        is Msg.Inner.AfterRemoveResult -> afterRemoveNotes(model, msg)
+        is Msg.Ui.CancelSelection -> cancelNotesSelection(model)
+        is Msg.Ui.PinSelected -> pinSelectedNotesToTopList(model)
+        is Msg.Ui.ReplaceSelected -> replaceSelectedNotesToFolder(model, msg)
+        is Msg.Ui.OnSelectFilter -> onFilterSelected(model, msg)
         is Msg.Inner.SelectPanelVisibility -> selectPanelVisibilityState(model, msg)
-        is Msg.Ui.OnDialogSelectAllCancelClicked -> onDialogSelectNotesCancelClicked(model)
-        is Msg.Ui.OnRemoveWithoutRecoveryClicked -> {
-            onDialogSelectNotesRemoveWithoutRecoveryClicked(model)
-        }
     }
 
     private fun selectPanelVisibilityState(
@@ -56,13 +53,16 @@ class NotesListSandbox(
         commands = setOf(Cmd.FetchData)
     )
 
-    private fun fetchingSuccess(model: Model, msg: Msg.Inner.FetchingSuccess): UpdateResult =
-        UpdatedModel(
+    private fun fetchingSuccess(model: Model, msg: Msg.Inner.FetchingSuccess): UpdateResult {
+        val sortNotes =
+            msg.notes.sortedWith(comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id })
+        return UpdatedModel(
             model = model.copy(
                 base = model.base.copy(isLoading = false, isSuccessLoading = true),
-                notes = msg.notes
+                notes = sortNotes
             )
         )
+    }
 
     private fun fetchingError(model: Model, msg: Msg.Inner.FetchingError): UpdateResult =
         UpdatedModel(
@@ -76,44 +76,34 @@ class NotesListSandbox(
             )
         )
 
-    private fun onBottomPanelReplaceToTrashClicked(model: Model): UpdateResult {
-        val beforeRemove = model.notes
+    private fun onBottomPanelRemoveClicked(model: Model): UpdateResult {
         val remove = model.notes.map { note ->
             return@map note.copy(isMovedToTrash = note.isSelected)
-        }.filter { !it.isMovedToTrash }
-
-        val isAllSelected = remove.all { it.isSelected }
-        val bottomPanelState = model.bottomPanelState.update { panelState ->
-            panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)
         }
+
+        val bottomPanelState = model.bottomPanelState.update { panelState ->
+            panelState.copy(selectedCount = 0)
+        }
+
         return UpdatedModel(
             model.copy(
-                notes = if (isAllSelected) beforeRemove else remove,
-                isSelectionState = isAllSelected,
-                isVisibleRemoveAllNotesDialog = isAllSelected,
+                notes = remove.filter { !it.isMovedToTrash },
+                isSelectionState = false,
                 bottomPanelState = bottomPanelState
-            )
+            ),
+            commands = setOf(Cmd.RemoveSelected(remove))
         )
     }
-    /*  private fun onBottomPanelReplaceToTrashClicked(model: Model): UpdateResult {
-        val beforeRemove = model.notes
-        val remove = model.notes.map { note ->
-            return@map note.copy(isMovedToTrash = note.isSelected)
-        }.filter { !it.isMovedToTrash }
 
-        val isAllSelected = remove.all { it.isSelected }
-        val bottomPanelState = model.bottomPanelState.update { panelState ->
-            panelState.copy(selectedCount = if (isAllSelected) panelState.selectedCount else 0)
-        }
-        return UpdatedModel(
+    private fun afterRemoveNotes(model: Model, msg: Msg.Inner.AfterRemoveResult): UpdateResult =
+        UpdatedModel(
             model.copy(
-                notes = if (isAllSelected) beforeRemove else remove,
-                isSelectionState = isAllSelected,
-                isVisibleRemoveAllNotesDialog = isAllSelected,
-                bottomPanelState = bottomPanelState
+                notes = msg.notes,
+                isSelectionState = msg.isAllSelected,
+                bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) },
+                isVisibleRemoveAllNotesDialog = msg.isAllSelected,
             )
         )
-    }*/
 
     private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
         if (model.isSelectionState)
@@ -162,18 +152,20 @@ class NotesListSandbox(
         val isSelectedContainsUnpinnedNotes = selectedNotes.map { it.isPinned }.contains(false)
         val notes = model.notes.map { note ->
             val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
-
             return@map if (note.isSelected) note.copy(isPinned = isPinned) else note
-        }.sortedWith(comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id })
+        }
 
-        return UpdatedModel(model = model.copy(notes = notes))
+        return UpdatedModel(
+            model = model.copy(notes = notes),
+            commands = setOf(Cmd.UpdatePinnedNotesInCache(notes))
+        )
     }
 
     private fun replaceSelectedNotesToFolder(
-        model: Model, msg: Msg.Ui.ReplaceSelectedNotes
+        model: Model, msg: Msg.Ui.ReplaceSelected
     ): UpdateResult = UpdatedModel(model)
 
-    private fun onFilterSelected(model: Model, msg: Msg.Ui.OnSelectNotesFilter): UpdateResult {
+    private fun onFilterSelected(model: Model, msg: Msg.Ui.OnSelectFilter): UpdateResult {
         val filters = model.chipsNotesFilter.mapIndexed { index, filter ->
             if (index == msg.index)
                 filter.copy(isSelected = true)
@@ -181,22 +173,6 @@ class NotesListSandbox(
                 filter
         }
         return UpdatedModel(model.copy(chipsNotesFilter = filters))
-    }
-
-    private fun onDialogSelectNotesCancelClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleRemoveAllNotesDialog = false))
-
-    private fun onDialogSelectNotesRemoveWithoutRecoveryClicked(model: Model): UpdateResult {
-        val notes = model.notes.filter { !it.isSelected }
-        val bottomPanelState = model.bottomPanelState.update { it.copy(selectedCount = 0) }
-        return UpdatedModel(
-            model.copy(
-                notes = notes,
-                isSelectionState = false,
-                bottomPanelState = bottomPanelState,
-                isVisibleRemoveAllNotesDialog = false
-            )
-        )
     }
 
     private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {

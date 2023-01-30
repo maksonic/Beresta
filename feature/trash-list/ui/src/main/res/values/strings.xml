@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_scr_trash">Корзина</string>
+    <string name="title_dialog_remove_notes">Удалить</string>
+    <string name="title_dialog_cancel_remove_notes">Отменить</string>
+    <string name="title_dialog_remove_all_notes">Удалить все заметки?</string>
 </resources>

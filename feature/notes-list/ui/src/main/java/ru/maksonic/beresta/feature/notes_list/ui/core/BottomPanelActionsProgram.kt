@@ -27,20 +27,18 @@ class BottomPanelActionsProgram(
     private fun executePanelActions(consumer: (Msg) -> Unit) {
         val bottomPanelActions = mapOf(
             BottomPanel.Action.Notes.Select.CANCEL to {
-                consumer(Msg.Ui.CancelNotesSelection)
+                consumer(Msg.Ui.CancelSelection)
             },
             BottomPanel.Action.Notes.Select.SELECT_ALL to {
-                consumer(Msg.Ui.SelectAllNotes)
+                consumer(Msg.Ui.SelectAll)
             },
             BottomPanel.Action.Notes.Select.HIDE to { },
             BottomPanel.Action.Notes.Select.PIN to {
-                consumer(Msg.Ui.PinSelectedNotes)
-                consumer(Msg.Ui.CancelNotesSelection)
+                consumer(Msg.Ui.PinSelected)
+                consumer(Msg.Ui.CancelSelection)
             },
             BottomPanel.Action.Notes.Select.REPLACE to { },
-            BottomPanel.Action.Notes.Select.REMOVE to {
-                consumer(Msg.Ui.RemoveSelectedItems)
-            }
+            BottomPanel.Action.Notes.Select.REMOVE to { consumer(Msg.Ui.RemoveSelectedItems) }
         )
 
         feature.state.mutableState.update { panelState ->

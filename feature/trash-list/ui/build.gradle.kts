@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Feature.NotesList.Api.path))
+    implementation(project(BaseModule.Feature.NotesList.Domain.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.BaseDomain.path))
     implementation(project(BaseModule.Feature.TrashList.Domain.path))
