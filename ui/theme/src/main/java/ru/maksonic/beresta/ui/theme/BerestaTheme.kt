@@ -31,7 +31,7 @@ fun AppTheme(
     BerestaTheme(
         lightPalette = baseLightPalette,
         darkPalette = baseDarkPalette,
-        darkTheme,
+        darkTheme = darkTheme,
         content = content
     )
 }

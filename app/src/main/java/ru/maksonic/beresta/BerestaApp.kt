@@ -10,6 +10,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.core.CoroutineDispatchers
+import ru.maksonic.beresta.core.MainActivitySandbox
+import ru.maksonic.beresta.core.MainProgram
 import ru.maksonic.beresta.core.converter.AssetsReader
 import ru.maksonic.beresta.core.converter.JsonConverter
 import ru.maksonic.beresta.data.common.Datastore
@@ -44,7 +46,8 @@ class BerestaApp : Application() {
 
     //General modules
     private val appModule = module {
-        viewModelOf(::MainViewModel)
+        single { MainProgram(themeSelector = get(), languageSelector = get()) }
+        viewModel { MainActivitySandbox(mainActivityProgram = get()) }
     }
 
     private val coreModule = module {
