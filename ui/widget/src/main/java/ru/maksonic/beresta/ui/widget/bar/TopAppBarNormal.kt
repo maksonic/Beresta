@@ -12,6 +12,8 @@ import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.widget.button.IconAction
 
 /**
@@ -34,7 +36,7 @@ fun TopAppBarNormal(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier.size(dp8))
-        IconAction(icon = { painterResource(id = R.drawable.ic_arrow_back) }, action = backAction)
+        IconAction(icon = { AppIcon.ArrowBack }, action = backAction)
         Text(text = title, style = TextDesign.topBar, modifier = modifier.padding(start = dp8))
         Spacer(modifier.weight(1f))
         menuActions()

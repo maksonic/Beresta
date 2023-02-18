@@ -17,7 +17,11 @@ class SettingsSandbox(
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnTopBarBackPressed -> topBarBackPressed(model)
+        is Msg.Ui.SwitchAppTheme -> afterThemeSwitch(model, msg)
     }
+
+    private fun afterThemeSwitch(model: Model, msg: Msg.Ui.SwitchAppTheme): UpdateResult =
+        UpdatedModel(model, commands = setOf(Cmd.SetTheme(msg.theme)))
 
     private fun topBarBackPressed(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateBack))

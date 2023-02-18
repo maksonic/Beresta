@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btnTitleNext">Продолжить</string>
+    <string name="btnTitleAuth">Синхронизировать</string>
+    <string name="btnSkipAuthTitle">Не сейчас</string>
+    <string name="btnCancel">Отменить</string>
+</resources>

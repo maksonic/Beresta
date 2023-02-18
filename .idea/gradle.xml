@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/common" />
+            <option value="$PROJECT_DIR$/data/database" />
+            <option value="$PROJECT_DIR$/elm" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/language-selector" />
+            <option value="$PROJECT_DIR$/feature/language-selector/api" />
+            <option value="$PROJECT_DIR$/feature/language-selector/core" />
+            <option value="$PROJECT_DIR$/feature/onboarding" />
+            <option value="$PROJECT_DIR$/feature/onboarding/api" />
+            <option value="$PROJECT_DIR$/feature/onboarding/core" />
+            <option value="$PROJECT_DIR$/feature/splash-screen" />
+            <option value="$PROJECT_DIR$/feature/splash-screen/api" />
+            <option value="$PROJECT_DIR$/feature/splash-screen/core" />
+            <option value="$PROJECT_DIR$/feature/theme-selector" />
+            <option value="$PROJECT_DIR$/feature/theme-selector/api" />
+            <option value="$PROJECT_DIR$/feature/theme-selector/core" />
+            <option value="$PROJECT_DIR$/navigation" />
+            <option value="$PROJECT_DIR$/navigation/graph-builder" />
+            <option value="$PROJECT_DIR$/navigation/router" />
+            <option value="$PROJECT_DIR$/screen" />
+            <option value="$PROJECT_DIR$/screen/main" />
+            <option value="$PROJECT_DIR$/screen/settings" />
+            <option value="$PROJECT_DIR$/ui" />
+            <option value="$PROJECT_DIR$/ui/theme" />
+            <option value="$PROJECT_DIR$/ui/widget" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

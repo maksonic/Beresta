@@ -33,7 +33,7 @@ android {
         jvmTarget = Config.jvmTarget
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Android.datastore)
     implementation(Lib.Room.runtime)
     implementation(Lib.JetBrains.coroutines)

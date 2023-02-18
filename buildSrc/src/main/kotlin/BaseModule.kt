@@ -7,11 +7,6 @@ sealed class BaseModule(val path: String, val namespace: String) {
         namespace = "ru.maksonic.beresta",
     )
 
-    object BaseDomain : BaseModule(
-        path = ":base-domain",
-        namespace = "ru.maksonic.beresta.base_domain",
-    )
-
     object Core : BaseModule(
         path = ":core",
         namespace = "ru.maksonic.beresta.core",
@@ -61,31 +56,50 @@ sealed class BaseModule(val path: String, val namespace: String) {
     object Feature {
 
         object Onboarding {
-            object Data : BaseModule(
-                path = ":feature:onboarding:data",
-                namespace = "ru.maksonic.beresta.feature.onboarding.data"
+            object Api : BaseModule(
+                path = ":feature:onboarding:api",
+                namespace = "ru.maksonic.beresta.feature.onboarding.api"
             )
 
-            object Domain : BaseModule(
-                path = ":feature:onboarding:domain",
-                namespace = "ru.maksonic.beresta.feature.onboarding.domain"
-            )
-
-            object Ui : BaseModule(
-                path = ":feature:onboarding:ui",
-                namespace = "ru.maksonic.beresta.feature.onboarding.ui"
+            object Core : BaseModule(
+                path = ":feature:onboarding:core",
+                namespace = "ru.maksonic.beresta.feature.onboarding.core"
             )
         }
 
-        object SplashScreen : BaseModule(
-            path = ":feature:splash-screen",
-            namespace = "ru.maksonic.beresta.feature.splash_screen"
-        )
+        object SplashScreen {
+            object Api : BaseModule(
+                path = ":feature:splash-screen:api",
+                namespace = "ru.maksonic.beresta.feature.splash_screen.api"
+            )
 
-        object ThemeSelector : BaseModule(
-            path = ":feature:theme-selector",
-            namespace = "ru.maksonic.beresta.feature.theme_selector"
-        )
+            object Core : BaseModule(
+                path = ":feature:splash-screen:core",
+                namespace = "ru.maksonic.beresta.feature.splash_screen.core"
+            )
+        }
+
+        object ThemeSelector {
+            object Api : BaseModule(
+                path = ":feature:theme-selector:api",
+                namespace = "ru.maksonic.beresta.feature.theme_selector.api"
+            )
+            object Core : BaseModule(
+                path = ":feature:theme-selector:core",
+                namespace = "ru.maksonic.beresta.feature.theme_selector.core"
+            )
+        }
+
+        object LanguageSelector {
+            object Api : BaseModule(
+                path = ":feature:language-selector:api",
+                namespace = "ru.maksonic.beresta.feature.language_selector.api"
+            )
+            object Core : BaseModule(
+                path = ":feature:language-selector:core",
+                namespace = "ru.maksonic.beresta.feature.language_selector.core"
+            )
+        }
 
         object NotesList {
             object Api : BaseModule(
