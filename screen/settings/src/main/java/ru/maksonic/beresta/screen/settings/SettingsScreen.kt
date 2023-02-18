@@ -1,10 +1,14 @@
 package ru.maksonic.beresta.screen.settings
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.navigation.router.router.SettingsScreenRouter
 import ru.maksonic.beresta.screen.settings.core.*
+import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -51,6 +56,17 @@ private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifi
             backgroundColor = { topBarColor.value },
             backAction = { send(Msg.Ui.OnTopBarBackPressed) }
         )
+        Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Button(onClick = { send(Msg.Ui.SwitchAppTheme(AppTheme.LIGHT)) }) {
+                Text(text = "LIGHT")
+            }
+            Button(onClick = { send(Msg.Ui.SwitchAppTheme(AppTheme.DARK)) }) {
+                Text(text = "NIGHT")
+            }
+            Button(onClick = { send(Msg.Ui.SwitchAppTheme(AppTheme.SYSTEM)) }) {
+                Text(text = "SYSTEM")
+            }
+        }
         LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
             items(50) {
                 Text("Setting title", modifier = modifier.padding(top = dp16))

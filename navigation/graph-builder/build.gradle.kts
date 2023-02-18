@@ -41,7 +41,7 @@ android {
         kotlinCompilerExtensionVersion = Config.kcExtVersion
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -50,10 +50,8 @@ android {
 
 dependencies {
     implementation(project(BaseModule.Navigation.Router.path))
-    implementation(project(BaseModule.Feature.Onboarding.Ui.path))
-    implementation(project(BaseModule.Feature.SplashScreen.path))
-    implementation(project(BaseModule.Feature.TrashList.Ui.path))
-    implementation(project(BaseModule.Feature.EditNote.Ui.path))
+    implementation(project(BaseModule.Feature.SplashScreen.Api.path))
+    implementation(project(BaseModule.Feature.Onboarding.Api.path))
     implementation(project(BaseModule.Screen.Main.path))
     implementation(project(BaseModule.Screen.Settings.path))
     implementation(Lib.Accompanist.navigation)

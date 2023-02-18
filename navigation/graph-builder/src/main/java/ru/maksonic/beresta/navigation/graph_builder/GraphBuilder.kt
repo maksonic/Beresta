@@ -4,6 +4,10 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.navigation
+import ru.maksonic.beresta.navigation.graph_builder.destination.mainScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.settingsScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.splashScreen
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 
@@ -13,7 +17,10 @@ import ru.maksonic.beresta.navigation.router.Destination
 interface GraphBuilder {
     fun buildGraph(graphBuilder: NavGraphBuilder)
 
-    class Builder(private val navigator: AppNavigator) : GraphBuilder {
+    class Builder(
+        private val navigator: AppNavigator, private val apiStore: FeatureApiStore
+    ) : GraphBuilder {
+
         private companion object {
             private const val DEF_ANIM_SPEED = 300
         }
@@ -26,14 +33,17 @@ interface GraphBuilder {
                 enterTransition = { fadeIn(animationSpec = tween(DEF_ANIM_SPEED)) },
                 exitTransition = { fadeOut(animationSpec = tween(DEF_ANIM_SPEED)) }
             ) {
-               with(navigator) {
-                   splashScreen(this)
-                   onboardingScreen(this)
-                   mainScreen(this)
-                   settingsScreen(this, DEF_ANIM_SPEED)
-                   trashListScreen(this, DEF_ANIM_SPEED)
-                   editNoteScreen(this)
-               }
+                with(navigator) {
+                    splashScreen(apiStore.splash, this)
+                    onboardingScreen(apiStore.onboarding, this)
+                    mainScreen(this)
+                    settingsScreen(this, DEF_ANIM_SPEED)
+                    /*
+
+                     settingsScreen(this, DEF_ANIM_SPEED)
+                     trashListScreen(this, DEF_ANIM_SPEED)
+                     editNoteScreen(this)*/
+                }
             }
         }
     }

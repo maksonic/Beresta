@@ -1,0 +1,25 @@
+{
+  "lang" : {
+    "russian": {
+      "onboarding": {
+        "btn_title_next": "Продолжить",
+        "btn_title_sync": "Синхронизировать",
+        "btn_title_skip_sync": "Не сейчас"
+      }
+    },
+    "english": {
+      "onboarding": {
+        "btn_title_next": "Next",
+        "btn_title_sync": "Synchronize",
+        "btn_title_skip_sync": "Not now"
+      }
+    },
+    "chines": {
+      "onboarding": {
+        "btn_title_next": "继续",
+        "btn_title_sync": "同步",
+        "btn_title_skip_sync": "现在不要"
+      }
+    }
+  }
+}

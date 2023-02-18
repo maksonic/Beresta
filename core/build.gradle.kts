@@ -41,7 +41,7 @@ android {
         kotlinCompilerExtensionVersion = Config.kcExtVersion
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation(Lib.Android.datastore)
+    implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)

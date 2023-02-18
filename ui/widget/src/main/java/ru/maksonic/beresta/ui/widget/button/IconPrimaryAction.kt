@@ -18,6 +18,8 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
+import ru.maksonic.beresta.ui.theme.icons.Add
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.widget.R
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
@@ -50,7 +52,7 @@ fun IconPrimaryAction(action: () -> Unit, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painterResource(id = R.drawable.ic_add),
+            imageVector = AppIcon.Add,
             tint = tertiaryContainer,
             modifier = modifier.size(32.dp),
             contentDescription = ""

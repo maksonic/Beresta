@@ -34,7 +34,7 @@ android {
         jvmTarget = Config.jvmTarget
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -43,8 +43,6 @@ android {
 
 dependencies {
     implementation(project(BaseModule.Data.Common.path))
-    implementation(project(BaseModule.Feature.NotesList.Data.path))
-    implementation(project(BaseModule.Feature.TasksList.Data.path))
     implementation(Lib.Room.ktx)
     ksp(Lib.Room.compiler)
     implementation(Lib.Koin.compose)

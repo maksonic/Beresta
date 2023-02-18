@@ -2,16 +2,13 @@
  * @Author maksonic on 15.12.2022
  */
 object Build {
-    private object Version {
-        const val toolsGradle = "7.4.0"
-        const val kotlinGradle = Config.kotlinVersion
+    object Version {
+        const val TOOLS_GRADLE = "8.0.0-beta02"
+        const val KOTLIN_GRADLE = Config.kotlinVersion
     }
     object Type {
         private const val RELEASE = "release"
         private const val DEBUG = "debug"
         const val CURRENT = RELEASE
     }
-
-    const val TOOLS_GRADLE = "com.android.tools.build:gradle:${Version.toolsGradle}"
-    const val KOTLIN_GRADLE = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinGradle}"
 }

@@ -1,7 +1,7 @@
 package ru.maksonic.beresta
 
 import android.app.Application
-import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -9,47 +9,31 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ru.maksonic.beresta.base_domain.DateFormatter
 import ru.maksonic.beresta.core.CoroutineDispatchers
-import ru.maksonic.beresta.core.ResourceProvider
+import ru.maksonic.beresta.core.converter.AssetsReader
+import ru.maksonic.beresta.core.converter.JsonConverter
 import ru.maksonic.beresta.data.common.Datastore
-import ru.maksonic.beresta.data.database.databaseModule
-import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelFeature
-import ru.maksonic.beresta.feature.botom_panel.api.BottomPanelSharedState
-import ru.maksonic.beresta.feature.botom_panel.ui.BottomPanelWidget
-import ru.maksonic.beresta.feature.notes_list.domain.RefactorNoteInteractor
-import ru.maksonic.beresta.feature.edit_note.ui.core.core.EditNoteProgram
-import ru.maksonic.beresta.feature.edit_note.ui.core.core.EditNoteSandbox
-import ru.maksonic.beresta.feature.notes_list.api.NoteUiMapper
-import ru.maksonic.beresta.feature.notes_list.api.feature.NotesListFeature
-import ru.maksonic.beresta.feature.notes_list.data.NotesRepositoryImpl
-import ru.maksonic.beresta.feature.notes_list.data.cache.NoteCacheMapper
-import ru.maksonic.beresta.feature.notes_list.data.cache.NotesCacheSource
-import ru.maksonic.beresta.feature.notes_list.domain.FetchNoteByIdUseCase
-import ru.maksonic.beresta.feature.notes_list.domain.FetchNotesUseCase
-import ru.maksonic.beresta.feature.notes_list.domain.NotesRepository
-import ru.maksonic.beresta.feature.notes_list.ui.NotesListScreen
-import ru.maksonic.beresta.feature.notes_list.ui.core.BottomPanelActionsProgram
-import ru.maksonic.beresta.feature.notes_list.ui.core.NotesUiMapperImpl
-import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListProgram
-import ru.maksonic.beresta.feature.notes_list.ui.core.NotesListSandbox
-import ru.maksonic.beresta.feature.onboarding.data.OnboardingRepository
-import ru.maksonic.beresta.feature.onboarding.data.OnboardingVisibilityDatastore
-import ru.maksonic.beresta.feature.onboarding.domain.OnboardingVisibility
-import ru.maksonic.beresta.feature.onboarding.domain.Repository
-import ru.maksonic.beresta.feature.onboarding.ui.core.OnboardingSandbox
-import ru.maksonic.beresta.feature.onboarding.ui.core.Program
-import ru.maksonic.beresta.feature.splash_screen.SplashViewModel
-import ru.maksonic.beresta.feature.tasks_list.api.TasksListFeature
-import ru.maksonic.beresta.feature.tasks_list.ui.TasksListScreen
-import ru.maksonic.beresta.feature.theme_selector.ThemeSelector
-import ru.maksonic.beresta.feature.trash_list.domain.FetchTrashNotesUseCase
-import ru.maksonic.beresta.feature.trash_list.ui.core.TrashProgram
-import ru.maksonic.beresta.feature.trash_list.ui.core.TrashSandbox
+import ru.maksonic.beresta.feature.language_selector.api.LanguageProvider
+import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
+import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
+import ru.maksonic.beresta.feature.language_selector.core.LanguageProviderImpl
+import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorCore
+import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorViewModel
+import ru.maksonic.beresta.feature.language_selector.core.ui.SelectAppLanguageSheet
+import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
+import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingVisibilityDatastore
+import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
+import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbox
+import ru.maksonic.beresta.feature.onboarding.core.presentation.Program
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingScreen
+import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
+import ru.maksonic.beresta.feature.splash_screen.core.BerestaSplashScreen
+import ru.maksonic.beresta.feature.splash_screen.core.SplashViewModel
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorCore
+import ru.maksonic.beresta.navigation.graph_builder.FeatureApiStore
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
-import ru.maksonic.beresta.screen.main.ui.core.BottomPanelActionsMainProgram
-import ru.maksonic.beresta.screen.main.ui.core.MainSandbox
 import ru.maksonic.beresta.screen.settings.core.SettingsProgram
 import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
 
@@ -58,138 +42,75 @@ import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
  */
 class BerestaApp : Application() {
 
+    //General modules
     private val appModule = module {
-        single<Datastore> { Datastore.Core(androidContext()) }
         viewModelOf(::MainViewModel)
     }
 
-    private val settingsModule = module {
-        single { SettingsProgram() }
-        viewModel { SettingsSandbox(program = get()) }
+    private val coreModule = module {
+        single { Json { ignoreUnknownKeys = true } }
+        single<AssetsReader> { AssetsReader.Reader(androidContext()) }
+        single<JsonConverter> { JsonConverter.Converter(assetsReader = get()) }
     }
 
-    private val coreModule = module {
-        single<ResourceProvider> { ResourceProvider.Core(androidContext()) }
-        single(named(CoroutineDispatchers.IO)) { Dispatchers.IO }
-        single(named(CoroutineDispatchers.DEFAULT)) { Dispatchers.Default }
-        single(named(CoroutineDispatchers.MAIN)) { Dispatchers.Main }
+    private val dataModule = module {
+        single<Datastore> { Datastore.Core(androidContext()) }
     }
 
     private val navigationModule = module {
-        single<GraphBuilder> { GraphBuilder.Builder(navigator = get()) }
+        single { FeatureApiStore(splash = get(), onboarding = get()) }
+        single<GraphBuilder> { GraphBuilder.Builder(navigator = get(), apiStore = get()) }
         single { AppNavigator() }
     }
 
-    private val themeSelectorFeatureModule = module {
-        single<ThemeSelector> { ThemeSelector.Feature(datastore = get()) }
-    }
-
+    //Feature modules
     private val splashScreenModule = module {
+        single<SplashApi> { BerestaSplashScreen() }
         viewModel { SplashViewModel(onboardingVisibility = get()) }
     }
 
     private val onboardingFeatureModule = module {
+        single<OnboardingApi.Visibility> { OnboardingVisibilityDatastore(datastore = get()) }
+        single<OnboardingApi.Ui> { OnboardingScreen() }
+        single { OnboardingRepository }
         single { Program(repository = get(), onboardingVisibility = get()) }
         viewModel { OnboardingSandbox(program = get()) }
     }
 
-    private val onboardingDataModule = module {
-        single<OnboardingVisibility> { OnboardingVisibilityDatastore(datastore = get()) }
-        single<Repository> { OnboardingRepository }
+    private val themeSelectorFeatureModule = module {
+        single<ThemeSelectorApi> { ThemeSelectorCore(datastore = get()) }
     }
 
-    private val mainScreenModule = module {
-        single { BottomPanelActionsMainProgram(feature = get()) }
-        viewModel {
-            MainSandbox(
-                bottomPanelActionsMainProgram = get(),
-                notesListFeature = get(),
-                tasksListFeature = get(),
-                bottomPanelFeature = get(),
-            )
-        }
-    }
-
-    private val notesListFeatureModule = module {
-        single<NoteUiMapper> { NotesUiMapperImpl(dateFormatter = DateFormatter) }
-        single<NotesListFeature> { NotesListScreen() }
+    private val languageSelectorFeatureModule = module {
+        viewModel { LanguageSelectorViewModel(selector = get()) }
+        single<LanguageSelectorApi.Ui> { SelectAppLanguageSheet() }
+        single<LanguageSelectorApi.Lang> { LanguageSelectorCore(datastore = get()) }
+        single<LanguageProvider> { LanguageProviderImpl() }
         single {
-            NotesListProgram(
-                interactor = get(),
-                fetchingUseCase = get(),
-                mapper = get(),
-                resourceProvider = get()
-            )
-        }
-        single { BottomPanelActionsProgram(feature = get()) }
-        viewModel {
-            NotesListSandbox(
-                notesListProgram = get(),
-                bottomPanelActionsProgram = get(),
-                bottomPanelFeature = get()
-            )
-        }
-    }
-
-    private val notesListFeatureDataModule = module {
-        single<RefactorNoteInteractor> { RefactorNoteInteractor.Impl(repository = get()) }
-        single { NoteCacheMapper() }
-        single {
-            NotesCacheSource(
-                noteDao = get(),
+            LanguageJsonToDataConverter(
+                json = get(),
+                jsonConverter = get(),
                 dispatcher = get(named(CoroutineDispatchers.IO))
             )
         }
-        single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
-        single { FetchNotesUseCase(repository = get()) }
-        single { FetchNoteByIdUseCase(repository = get()) }
     }
 
-    private val tasksListFeatureModule = module {
-        single<TasksListFeature> { TasksListScreen() }
-    }
-
-    private val bottomPanelModule = module {
-        single { BottomPanelSharedState() }
-        single<BottomPanelFeature> { BottomPanelWidget(panelSharedState = get()) }
-    }
-
-    private val trashModule = module {
-        single { FetchTrashNotesUseCase(repository = get()) }
-        single { TrashProgram(useCase = get(), mapper = get()) }
-        viewModel { TrashSandbox(trashProgram = get()) }
-    }
-
-
-    private val editNoteFeatureModule = module {
-        single {
-            EditNoteProgram(
-                interactor = get(),
-                fetchNoteByIdUseCase = get(),
-                mapper = get(),
-                navigator = get()
-            )
-        }
-        viewModel { EditNoteSandbox(program = get()) }
+    private val settingsModule = module {
+        single { SettingsProgram(themeSelector = get()) }
+        viewModel { SettingsSandbox(program = get()) }
     }
 
     private val modules = listOf(
         appModule,
         settingsModule,
+        coreModule,
+        dataModule,
         splashScreenModule,
         navigationModule,
-        databaseModule,
-        onboardingDataModule,
         onboardingFeatureModule,
-        mainScreenModule,
-        notesListFeatureDataModule,
-        notesListFeatureModule,
-        tasksListFeatureModule,
         themeSelectorFeatureModule,
-        coreModule,
-        bottomPanelModule,
-        trashModule,
-        editNoteFeatureModule
+        languageSelectorFeatureModule
+
     )
 
     override fun onCreate() {

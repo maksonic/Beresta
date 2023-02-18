@@ -1,15 +1,7 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath(Build.TOOLS_GRADLE)
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
-    }
-}
-
-
-task<Delete>("clean") {
-    delete(rootProject.buildDir)
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    pluginAndroidApp()
+    pluginAndroidLibrary()
+    pluginKotlinAndroid()
+    pluginKotlinSerialization()
 }
