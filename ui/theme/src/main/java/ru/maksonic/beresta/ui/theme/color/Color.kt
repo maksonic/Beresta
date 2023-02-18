@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.ui.theme.color
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.ui.theme.Theme
@@ -12,6 +13,7 @@ val LocalAppColors = staticCompositionLocalOf<AppColor> {
     error("No colors provided")
 }
 
+@Stable
 data class AppColor(
     val primary: Color,
     val onPrimary: Color,

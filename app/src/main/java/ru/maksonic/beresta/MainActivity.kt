@@ -3,26 +3,29 @@ package ru.maksonic.beresta
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.feature.language_selector.api.AppLanguage
-import ru.maksonic.beresta.feature.language_selector.api.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.api.LocalBerestaLanguage
 import ru.maksonic.beresta.feature.language_selector.api.provideLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
@@ -33,7 +36,15 @@ import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.background
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: MainViewModel by viewModel()
+
+    private companion object {
+        private const val THEME_CHANGE_INITIAL_ALPHA = 0f
+
+        //If the value is less than .9f, then friezes are visible when changing the theme
+        private const val THEME_CHANGE_TARGET_ALPHA = .9f
+    }
+
+    private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
 
@@ -47,22 +58,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             navigator.navController = rememberAnimatedNavController()
 
-            val model = viewModel.state.collectAsStateWithLifecycle(lifecycle).value
-            val systemUiController = rememberSystemUiController()
+            val model = sandbox.model.collectAsStateWithLifecycle(lifecycle).value
             val isDarkTheme = isSystemInDarkTheme()
 
-            initTheme(model.theme, isDarkTheme).invoke {
-                ProvideAppLanguage(model.language) {
-                    SystemComponentColor(systemUiController, isDarkTheme)
-                    Scaffold(backgroundColor = background) { paddings ->
-                        AnimatedNavHost(
-                            navController = navigator.navController,
-                            startDestination = Destination.route,
-                            modifier = Modifier
-                                .padding(paddingValues = paddings)
-                                .fillMaxSize()
-                        ) {
-                            graphBuilder.buildGraph(graphBuilder = this)
+            AnimatedContent(
+                modifier = Modifier
+                    .fillMaxSize(),
+                targetState = model.theme,
+                transitionSpec = {
+                    fadeIn(
+                        initialAlpha = THEME_CHANGE_INITIAL_ALPHA,
+                        animationSpec = tween(300, 0)
+                    ) with fadeOut(
+                        targetAlpha = THEME_CHANGE_TARGET_ALPHA,
+                        animationSpec = tween(300, 0)
+                    )
+                },
+            ) { animatedTheme ->
+                initTheme(animatedTheme, isDarkTheme).invoke {
+                    ProvideAppLanguage(model.language) {
+                        SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
+                        Scaffold(backgroundColor = background) { paddings ->
+                            AnimatedNavHost(
+                                navController = navigator.navController,
+                                startDestination = Destination.route,
+                                modifier = Modifier
+                                    .padding(paddingValues = paddings)
+                                    .fillMaxSize()
+                            ) {
+                                graphBuilder.buildGraph(graphBuilder = this)
+                            }
                         }
                     }
                 }
@@ -74,13 +99,12 @@ class MainActivity : ComponentActivity() {
         theme: AppTheme, isDark: Boolean
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
         AppTheme.SYSTEM -> { content -> AppTheme(darkTheme = isDark, content = content) }
-        AppTheme.DARK -> { content -> AppTheme(darkTheme = true, content) }
         AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, content = content) }
-        AppTheme.HIGH_CONTRAST -> { content -> AppTheme(darkTheme = true, content = content) }
+        else -> { content -> AppTheme(darkTheme = true, content) }
     }
 
     @Composable
-    fun ProvideAppLanguage(language: AppLanguage, content: @Composable () -> Unit) {
+    private fun ProvideAppLanguage(language: AppLanguage, content: @Composable () -> Unit) {
         CompositionLocalProvider(LocalBerestaLanguage provides provideLanguage(language)) {
             content()
         }
