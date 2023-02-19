@@ -1,25 +1,98 @@
 {
-  "lang" : {
-    "russian": {
-      "onboarding": {
-        "btn_title_next": "Продолжить",
-        "btn_title_sync": "Синхронизировать",
-        "btn_title_skip_sync": "Не сейчас"
-      }
+  "russian": {
+    "onboarding": {
+      "btn_title_next": "Продолжить",
+      "btn_title_sync": "Синхронизировать",
+      "btn_title_skip_sync": "Не сейчас",
+      "onboarding_data": [
+        {
+          "id": 0,
+          "title": "Заголовок 1 на русском",
+          "description": "1 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+        },
+        {
+          "id": 1,
+          "title": "Заголовок 2 на русском",
+          "description": "2 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+        },
+        {
+          "id": 2,
+          "title": "Заголовок 3 на русском",
+          "description": "3 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+        },
+        {
+          "id": 3,
+          "title": "Синхронизируйте данные с облаком",
+          "description": "Подключите свой Google аккаунт, чтобы иметь возможность восстановить заметки, а так же использовать их на других устройствах."
+        }
+      ]
     },
-    "english": {
-      "onboarding": {
-        "btn_title_next": "Next",
-        "btn_title_sync": "Synchronize",
-        "btn_title_skip_sync": "Not now"
-      }
+    "select_language_sheet": {
+      "btn_title_save_language": "Сохранить"
+    }
+  },
+  "english": {
+    "onboarding": {
+      "btn_title_next": "Next",
+      "btn_title_sync": "Synchronize",
+      "btn_title_skip_sync": "Not now",
+      "onboarding_data": [
+        {
+          "id": 0,
+          "title": "Title 1 on english",
+          "description": "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        },
+        {
+          "id": 1,
+          "title": "Title 2 on english",
+          "description": "2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        },
+        {
+          "id": 2,
+          "title": "Title 3 on english",
+          "description": "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        },
+        {
+          "id": 3,
+          "title": "Sync your data to the cloud",
+          "description": "Connect your Google account to be able to restore notes and use them on other devices."
+        }
+      ]
     },
-    "chines": {
-      "onboarding": {
-        "btn_title_next": "继续",
-        "btn_title_sync": "同步",
-        "btn_title_skip_sync": "现在不要"
-      }
+    "select_language_sheet": {
+      "btn_title_save_language": "Save"
+    }
+  },
+  "chines": {
+    "onboarding": {
+      "btn_title_next": "继续",
+      "btn_title_sync": "同步",
+      "btn_title_skip_sync": "现在不要",
+      "onboarding_data": [
+        {
+          "id": 0,
+          "title": "标头 1 用中文表达",
+          "description": "1 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+        },
+        {
+          "id": 1,
+          "title": "标头 2 用中文表达",
+          "description": "2 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+        },
+        {
+          "id": 2,
+          "title": "标头 3 用中文表达",
+          "description": "3 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+        },
+        {
+          "id": 3,
+          "title": "将您的数据同步到云端",
+          "description": "连接您的 Google 帐户，以便能够恢复笔记并在其他设备上使用它们。"
+        }
+      ]
+    },
+    "select_language_sheet": {
+      "btn_title_save_language": "节省"
     }
   }
 }

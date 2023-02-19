@@ -81,6 +81,7 @@ dependencies {
     implementation(Lib.Accompanist.navigation)
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Android.coreKtx)
+    implementation(Lib.Android.gson)
     implementation(Lib.Android.lifecycle)
     implementation(platform(Lib.Compose.bom))
     implementation(Lib.Compose.activity)

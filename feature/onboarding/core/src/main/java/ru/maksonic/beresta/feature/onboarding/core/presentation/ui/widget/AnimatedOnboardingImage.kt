@@ -44,23 +44,12 @@ internal fun AnimatedOnboardingImage(
         targetValue = rotation,
         animationSpec = tween(Theme.dimen.durationAnimOnboarding, easing = LinearOutSlowInEasing)
     )
-    val infiniteTransition = rememberInfiniteTransition()
-
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500),
-            repeatMode = RepeatMode.Reverse
-        )
-    )
 
     Image(
         painter = painterResource(image),
         contentDescription = "",
         modifier = modifier
             .fillMaxWidth()
-            .scale(scale)
             .graphicsLayer {
                 lerp(
                     start = 0.4f,
@@ -73,6 +62,6 @@ internal fun AnimatedOnboardingImage(
                     translationY = animateTransition.value
                 }
             }
-            .pulsating(pulseFraction = 1.01f, duration = 1500)
+            //.pulsating(pulseFraction = 1.01f, duration = 1500)
     )
 }

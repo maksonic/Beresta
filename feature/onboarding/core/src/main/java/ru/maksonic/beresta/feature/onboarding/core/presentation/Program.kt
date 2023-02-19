@@ -19,6 +19,6 @@ class Program(
     }
 
     private fun fetchOnboardings(consumer: (Msg) -> Unit) {
-        consumer(Msg.Inner.Onboardings(repository.onboardings))
+        consumer(Msg.Inner.OnboardingImages(repository.onboardingImages))
     }
 }

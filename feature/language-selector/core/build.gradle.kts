@@ -56,6 +56,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(Lib.Android.datastore)
+    implementation(Lib.Android.gson)
     implementation(Lib.JetBrains.json)
     implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Compose.material)

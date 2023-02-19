@@ -25,9 +25,9 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
-import ru.maksonic.beresta.feature.language_selector.api.AppLanguage
-import ru.maksonic.beresta.feature.language_selector.api.LocalBerestaLanguage
-import ru.maksonic.beresta.feature.language_selector.api.provideLanguage
+import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
+import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
+import ru.maksonic.beresta.feature.language_selector.api.provider.LocalBerestaLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
     private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
+    private val languageProvider: LanguageProvider by inject()
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
                 },
             ) { animatedTheme ->
                 initTheme(animatedTheme, isDarkTheme).invoke {
-                    ProvideAppLanguage(model.language) {
+                    ProvideAppLanguage(model.languageProvider) {
                         SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
                         Scaffold(backgroundColor = background) { paddings ->
                             AnimatedNavHost(
@@ -104,8 +105,11 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun ProvideAppLanguage(language: AppLanguage, content: @Composable () -> Unit) {
-        CompositionLocalProvider(LocalBerestaLanguage provides provideLanguage(language)) {
+    private fun ProvideAppLanguage(
+        provided: BerestaLanguage,
+        content: @Composable () -> Unit
+    ) {
+        CompositionLocalProvider(LocalBerestaLanguage provides provided) {
             content()
         }
     }

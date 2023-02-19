@@ -9,33 +9,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerScope
-import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingEntity
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
  * @Author maksonic on 15.12.2022
  */
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun OnboardingItem(
-    item: OnboardingEntity,
     page: Int,
+    title: String,
+    description: String,
+    imageId: Int,
     pagerScope: PagerScope,
     modifier: Modifier = Modifier
 ) {
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize(),
     ) {
         Spacer(modifier = modifier.weight(0.2f))
 
-        AnimatedOnboardingImage(pagerScope, page, item.image, modifier.weight(0.5f))
+        AnimatedOnboardingImage(pagerScope, page, imageId, modifier.weight(0.5f))
 
         Spacer(modifier = modifier.weight(0.1f))
 
         Text(
-            text = item.title,
+            text = title,
             style = TextDesign.header,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(start = dp16, end = dp16)
@@ -44,7 +48,7 @@ internal fun OnboardingItem(
         Spacer(modifier = modifier.weight(0.02f))
 
         Text(
-            text = item.description,
+            text = description,
             style = TextDesign.body,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(start = dp16, end = dp16)
