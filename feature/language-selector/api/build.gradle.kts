@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(Lib.Android.gson)
     implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)

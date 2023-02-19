@@ -1,40 +1,44 @@
 package ru.maksonic.beresta.feature.language_selector.core
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import ru.maksonic.beresta.feature.language_selector.api.AppLanguage
-import ru.maksonic.beresta.feature.language_selector.api.BerestaLanguage
-import ru.maksonic.beresta.feature.language_selector.api.LanguageProvider
-import ru.maksonic.beresta.feature.language_selector.api.OnboardingScreenLang
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import ru.maksonic.beresta.feature.language_selector.api.LanguageStore
+import ru.maksonic.beresta.feature.language_selector.api.provider.AppLanguage
+import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
+import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 
 /**
  * @Author maksonic on 17.02.2023
  */
-class LanguageProviderImpl() : LanguageProvider {
-    private val _data: MutableStateFlow<BerestaLanguage?> = MutableStateFlow(null)
-    private val data = _data.asStateFlow()
+class LanguageProviderImpl(
+    private val langConverter: LanguageJsonToDataConverter
+) : LanguageProvider {
 
-
-
-    override fun provideLanguage(currentLanguage: AppLanguage): AppLanguage {
-
-        val onboardingScreenLang = OnboardingScreenLang(
-            onboardingNextBtnTitle = when (currentLanguage) {
-                AppLanguage.RUSSIAN -> "Продолжить"
-                AppLanguage.ENGLISH -> "Next"
-                AppLanguage.CHINES -> "继续"
-            },
-            onboardingSyncBtnTitle = when (currentLanguage) {
-                AppLanguage.RUSSIAN -> "Синхронизировать"
-                AppLanguage.ENGLISH -> "Synchronize"
-                AppLanguage.CHINES -> "同步"
-            },
-            onboardingNotSyncBtnTitle = when (currentLanguage) {
-                AppLanguage.RUSSIAN -> "Не сейчас"
-                AppLanguage.ENGLISH -> "Not now"
-                AppLanguage.CHINES -> "现在不要"
-            },
-        )
-        return AppLanguage.ENGLISH
+    override suspend fun provideLanguage(language: AppLanguage): Flow<BerestaLanguage> = flow {
+        langConverter.getLangDataFromJson().collect { store ->
+            store.onSuccess { data ->
+                val berestaLanguage = BerestaLanguage(
+                    onboardingTextData = onboardingText(language, data),
+                    languageSheetTextData = languageSheetText(language, data)
+                )
+                emit(berestaLanguage)
+            }
+            store.onFailure {
+                emit(BerestaLanguage())
+            }
+        }
     }
+
+    private fun onboardingText(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.onboardingTextData
+        AppLanguage.ENGLISH -> data.english.onboardingTextData
+        AppLanguage.CHINES -> data.chines.onboardingTextData
+    }
+
+    private fun languageSheetText(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.langSheet
+        AppLanguage.ENGLISH -> data.english.langSheet
+        AppLanguage.CHINES -> data.chines.langSheet
+    }
+
 }

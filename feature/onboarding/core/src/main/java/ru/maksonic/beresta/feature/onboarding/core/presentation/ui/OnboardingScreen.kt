@@ -1,21 +1,18 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation.ui
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,31 +26,27 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
-import ru.maksonic.beresta.feature.language_selector.api.text
+import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Eff
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Msg
 import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbox
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.NextSlideButton
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.OnboardingItem
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.OnboardingTopBar
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.SelectLanguageBottomSheetDialogContent
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.transparent
-import ru.maksonic.beresta.ui.theme.component.dimenAnimFast
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.Language
-import ru.maksonic.beresta.ui.widget.button.IconAction
-import ru.maksonic.beresta.ui.widget.button.PrimaryButton
-import ru.maksonic.beresta.ui.widget.button.TertiaryButton
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
  * @Author maksonic on 15.02.2023
  */
+internal typealias SendMessage = (Msg) -> Unit
+
 class OnboardingScreen : OnboardingApi.Ui {
 
     @Composable
@@ -70,23 +63,22 @@ private fun Content(
     languageSheet: LanguageSelectorApi.Ui = get(),
     router: OnboardingRouter
 ) {
-
     val model = sandbox.model.collectAsState().value
+    val send = sandbox::sendMsg
     val pagerState = rememberPagerState()
+    val isLastCurrentPage = pagerState.currentPage == 3
     val languageSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
-    val scope = rememberCoroutineScope()
-    val isLastCurrentPage = pagerState.currentPage == model.onboardings.lastIndex
-    val titlePrimaryBtn = if (isLastCurrentPage) text.onboarding.onboardingSyncBtnTitle
-    else text.onboarding.onboardingNextBtnTitle
-    val alphaDoNotSyncBtn: Float by animateFloatAsState(
-        targetValue = if (isLastCurrentPage) 1f else 0f,
-        animationSpec = tween(durationMillis = dimenAnimFast, easing = LinearEasing)
-    )
 
-    HandleUiEffects(sandbox.effects, pagerState, onGoogleAuthClicked = {}, router)
+    HandleUiEffects(
+        effects = sandbox.effects,
+        pagerState = pagerState,
+        onGoogleAuthClicked = {},
+        bottomSheetState = languageSheetState,
+        router = router
+    )
 
     ModalBottomSheetLayout(
         sheetState = languageSheetState,
@@ -94,13 +86,12 @@ private fun Content(
         sheetContentColor = transparent,
         sheetElevation = Theme.elevation.disable,
         sheetContent = {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .defaultMinSize(minHeight = 1.dp)
-            ) {
-                languageSheet.BottomSheet(state = { languageSheetState }, modifier)
-            }
+            SelectLanguageBottomSheetDialogContent(
+                send = send,
+                languageSheet = languageSheet,
+                languageSheetState = languageSheetState,
+                modifier = modifier
+            )
         }
     ) {
         Column(
@@ -109,52 +100,34 @@ private fun Content(
                 .systemBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .height(Theme.widgetSize.topBarNormalHeight)
-                    .padding(end = dp4),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                IconAction(icon = { AppIcon.Language }) {
-                    scope.launch {
-                        languageSheetState.animateTo(ModalBottomSheetValue.Expanded)
-                    }
-                }
-            }
+            val onboardingData = text.onboardingTextData.data
+
+            OnboardingTopBar(showLanguageSelector = { send(Msg.Ui.OnSelectLanguageBtnClicked) })
+
             OverscrollBehavior {
                 HorizontalPager(
-                    count = model.onboardings.count(),
+                    count = model.onboardingImages.count(),
                     state = pagerState,
                     modifier = modifier.weight(1f)
                 ) { page ->
-                    OnboardingItem(item = model.onboardings[page], page = page, pagerScope = this)
+                    OnboardingItem(
+                        title = onboardingData[page].title,
+                        description = onboardingData[page].description,
+                        imageId = model.onboardingImages[page],
+                        page = page, pagerScope = this)
                 }
             }
-
-            PrimaryButton(
-                action = { sandbox.sendMsg(Msg.Ui.OnPrimaryBtnClicked) },
-                title = titlePrimaryBtn,
-            )
-
-            Spacer(modifier.height(dp8))
-
-            TertiaryButton(
-                action = { sandbox.sendMsg(Msg.Ui.OnSkipSyncBtnClicked) },
-                title = "text.onboarding.onboardingNotSyncBtnTitle",
-                modifier = modifier.alpha(alphaDoNotSyncBtn)
-            )
-            Spacer(modifier = modifier.padding(bottom = dp16))
+            NextSlideButton(send, isLastCurrentPage , modifier)
         }
     }
 }
 
-
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     pagerState: PagerState,
+    bottomSheetState: ModalBottomSheetState,
     onGoogleAuthClicked: () -> Unit,
     router: OnboardingRouter
 ) {
@@ -182,6 +155,17 @@ private fun HandleUiEffects(
             }
 
             is Eff.NavigateToMain -> router.toMain()
+            is Eff.HideLanguageSheet -> {
+                scope.launch {
+                    bottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                }
+            }
+
+            is Eff.ShowLanguageSheet -> {
+                scope.launch {
+                    bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                }
+            }
         }
     }
 }

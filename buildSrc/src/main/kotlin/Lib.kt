@@ -22,6 +22,9 @@ object Lib {
         //coroutines
         const val coroutinesAndroid = "1.6.4"
 
+        //Gson
+        const val gson = "2.10.1"
+
         //Json
         const val json = "1.5.0-RC"
 
@@ -47,6 +50,7 @@ object Lib {
     object Android {
         const val coreKtx = "androidx.core:core-ktx:${Version.coreKtx}"
         const val datastore = "androidx.datastore:datastore-preferences:${Version.datastore}"
+        const val gson = "com.google.code.gson:gson:${Version.gson}"
         const val lifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:${Version.lifecycle}"
     }
 

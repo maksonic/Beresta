@@ -20,11 +20,13 @@ class OnboardingSandbox(
         is Msg.Ui.OnGoogleAuthClicked -> UpdatedModel(model)
         is Msg.Ui.OnPrimaryBtnClicked -> onPrimaryBtnClicked(model)
         is Msg.Ui.OnSkipSyncBtnClicked -> onSkipBtnClicked(model)
-        is Msg.Inner.Onboardings -> fetchedData(model, msg)
+        is Msg.Inner.OnboardingImages -> fetchedData(model, msg)
+        is Msg.Ui.OnHideLanguageBtnClicked -> UpdatedModel(model, effects = setOf(Eff.HideLanguageSheet))
+        is Msg.Ui.OnSelectLanguageBtnClicked -> UpdatedModel(model, effects = setOf(Eff.ShowLanguageSheet))
     }
 
-    private fun fetchedData(model: Model, msg: Msg.Inner.Onboardings): UpdateResult =
-        UpdatedModel(model.copy(onboardings = msg.data))
+    private fun fetchedData(model: Model, msg: Msg.Inner.OnboardingImages): UpdateResult =
+        UpdatedModel(model.copy(onboardingImages = msg.data))
 
     private fun onPrimaryBtnClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.SlideNextPage))

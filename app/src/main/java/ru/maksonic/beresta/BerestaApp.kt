@@ -1,11 +1,12 @@
 package ru.maksonic.beresta
 
 import android.app.Application
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -15,7 +16,7 @@ import ru.maksonic.beresta.core.MainProgram
 import ru.maksonic.beresta.core.converter.AssetsReader
 import ru.maksonic.beresta.core.converter.JsonConverter
 import ru.maksonic.beresta.data.common.Datastore
-import ru.maksonic.beresta.feature.language_selector.api.LanguageProvider
+import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
 import ru.maksonic.beresta.feature.language_selector.core.LanguageProviderImpl
@@ -46,12 +47,22 @@ class BerestaApp : Application() {
 
     //General modules
     private val appModule = module {
-        single { MainProgram(themeSelector = get(), languageSelector = get()) }
+        single {
+            MainProgram(
+                themeSelector = get(),
+                languageSelector = get(),
+                languageProvider = get()
+            )
+        }
         viewModel { MainActivitySandbox(mainActivityProgram = get()) }
     }
 
     private val coreModule = module {
+        single(named(CoroutineDispatchers.IO)) { Dispatchers.IO }
+        single(named(CoroutineDispatchers.DEFAULT)) { Dispatchers.Default }
+        single(named(CoroutineDispatchers.MAIN)) { Dispatchers.Main }
         single { Json { ignoreUnknownKeys = true } }
+        single { Gson() }
         single<AssetsReader> { AssetsReader.Reader(androidContext()) }
         single<JsonConverter> { JsonConverter.Converter(assetsReader = get()) }
     }
@@ -88,10 +99,10 @@ class BerestaApp : Application() {
         viewModel { LanguageSelectorViewModel(selector = get()) }
         single<LanguageSelectorApi.Ui> { SelectAppLanguageSheet() }
         single<LanguageSelectorApi.Lang> { LanguageSelectorCore(datastore = get()) }
-        single<LanguageProvider> { LanguageProviderImpl() }
+        single<LanguageProvider> { LanguageProviderImpl(langConverter = get()) }
         single {
             LanguageJsonToDataConverter(
-                json = get(),
+                gson = get(),
                 jsonConverter = get(),
                 dispatcher = get(named(CoroutineDispatchers.IO))
             )
