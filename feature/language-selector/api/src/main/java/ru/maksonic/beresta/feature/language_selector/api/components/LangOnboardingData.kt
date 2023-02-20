@@ -13,9 +13,8 @@ data class OnboardingDataItem(
     @SerializedName("description") val description: String = ""
 )
 
-
 @Serializable
-data class OnboardingTextData(
+data class LangOnboardingData(
     @SerializedName("btn_title_next") val btnTitleNext: String = "",
     @SerializedName("btn_title_sync") val btnTitleSync: String = "",
     @SerializedName("btn_title_skip_sync") val btnTitleSkipSync: String = "",
@@ -25,7 +24,7 @@ data class OnboardingTextData(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as OnboardingTextData
+        other as LangOnboardingData
 
         if (btnTitleNext != other.btnTitleNext) return false
         if (btnTitleSync != other.btnTitleSync) return false

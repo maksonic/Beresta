@@ -13,7 +13,6 @@ interface LanguageSelectorApi {
     interface Lang {
         suspend fun setLanguage(lang: AppLanguage)
         val currentLanguage: Flow<AppLanguage>
-        val languagesTitle: Map<AppLanguage, String>
     }
 
     interface Ui {

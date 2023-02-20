@@ -18,8 +18,11 @@ class LanguageProviderImpl(
         langConverter.getLangDataFromJson().collect { store ->
             store.onSuccess { data ->
                 val berestaLanguage = BerestaLanguage(
-                    onboardingTextData = onboardingText(language, data),
-                    languageSheetTextData = languageSheetText(language, data)
+                    langTitle = langTitle(language, data),
+                    translatedLanguage = translated(language, data),
+                    langOnboardingData = onboardingText(language, data),
+                    langSharedData = shared(language, data),
+                    settings = settingsText(language, data)
                 )
                 emit(berestaLanguage)
             }
@@ -29,16 +32,33 @@ class LanguageProviderImpl(
         }
     }
 
+    private fun langTitle(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.langTitle
+        AppLanguage.ENGLISH -> data.english.langTitle
+        AppLanguage.CHINESE -> data.chinese.langTitle
+    }
+
+    private fun translated(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.translatedLanguage
+        AppLanguage.ENGLISH -> data.english.translatedLanguage
+        AppLanguage.CHINESE -> data.chinese.translatedLanguage
+    }
+
     private fun onboardingText(language: AppLanguage, data: LanguageStore) = when (language) {
-        AppLanguage.RUSSIAN -> data.russian.onboardingTextData
-        AppLanguage.ENGLISH -> data.english.onboardingTextData
-        AppLanguage.CHINES -> data.chines.onboardingTextData
+        AppLanguage.RUSSIAN -> data.russian.langOnboardingData
+        AppLanguage.ENGLISH -> data.english.langOnboardingData
+        AppLanguage.CHINESE -> data.chinese.langOnboardingData
     }
 
-    private fun languageSheetText(language: AppLanguage, data: LanguageStore) = when (language) {
-        AppLanguage.RUSSIAN -> data.russian.langSheet
-        AppLanguage.ENGLISH -> data.english.langSheet
-        AppLanguage.CHINES -> data.chines.langSheet
+    private fun settingsText(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.settings
+        AppLanguage.ENGLISH -> data.english.settings
+        AppLanguage.CHINESE -> data.chinese.settings
     }
 
+    private fun shared(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.shared
+        AppLanguage.ENGLISH -> data.english.shared
+        AppLanguage.CHINESE -> data.chinese.shared
+    }
 }

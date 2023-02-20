@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Navigation.Router.path))
+    implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.ThemeSelector.Api.path))
 
     implementation(Lib.Compose.material)

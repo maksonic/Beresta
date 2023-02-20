@@ -1,14 +1,19 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerScope
+import androidx.compose.ui.tooling.preview.Preview
+import ru.maksonic.beresta.feature.onboarding.core.R
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingUi
+import ru.maksonic.beresta.ui.theme.BerestaTheme
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 
@@ -16,14 +21,11 @@ import ru.maksonic.beresta.ui.theme.component.dp16
  * @Author maksonic on 15.12.2022
  */
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun OnboardingItem(
-    page: Int,
-    title: String,
-    description: String,
-    imageId: Int,
-    pagerScope: PagerScope,
+    item: OnboardingUi,
+    pageOffset: () -> Float,
+    pagerProgress: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -32,29 +34,49 @@ internal fun OnboardingItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize(),
     ) {
-        Spacer(modifier = modifier.weight(0.2f))
 
-        AnimatedOnboardingImage(pagerScope, page, imageId, modifier.weight(0.5f))
-
-        Spacer(modifier = modifier.weight(0.1f))
-
-        Text(
-            text = title,
-            style = TextDesign.header,
-            textAlign = TextAlign.Center,
-            modifier = modifier.padding(start = dp16, end = dp16)
+        AnimatedOnboardingImage(
+            pageOffset = pageOffset,
+            pagerProgress = pagerProgress,
+            item.imageId,
+            modifier
+                .padding(top = Theme.widgetSize.topBarNormalHeight)
+                .weight(0.5f)
         )
 
-        Spacer(modifier = modifier.weight(0.02f))
+        Column(
+            modifier
+                .weight(0.5f)
+                .padding(start = dp16, end = dp16),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = modifier.weight(0.05f))
+            Text(
+                text = item.title,
+                style = TextDesign.header,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = modifier.weight(0.05f))
+            Text(
+                text = item.description,
+                style = TextDesign.body,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = modifier.weight(0.2f))
+        }
+    }
+}
 
-        Text(
-            text = description,
-            style = TextDesign.body,
-            textAlign = TextAlign.Center,
-            modifier = modifier.padding(start = dp16, end = dp16)
+
+@Preview(showBackground = true)
+@Composable
+fun OnboardingItemPreview() {
+    BerestaTheme {
+        OnboardingItem(
+            item = OnboardingUi.preview,
+            pagerProgress = { false },
+            pageOffset = { 0f }
         )
-
-        Spacer(modifier = modifier.weight(0.2f))
     }
 }
 

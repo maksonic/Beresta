@@ -11,8 +11,8 @@ import ru.maksonic.beresta.feature.language_selector.api.components.TranslatedLa
  * @Author maksonic on 17.02.2023
  */
 @Serializable
-data class Russian(
-    @SerializedName("language_title") val langTitle: String = "Русский",
+data class Chinese(
+    @SerializedName("language_title") val langTitle: String = "简体中文",
     @SerializedName("translated_language") val translatedLanguage: TranslatedLanguage,
     @SerializedName("onboarding") val langOnboardingData: LangOnboardingData,
     @SerializedName("shared") val shared: LangSharedData,

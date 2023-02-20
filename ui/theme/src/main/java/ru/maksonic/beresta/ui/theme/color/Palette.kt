@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.ui.theme.color
 
+import android.content.res.Resources.Theme
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -23,6 +24,7 @@ private object Palette {
     val carmineRed = Color(0xFFB00020)
     val white = Color(0xFFFFFFFF)
     val snow = Color(0xFFF6F6F6)
+    val shadow = Color(0x2A000000)
     val transparent = Color(0x00000000)
 }
 
@@ -51,6 +53,7 @@ val baseLightPalette = AppColor(
     onSurfaceVariant = Palette.black,
     outline = Palette.carmineRed,
     shadow = Palette.black,
+    scrim = Palette.black.copy(alpha = 0.32f),
     transparent = Palette.transparent
 )
 val baseDarkPalette = AppColor(
@@ -78,6 +81,7 @@ val baseDarkPalette = AppColor(
     onSurfaceVariant = Palette.grayDark,
     outline = Palette.carmineRed,
     shadow = Palette.black,
+    scrim = Palette.black.copy(alpha = 0.32f),
     transparent = Palette.transparent
 )
 

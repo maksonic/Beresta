@@ -3,6 +3,8 @@ package ru.maksonic.beresta.ui.theme
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
+import ru.maksonic.beresta.feature.language_selector.api.provider.LocalBerestaLanguage
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.LocalAppColors
 import ru.maksonic.beresta.ui.theme.component.*
@@ -14,6 +16,7 @@ import ru.maksonic.beresta.ui.theme.component.*
 fun AppLocalProvider(
     colors: AppColor,
     images: AppImage,
+    languages: BerestaLanguage,
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
@@ -25,6 +28,7 @@ fun AppLocalProvider(
         LocalAppDimen provides dimens,
         LocalAppShape provides shapes,
         LocalRippleTheme provides AppRipple,
+        LocalBerestaLanguage provides languages,
         content = content
     )
 }

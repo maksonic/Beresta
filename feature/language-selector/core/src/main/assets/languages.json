@@ -1,5 +1,11 @@
 {
   "russian": {
+    "language_title": "Русский",
+    "translated_language": {
+      "russian": "Русский",
+      "english": "Английский",
+      "chinese": "Упрощённый китайский"
+    },
     "onboarding": {
       "btn_title_next": "Продолжить",
       "btn_title_sync": "Синхронизировать",
@@ -27,11 +33,36 @@
         }
       ]
     },
-    "select_language_sheet": {
-      "btn_title_save_language": "Сохранить"
+    "shared": {
+      "btn_title_save": "Сохранить",
+      "btn_title_cancel": "Отменить",
+      "btn_title_close": "Закрыть"
+    },
+    "settings": {
+      "top_bar_title": "Настройки",
+      "title_general": "Основное",
+      "title_account": "Аккаунт",
+      "title_support": "Помощь",
+      "item_switch_language": "Язык",
+      "item_switch_theme": "Тема",
+      "item_change_account": "Редактировать профиль",
+      "item_write_message": "Написать разработчикам",
+      "item_privacy": "Политика конфиденциальности",
+      "item_terms_of_use": "Пользовательское соглашение",
+      "item_about_app": "О приложении",
+      "title_theme_system": "Системная",
+      "title_theme_light": "Светлая",
+      "title_theme_night": "Тёмная",
+      "title_theme_high_contrast": "Высококонтрастная"
     }
   },
   "english": {
+    "language_title": "English",
+    "translated_language": {
+      "russian": "Russian",
+      "english": "English",
+      "chinese": "Simplified Chinese"
+    },
     "onboarding": {
       "btn_title_next": "Next",
       "btn_title_sync": "Synchronize",
@@ -59,11 +90,36 @@
         }
       ]
     },
-    "select_language_sheet": {
-      "btn_title_save_language": "Save"
+    "shared": {
+      "btn_title_save": "Save",
+      "btn_title_cancel": "Cancel",
+      "btn_title_close": "Close"
+    },
+    "settings": {
+      "top_bar_title": "Settings",
+      "title_general": "Main",
+      "title_account": "Account",
+      "title_support": "Support",
+      "item_switch_language": "Language",
+      "item_switch_theme": "Theme",
+      "item_change_account": "Edit Profile",
+      "item_write_message": "Write to developers",
+      "item_privacy": "Privacy Policy",
+      "item_terms_of_use": "User Agreement",
+      "item_about_app": "About app",
+      "title_theme_system": "System",
+      "title_theme_light": "Light",
+      "title_theme_night": "Night",
+      "title_theme_high_contrast": "High contrast"
     }
   },
-  "chines": {
+  "chinese": {
+    "language_title": "简体中文",
+    "translated_language": {
+      "russian": "俄语",
+      "english": "英语",
+      "chinese": "简体中文"
+    },
     "onboarding": {
       "btn_title_next": "继续",
       "btn_title_sync": "同步",
@@ -91,8 +147,27 @@
         }
       ]
     },
-    "select_language_sheet": {
-      "btn_title_save_language": "节省"
+    "shared": {
+      "btn_title_save": "节省",
+      "btn_title_cancel": "取消",
+      "btn_title_close": "关闭"
+    },
+    "settings": {
+      "top_bar_title": "设置",
+      "title_general": "将军",
+      "title_account": "账号",
+      "title_support": "帮助",
+      "item_switch_language": "语言",
+      "item_switch_theme": "主题",
+      "item_change_account": "编辑个人资料",
+      "item_write_message": "写给开发者",
+      "item_privacy": "隐私政策",
+      "item_terms_of_use": "用户协议",
+      "item_about_app": "关于应用程序",
+      "title_theme_system": "系统",
+      "title_theme_light": "光",
+      "title_theme_night": "黑暗",
+      "title_theme_high_contrast": "高对比度"
     }
   }
 }

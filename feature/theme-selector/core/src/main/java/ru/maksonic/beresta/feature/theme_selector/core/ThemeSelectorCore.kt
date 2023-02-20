@@ -11,7 +11,7 @@ import ru.maksonic.beresta.ui.theme.AppTheme
 /**
  * @Author maksonic on 15.02.2023
  */
-class ThemeSelectorCore(private val datastore: Datastore) : ThemeSelectorApi {
+class ThemeSelectorCore(private val datastore: Datastore) : ThemeSelectorApi.Theme {
     private val key = stringPreferencesKey("prefs_app_theme_key")
 
     override suspend fun setTheme(theme: AppTheme) {

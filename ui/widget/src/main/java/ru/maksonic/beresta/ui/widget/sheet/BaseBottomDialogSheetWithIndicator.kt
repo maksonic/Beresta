@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.language_selector.core.ui
+package ru.maksonic.beresta.ui.widget.sheet
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -27,6 +27,7 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 /**
  * @Author maksonic on 19.02.2023
  */
+
 @Composable
 fun BaseBottomDialogSheetWithIndicator(
     isVisibleSheet: Boolean,
@@ -70,13 +71,11 @@ private fun SheetIndicator(tint: Color = onSecondaryContainer, modifier: Modifie
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun BaseBottomDialogSheetWithIndicatorPreview() {
 
     BerestaTheme {
-        BaseBottomDialogSheetWithIndicator(isVisibleSheet = true, hideSheet = {}) {
-
-        }
+        BaseBottomDialogSheetWithIndicator(isVisibleSheet = true, hideSheet = {}) {}
     }
 }
