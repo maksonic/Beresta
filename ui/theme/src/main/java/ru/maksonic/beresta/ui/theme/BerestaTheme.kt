@@ -6,6 +6,7 @@ import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguag
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.baseDarkPalette
 import ru.maksonic.beresta.ui.theme.color.baseLightPalette
+import ru.maksonic.beresta.ui.theme.color.highContrastPalette
 import ru.maksonic.beresta.ui.theme.component.AppImage
 
 /**
@@ -21,7 +22,7 @@ fun BerestaTheme(
 ) {
     val colors = if (darkTheme) darkPalette else lightPalette
 
-    AppLocalProvider(colors, provideImages(darkTheme), languages = provideLanguages,content)
+    AppLocalProvider(colors, provideImages(darkTheme), languages = provideLanguages, content)
 }
 
 
@@ -34,6 +35,21 @@ fun AppTheme(
     BerestaTheme(
         lightPalette = baseLightPalette,
         darkPalette = baseDarkPalette,
+        darkTheme = darkTheme,
+        provideLanguages = provideLanguages,
+        content = content
+    )
+}
+
+@Composable
+fun HighContrastTheme(
+    darkTheme: Boolean = true,
+    provideLanguages: BerestaLanguage,
+    content: @Composable () -> Unit
+) {
+    BerestaTheme(
+        lightPalette = baseLightPalette,
+        darkPalette = highContrastPalette,
         darkTheme = darkTheme,
         provideLanguages = provideLanguages,
         content = content

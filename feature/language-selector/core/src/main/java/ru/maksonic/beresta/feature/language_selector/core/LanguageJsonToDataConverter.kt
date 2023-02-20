@@ -9,7 +9,6 @@ import ru.maksonic.beresta.core.converter.JsonConverter
 import ru.maksonic.beresta.feature.language_selector.api.LanguageStore
 import java.lang.reflect.Type
 
-
 /**
  * @Author maksonic on 16.02.2023
  */

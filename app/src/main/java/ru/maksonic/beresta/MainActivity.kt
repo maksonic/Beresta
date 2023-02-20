@@ -13,7 +13,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,12 +25,11 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
-import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
-import ru.maksonic.beresta.feature.language_selector.api.provider.LocalBerestaLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.ui.theme.AppTheme
+import ru.maksonic.beresta.ui.theme.HighContrastTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.background
 
@@ -47,7 +45,6 @@ class MainActivity : ComponentActivity() {
     private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
-    private val languageProvider: LanguageProvider by inject()
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,17 +96,8 @@ class MainActivity : ComponentActivity() {
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
         AppTheme.SYSTEM -> { content -> AppTheme(darkTheme = isDark, language, content = content) }
         AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, language, content = content) }
-        else -> { content -> AppTheme(darkTheme = true, language, content) }
-    }
-
-    @Composable
-    private fun ProvideAppLanguage(
-        provided: BerestaLanguage,
-        content: @Composable () -> Unit
-    ) {
-        CompositionLocalProvider(LocalBerestaLanguage provides provided) {
-            content()
-        }
+        AppTheme.DARK -> { content -> AppTheme(darkTheme = true, language, content = content) }
+        AppTheme.HIGH_CONTRAST -> { content -> HighContrastTheme(darkTheme = true, language, content) }
     }
 
     //On some Chinese devices, when launching app or switching the theme, a blank screen appears.

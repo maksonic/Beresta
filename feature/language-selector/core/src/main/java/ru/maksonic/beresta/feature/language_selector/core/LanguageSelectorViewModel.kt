@@ -19,7 +19,8 @@ class LanguageSelectorViewModel(private val selector: LanguageSelectorApi.Lang) 
     private val uiData = listOf(
         LanguageUi(id = AppLanguage.RUSSIAN.ordinal, AppLanguage.RUSSIAN),
         LanguageUi(id = AppLanguage.ENGLISH.ordinal, AppLanguage.ENGLISH),
-        LanguageUi(id = AppLanguage.CHINESE.ordinal, AppLanguage.CHINESE)
+        LanguageUi(id = AppLanguage.CHINESE.ordinal, AppLanguage.CHINESE),
+        LanguageUi(id = AppLanguage.CHINESE_TR.ordinal, AppLanguage.CHINESE_TR),
     )
 
     private val _languagesCollection = MutableStateFlow(LanguagesCollection(uiData))

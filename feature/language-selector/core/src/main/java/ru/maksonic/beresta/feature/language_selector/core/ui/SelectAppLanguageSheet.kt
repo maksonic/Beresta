@@ -88,6 +88,7 @@ fun LanguagesUiItems(
                 AppLanguage.RUSSIAN -> text.translatedLanguage.russian
                 AppLanguage.ENGLISH -> text.translatedLanguage.english
                 AppLanguage.CHINESE -> text.translatedLanguage.chinese
+                AppLanguage.CHINESE_TR -> text.translatedLanguage.chineseTr
             }
             LanguageItem(
                 item = item,

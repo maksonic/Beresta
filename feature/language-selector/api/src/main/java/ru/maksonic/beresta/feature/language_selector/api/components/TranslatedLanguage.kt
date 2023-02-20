@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.feature.language_selector.api.components
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,7 +8,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class TranslatedLanguage(
-    @SerialName("russian") val russian: String = "",
-    @SerialName("english") val english: String = "",
-    @SerialName("chinese") val chinese: String = "",
+    @SerializedName("russian") val russian: String = "",
+    @SerializedName("english") val english: String = "",
+    @SerializedName("chinese") val chinese: String = "",
+    @SerializedName("chinese_tr") val chineseTr: String = "",
 )

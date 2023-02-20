@@ -85,3 +85,33 @@ val baseDarkPalette = AppColor(
     transparent = Palette.transparent
 )
 
+
+val highContrastPalette = AppColor(
+    primary = Palette.cornflowerBlue,
+    onPrimary = Palette.black,
+    primaryContainer = Palette.mineShaft,
+    onPrimaryContainer = Palette.white,
+    secondary = Palette.grayDark,
+    onSecondary = Palette.white,
+    secondaryContainer = Palette.tundora2,
+    onSecondaryContainer = Palette.grayDark,
+    tertiary = Palette.tundora2,
+    onTertiary = Palette.white,
+    tertiaryContainer = Palette.tundora,
+    onTertiaryContainer = Palette.white,
+    error = Palette.carmineRed,
+    onError = Palette.carmineRed,
+    errorContainer = Palette.carmineRed,
+    onErrorContainer = Palette.carmineRed,
+    background = Palette.black,
+    onBackground = Palette.white,
+    surface = Palette.mineShaft,
+    onSurface = Palette.white,
+    surfaceVariant = Palette.grayDusty,
+    onSurfaceVariant = Palette.grayDark,
+    outline = Palette.carmineRed,
+    shadow = Palette.black,
+    scrim = Palette.black.copy(alpha = 0.32f),
+    transparent = Palette.transparent
+)
+

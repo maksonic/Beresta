@@ -16,7 +16,8 @@ private const val ONBOARDINGS_COUNT = 4
 enum class AppLanguage(val title: String) {
     RUSSIAN(title = "\uD83C\uDDF7\uD83C\uDDFA  Русский"),
     ENGLISH(title = "\uD83C\uDDEC\uD83C\uDDE7  English"),
-    CHINESE(title = "\uD83C\uDDE8\uD83C\uDDF3  简体中文")
+    CHINESE(title = "\uD83C\uDDE8\uD83C\uDDF3  简体中文"),
+    CHINESE_TR(title = "\uD83C\uDDE8\uD83C\uDDF3  繁体中文"),
 }
 
 val LocalBerestaLanguage = staticCompositionLocalOf<BerestaLanguage> {
