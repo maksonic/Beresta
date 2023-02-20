@@ -1,8 +1,6 @@
 package ru.maksonic.beresta.ui.theme.icons
 
 import androidx.compose.foundation.Image
-import androidx.compose.material.icons.materialIcon
-import androidx.compose.material.icons.materialPath
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector

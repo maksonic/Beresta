@@ -10,7 +10,7 @@ import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
  * @Author maksonic on 18.02.2023
  */
 class MainProgram(
-    private val themeSelector: ThemeSelectorApi,
+    private val themeSelector: ThemeSelectorApi.Theme,
     private val languageSelector: LanguageSelectorApi.Lang,
     private val languageProvider: LanguageProvider,
 ) : ElmProgram<Msg, Cmd> {

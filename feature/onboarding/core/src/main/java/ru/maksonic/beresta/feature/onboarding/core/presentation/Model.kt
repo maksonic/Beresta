@@ -5,12 +5,14 @@ import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
+import ru.maksonic.beresta.feature.language_selector.api.components.OnboardingDataItem
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingUi
 
 /**
  * @Author maksonic on 24.12.2022
  */
 @Stable
-data class Model(val onboardingImages: Array<Int> = emptyArray()) : ElmModel
+data class Model(val onboardings: Array<OnboardingUi> = emptyArray()) : ElmModel
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
@@ -22,12 +24,13 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class OnboardingImages(val data: Array<Int>) : Inner()
+        data class Onboardings(val data: Array<OnboardingUi>) : Inner()
+        data class FetchOnboardingTextData(val data: Array<OnboardingDataItem>): Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchOnboardings : Cmd()
+    data class FetchOnboardings(val textData: Array<OnboardingDataItem>) : Cmd()
     object NotShowAgain : Cmd()
 }
 

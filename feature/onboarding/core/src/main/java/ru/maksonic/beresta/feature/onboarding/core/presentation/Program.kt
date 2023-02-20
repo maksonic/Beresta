@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation
 
 import ru.maksonic.beresta.elm.ElmProgram
+import ru.maksonic.beresta.feature.language_selector.api.components.OnboardingDataItem
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
 
@@ -13,12 +14,12 @@ class Program(
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Cmd.FetchOnboardings -> fetchOnboardings(consumer)
+            is Cmd.FetchOnboardings -> fetchOnboardings(cmd.textData, consumer)
             is Cmd.NotShowAgain -> onboardingVisibility.notShowAgain()
         }
     }
 
-    private fun fetchOnboardings(consumer: (Msg) -> Unit) {
-        consumer(Msg.Inner.OnboardingImages(repository.onboardingImages))
+    private fun fetchOnboardings(textData: Array<OnboardingDataItem>, consumer: (Msg) -> Unit) {
+        consumer(Msg.Inner.Onboardings(repository.onboardings(textData)))
     }
 }

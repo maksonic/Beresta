@@ -24,9 +24,4 @@ class LanguageSelectorCore(private val datastore: Datastore) : LanguageSelectorA
         AppLanguage.valueOf(langSetting[key] ?: AppLanguage.RUSSIAN.name)
     }
 
-    override val languagesTitle: Map<AppLanguage, String> = mapOf(
-        AppLanguage.RUSSIAN to "\uD83C\uDDF7\uD83C\uDDFA  Русский",
-        AppLanguage.ENGLISH to "\uD83C\uDDEC\uD83C\uDDE7  English",
-        AppLanguage.CHINES to "\uD83C\uDDE8\uD83C\uDDF3  中国人"
-    )
 }

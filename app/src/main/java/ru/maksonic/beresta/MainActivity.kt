@@ -76,8 +76,7 @@ class MainActivity : ComponentActivity() {
                     )
                 },
             ) { animatedTheme ->
-                initTheme(animatedTheme, isDarkTheme).invoke {
-                    ProvideAppLanguage(model.languageProvider) {
+                initTheme(animatedTheme, isDarkTheme, model.languageProvider).invoke {
                         SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
                         Scaffold(backgroundColor = background) { paddings ->
                             AnimatedNavHost(
@@ -91,17 +90,16 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                }
             }
         }
     }
 
     private fun initTheme(
-        theme: AppTheme, isDark: Boolean
+        theme: AppTheme, isDark: Boolean, language: BerestaLanguage,
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
-        AppTheme.SYSTEM -> { content -> AppTheme(darkTheme = isDark, content = content) }
-        AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, content = content) }
-        else -> { content -> AppTheme(darkTheme = true, content) }
+        AppTheme.SYSTEM -> { content -> AppTheme(darkTheme = isDark, language, content = content) }
+        AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, language, content = content) }
+        else -> { content -> AppTheme(darkTheme = true, language, content) }
     }
 
     @Composable

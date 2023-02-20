@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.language_selector.core.ui
+package ru.maksonic.beresta.feature.theme_selector.core.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Row
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,16 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
-import ru.maksonic.beresta.feature.language_selector.api.LanguageUi
-import ru.maksonic.beresta.feature.language_selector.api.LanguagesCollection
-import ru.maksonic.beresta.feature.language_selector.api.provider.AppLanguage
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
-import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorViewModel
-import ru.maksonic.beresta.ui.theme.BerestaTheme
+import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeUi
+import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorViewModel
+import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
+import ru.maksonic.beresta.ui.theme.color.onTertiary
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.secondary
 import ru.maksonic.beresta.ui.theme.color.surface
@@ -37,9 +38,9 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.sheet.BaseBottomDialogSheetWithIndicator
 
 /**
- * @Author maksonic on 16.02.2023
+ * @Author maksonic on 20.02.2023
  */
-class SelectAppLanguageSheet : LanguageSelectorApi.Ui {
+class ThemeSelectorBottomSheet : ThemeSelectorApi.Ui {
 
     @Composable
     override fun BottomSheet(
@@ -56,42 +57,41 @@ private fun Content(
     isVisibleSheet: Boolean,
     hideSheet: () -> Unit,
     modifier: Modifier,
-    viewModel: LanguageSelectorViewModel = koinViewModel()
+    viewModel: ThemeSelectorViewModel = koinViewModel()
 ) {
-    val languages = viewModel.languages.collectAsState().value
+    val themes = viewModel.themes.collectAsState().value
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
 
-        LanguagesUiItems(languagesCollection = { languages }) { item ->
-            viewModel.setLang(item.language)
+        ThemesUiItems(themesCollection = themes) { item ->
+            viewModel.setTheme(item.theme)
         }
 
         Spacer(modifier.height(dp16))
-
         PrimaryButton(
             action = { hideSheet() },
-            title = text.langSharedData.btnTitleSave
+            title = text.langSharedData.btnTitleClose
         )
         Spacer(modifier.height(dp16))
     }
 }
 
 @Composable
-fun LanguagesUiItems(
-    languagesCollection: () -> LanguagesCollection,
-    onChangeLang: (item: LanguageUi) -> Unit
+private fun ThemesUiItems(
+    themesCollection: ThemesCollection,
+    onChangeLang: (item: ThemeUi) -> Unit
 ) {
-
     LazyColumn() {
-        items(languagesCollection().data, key = { lang -> lang.id }) { item ->
-            val translatedLangHint = when (languagesCollection().data[item.id].language) {
-                AppLanguage.RUSSIAN -> text.translatedLanguage.russian
-                AppLanguage.ENGLISH -> text.translatedLanguage.english
-                AppLanguage.CHINESE -> text.translatedLanguage.chinese
+        items(themesCollection.data, key = { theme -> theme.id }) { item ->
+            val title = when (item.theme) {
+                AppTheme.SYSTEM -> text.settings.titleThemeSystem
+                AppTheme.LIGHT -> text.settings.titleThemeLight
+                AppTheme.DARK -> text.settings.themeTitleNight
+                AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
-            LanguageItem(
-                item = item,
-                translatedLangHint = translatedLangHint,
+            val updated = item.copy(title = title)
+            ThemeItem(
+                item = updated,
                 onChangeLang = { onChangeLang(item) }
             )
         }
@@ -99,9 +99,8 @@ fun LanguagesUiItems(
 }
 
 @Composable
-private fun LanguageItem(
-    item: LanguageUi,
-    translatedLangHint: String,
+private fun ThemeItem(
+    item: ThemeUi,
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -118,41 +117,17 @@ private fun LanguageItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Text(
-            item.language.title,
-            style = TextDesign.title,
+        Icon(
+            imageVector = item.icon,
+            tint = onTertiary,
+            contentDescription = "",
             modifier = modifier.padding(start = dp8)
         )
-        Spacer(modifier.weight(1f))
+
         Text(
-            text = translatedLangHint,
-            style = TextDesign.captionNormal.copy(color = secondary),
-            modifier = modifier.padding(end = dp8)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SelectAppLanguageSheetPreview() {
-    BerestaTheme {
-        Content(
-            isVisibleSheet = true,
-            hideSheet = { },
-            Modifier
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun LangItemPreview() {
-    BerestaTheme {
-        LanguageItem(
-            item = LanguageUi(0, AppLanguage.RUSSIAN),
-            onChangeLang = { },
-            translatedLangHint = "Russian"
+            text = item.title,
+            style = TextDesign.title,
+            modifier = modifier.padding(start = dp8)
         )
     }
 }
