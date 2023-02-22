@@ -14,14 +14,6 @@ import ru.maksonic.beresta.ui.theme.color.background
 /**
  * @Author maksonic on 25.12.2022
  */
-@Preview
-@Composable
-private fun LoadingVieStatePreview() {
-    BerestaTheme {
-        LoadingViewState()
-    }
-}
-
 @Composable
 fun LoadingViewState(modifier: Modifier = Modifier) {
     Box(
@@ -31,5 +23,13 @@ fun LoadingViewState(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
+    }
+}
+
+@Preview
+@Composable
+private fun LoadingVieStatePreview() {
+    BerestaTheme {
+        LoadingViewState()
     }
 }

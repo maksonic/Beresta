@@ -27,10 +27,10 @@ val LocalBerestaLanguage = staticCompositionLocalOf<BerestaLanguage> {
 data class BerestaLanguage(
     val langTitle: String = "",
     val translatedLanguage: TranslatedLanguage = TranslatedLanguage(),
-    val langOnboardingData: LangOnboardingData = LangOnboardingData(
+    val onboarding: LangOnboardingData = LangOnboardingData(
         data = Array(ONBOARDINGS_COUNT) { OnboardingDataItem()}
     ),
-    val langSharedData: LangSharedData = LangSharedData(),
+    val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData()
 )
 

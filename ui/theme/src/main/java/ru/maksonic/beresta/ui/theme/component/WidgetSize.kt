@@ -17,11 +17,12 @@ data class AppWidgetSize(
     val topBarNormalHeight: Dp,
     val tabBarHeight: Dp,
     val bottomPanelHeightDefault: Dp,
-    val bottomPanelHeightIdle: Dp,
+    val bottomMainPanelHeight: Dp,
     val bottomPanelHeightSelected: Dp,
     val filterChipHeight: Dp,
     val minimumTouchTargetSize: Dp,
-    val modalSheetItemHeight: Dp
+    val modalSheetItemHeight: Dp,
+    val searchBarCollapsedHeight: Dp
 )
 
 val widgetsSize = AppWidgetSize(
@@ -30,9 +31,10 @@ val widgetsSize = AppWidgetSize(
     tabBarHeight = 36.dp,
     topBarNormalHeight = 56.dp,
     bottomPanelHeightDefault = 56.dp,
-    bottomPanelHeightIdle = 72.dp,
+    bottomMainPanelHeight = 80.dp,
     bottomPanelHeightSelected = 112.dp,
     filterChipHeight = 42.dp,
     minimumTouchTargetSize = 48.dp,
-    modalSheetItemHeight = 48.dp
+    modalSheetItemHeight = 48.dp,
+    searchBarCollapsedHeight = 48.dp
 )

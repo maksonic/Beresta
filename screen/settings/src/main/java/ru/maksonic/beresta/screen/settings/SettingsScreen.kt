@@ -91,7 +91,7 @@ private fun Content(
                 AppTheme.DARK -> text.settings.themeTitleNight
                 AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
-            SystemStatusBar(changeableBackgroundColor = { topBarColor.value })
+            SystemStatusBar(backgroundColor = { topBarColor.value })
             TopAppBarNormal(
                 title = text.settings.topBarTitle,
                 backgroundColor = { topBarColor.value },
