@@ -1,8 +1,12 @@
 package ru.maksonic.beresta.feature.splash_screen.core
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -23,10 +27,9 @@ import ru.maksonic.beresta.ui.widget.functional.animation.pulsating
 /**
  * @Author maksonic on 10.02.2023
  */
+private const val PULSE_FRACTION = 1.3f
+
 class BerestaSplashScreen : SplashApi {
-    private companion object {
-        private const val PULSE_FRACTION = 1.3f
-    }
 
     @Composable
     override fun Screen(router: SplashScreenRouter) {
@@ -40,37 +43,42 @@ class BerestaSplashScreen : SplashApi {
 
     @Composable
     override fun Widget(modifier: Modifier) {
-        /**
-         * @see [size] and [padding] compare with
-         * [ru.maksonic.beresta.feature.splash_screen.core.R.drawable.splash_bg]
-         */
+        SplashContent(modifier)
+    }
+}
 
-        Column(
-            modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier.weight(1f))
+@Composable
+private fun SplashContent(modifier: Modifier) {
+    /**
+     * @see [size] and [padding] compare with
+     * [ru.maksonic.beresta.feature.splash_screen.core.R.drawable.splash_bg]
+     */
 
-                Image(
-                    painter = painterResource(R.drawable.logo_beresta_foreground),
-                    contentDescription = "",
-                    modifier = modifier
-                        .padding(top = 60.dp)
-                        .size(150.dp)
-                        .pulsating(PULSE_FRACTION),
-                    colorFilter = ColorFilter.tint(color = onSurface)
-                )
+    Column(
+        modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier.weight(1f))
 
-            Spacer(modifier.weight(1f))
-            Image(
-                painter = painterResource(Theme.image.splashBottomLogo),
-                contentDescription = "",
-                modifier = modifier
-                    .padding(bottom = 60.dp)
-                    .size(125.dp, 45.dp)
-            )
-        }
+        Image(
+            painter = painterResource(R.drawable.logo_beresta_foreground),
+            contentDescription = "",
+            modifier = modifier
+                .padding(top = 60.dp)
+                .size(150.dp)
+                .pulsating(PULSE_FRACTION),
+            colorFilter = ColorFilter.tint(color = onSurface)
+        )
+
+        Spacer(modifier.weight(1f))
+        Image(
+            painter = painterResource(Theme.image.splashBottomLogo),
+            contentDescription = "",
+            modifier = modifier
+                .padding(bottom = 60.dp)
+                .size(125.dp, 45.dp)
+        )
     }
 }
 

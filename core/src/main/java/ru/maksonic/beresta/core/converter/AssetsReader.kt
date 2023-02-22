@@ -8,7 +8,7 @@ import android.content.Context
 interface AssetsReader {
     fun readAssetsString(fileName: String): String
 
-    class Reader(private val context: Context) : AssetsReader {
+    class Core(private val context: Context) : AssetsReader {
         override fun readAssetsString(fileName: String): String = context.assets
             .open(fileName)
             .bufferedReader()

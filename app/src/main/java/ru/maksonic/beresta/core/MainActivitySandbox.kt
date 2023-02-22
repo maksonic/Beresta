@@ -8,7 +8,7 @@ import ru.maksonic.beresta.elm.UpdatedModel
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class MainActivitySandbox(mainActivityProgram: MainProgram) : Sandbox<Model, Msg, Cmd, Eff>(
+class MainActivitySandbox(mainActivityProgram: MainActivityProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model(),
     initialCmd = setOf(
         Cmd.ReadLanguageFromDataStore, Cmd.ReadThemeFromDataStore, Cmd.FetchAppLanguage

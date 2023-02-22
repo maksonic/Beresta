@@ -8,7 +8,7 @@ import java.io.IOException
 interface JsonConverter {
     fun convertAssertJsonToString(fileName: String): Result<String>
 
-    class Converter(private val assetsReader: AssetsReader) : JsonConverter {
+    class Core(private val assetsReader: AssetsReader) : JsonConverter {
 
         override fun convertAssertJsonToString(fileName: String): Result<String> {
             return try {

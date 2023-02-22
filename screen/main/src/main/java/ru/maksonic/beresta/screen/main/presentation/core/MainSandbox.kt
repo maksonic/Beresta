@@ -8,21 +8,47 @@ import ru.maksonic.beresta.elm.UpdatedModel
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class MainSandbox : Sandbox<Model, Msg, Cmd, Eff>(
+class MainSandbox(
+    mainProgram: MainProgram
+) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model(),
-    initialCmd = setOf(Cmd.ListenBottomPanelActions),
-    subscriptions = listOf()
+    initialCmd = setOf(Cmd.RunFetchingNotesCollection),
+    subscriptions = listOf(mainProgram)
 ) {
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchedNotesCollection -> fetchedNotes(model, msg)
+        is Msg.Inner.FetchedError -> fetchedError(model, msg)
         is Msg.Ui.CreateNewNote -> onAddNoteClicked(model)
         is Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
         is Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
         is Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
-        is Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
         is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
+        is Msg.Ui.OnSettingsClicked -> onSettingsClicked(model)
         is Msg.Ui.OnTrashClicked -> onTrashClicked(model)
-        is Msg.Ui.OnSearchClicked -> onSearchClicked(model)
+        is Msg.Ui.OnOpenFoldersClicked -> UpdatedModel(model)
+        is Msg.Ui.OnSortNotesByClicked -> UpdatedModel(model)
+
     }
+
+    private fun fetchedNotes(model: Model, msg: Msg.Inner.FetchedNotesCollection): UpdateResult =
+        UpdatedModel(
+            model.copy(
+                base = model.base.copy(isLoading = false, isSuccessLoading = true, isError = false),
+                notes = msg.data
+            )
+        )
+
+    private fun fetchedError(model: Model, msg: Msg.Inner.FetchedError): UpdateResult =
+        UpdatedModel(
+            model.copy(
+                base = model.base.copy(
+                    isLoading = false,
+                    isSuccessLoading = false,
+                    isError = true,
+                    errorMsg = msg.message
+                )
+            )
+        )
 
     private fun onAddNoteClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateToAddNewNote))
@@ -49,5 +75,4 @@ class MainSandbox : Sandbox<Model, Msg, Cmd, Eff>(
     private fun onTrashClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateToTrash))
 
-    private fun onSearchClicked(model: Model): UpdateResult = UpdatedModel(model)
 }

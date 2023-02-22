@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import ru.maksonic.beresta.feature.onboarding.core.R
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingUi
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
@@ -20,7 +19,6 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 /**
  * @Author maksonic on 15.12.2022
  */
-
 @Composable
 internal fun OnboardingItem(
     item: OnboardingUi,
@@ -28,8 +26,6 @@ internal fun OnboardingItem(
     pagerProgress: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
-
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxSize(),

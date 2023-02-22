@@ -11,34 +11,52 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.core.CoroutineDispatchers
+import ru.maksonic.beresta.core.MainActivityProgram
 import ru.maksonic.beresta.core.MainActivitySandbox
-import ru.maksonic.beresta.core.MainProgram
+import ru.maksonic.beresta.core.ResourceProvider
 import ru.maksonic.beresta.core.converter.AssetsReader
 import ru.maksonic.beresta.core.converter.JsonConverter
+import ru.maksonic.beresta.core.domain.DateFormatter
 import ru.maksonic.beresta.data.common.Datastore
-import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
+import ru.maksonic.beresta.data.database.databaseModule
+import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
+import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
+import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
+import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
 import ru.maksonic.beresta.feature.language_selector.core.LanguageProviderImpl
 import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorCore
-import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorViewModel
-import ru.maksonic.beresta.feature.language_selector.core.ui.SelectAppLanguageSheet
+import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
+import ru.maksonic.beresta.feature.language_selector.core.presentation.ui.SelectAppLanguageSheet
+import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
+import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
+import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
+import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
+import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.NotesListWidget
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
-import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingVisibilityDatastore
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
+import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingVisibilityDatastore
 import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbox
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Program
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingScreen
+import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
+import ru.maksonic.beresta.feature.search_bar.core.presentation.SearchBarSandbox
+import ru.maksonic.beresta.feature.search_bar.core.presentation.ui.SearchBarWidget
 import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
 import ru.maksonic.beresta.feature.splash_screen.core.BerestaSplashScreen
 import ru.maksonic.beresta.feature.splash_screen.core.SplashViewModel
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorCore
-import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorViewModel
-import ru.maksonic.beresta.feature.theme_selector.core.ui.ThemeSelectorBottomSheet
+import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
+import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.ThemeSelectorBottomSheet
 import ru.maksonic.beresta.navigation.graph_builder.FeatureApiStore
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
+import ru.maksonic.beresta.screen.main.presentation.core.MainProgram
+import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
 import ru.maksonic.beresta.screen.settings.core.SettingsProgram
 import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
 
@@ -50,7 +68,7 @@ class BerestaApp : Application() {
     //General modules
     private val appModule = module {
         single {
-            MainProgram(
+            MainActivityProgram(
                 themeSelector = get(),
                 languageSelector = get(),
                 languageProvider = get()
@@ -65,8 +83,10 @@ class BerestaApp : Application() {
         single(named(CoroutineDispatchers.MAIN)) { Dispatchers.Main }
         single { Json { ignoreUnknownKeys = true } }
         single { Gson() }
-        single<AssetsReader> { AssetsReader.Reader(androidContext()) }
-        single<JsonConverter> { JsonConverter.Converter(assetsReader = get()) }
+        single<AssetsReader> { AssetsReader.Core(androidContext()) }
+        single<JsonConverter> { JsonConverter.Core(assetsReader = get()) }
+        single<ResourceProvider> { ResourceProvider.Core(androidContext()) }
+        single { DateFormatter }
     }
 
     private val dataModule = module {
@@ -75,7 +95,7 @@ class BerestaApp : Application() {
 
     private val navigationModule = module {
         single { FeatureApiStore(splash = get(), onboarding = get()) }
-        single<GraphBuilder> { GraphBuilder.Builder(navigator = get(), apiStore = get()) }
+        single<GraphBuilder> { GraphBuilder.Core(navigator = get(), apiStore = get()) }
         single { AppNavigator() }
     }
 
@@ -83,6 +103,11 @@ class BerestaApp : Application() {
     private val splashScreenModule = module {
         single<SplashApi> { BerestaSplashScreen() }
         viewModel { SplashViewModel(onboardingVisibility = get()) }
+    }
+
+    private val mainScreenModule = module {
+        single { MainProgram(fetchingUseCase = get(), mapper = get()) }
+        viewModel { MainSandbox(mainProgram = get()) }
     }
 
     private val onboardingFeatureModule = module {
@@ -118,16 +143,45 @@ class BerestaApp : Application() {
         viewModel { SettingsSandbox(program = get()) }
     }
 
+    private val notesListFeatureModule = module {
+        single<NotesListApi.Ui> { NotesListWidget() }
+        single { NoteUiMapper(dateFormatter = get()) }
+        viewModel { NotesListSandbox() }
+
+    }
+    private val notesListFeatureDataModule = module {
+        single { NoteCacheMapper() }
+        single {
+            NotesCacheDataSource(
+                noteDao = get(),
+                dispatcher = get(named(CoroutineDispatchers.IO))
+            )
+        }
+        single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
+        single { FetchNotesUseCase(repository = get()) }
+        single { FetchNoteByIdUseCase(repository = get()) }
+    }
+
+    private val searchBarFeatureModule = module {
+        viewModel { SearchBarSandbox() }
+        single<SearchBarApi.Ui> { SearchBarWidget() }
+    }
+
     private val modules = listOf(
         appModule,
         settingsModule,
         coreModule,
         dataModule,
+        databaseModule,
         splashScreenModule,
+        mainScreenModule,
         navigationModule,
         onboardingFeatureModule,
         themeSelectorFeatureModule,
-        languageSelectorFeatureModule
+        languageSelectorFeatureModule,
+        notesListFeatureModule,
+        notesListFeatureDataModule,
+        searchBarFeatureModule
 
     )
 

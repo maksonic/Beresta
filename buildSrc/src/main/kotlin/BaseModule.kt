@@ -22,6 +22,11 @@ sealed class BaseModule(val path: String, val namespace: String) {
             path = ":data:database",
             namespace = "ru.maksonic.beresta.data.database"
         )
+
+        object Notes : BaseModule(
+            path = ":data:notes",
+            namespace = "ru.maksonic.beresta.data.notes"
+        )
     }
 
     object Elm : BaseModule(
@@ -84,6 +89,7 @@ sealed class BaseModule(val path: String, val namespace: String) {
                 path = ":feature:theme-selector:api",
                 namespace = "ru.maksonic.beresta.feature.theme_selector.api"
             )
+
             object Core : BaseModule(
                 path = ":feature:theme-selector:core",
                 namespace = "ru.maksonic.beresta.feature.theme_selector.core"
@@ -95,6 +101,7 @@ sealed class BaseModule(val path: String, val namespace: String) {
                 path = ":feature:language-selector:api",
                 namespace = "ru.maksonic.beresta.feature.language_selector.api"
             )
+
             object Core : BaseModule(
                 path = ":feature:language-selector:core",
                 namespace = "ru.maksonic.beresta.feature.language_selector.core"
@@ -107,43 +114,24 @@ sealed class BaseModule(val path: String, val namespace: String) {
                 namespace = "ru.maksonic.beresta.feature.notes_list.api"
             )
 
-            object Data : BaseModule(
-                path = ":feature:notes-list:data",
-                namespace = "ru.maksonic.beresta.feature.notes_list.data"
-            )
-
-            object Domain : BaseModule(
-                path = ":feature:notes-list:domain",
-                namespace = "ru.maksonic.beresta.feature.notes_list.domain"
-            )
-
-            object Ui : BaseModule(
-                path = ":feature:notes-list:ui",
-                namespace = "ru.maksonic.beresta.feature.notes_list.ui"
+            object Core : BaseModule(
+                path = ":feature:notes-list:core",
+                namespace = "ru.maksonic.beresta.feature.notes_list.core"
             )
         }
 
-        object TasksList {
+        object SearchBar {
             object Api : BaseModule(
-                path = ":feature:tasks-list:api",
-                namespace = "ru.maksonic.beresta.feature.tasks_list.api"
+                path = ":feature:search-bar:api",
+                namespace = "ru.maksonic.beresta.feature.search_bar.api"
             )
 
-            object Data : BaseModule(
-                path = ":feature:tasks-list:data",
-                namespace = "ru.maksonic.beresta.feature.tasks_list.data"
-            )
-
-            object Domain : BaseModule(
-                path = ":feature:tasks-list:domain",
-                namespace = "ru.maksonic.beresta.feature.tasks_list.domain"
-            )
-
-            object Ui : BaseModule(
-                path = ":feature:tasks-list:ui",
-                namespace = "ru.maksonic.beresta.feature.tasks_list.ui"
+            object Core : BaseModule(
+                path = ":feature:search-bar:core",
+                namespace = "ru.maksonic.beresta.feature.search_bar.core"
             )
         }
+
 
         object TrashList {
             object Domain : BaseModule(

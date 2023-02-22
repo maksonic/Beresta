@@ -23,6 +23,7 @@ data class AppPadding(
     val dp16: Dp,
     val dp24: Dp,
     val dp32: Dp,
+    val dp48: Dp,
     val dp56: Dp,
     val dp64: Dp,
     val dp72: Dp,
@@ -38,6 +39,7 @@ val paddings = AppPadding(
     dp16 = 16.dp,
     dp24 = 24.dp,
     dp32 = 32.dp,
+    dp48 = 48.dp,
     dp56 = 56.dp,
     dp64 = 64.dp,
     dp72 = 72.dp
@@ -52,6 +54,7 @@ val dp12 @Composable get() = Theme.padding.dp12
 val dp16 @Composable get() = Theme.padding.dp16
 val dp24 @Composable get() = Theme.padding.dp24
 val dp32 @Composable get() = Theme.padding.dp32
+val dp48 @Composable get() = Theme.padding.dp48
 val dp56 @Composable get() = Theme.padding.dp56
 val dp64 @Composable get() = Theme.padding.dp64
 val dp72 @Composable get() = Theme.padding.dp72

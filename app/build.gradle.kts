@@ -54,6 +54,7 @@ dependencies {
 
     implementation(project(BaseModule.Data.Common.path))
     implementation(project(BaseModule.Data.Database.path))
+    implementation(project(BaseModule.Data.Notes.path))
 
     implementation(project(BaseModule.Elm.path))
 
@@ -74,6 +75,12 @@ dependencies {
 
     implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.LanguageSelector.Core.path))
+
+    implementation(project(BaseModule.Feature.NotesList.Api.path))
+    implementation(project(BaseModule.Feature.NotesList.Core.path))
+
+    implementation(project(BaseModule.Feature.SearchBar.Api.path))
+    implementation(project(BaseModule.Feature.SearchBar.Core.path))
 
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))

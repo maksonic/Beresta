@@ -17,7 +17,7 @@ import ru.maksonic.beresta.navigation.router.Destination
 interface GraphBuilder {
     fun buildGraph(graphBuilder: NavGraphBuilder)
 
-    class Builder(
+    class Core(
         private val navigator: AppNavigator, private val apiStore: FeatureApiStore
     ) : GraphBuilder {
 

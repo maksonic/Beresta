@@ -3,14 +3,16 @@ package ru.maksonic.beresta.screen.main.presentation.core
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.elm.*
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
 
 /**
  * @Author maksonic on 16.01.2023
  */
 @Stable
 data class Model(
-    val base: BaseModel = BaseModel(),
+    val base: BaseModel = BaseModel(isLoading = true),
     val entry: NavBackStackEntry? = null,
+    val notes: NotesCollection = NotesCollection(emptyList()),
     val isVisibleTopBar: Boolean = true,
     val isColoredTopBar: Boolean = false,
     val isVisibleBottomBar: Boolean = true,
@@ -21,11 +23,14 @@ sealed class Msg : ElmMessage {
         object CreateNewNote : Ui()
         object OnSettingsClicked : Ui()
         object OnTrashClicked : Ui()
-        object OnSearchClicked : Ui()
+        object OnOpenFoldersClicked : Ui()
+        object OnSortNotesByClicked : Ui()
         object OnShareSelectedNotes : Ui()
     }
 
     sealed class Inner : Msg() {
+        data class FetchedNotesCollection(val data: NotesCollection): Inner()
+        data class FetchedError(val message: String): Inner()
         data class SetTopBarVisibility(val value: Boolean) : Inner()
         data class SetColoredTopBar(val value: Boolean) : Inner()
         data class SetBottomVisibility(val value: Boolean) : Inner()
@@ -33,7 +38,7 @@ sealed class Msg : ElmMessage {
 }
 
 sealed class Cmd : ElmCommand {
-    object ListenBottomPanelActions : Cmd()
+    object RunFetchingNotesCollection : Cmd()
 }
 
 sealed class Eff : ElmEffect {

@@ -27,8 +27,8 @@ import ru.maksonic.beresta.ui.widget.button.TertiaryButton
  */
 @Composable
 internal fun NextSlideButton(send: SendMessage, isLastCurrentPage: Boolean, modifier: Modifier) {
-    val titlePrimaryBtn = if (isLastCurrentPage) text.langOnboardingData.btnTitleSync
-    else text.langOnboardingData.btnTitleNext
+    val titlePrimaryBtn = if (isLastCurrentPage) text.onboarding.btnTitleSync
+    else text.onboarding.btnTitleNext
 
     val alphaDoNotSyncBtn: Float by animateFloatAsState(
         targetValue = if (isLastCurrentPage) 1f else 0f,
@@ -45,7 +45,7 @@ internal fun NextSlideButton(send: SendMessage, isLastCurrentPage: Boolean, modi
 
         TertiaryButton(
             action = { send(Msg.Ui.OnSkipSyncBtnClicked) },
-            title = text.langOnboardingData.btnTitleSkipSync,
+            title = text.onboarding.btnTitleSkipSync,
             modifier = modifier.alpha(alphaDoNotSyncBtn)
         )
         Spacer(modifier = modifier.padding(bottom = dp16))

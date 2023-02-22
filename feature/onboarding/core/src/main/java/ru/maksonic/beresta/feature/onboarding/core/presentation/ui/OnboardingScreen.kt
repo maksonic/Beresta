@@ -104,7 +104,7 @@ private fun Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //Fetch text from local provider for build onboardings.
-            send(Msg.Inner.FetchOnboardingTextData(text.langOnboardingData.data))
+            send(Msg.Inner.FetchOnboardingTextData(text.onboarding.data))
 
             OnboardingTopBar(showLanguageSelector = { send(Msg.Ui.OnSelectLanguageBtnClicked) })
 

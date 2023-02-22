@@ -20,8 +20,8 @@ class LanguageProviderImpl(
                 val berestaLanguage = BerestaLanguage(
                     langTitle = langTitle(language, data),
                     translatedLanguage = translated(language, data),
-                    langOnboardingData = onboardingText(language, data),
-                    langSharedData = shared(language, data),
+                    onboarding = onboardingText(language, data),
+                    shared = shared(language, data),
                     settings = settingsText(language, data)
                 )
                 emit(berestaLanguage)
