@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.core.presentation.ui
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
@@ -15,8 +16,11 @@ import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.NoteLi
 class NotesListWidget : NotesListApi.Ui {
 
     @Composable
-    override fun FetchedNotesWidget(notes: NotesCollection, modifier: Modifier) {
-        FetchedNotesWidgetContent(notes)
+    override fun FetchedNotesWidget(
+        notes: NotesCollection,
+        scrollState: () -> LazyListState,
+        modifier: Modifier) {
+        FetchedNotesWidgetContent(notes, scrollState)
     }
 
     @Composable

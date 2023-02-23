@@ -52,5 +52,6 @@ android {
 dependencies {
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Navigation.Router.path))
+    implementation(Lib.Compose.material)
     implementation(Lib.Koin.compose)
 }

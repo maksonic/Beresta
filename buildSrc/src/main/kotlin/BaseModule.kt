@@ -145,27 +145,15 @@ sealed class BaseModule(val path: String, val namespace: String) {
             )
         }
 
-        object BottomPanel {
-            object Api : BaseModule(
-                path = ":feature:bottom-panel:api",
-                namespace = "ru.maksonic.beresta.feature.bottom_panel.api"
-            )
-
-            object Ui : BaseModule(
-                path = ":feature:bottom-panel:ui",
-                namespace = "ru.maksonic.beresta.feature.bottom_panel.ui"
-            )
-        }
-
         object EditNote {
-            object Domain : BaseModule(
-                path = ":feature:edit-note:domain",
-                namespace = "ru.maksonic.beresta.feature.edit_note.domain"
+            object Api : BaseModule(
+                path = ":feature:edit-note:api",
+                namespace = "ru.maksonic.beresta.feature.edit_note.api"
             )
 
-            object Ui : BaseModule(
-                path = ":feature:edit-note:ui",
-                namespace = "ru.maksonic.beresta.feature.edit_note.ui"
+            object Core : BaseModule(
+                path = ":feature:edit-note:core",
+                namespace = "ru.maksonic.beresta.feature.edit_note.core"
             )
         }
     }

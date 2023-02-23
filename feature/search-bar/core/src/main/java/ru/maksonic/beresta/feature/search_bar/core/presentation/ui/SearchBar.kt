@@ -29,8 +29,6 @@ internal fun SearchBar(
     BoxWithConstraints(modifier.fillMaxSize()) {
         val boxScope = this
 
-        SearchBarContainer(modifier)
-
         SearchBarOverflowContainer(
             isExpanded = { model.isExpandedBar },
             send = send,

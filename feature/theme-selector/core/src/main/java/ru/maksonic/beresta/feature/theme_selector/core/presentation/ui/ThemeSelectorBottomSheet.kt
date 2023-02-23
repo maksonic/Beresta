@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.theme_selector.core.presentation.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +31,7 @@ import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.functional.clickAction
@@ -61,26 +63,27 @@ private fun Content(
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
 
-        ThemesUiItems(themesCollection = themes) { item ->
-            viewModel.setTheme(item.theme)
-        }
+        ThemesUiItems(
+            themesCollection = themes,
+            onChangeLang = { item -> viewModel.setTheme(item.theme) }
+        )
 
-        Spacer(modifier.height(dp16))
         PrimaryButton(
             action = { hideSheet() },
-            title = text.shared.btnTitleClose
+            title = text.shared.btnTitleSave,
+            modifier = modifier.padding(bottom = dp16)
         )
-        Spacer(modifier.height(dp16))
     }
 }
 
 @Composable
 private fun ThemesUiItems(
     themesCollection: ThemesCollection,
-    onChangeLang: (item: ThemeUi) -> Unit
+    onChangeLang: (item: ThemeUi) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    LazyColumn() {
-        items(themesCollection.data, key = { theme -> theme.id }) { item ->
+    Column(modifier.padding(bottom = dp16)) {
+        themesCollection.data.forEach { item ->
             val title = when (item.theme) {
                 AppTheme.SYSTEM -> text.settings.titleThemeSystem
                 AppTheme.LIGHT -> text.settings.titleThemeLight
@@ -88,6 +91,7 @@ private fun ThemesUiItems(
                 AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
             val updated = item.copy(title = title)
+
             ThemeItem(
                 item = updated,
                 onChangeLang = { onChangeLang(item) }

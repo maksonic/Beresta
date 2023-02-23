@@ -1,13 +1,12 @@
 package ru.maksonic.beresta.feature.language_selector.core.presentation.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -62,29 +61,28 @@ private fun Content(
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
 
-        LanguagesUiItems(languagesCollection = { languages }) { item ->
-            viewModel.setLang(item.language)
-        }
-
-        Spacer(modifier.height(dp16))
+        LanguagesUiItems(
+            languagesCollection = languages,
+            onChangeLang = { item -> viewModel.setLang(item.language) }
+        )
 
         PrimaryButton(
             action = { hideSheet() },
-            title = text.shared.btnTitleSave
+            title = text.shared.btnTitleSave,
+            modifier = modifier.padding(bottom = dp16)
         )
-        Spacer(modifier.height(dp16))
     }
 }
 
 @Composable
-fun LanguagesUiItems(
-    languagesCollection: () -> LanguagesCollection,
-    onChangeLang: (item: LanguageUi) -> Unit
+private fun LanguagesUiItems(
+    languagesCollection: LanguagesCollection,
+    onChangeLang: (item: LanguageUi) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-
-    LazyColumn() {
-        items(languagesCollection().data, key = { lang -> lang.id }) { item ->
-            val translatedLangHint = when (languagesCollection().data[item.id].language) {
+    Column(modifier.padding(bottom = dp16)) {
+        languagesCollection.data.forEach { item ->
+            val translatedLangHint = when (languagesCollection.data[item.id].language) {
                 AppLanguage.RUSSIAN -> text.translatedLanguage.russian
                 AppLanguage.ENGLISH -> text.translatedLanguage.english
                 AppLanguage.CHINESE -> text.translatedLanguage.chinese
@@ -135,7 +133,7 @@ private fun LanguageItem(
 
 @Preview(showBackground = true)
 @Composable
-fun SelectAppLanguageSheetPreview() {
+private fun SelectAppLanguageSheetPreview() {
     BerestaTheme {
         Content(
             isVisibleSheet = true,

@@ -82,6 +82,9 @@ dependencies {
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
     implementation(project(BaseModule.Feature.SearchBar.Core.path))
 
+    implementation(project(BaseModule.Feature.EditNote.Api.path))
+    implementation(project(BaseModule.Feature.EditNote.Core.path))
+
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
 

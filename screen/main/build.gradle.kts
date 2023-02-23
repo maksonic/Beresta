@@ -54,6 +54,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Navigation.Router.path))
+    implementation(project(BaseModule.Feature.EditNote.Api.path))
     implementation(project(BaseModule.Feature.NotesList.Api.path))
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
 

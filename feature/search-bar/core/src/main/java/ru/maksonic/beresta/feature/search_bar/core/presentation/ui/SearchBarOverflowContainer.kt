@@ -1,14 +1,16 @@
 package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -42,13 +44,14 @@ internal fun SearchBarOverflowContainer(
     val endPadding = animateDpAsState(if (isExpanded()) 0.dp else 68.dp)
     val backgroundColor = animateColorAsState(if (isExpanded()) background else tertiaryContainer)
     val height = animateDpAsState(
-        if (isExpanded()) boxScope.maxHeight else Theme.widgetSize.searchBarCollapsedHeight
+        if (isExpanded()) boxScope.maxHeight else Theme.widgetSize.searchBarCollapsedHeight,
+        animationSpec = tween()
     )
 
     Box(
         modifier
             .fillMaxSize()
-            .systemBarsPadding()
+            .statusBarsPadding()
     ) {
         val clickModifier = if (isExpanded())
             Modifier.noRippleClickable { }
@@ -56,6 +59,7 @@ internal fun SearchBarOverflowContainer(
 
         Box(
             modifier
+                .animateContentSize()
                 .padding(top = topPadding.value)
                 .fillMaxWidth()
                 .height(height.value)

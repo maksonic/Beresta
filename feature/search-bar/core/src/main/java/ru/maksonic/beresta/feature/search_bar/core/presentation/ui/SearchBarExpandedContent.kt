@@ -3,7 +3,9 @@ package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,11 +35,13 @@ import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Close
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 22.02.2023
@@ -56,7 +60,7 @@ internal fun ExpandedSearchQueryFiled(
         focusRequester.requestFocus()
         onDispose { focusRequester.freeFocus() }
     }
-    Column {
+    Column(modifier.noRippleClickable {  }) {
         Row(
             modifier
                 .fillMaxWidth()
@@ -105,7 +109,8 @@ fun SearchListResult(notes: NotesCollection, notesApi: NotesListApi.Ui, modifier
     LazyColumn(
         state = scrollState,
         modifier = modifier
-            .systemBarsPadding(),
+            .systemBarsPadding()
+            .padding(top = dp8),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->
@@ -115,6 +120,9 @@ fun SearchListResult(notes: NotesCollection, notesApi: NotesListApi.Ui, modifier
                 note = note,
                 modifier = Modifier.animateItemPlacement()
             )
+        }
+        item {
+            Spacer(modifier.height(dp8))
         }
     }
 }

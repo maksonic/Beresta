@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.screen.settings.SettingsScreen
+import ru.maksonic.beresta.screen.settings.presentation.SettingsScreen
 
 /**
  * @Author maksonic on 17.02.2023

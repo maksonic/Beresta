@@ -22,7 +22,8 @@ data class AppWidgetSize(
     val filterChipHeight: Dp,
     val minimumTouchTargetSize: Dp,
     val modalSheetItemHeight: Dp,
-    val searchBarCollapsedHeight: Dp
+    val searchBarCollapsedHeight: Dp,
+    val btnFabSize: Dp
 )
 
 val widgetsSize = AppWidgetSize(
@@ -36,5 +37,6 @@ val widgetsSize = AppWidgetSize(
     filterChipHeight = 42.dp,
     minimumTouchTargetSize = 48.dp,
     modalSheetItemHeight = 48.dp,
-    searchBarCollapsedHeight = 48.dp
+    searchBarCollapsedHeight = 48.dp,
+    btnFabSize = 56.dp
 )

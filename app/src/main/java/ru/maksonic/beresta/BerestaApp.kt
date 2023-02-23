@@ -22,6 +22,9 @@ import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
 import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
+import ru.maksonic.beresta.feature.edit_note.core.EditNoteSandbox
+import ru.maksonic.beresta.feature.edit_note.core.presentation.ui.EditNoteWidget
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
@@ -57,8 +60,8 @@ import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.screen.main.presentation.core.MainProgram
 import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
-import ru.maksonic.beresta.screen.settings.core.SettingsProgram
-import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
+import ru.maksonic.beresta.screen.settings.SettingsProgram
+import ru.maksonic.beresta.screen.settings.SettingsSandbox
 
 /**
  * @Author maksonic on 15.12.2022
@@ -167,6 +170,11 @@ class BerestaApp : Application() {
         single<SearchBarApi.Ui> { SearchBarWidget() }
     }
 
+    private val editNoteFeatureModule = module {
+        viewModel { EditNoteSandbox() }
+        single<EditNoteApi.Ui> { EditNoteWidget() }
+    }
+
     private val modules = listOf(
         appModule,
         settingsModule,
@@ -181,8 +189,8 @@ class BerestaApp : Application() {
         languageSelectorFeatureModule,
         notesListFeatureModule,
         notesListFeatureDataModule,
-        searchBarFeatureModule
-
+        searchBarFeatureModule,
+        editNoteFeatureModule
     )
 
     override fun onCreate() {
