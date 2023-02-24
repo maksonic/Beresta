@@ -8,10 +8,10 @@ import org.gradle.plugin.use.PluginDependencySpec
  * @Author maksonic on 15.12.2022
  */
 fun PluginDependenciesSpec.pluginAndroidApp(): PluginDependencySpec =
-    id("com.android.application") version ("8.0.0-beta02") apply false
+    id("com.android.application") version ("7.4.1") apply false
 
 fun PluginDependenciesSpec.pluginAndroidLibrary(): PluginDependencySpec =
-    id("com.android.library") version ("8.0.0-beta02") apply false
+    id("com.android.library") version ("7.4.1") apply false
 
 fun PluginDependenciesSpec.pluginKotlinAndroid(): PluginDependencySpec =
     kotlin("android") version (Build.Version.KOTLIN_GRADLE) apply false

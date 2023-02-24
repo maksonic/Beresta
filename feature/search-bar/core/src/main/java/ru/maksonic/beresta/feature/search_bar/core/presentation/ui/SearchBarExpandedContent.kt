@@ -1,13 +1,8 @@
 package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,16 +21,9 @@ import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg
-import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.secondary
-import ru.maksonic.beresta.ui.theme.color.secondaryContainer
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
-import ru.maksonic.beresta.ui.theme.color.transparent
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Close
@@ -46,9 +34,8 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 22.02.2023
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ExpandedSearchQueryFiled(
+internal fun SearchBarExpandedContent(
     model: Model,
     send: SendMessage,
     notesList: NotesListApi.Ui,
@@ -60,57 +47,78 @@ internal fun ExpandedSearchQueryFiled(
         focusRequester.requestFocus()
         onDispose { focusRequester.freeFocus() }
     }
-    Column(modifier.noRippleClickable {  }) {
-        Row(
-            modifier
-                .fillMaxWidth()
-                .padding(start = dp4, end = dp16),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconAction(
-                icon = { AppIcon.ArrowBack },
-                action = { send(Msg.Ui.OnCollapseSearchBarClicked) }
-            )
-            TextField(
-                value = model.searchQuery,
-                onValueChange = { send(Msg.Inner.AfterUserInputQueryChanged(it)) },
-                singleLine = true,
-                textStyle = TextDesign.body,
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = onPrimaryContainer,
-                    containerColor = transparent,
-                    cursorColor = primary,
-                    focusedIndicatorColor = onPrimaryContainer,
-                    unfocusedIndicatorColor = secondary,
-                    disabledIndicatorColor = secondaryContainer,
-                    selectionColors = TextSelectionColors(handleColor = primary, tertiaryContainer),
-                ),
-                trailingIcon = {
-                    AnimateFadeInOut(model.searchQuery.isNotEmpty()) {
-                        IconAction(icon = { AppIcon.Close }) {
-                            send(Msg.Ui.OnClearInputQueryClicked)
-                        }
+
+    Column(
+        modifier
+            .systemBarsPadding()
+            .fillMaxSize()
+            .background(background)
+            .noRippleClickable { }) {
+        TopBar(model = model, send = send, focusRequester = { focusRequester })
+        SearchListResult(notes = model.searchList, notesApi = notesList)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopBar(
+    model: Model,
+    send: SendMessage,
+    focusRequester: () -> FocusRequester,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .height(Theme.widgetSize.topBarNormalHeight)
+            .padding(start = dp4, end = dp16),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        IconAction(
+            icon = { AppIcon.ArrowBack },
+            action = { send(Msg.Ui.OnCollapseSearchBarClicked) }
+        )
+        TextField(
+            value = model.searchQuery,
+            onValueChange = { send(Msg.Inner.AfterUserInputQueryChanged(it)) },
+            singleLine = true,
+            textStyle = TextDesign.body,
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = onPrimaryContainer,
+                containerColor = transparent,
+                cursorColor = primary,
+                focusedIndicatorColor = onPrimaryContainer,
+                unfocusedIndicatorColor = secondary,
+                disabledIndicatorColor = secondaryContainer,
+                selectionColors = TextSelectionColors(handleColor = primary, tertiaryContainer),
+            ),
+            trailingIcon = {
+                AnimateFadeInOut(model.searchQuery.isNotEmpty()) {
+                    IconAction(icon = { AppIcon.Close }) {
+                        send(Msg.Ui.OnClearInputQueryClicked)
                     }
-                },
-                modifier = modifier
-                    .weight(1f)
-                    .focusRequester(focusRequester)
-            )
-        }
-        SearchListResult(notes = model.searchList, notesApi = notesList, modifier.weight(1f))
+                }
+            },
+            modifier = modifier
+                .weight(1f)
+                .focusRequester(focusRequester())
+        )
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchListResult(notes: NotesCollection, notesApi: NotesListApi.Ui, modifier: Modifier) {
+private fun SearchListResult(
+    notes: NotesCollection,
+    notesApi: NotesListApi.Ui,
+    modifier: Modifier = Modifier
+) {
     val scrollState = rememberLazyListState()
 
     LazyColumn(
         state = scrollState,
-        modifier = modifier
-            .systemBarsPadding()
-            .padding(top = dp8),
+        modifier = modifier.padding(top = dp8),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->
@@ -122,7 +130,7 @@ fun SearchListResult(notes: NotesCollection, notesApi: NotesListApi.Ui, modifier
             )
         }
         item {
-            Spacer(modifier.height(dp8))
+            Spacer(Modifier.height(dp12))
         }
     }
 }

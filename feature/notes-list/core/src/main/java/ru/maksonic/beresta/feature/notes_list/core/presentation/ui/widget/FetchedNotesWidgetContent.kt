@@ -20,6 +20,7 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
 import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
  * @Author maksonic on 22.02.2023
@@ -27,22 +28,20 @@ import ru.maksonic.beresta.ui.theme.Theme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FetchedNotesWidgetContent(
+    modifier: Modifier = Modifier,
     notes: NotesCollection,
     scrollState: () -> LazyListState,
     sandbox: NotesListSandbox = koinViewModel(),
-    modifier: Modifier = Modifier
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notes))
     val model = sandbox.model.collectAsState().value
-    val scope = rememberCoroutineScope()
-// Create the overscroll controller
 
     LazyColumn(
         state = scrollState(),
         modifier = modifier
             .statusBarsPadding()
             .fillMaxSize()
-            .padding(top = Theme.widgetSize.topBarNormalHeight),
+            .padding(top = Theme.widgetSize.topBarNormalHeight.plus(dp16)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = model.notes.data, key = { note -> note.id }) { note ->

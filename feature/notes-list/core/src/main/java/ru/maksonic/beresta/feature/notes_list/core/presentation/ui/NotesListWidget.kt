@@ -19,8 +19,9 @@ class NotesListWidget : NotesListApi.Ui {
     override fun FetchedNotesWidget(
         notes: NotesCollection,
         scrollState: () -> LazyListState,
-        modifier: Modifier) {
-        FetchedNotesWidgetContent(notes, scrollState)
+        modifier: Modifier
+    ) {
+        FetchedNotesWidgetContent(notes = notes, scrollState = scrollState)
     }
 
     @Composable

@@ -18,7 +18,7 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Search
 
 /**
- * @Author maksonic on 22.02.2023
+ * @Author maksonic on 24.02.2023
  */
 @Composable
 internal fun SearchBarCollapsedContent(modifier: Modifier = Modifier) {

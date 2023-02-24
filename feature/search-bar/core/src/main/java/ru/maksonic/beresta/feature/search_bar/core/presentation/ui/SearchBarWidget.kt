@@ -30,30 +30,29 @@ class SearchBarWidget : SearchBarApi.Ui {
     override fun Widget(notesCollection: NotesCollection, modifier: Modifier) {
         val isVisible = searchBarVisibility.collectAsState().value
         AnimateFadeInOut(visible = isVisible) {
-            Content(
-                notesCollection = notesCollection,
-                modifier = modifier
-            )
+            Content(notesCollection = notesCollection, modifier = modifier)
         }
     }
 }
 
 @Composable
 private fun Content(
+    modifier: Modifier = Modifier,
     sandbox: SearchBarSandbox = koinViewModel(),
     notesCollection: NotesCollection,
     notesList: NotesListApi.Ui = get(),
-    modifier: Modifier = Modifier
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notesCollection))
     val model = sandbox.model.collectAsState().value
 
     Box(modifier.fillMaxSize()) {
         BackgroundCollapsedSearchBarWithUserIcon()
-        SearchBar(
+
+        SearchBarOverflowContainer(
             model = model,
             send = sandbox::sendMsg,
-            notesList = notesList
+            notesList = notesList,
+            modifier = modifier
         )
     }
 }

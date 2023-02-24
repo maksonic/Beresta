@@ -1,39 +1,39 @@
 package ru.maksonic.beresta.feature.edit_note.core.presentation.ui
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.BoxWithConstraintsScope
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ru.maksonic.beresta.feature.edit_note.core.Model
+import ru.maksonic.beresta.feature.edit_note.core.Msg
 
 /**
- * @Author maksonic on 23.02.2023
+ * @Author maksonic on 24.02.2023
  */
 @Composable
-internal fun EditNoteOverflowContainer(
+fun EditNoteOverflowContainer(
+    model: Model,
     send: SendMessage,
-    modifier: Modifier = Modifier,
-    content: @Composable (boxScope: BoxWithConstraintsScope) -> Unit,
+    isScrolledTopNotes: () -> Boolean,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.Bottom
-    ) {
 
-        BoxWithConstraints(
-            modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            val boxScope = this
-            content(boxScope)
+    BackHandler(model.isExpandedEdit) {
+        if (model.isExpandedEdit) {
+            send(Msg.Ui.OnBackTopBarClicked)
         }
+    }
+
+    BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+        val boxScope = this
+
+        EditNoteExpandableFab(
+            model = model,
+            send = send,
+            isScrolledTopNotes = isScrolledTopNotes,
+            boxScope = boxScope
+        )
     }
 }

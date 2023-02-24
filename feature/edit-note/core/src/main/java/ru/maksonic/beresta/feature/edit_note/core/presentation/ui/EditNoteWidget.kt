@@ -41,7 +41,11 @@ private fun Content(
         hideSearchBar = { searchBar.searchBarVisibilityState.update { false } }
     )
 
-    ExpandableFabButton(model = model, send = sandbox::sendMsg, isScrollTop = isScrollTop)
+    EditNoteOverflowContainer(
+        model = model,
+        send = sandbox::sendMsg,
+        isScrolledTopNotes = isScrollTop
+    )
 }
 
 @Composable
@@ -57,4 +61,3 @@ private fun HandleUiEffects(
         }
     }
 }
-

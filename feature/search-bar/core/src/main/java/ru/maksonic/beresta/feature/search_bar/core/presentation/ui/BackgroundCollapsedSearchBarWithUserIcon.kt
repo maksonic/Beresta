@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.widget.UserAccountCircleAvatarTopBarWidget
 
 /**
@@ -24,6 +25,7 @@ internal fun BackgroundCollapsedSearchBarWithUserIcon(modifier: Modifier = Modif
         modifier
             .statusBarsPadding()
             .fillMaxWidth()
+            .padding(top = dp16)
             .height(Theme.widgetSize.topBarNormalHeight)
             .background(background),
         verticalAlignment = Alignment.CenterVertically,
