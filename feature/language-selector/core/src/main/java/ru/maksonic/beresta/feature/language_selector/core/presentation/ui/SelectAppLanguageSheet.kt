@@ -125,7 +125,7 @@ private fun LanguageItem(
         Spacer(modifier.weight(1f))
         Text(
             text = translatedLangHint,
-            style = TextDesign.captionNormal.copy(color = secondary),
+            style = TextDesign.captionSmall.copy(color = secondary),
             modifier = modifier.padding(end = dp8)
         )
     }
