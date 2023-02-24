@@ -56,6 +56,11 @@ sealed class BaseModule(val path: String, val namespace: String) {
             path = ":screen:settings",
             namespace = "ru.maksonic.beresta.screen.settings"
         )
+
+        object Trash : BaseModule(
+            path = ":screen:trash-list",
+            namespace = "ru.maksonic.beresta.screen.trash_list"
+        )
     }
 
     object Feature {
@@ -134,14 +139,14 @@ sealed class BaseModule(val path: String, val namespace: String) {
 
 
         object TrashList {
-            object Domain : BaseModule(
-                path = ":feature:trash-list:domain",
-                namespace = "ru.maksonic.beresta.feature.trash_list.domain"
+            object Api : BaseModule(
+                path = ":feature:trash-list:api",
+                namespace = "ru.maksonic.beresta.feature.trash_list.api"
             )
 
-            object Ui : BaseModule(
-                path = ":feature:trash-list:ui",
-                namespace = "ru.maksonic.beresta.feature.trash_list.ui"
+            object Core : BaseModule(
+                path = ":feature:trash-list:core",
+                namespace = "ru.maksonic.beresta.feature.trash_list.core"
             )
         }
 

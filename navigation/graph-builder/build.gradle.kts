@@ -54,6 +54,7 @@ dependencies {
     implementation(project(BaseModule.Feature.Onboarding.Api.path))
     implementation(project(BaseModule.Screen.Main.path))
     implementation(project(BaseModule.Screen.Settings.path))
+    implementation(project(BaseModule.Screen.Trash.path))
     implementation(Lib.Accompanist.navigation)
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Koin.compose)

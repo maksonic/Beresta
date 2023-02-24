@@ -6,7 +6,7 @@ import org.gradle.api.JavaVersion
 object Config {
     const val kotlinVersion = "1.8.10"
     const val composeVersion = "1.4.0-alpha04"
-    const val kcExtVersion = "1.4.2"
+    const val kcExtVersion = "1.4.3"
     const val kspVersion = "1.8.10-1.0.9"
     const val appId = "ru.maksonic.beresta"
     const val compileSdk = 33

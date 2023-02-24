@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.navigation
+import ru.maksonic.beresta.navigation.graph_builder.destination.*
 import ru.maksonic.beresta.navigation.graph_builder.destination.mainScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settingsScreen
@@ -38,6 +39,7 @@ interface GraphBuilder {
                     onboardingScreen(apiStore.onboarding, this)
                     mainScreen(this)
                     settingsScreen(this, DEF_ANIM_SPEED)
+                    trashListScreen(this, DEF_ANIM_SPEED)
                     /*
 
                      settingsScreen(this, DEF_ANIM_SPEED)
