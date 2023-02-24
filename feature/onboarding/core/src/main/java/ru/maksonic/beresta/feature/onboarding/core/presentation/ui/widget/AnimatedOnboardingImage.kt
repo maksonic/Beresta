@@ -49,6 +49,6 @@ internal fun AnimatedOnboardingImage(
                     translationY = animateTransition.value
                 }
             }
-            .pulsating(pulseFraction = 1.01f, duration = 1500)
+            .pulsating(pulseFraction = 1.05f, duration = 3000)
     )
 }

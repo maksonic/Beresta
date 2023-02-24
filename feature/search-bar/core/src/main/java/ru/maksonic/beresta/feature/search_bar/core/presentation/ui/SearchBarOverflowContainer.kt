@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg
@@ -18,6 +19,7 @@ internal fun SearchBarOverflowContainer(
     model: Model,
     send: SendMessage,
     notesList: NotesListApi.Ui,
+    searchBarCollapsedColor: () -> Color,
     modifier: Modifier,
 ) {
 
@@ -29,6 +31,12 @@ internal fun SearchBarOverflowContainer(
 
     BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         val boxScope = this
-        ExpandableSearchBar(model = model, send = send, boxScope = boxScope, notesList = notesList)
+        ExpandableSearchBar(
+            model = model,
+            send = send,
+            boxScope = boxScope,
+            notesList = notesList,
+            searchBarCollapsedColor = searchBarCollapsedColor
+        )
     }
 }

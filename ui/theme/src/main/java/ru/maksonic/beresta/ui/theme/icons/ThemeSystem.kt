@@ -98,6 +98,16 @@ val AppIcon.ThemeSystem: ImageVector
                 curveTo(6.124F, 20.979F, 5.849F, 20.869F, 5.617F, 20.658F)
                 close()
             }
+            materialPath {
+                moveTo(21.0F, 14.5F)
+                curveTo(21.0F, 18.09F, 18.09F, 21.0F, 14.5F, 21.0F)
+                curveTo(11.948F, 21.0F, 9.739F, 19.529F, 8.675F, 17.389F)
+                curveTo(8.243F, 16.518F, 10.5F, 16.538F, 10.5F, 15.5F)
+                curveTo(13.5F, 13.5F, 12.0F, 14.0F, 14.5F, 11.5F)
+                curveTo(15.622F, 11.5F, 16.678F, 8.284F, 17.599F, 8.785F)
+                curveTo(19.625F, 9.886F, 21.0F, 12.032F, 21.0F, 14.5F)
+                close()
+            }
         }
         return _themeSystem!!
     }

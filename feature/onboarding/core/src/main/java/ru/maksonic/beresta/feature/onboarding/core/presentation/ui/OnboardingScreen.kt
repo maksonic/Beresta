@@ -39,6 +39,7 @@ import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.Onboar
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.SelectLanguageBottomSheetDialogContent
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.scrim
 import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
@@ -63,36 +64,32 @@ class OnboardingScreen : OnboardingApi.Ui {
 private fun Content(
     modifier: Modifier = Modifier,
     sandbox: OnboardingSandbox = koinViewModel(),
-    languageSheet: LanguageSelectorApi.Ui = get(),
     router: OnboardingRouter
 ) {
     val model = sandbox.model.collectAsState().value
     val send = sandbox::sendMsg
     val pagerState = rememberPagerState()
     val isLastCurrentPage = pagerState.currentPage == LAST_ONBOARDING_PAGE
-    val languageSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
-    )
 
     HandleUiEffects(
         effects = sandbox.effects,
         pagerState = pagerState,
         onGoogleAuthClicked = {},
-        bottomSheetState = languageSheetState,
+        bottomSheetState = model.modalBottomSheetState,
         router = router
     )
 
     ModalBottomSheetLayout(
-        sheetState = languageSheetState,
+        sheetState = model.modalBottomSheetState,
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
         sheetElevation = Theme.elevation.disable,
+        scrimColor = scrim,
         sheetContent = {
-            SelectLanguageBottomSheetDialogContent(
+            MultipleModalBottomSheetContent(
                 send = send,
-                languageSheet = languageSheet,
-                languageSheetState = languageSheetState,
+                currentSheetContent = model.currentSheetContent,
+                modalSheetState = { model.modalBottomSheetState },
                 modifier = modifier
             )
         }
@@ -106,7 +103,10 @@ private fun Content(
             //Fetch text from local provider for build onboardings.
             send(Msg.Inner.FetchOnboardingTextData(text.onboarding.data))
 
-            OnboardingTopBar(showLanguageSelector = { send(Msg.Ui.OnSelectLanguageBtnClicked) })
+            OnboardingTopBar(
+                showLanguageSelector = { send(Msg.Ui.OnShowSelectLanguageSheetClicked) },
+                showThemeSelector = { send(Msg.Ui.OnShowSelectThemeSheetClicked) },
+            )
 
             OverscrollBehavior {
                 HorizontalPager(
@@ -162,13 +162,12 @@ private fun HandleUiEffects(
             }
 
             is Eff.NavigateToMain -> router.toMain()
-            is Eff.HideLanguageSheet -> {
+            is Eff.HideModalSheet -> {
                 scope.launch {
                     bottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
                 }
             }
-
-            is Eff.ShowLanguageSheet -> {
+            is Eff.ShowModalSheet -> {
                 scope.launch {
                     bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
                 }

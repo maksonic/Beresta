@@ -27,7 +27,6 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 /**
  * @Author maksonic on 19.02.2023
  */
-
 @Composable
 fun BaseBottomDialogSheetWithIndicator(
     isVisibleSheet: Boolean,
@@ -55,11 +54,12 @@ fun BaseBottomDialogSheetWithIndicator(
 }
 
 @Composable
-private fun SheetIndicator(tint: Color = onSecondaryContainer, modifier: Modifier = Modifier) {
+private fun SheetIndicator(modifier: Modifier = Modifier, tint: Color = onSecondaryContainer) {
     Box(
         modifier
             .fillMaxWidth()
-            .height(Theme.widgetSize.minimumTouchTargetSize), contentAlignment = Alignment.TopCenter
+            .height(Theme.widgetSize.minimumTouchTargetSize),
+        contentAlignment = Alignment.TopCenter
     ) {
         Box(
             modifier

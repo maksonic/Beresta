@@ -1,9 +1,7 @@
 package ru.maksonic.beresta.screen.main.presentation.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,11 +21,14 @@ import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.widget.MainBottomIdlePanelWidget
 import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.surfaceVariant
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.widget.LoadingViewState
-import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
+import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 
 /**
  * @Author maksonic on 15.02.2023
@@ -35,27 +36,30 @@ import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
-fun MainScreen(
-    router: MainScreenRouter,
-) {
-    Content(router)
+fun MainScreen(router: MainScreenRouter) {
+    Content(router = router)
 }
 
 @Composable
 private fun Content(
-    router: MainScreenRouter,
+    modifier: Modifier = Modifier,
     notesList: NotesListApi.Ui = get(),
     searchBar: SearchBarApi.Ui = get(),
     editNote: EditNoteApi.Ui = get(),
     sandbox: MainSandbox = koinViewModel(),
-    modifier: Modifier = Modifier
+    router: MainScreenRouter
 ) {
     HandleUiEffects(sandbox.effects, router)
 
     val model = sandbox.model.collectAsState().value
     val scrollState = rememberLazyListState()
     val isScrollTop = scrollState.isScrollUp()
-    val statusBarColor = background
+    val isVisibleFirstNote = scrollState.isVisibleFirstItem()
+    val searchBarBackgroundColor =
+        animateColorAsState(if (isVisibleFirstNote.value) background else tertiaryContainer)
+    val searchBarColor = animateColorAsState(
+        if (isVisibleFirstNote.value) surfaceVariant else onTertiaryContainer
+    )
 
     Box(
         modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
@@ -74,8 +78,11 @@ private fun Content(
             }
         }
 
-        Column(modifier.fillMaxSize()) {
-            SystemStatusBar(backgroundColor = { statusBarColor })
+        Column(
+            modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+        ) {
             Spacer(modifier.weight(1f))
             MainBottomIdlePanelWidget(sandbox::sendMsg, isScrollTop = { isScrollTop })
         }
@@ -83,7 +90,12 @@ private fun Content(
         editNote.Widget(isNotesScrollTop = { isScrollTop }, modifier)
 
         AnimateFadeInOut(!state.value) {
-            searchBar.Widget(notesCollection = model.notes, modifier = modifier)
+            searchBar.Widget(
+                notesCollection = model.notes,
+                searchTopBarBackground = { searchBarBackgroundColor.value },
+                searchBarCollapsedColor = { searchBarColor.value },
+                modifier = modifier
+            )
         }
     }
 }

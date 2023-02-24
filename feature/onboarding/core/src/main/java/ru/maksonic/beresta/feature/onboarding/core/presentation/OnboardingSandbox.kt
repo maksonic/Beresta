@@ -1,13 +1,16 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation
 
+import androidx.compose.material.ExperimentalMaterialApi
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
+import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.ModalSheetContent
 
 /**
  * @Author maksonic on 15.12.2022
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
+@OptIn(ExperimentalMaterialApi::class)
 class OnboardingSandbox(
     program: Program
 ) : Sandbox<Model, Msg, Cmd, Eff>(
@@ -15,13 +18,15 @@ class OnboardingSandbox(
     initialEff = setOf(),
     subscriptions = listOf(program)
 ) {
+
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchOnboardingTextData -> afterFetchingOnboardingTextFromProvider(model, msg)
         is Msg.Ui.OnGoogleAuthClicked -> UpdatedModel(model)
         is Msg.Ui.OnPrimaryBtnClicked -> onPrimaryBtnClicked(model)
         is Msg.Ui.OnSkipSyncBtnClicked -> onSkipBtnClicked(model)
         is Msg.Inner.Onboardings -> fetchedData(model, msg)
-        is Msg.Ui.OnSelectLanguageBtnClicked -> onShowLanguageSheetClicked(model)
+        is Msg.Ui.OnShowSelectLanguageSheetClicked -> onShowLanguageSheetClicked(model)
+        is Msg.Ui.OnShowSelectThemeSheetClicked -> onShowThemeSheetClicked(model)
         is Msg.Ui.OnHideLanguageBtnClicked -> onHideLanguageSheetClicked(model)
     }
 
@@ -43,8 +48,17 @@ class OnboardingSandbox(
     )
 
     private fun onShowLanguageSheetClicked(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.ShowLanguageSheet))
+        UpdatedModel(
+            model = model.copy(currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR),
+            effects = setOf(Eff.ShowModalSheet)
+        )
+
+    private fun onShowThemeSheetClicked(model: Model): UpdateResult =
+        UpdatedModel(
+            model = model.copy(currentSheetContent = ModalSheetContent.THEME_SELECTOR),
+            effects = setOf(Eff.ShowModalSheet)
+        )
 
     private fun onHideLanguageSheetClicked(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.HideLanguageSheet))
+        UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
 }

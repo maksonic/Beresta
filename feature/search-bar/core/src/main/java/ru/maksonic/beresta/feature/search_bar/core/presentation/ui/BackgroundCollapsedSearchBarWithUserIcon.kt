@@ -1,36 +1,38 @@
 package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp32
+import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.UserAccountCircleAvatarTopBarWidget
 
 /**
  * @Author maksonic on 22.02.2023
  */
 @Composable
-internal fun BackgroundCollapsedSearchBarWithUserIcon(modifier: Modifier = Modifier) {
-    Row(
+internal fun BackgroundCollapsedSearchBarWithUserIcon(
+    searchTopBarBackground: () -> Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
         modifier
-            .statusBarsPadding()
             .fillMaxWidth()
-            .padding(top = dp16)
-            .height(Theme.widgetSize.topBarNormalHeight)
-            .background(background),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+            .drawBehind { drawRect(searchTopBarBackground()) }
     ) {
-        UserAccountCircleAvatarTopBarWidget(modifier.padding(end = dp16))
+        SystemStatusBar(backgroundColor = searchTopBarBackground)
+
+        Box(
+            modifier
+                .fillMaxWidth()
+                .height(Theme.widgetSize.topBarMediumHeight), contentAlignment = Alignment.CenterEnd
+        ) {
+            UserAccountCircleAvatarTopBarWidget(modifier.padding(top = dp8, end = dp16))
+        }
     }
 }

@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
+    implementation(project(BaseModule.Feature.ThemeSelector.Api.path))
     implementation(project(BaseModule.Data.Common.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Elm.path))

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.get
@@ -27,10 +28,20 @@ class SearchBarWidget : SearchBarApi.Ui {
     private val searchBarVisibility = searchBarVisibilityState.asStateFlow()
 
     @Composable
-    override fun Widget(notesCollection: NotesCollection, modifier: Modifier) {
+    override fun Widget(
+        notesCollection: NotesCollection,
+        searchTopBarBackground: () -> Color,
+        searchBarCollapsedColor: () -> Color,
+        modifier: Modifier
+    ) {
         val isVisible = searchBarVisibility.collectAsState().value
         AnimateFadeInOut(visible = isVisible) {
-            Content(notesCollection = notesCollection, modifier = modifier)
+            Content(
+                notesCollection = notesCollection,
+                searchTopBarBackground = searchTopBarBackground,
+                searchBarCollapsedColor = searchBarCollapsedColor,
+                modifier = modifier
+            )
         }
     }
 }
@@ -39,19 +50,22 @@ class SearchBarWidget : SearchBarApi.Ui {
 private fun Content(
     modifier: Modifier = Modifier,
     sandbox: SearchBarSandbox = koinViewModel(),
-    notesCollection: NotesCollection,
     notesList: NotesListApi.Ui = get(),
+    notesCollection: NotesCollection,
+    searchTopBarBackground: () -> Color,
+    searchBarCollapsedColor: () -> Color,
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notesCollection))
     val model = sandbox.model.collectAsState().value
 
     Box(modifier.fillMaxSize()) {
-        BackgroundCollapsedSearchBarWithUserIcon()
+        BackgroundCollapsedSearchBarWithUserIcon(searchTopBarBackground)
 
         SearchBarOverflowContainer(
             model = model,
             send = sandbox::sendMsg,
             notesList = notesList,
+            searchBarCollapsedColor = searchBarCollapsedColor,
             modifier = modifier
         )
     }

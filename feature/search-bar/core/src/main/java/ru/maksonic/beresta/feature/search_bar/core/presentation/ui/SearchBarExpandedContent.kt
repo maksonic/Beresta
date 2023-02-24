@@ -27,6 +27,7 @@ import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Close
+import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
@@ -50,10 +51,12 @@ internal fun SearchBarExpandedContent(
 
     Column(
         modifier
-            .systemBarsPadding()
             .fillMaxSize()
             .background(background)
             .noRippleClickable { }) {
+        val statusBarColor = background
+
+        SystemStatusBar(backgroundColor = { statusBarColor })
         TopBar(model = model, send = send, focusRequester = { focusRequester })
         SearchListResult(notes = model.searchList, notesApi = notesList)
     }
@@ -91,7 +94,7 @@ private fun TopBar(
                 focusedIndicatorColor = onPrimaryContainer,
                 unfocusedIndicatorColor = secondary,
                 disabledIndicatorColor = secondaryContainer,
-                selectionColors = TextSelectionColors(handleColor = primary, tertiaryContainer),
+                selectionColors = TextSelectionColors(handleColor = primary, onSurfaceVariant),
             ),
             trailingIcon = {
                 AnimateFadeInOut(model.searchQuery.isNotEmpty()) {

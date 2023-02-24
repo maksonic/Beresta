@@ -24,10 +24,7 @@ import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.secondary
-import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.theme.color.tertiary
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -104,7 +101,7 @@ private fun LanguageItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = animateColorAsState(if (item.isSelected) tertiary else surface)
+    val backgroundColor = animateColorAsState(if (item.isSelected) surfaceVariant else surface)
 
     Row(
         modifier

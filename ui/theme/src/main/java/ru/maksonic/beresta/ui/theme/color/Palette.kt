@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.ui.theme.color
 
-import android.content.res.Resources.Theme
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -12,12 +11,13 @@ private object Palette {
     val nero = Color(0xFF212121)
     val mineShaft = Color(0xFF313131)
     val tundora = Color(0xFF414141)
-    val tundora2 = Color(0xFF616161)
-    val grayDark = Color(0xFF868686)
-    val grayDusty = Color(0xFFDFDFDF)
+    val doveGray = Color(0xFF616161)
+    val gray = Color(0xFF868686)
+    val alto = Color(0xFFDFDFDF)
     //Blue
     val azureRadiance = Color(0xFF0374F4)
-    val cornflowerBlue = Color(0xFF90CAF9)
+    val anakiwa = Color(0xFF93C4F5)
+    val cornflowerBlue = Color(0xFFC0DCF9)
     val tropicalBlue = Color(0xFFCCE3FA)
     val solitude = Color(0xFFE2F0FF)
     //Other
@@ -33,14 +33,14 @@ val baseLightPalette = AppColor(
     onPrimary = Palette.white,
     primaryContainer = Palette.white,
     onPrimaryContainer = Palette.black,
-    secondary = Palette.grayDark,
-    onSecondary = Palette.grayDusty,
-    secondaryContainer = Palette.grayDusty,
-    onSecondaryContainer = Palette.grayDusty,
+    secondary = Palette.gray,
+    onSecondary = Palette.alto,
+    secondaryContainer = Palette.alto,
+    onSecondaryContainer = Palette.alto,
     tertiary = Palette.tropicalBlue,
     onTertiary = Palette.tundora,
     tertiaryContainer = Palette.solitude,
-    onTertiaryContainer = Palette.grayDark,
+    onTertiaryContainer = Palette.cornflowerBlue,
     error = Palette.carmineRed,
     onError = Palette.carmineRed,
     errorContainer = Palette.carmineRed,
@@ -49,26 +49,26 @@ val baseLightPalette = AppColor(
     onBackground = Palette.black,
     surface = Palette.white,
     onSurface = Palette.black,
-    surfaceVariant = Palette.mineShaft,
-    onSurfaceVariant = Palette.black,
+    surfaceVariant = Palette.tropicalBlue,
+    onSurfaceVariant = Palette.solitude,
     outline = Palette.carmineRed,
     shadow = Palette.black,
-    scrim = Palette.black.copy(alpha = 0.32f),
+    scrim = Palette.black.copy(alpha = 0.24f),
     transparent = Palette.transparent
 )
 val baseDarkPalette = AppColor(
-    primary = Palette.cornflowerBlue,
+    primary = Palette.anakiwa,
     onPrimary = Palette.black,
     primaryContainer = Palette.mineShaft,
     onPrimaryContainer = Palette.snow,
-    secondary = Palette.grayDark,
+    secondary = Palette.gray,
     onSecondary = Palette.white,
-    secondaryContainer = Palette.tundora2,
-    onSecondaryContainer = Palette.grayDark,
-    tertiary = Palette.tundora2,
+    secondaryContainer = Palette.doveGray,
+    onSecondaryContainer = Palette.gray,
+    tertiary = Palette.doveGray,
     onTertiary = Palette.white,
     tertiaryContainer = Palette.tundora,
-    onTertiaryContainer = Palette.white,
+    onTertiaryContainer = Palette.doveGray,
     error = Palette.carmineRed,
     onError = Palette.carmineRed,
     errorContainer = Palette.carmineRed,
@@ -77,8 +77,8 @@ val baseDarkPalette = AppColor(
     onBackground = Palette.snow,
     surface = Palette.mineShaft,
     onSurface = Palette.white,
-    surfaceVariant = Palette.grayDusty,
-    onSurfaceVariant = Palette.grayDark,
+    surfaceVariant = Palette.doveGray,
+    onSurfaceVariant = Palette.tundora,
     outline = Palette.carmineRed,
     shadow = Palette.black,
     scrim = Palette.black.copy(alpha = 0.32f),
@@ -87,31 +87,31 @@ val baseDarkPalette = AppColor(
 
 
 val highContrastPalette = AppColor(
-    primary = Palette.cornflowerBlue,
-    onPrimary = Palette.black,
-    primaryContainer = Palette.mineShaft,
+    primary = Palette.azureRadiance,
+    onPrimary = Palette.white,
+    primaryContainer = Palette.nero,
     onPrimaryContainer = Palette.white,
-    secondary = Palette.grayDark,
+    secondary = Palette.gray,
     onSecondary = Palette.white,
-    secondaryContainer = Palette.tundora2,
-    onSecondaryContainer = Palette.grayDark,
-    tertiary = Palette.tundora2,
+    secondaryContainer = Palette.doveGray,
+    onSecondaryContainer = Palette.gray,
+    tertiary = Palette.doveGray,
     onTertiary = Palette.white,
-    tertiaryContainer = Palette.tundora,
-    onTertiaryContainer = Palette.white,
+    tertiaryContainer = Palette.black,
+    onTertiaryContainer = Palette.mineShaft,
     error = Palette.carmineRed,
     onError = Palette.carmineRed,
     errorContainer = Palette.carmineRed,
     onErrorContainer = Palette.carmineRed,
     background = Palette.black,
     onBackground = Palette.white,
-    surface = Palette.mineShaft,
+    surface = Palette.black,
     onSurface = Palette.white,
-    surfaceVariant = Palette.grayDusty,
-    onSurfaceVariant = Palette.grayDark,
+    surfaceVariant = Palette.mineShaft,
+    onSurfaceVariant = Palette.tundora,
     outline = Palette.carmineRed,
     shadow = Palette.black,
-    scrim = Palette.black.copy(alpha = 0.32f),
+    scrim = Palette.black.copy(alpha = 0.8f),
     transparent = Palette.transparent
 )
 

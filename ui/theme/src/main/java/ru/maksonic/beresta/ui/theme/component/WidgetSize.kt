@@ -15,7 +15,7 @@ data class AppWidgetSize(
     val btnNav: Dp,
     val btnPrimaryHeight: Dp,
     val topBarNormalHeight: Dp,
-    val tabBarHeight: Dp,
+    val topBarMediumHeight: Dp,
     val bottomPanelHeightDefault: Dp,
     val bottomMainPanelHeight: Dp,
     val bottomPanelHeightSelected: Dp,
@@ -29,8 +29,8 @@ data class AppWidgetSize(
 val widgetsSize = AppWidgetSize(
     btnNav = 24.dp,
     btnPrimaryHeight = 56.dp,
-    tabBarHeight = 36.dp,
     topBarNormalHeight = 56.dp,
+    topBarMediumHeight = 80.dp,
     bottomPanelHeightDefault = 56.dp,
     bottomMainPanelHeight = 80.dp,
     bottomPanelHeightSelected = 112.dp,

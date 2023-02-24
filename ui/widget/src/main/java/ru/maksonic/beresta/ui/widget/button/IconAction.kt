@@ -20,10 +20,11 @@ fun IconAction(
     modifier: Modifier = Modifier,
     icon: @Composable () -> ImageVector,
     tint: Color = onBackground,
+    ripple: Color = primary,
     contentDescription: String = "",
     action: () -> Unit
 ) {
-    BaseClickableIcon(onClick = action, rippleColor = primary, modifier = modifier) {
+    BaseClickableIcon(onClick = action, rippleColor = ripple, modifier = modifier) {
         Icon(imageVector = icon(), contentDescription = contentDescription, tint = tint)
     }
 }

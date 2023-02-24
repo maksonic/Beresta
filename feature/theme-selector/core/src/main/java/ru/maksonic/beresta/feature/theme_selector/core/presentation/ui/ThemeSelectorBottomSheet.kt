@@ -1,14 +1,7 @@
 package ru.maksonic.beresta.feature.theme_selector.core.presentation.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,19 +12,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
-import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeUi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onTertiary
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.theme.color.tertiary
+import ru.maksonic.beresta.ui.theme.color.surfaceVariant
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.functional.clickAction
@@ -106,7 +98,7 @@ private fun ThemeItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = animateColorAsState(if (item.isSelected) tertiary else surface)
+    val backgroundColor = animateColorAsState(if (item.isSelected) surfaceVariant else surface)
 
     Row(
         modifier

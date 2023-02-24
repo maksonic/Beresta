@@ -29,6 +29,7 @@ import ru.maksonic.beresta.screen.settings.presentation.widget.setting_item.Supp
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.theme.color.scrim
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
@@ -77,6 +78,7 @@ private fun Content(
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
         sheetElevation = Theme.elevation.disable,
+        scrimColor = scrim,
         sheetContent = {
             MultipleModalBottomSheetContent(
                 send = send,
@@ -128,7 +130,6 @@ private fun HandleUiEffects(
                     modalSheetState.animateTo(ModalBottomSheetValue.Hidden)
                 }
             }
-
             is Eff.ShowModalSheet -> {
                 scope.launch {
                     modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
