@@ -121,7 +121,7 @@ private fun SearchListResult(
 
     LazyColumn(
         state = scrollState,
-        modifier = modifier.padding(top = dp8),
+        modifier = modifier.navigationBarsPadding().padding(top = dp8),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->
