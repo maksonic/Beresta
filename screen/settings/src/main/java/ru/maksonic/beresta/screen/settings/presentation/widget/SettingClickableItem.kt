@@ -52,7 +52,7 @@ internal fun SettingClickableItem(
 
         Text(
             text = hint,
-            style = TextDesign.body.copy(color = secondary),
+            style = TextDesign.bodyPrimary.copy(color = secondary),
             modifier = modifier.padding(end = dp16)
         )
     }

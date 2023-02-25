@@ -19,6 +19,7 @@ class MainActivityProgram(
             is Cmd.ReadLanguageFromDataStore -> readLanguageFromDatastore(consumer)
             is Cmd.ReadThemeFromDataStore -> readThemeFromDatastore(consumer)
             is Cmd.FetchAppLanguage -> fetchAppLanguage(consumer)
+            is Cmd.ReadThemePaletteFromDataStore -> readThemePaletteFromDatastore(consumer)
         }
     }
 
@@ -39,6 +40,12 @@ class MainActivityProgram(
             languageProvider.provideLanguage(appLang).collect { lang ->
                 consumer(Msg.Inner.FetchedLanguageForProvide(lang))
             }
+        }
+    }
+
+    private suspend fun readThemePaletteFromDatastore(consumer: (Msg) -> Unit) {
+        themeSelector.currentPalette.collectLatest { savedThemePalette ->
+            consumer(Msg.Inner.SetAppThemePalette(savedThemePalette))
         }
     }
 }

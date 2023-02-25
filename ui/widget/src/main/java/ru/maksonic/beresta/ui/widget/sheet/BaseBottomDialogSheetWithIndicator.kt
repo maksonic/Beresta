@@ -14,14 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
-import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.color.tertiary
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
@@ -43,9 +42,9 @@ fun BaseBottomDialogSheetWithIndicator(
             .fillMaxWidth()
             .systemBarsPadding()
             .padding(start = dp16, end = dp16, bottom = dp16)
-            .shadow(Theme.elevation.dp16, shape = Theme.shape.cornerExtra)
             .clip(Theme.shape.cornerExtra)
-            .background(surface),
+            .background(tertiaryContainer)
+            .padding(start = dp16, end = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SheetIndicator()
@@ -54,7 +53,7 @@ fun BaseBottomDialogSheetWithIndicator(
 }
 
 @Composable
-private fun SheetIndicator(modifier: Modifier = Modifier, tint: Color = onSecondaryContainer) {
+private fun SheetIndicator(modifier: Modifier = Modifier, tint: Color = tertiary) {
     Box(
         modifier
             .fillMaxWidth()

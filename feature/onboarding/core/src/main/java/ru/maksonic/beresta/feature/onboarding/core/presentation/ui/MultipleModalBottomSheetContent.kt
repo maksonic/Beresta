@@ -33,16 +33,14 @@ internal fun MultipleModalBottomSheetContent(
         ModalSheetContent.LANGUAGE_SELECTOR -> {
             languageSheet.BottomSheet(
                 isVisibleSheet = modalSheetState().isVisible,
-                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) },
-                modifier = modifier
+                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
             )
         }
 
         ModalSheetContent.THEME_SELECTOR -> {
             themeSheet.BottomSheet(
                 isVisibleSheet = modalSheetState().isVisible,
-                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) },
-                modifier = modifier
+                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
             )
         }
 

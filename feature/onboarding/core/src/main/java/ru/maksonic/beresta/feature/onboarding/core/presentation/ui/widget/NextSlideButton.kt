@@ -35,10 +35,16 @@ internal fun NextSlideButton(send: SendMessage, isLastCurrentPage: Boolean, modi
         animationSpec = tween(durationMillis = dimenAnimFast, easing = LinearEasing)
     )
 
-    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier
+            .fillMaxWidth()
+            .padding(start = dp16, end = dp16),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         PrimaryButton(
             action = { send(Msg.Ui.OnPrimaryBtnClicked) },
             title = titlePrimaryBtn,
+            modifier = modifier.fillMaxWidth()
         )
 
         Spacer(modifier.height(dp8))

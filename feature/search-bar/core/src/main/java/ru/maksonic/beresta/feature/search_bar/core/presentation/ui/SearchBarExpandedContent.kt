@@ -86,7 +86,7 @@ private fun TopBar(
             value = model.searchQuery,
             onValueChange = { send(Msg.Inner.AfterUserInputQueryChanged(it)) },
             singleLine = true,
-            textStyle = TextDesign.body,
+            textStyle = TextDesign.bodyPrimary,
             colors = TextFieldDefaults.textFieldColors(
                 textColor = onPrimaryContainer,
                 containerColor = transparent,

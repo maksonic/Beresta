@@ -67,7 +67,7 @@ internal fun NoteListItemContent(
             )
             Text(
                 text = note.message,
-                style = TextDesign.body,
+                style = TextDesign.bodyPrimary,
                 modifier = modifier.padding(top = dp8)
             )
             Text(

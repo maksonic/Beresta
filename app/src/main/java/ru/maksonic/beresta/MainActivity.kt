@@ -31,6 +31,7 @@ import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.HighContrastTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
+import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
 import ru.maksonic.beresta.ui.theme.color.background
 
 class MainActivity : ComponentActivity() {
@@ -60,8 +61,7 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme = isSystemInDarkTheme()
 
             AnimatedContent(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 targetState = model.theme,
                 transitionSpec = {
                     fadeIn(
@@ -73,31 +73,73 @@ class MainActivity : ComponentActivity() {
                     )
                 },
             ) { animatedTheme ->
-                initTheme(animatedTheme, isDarkTheme, model.languageProvider).invoke {
-                        SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
-                        Scaffold(backgroundColor = background) { paddings ->
-                            AnimatedNavHost(
-                                navController = navigator.navController,
-                                startDestination = Destination.route,
-                                modifier = Modifier
-                                    .padding(paddingValues = paddings)
-                                    .fillMaxSize()
-                            ) {
-                                graphBuilder.buildGraph(graphBuilder = this)
-                            }
+                initTheme(
+                    theme = animatedTheme,
+                    isDark = isDarkTheme,
+                    language = model.languageProvider,
+                    palette = model.themePalette
+                ).invoke {
+
+                    SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
+
+                    Scaffold(backgroundColor = background) { paddings ->
+
+                        AnimatedNavHost(
+                            navController = navigator.navController,
+                            startDestination = Destination.route,
+                            modifier = Modifier
+                                .padding(paddingValues = paddings)
+                                .fillMaxSize()
+                        ) {
+                            graphBuilder.buildGraph(graphBuilder = this)
                         }
                     }
+                }
             }
         }
     }
 
     private fun initTheme(
-        theme: AppTheme, isDark: Boolean, language: BerestaLanguage,
+        theme: AppTheme,
+        isDark: Boolean,
+        language: BerestaLanguage,
+        palette: ThemeColorPalette,
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
-        AppTheme.SYSTEM -> { content -> AppTheme(darkTheme = isDark, language, content = content) }
-        AppTheme.LIGHT -> { content -> AppTheme(darkTheme = false, language, content = content) }
-        AppTheme.DARK -> { content -> AppTheme(darkTheme = true, language, content = content) }
-        AppTheme.HIGH_CONTRAST -> { content -> HighContrastTheme(darkTheme = true, language, content) }
+        AppTheme.SYSTEM -> { content ->
+            AppTheme(
+                darkTheme = isDark,
+                provideLanguages = language,
+                palette = palette,
+                content = content
+            )
+        }
+
+        AppTheme.LIGHT -> { content ->
+            AppTheme(
+                darkTheme = false,
+                provideLanguages = language,
+                palette = palette,
+                content = content
+            )
+        }
+
+        AppTheme.DARK -> { content ->
+            AppTheme(
+                darkTheme = true,
+                provideLanguages = language,
+                palette = palette,
+                content = content
+            )
+        }
+
+        AppTheme.HIGH_CONTRAST -> { content ->
+            HighContrastTheme(
+                darkTheme = true,
+                provideLanguages = language,
+                palette = palette,
+                content = content
+            )
+        }
     }
 
     //On some Chinese devices, when launching app or switching the theme, a blank screen appears.

@@ -33,6 +33,7 @@ import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onPrimary
+import ru.maksonic.beresta.ui.theme.color.onTertiary
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.transparent
@@ -94,7 +95,7 @@ fun MainBottomIdlePanelWidget(
             verticalAlignment = Alignment.CenterVertically
         ) {
             actions.forEach { panelItem ->
-                IconAction(icon = { panelItem.icon }, action = { send(panelItem.msg) })
+                IconAction(icon = { panelItem.icon }, action = { send(panelItem.msg) }, tint = onTertiary)
             }
         }
     }

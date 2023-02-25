@@ -55,7 +55,7 @@ internal fun OnboardingItem(
             Spacer(modifier = modifier.weight(0.05f))
             Text(
                 text = item.description,
-                style = TextDesign.body,
+                style = TextDesign.bodyPrimary,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = modifier.weight(0.2f))

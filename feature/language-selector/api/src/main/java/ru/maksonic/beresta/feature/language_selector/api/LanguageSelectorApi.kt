@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.language_selector.api
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.feature.language_selector.api.provider.AppLanguage
 
@@ -17,6 +16,6 @@ interface LanguageSelectorApi {
 
     interface Ui {
         @Composable
-        fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit, modifier: Modifier)
+        fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit)
     }
 }

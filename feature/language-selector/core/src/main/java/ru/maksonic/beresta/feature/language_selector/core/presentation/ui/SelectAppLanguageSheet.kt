@@ -38,12 +38,8 @@ import ru.maksonic.beresta.ui.widget.sheet.BaseBottomDialogSheetWithIndicator
 class SelectAppLanguageSheet : LanguageSelectorApi.Ui {
 
     @Composable
-    override fun BottomSheet(
-        isVisibleSheet: Boolean,
-        hideSheet: () -> Unit,
-        modifier: Modifier
-    ) {
-        Content(isVisibleSheet, hideSheet, modifier = modifier)
+    override fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit) {
+        Content(isVisibleSheet, hideSheet)
     }
 }
 
@@ -51,7 +47,7 @@ class SelectAppLanguageSheet : LanguageSelectorApi.Ui {
 private fun Content(
     isVisibleSheet: Boolean,
     hideSheet: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     viewModel: LanguageSelectorViewModel = koinViewModel()
 ) {
     val languages = viewModel.languages.collectAsState().value
@@ -66,7 +62,9 @@ private fun Content(
         PrimaryButton(
             action = { hideSheet() },
             title = text.shared.btnTitleSave,
-            modifier = modifier.padding(bottom = dp16)
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = dp16)
         )
     }
 }
@@ -101,11 +99,12 @@ private fun LanguageItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = animateColorAsState(if (item.isSelected) surfaceVariant else surface)
+    val backgroundColor =
+        animateColorAsState(if (item.isSelected) onTertiaryContainer else tertiaryContainer)
 
     Row(
         modifier
-            .padding(start = dp16, end = dp16, bottom = dp8)
+            .padding(bottom = dp8)
             .fillMaxWidth()
             .height(Theme.widgetSize.modalSheetItemHeight)
             .clip(Theme.shape.cornerNormal)
@@ -116,13 +115,13 @@ private fun LanguageItem(
 
         Text(
             item.language.title,
-            style = TextDesign.title,
+            style = TextDesign.title.copy(color = onTertiary),
             modifier = modifier.padding(start = dp8)
         )
         Spacer(modifier.weight(1f))
         Text(
             text = translatedLangHint,
-            style = TextDesign.captionSmall.copy(color = secondary),
+            style = TextDesign.bodySecondary.copy(color = onTertiary),
             modifier = modifier.padding(end = dp8)
         )
     }

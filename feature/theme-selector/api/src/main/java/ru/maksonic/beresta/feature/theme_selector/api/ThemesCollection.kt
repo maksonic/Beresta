@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.feature.theme_selector.api
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.maksonic.beresta.ui.theme.AppTheme
+import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
 
 /**
  * @Author maksonic on 20.02.2023
@@ -30,3 +32,9 @@ data class ThemesCollection(val data: Array<ThemeUi>) {
         return data.contentHashCode()
     }
 }
+
+data class ColorPalette(
+    val palette: ThemeColorPalette,
+    val isSelected: Boolean = false,
+    val color: Color = Color.Transparent
+)

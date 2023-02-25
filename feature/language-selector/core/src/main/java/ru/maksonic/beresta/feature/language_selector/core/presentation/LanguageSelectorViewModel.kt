@@ -29,20 +29,19 @@ class LanguageSelectorViewModel(private val selector: LanguageSelectorApi.Lang) 
     init {
         viewModelScope.launch {
             selector.currentLanguage.collect { appLanguage ->
-                selectItem(appLanguage.ordinal)
+                updateLanguageSelectionState(appLanguage.ordinal)
             }
         }
     }
 
-
     fun setLang(appLanguage: AppLanguage) {
         viewModelScope.launch {
-            selectItem(appLanguage.ordinal)
+            updateLanguageSelectionState(appLanguage.ordinal)
             selector.setLanguage(appLanguage)
         }
     }
 
-    private fun selectItem(ordinal: Int) {
+    private fun updateLanguageSelectionState(ordinal: Int) {
         _languagesCollection.update { languagesCollection: LanguagesCollection ->
             languagesCollection.copy(data = languagesCollection.data.map { item ->
                 val isSelected = item.language.ordinal == ordinal

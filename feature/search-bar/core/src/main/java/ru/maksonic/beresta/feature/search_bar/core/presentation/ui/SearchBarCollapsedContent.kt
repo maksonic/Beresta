@@ -36,7 +36,7 @@ internal fun SearchBarCollapsedContent(modifier: Modifier = Modifier) {
         )
         Text(
             text = text.shared.hintFindNote,
-            style = TextDesign.body.copy(color = onTertiary),
+            style = TextDesign.bodyPrimary.copy(color = onTertiary),
             modifier = modifier.padding(start = dp12)
         )
     }

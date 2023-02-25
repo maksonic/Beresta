@@ -9,7 +9,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,9 +24,7 @@ import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Eff
@@ -36,7 +33,6 @@ import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbo
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.NextSlideButton
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.OnboardingItem
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.OnboardingTopBar
-import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.widget.SelectLanguageBottomSheetDialogContent
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.scrim
