@@ -5,24 +5,7 @@ import androidx.compose.runtime.Composable
 import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
-import ru.maksonic.beresta.ui.theme.color.palette.baseDarkPalette
-import ru.maksonic.beresta.ui.theme.color.palette.baseLightPalette
-import ru.maksonic.beresta.ui.theme.color.palette.darkGreenPalette
-import ru.maksonic.beresta.ui.theme.color.palette.darkOrangePalette
-import ru.maksonic.beresta.ui.theme.color.palette.darkPurplePalette
-import ru.maksonic.beresta.ui.theme.color.palette.darkRedPalette
-import ru.maksonic.beresta.ui.theme.color.palette.darkYellowPalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastGreenPalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastOrangePalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastPalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastPurplePalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastRedPalette
-import ru.maksonic.beresta.ui.theme.color.palette.highContrastYellowPalette
-import ru.maksonic.beresta.ui.theme.color.palette.lightGreenPalette
-import ru.maksonic.beresta.ui.theme.color.palette.lightOrangePalette
-import ru.maksonic.beresta.ui.theme.color.palette.lightPurplePalette
-import ru.maksonic.beresta.ui.theme.color.palette.lightRedPalette
-import ru.maksonic.beresta.ui.theme.color.palette.lightYellowPalette
+import ru.maksonic.beresta.ui.theme.color.palette.*
 import ru.maksonic.beresta.ui.theme.component.AppImage
 
 /**
@@ -49,21 +32,35 @@ fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val lightPalette = when (palette) {
-        ThemeColorPalette.BLUE -> baseLightPalette
+        ThemeColorPalette.BLUE -> lightBluePalette
         ThemeColorPalette.GREEN -> lightGreenPalette
         ThemeColorPalette.PURPLE -> lightPurplePalette
         ThemeColorPalette.RED -> lightRedPalette
         ThemeColorPalette.ORANGE -> lightOrangePalette
         ThemeColorPalette.YELLOW -> lightYellowPalette
+        ThemeColorPalette.BLACK_OUT -> outlinedBlackPalette
+        ThemeColorPalette.BLUE_OUT -> baseLightPalette
+        ThemeColorPalette.GREEN_OUT -> outlinedGreenPalette
+        ThemeColorPalette.PURPLE_OUT -> outlinedPurplePalette
+        ThemeColorPalette.RED_OUT -> outlinedRedPalette
+        ThemeColorPalette.ORANGE_OUT -> outlinedOrangePalette
+        ThemeColorPalette.YELLOW_OUT -> outlinedYellowPalette
     }
 
     val darkPalette = when (palette) {
-        ThemeColorPalette.BLUE -> baseDarkPalette
+        ThemeColorPalette.BLUE -> darkBluePalette
         ThemeColorPalette.GREEN -> darkGreenPalette
         ThemeColorPalette.PURPLE -> darkPurplePalette
         ThemeColorPalette.RED -> darkRedPalette
         ThemeColorPalette.ORANGE -> darkOrangePalette
         ThemeColorPalette.YELLOW -> darkYellowPalette
+        ThemeColorPalette.BLACK_OUT -> darkBlackPalette
+        ThemeColorPalette.BLUE_OUT -> baseDarkPalette
+        ThemeColorPalette.GREEN_OUT -> baseDarkPalette
+        ThemeColorPalette.PURPLE_OUT -> baseDarkPalette
+        ThemeColorPalette.RED_OUT -> baseDarkPalette
+        ThemeColorPalette.ORANGE_OUT -> baseDarkPalette
+        ThemeColorPalette.YELLOW_OUT -> baseDarkPalette
     }
     BerestaTheme(
         lightPalette = lightPalette,
@@ -82,12 +79,19 @@ fun HighContrastTheme(
     content: @Composable () -> Unit
 ) {
     val contrastPalette = when (palette) {
-        ThemeColorPalette.BLUE -> highContrastPalette
+        ThemeColorPalette.BLUE -> highContrastBluePalette
         ThemeColorPalette.GREEN -> highContrastGreenPalette
         ThemeColorPalette.PURPLE -> highContrastPurplePalette
         ThemeColorPalette.RED -> highContrastRedPalette
         ThemeColorPalette.ORANGE -> highContrastOrangePalette
         ThemeColorPalette.YELLOW -> highContrastYellowPalette
+        ThemeColorPalette.BLACK_OUT -> highContrastBlackPalette
+        ThemeColorPalette.BLUE_OUT -> highContrastPalette
+        ThemeColorPalette.GREEN_OUT -> highContrastPalette
+        ThemeColorPalette.PURPLE_OUT -> highContrastPalette
+        ThemeColorPalette.RED_OUT -> highContrastPalette
+        ThemeColorPalette.ORANGE_OUT -> highContrastPalette
+        ThemeColorPalette.YELLOW_OUT -> highContrastPalette
     }
 
     BerestaTheme(

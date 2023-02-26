@@ -14,7 +14,13 @@ val LocalAppColors = staticCompositionLocalOf<AppColor> {
 }
 
 enum class ThemeColorPalette {
-    BLUE, GREEN, PURPLE, RED, ORANGE, YELLOW
+    BLACK_OUT,
+    BLUE, BLUE_OUT,
+    GREEN, GREEN_OUT,
+    PURPLE, PURPLE_OUT,
+    RED, RED_OUT,
+    ORANGE, ORANGE_OUT,
+    YELLOW, YELLOW_OUT
 }
 
 @Stable
@@ -45,6 +51,8 @@ data class AppColor(
     val shadow: Color,
     val scrim: Color,
     val transparent: Color,
+    val idle: Color,
+    val black: Color,
     val blue: Color,
     val green: Color,
     val purple: Color,

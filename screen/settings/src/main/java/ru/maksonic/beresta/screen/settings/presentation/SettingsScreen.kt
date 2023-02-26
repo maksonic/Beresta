@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.screen.settings.presentation
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -88,7 +90,7 @@ private fun Content(
             )
         }
     ) {
-        Column {
+        Column(modifier.fillMaxWidth().background(background)) {
             val themeHint = when (model.currentTheme) {
                 AppTheme.SYSTEM -> text.settings.titleThemeSystem
                 AppTheme.LIGHT -> text.settings.titleThemeLight
@@ -96,6 +98,7 @@ private fun Content(
                 AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
             SystemStatusBar(backgroundColor = { topBarColor.value })
+
             TopAppBarNormal(
                 title = text.settings.topBarTitle,
                 backgroundColor = { topBarColor.value },

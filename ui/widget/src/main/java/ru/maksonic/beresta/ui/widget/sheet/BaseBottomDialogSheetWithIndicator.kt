@@ -2,25 +2,20 @@ package ru.maksonic.beresta.ui.widget.sheet
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.theme.color.tertiary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
@@ -42,8 +37,9 @@ fun BaseBottomDialogSheetWithIndicator(
             .fillMaxWidth()
             .systemBarsPadding()
             .padding(start = dp16, end = dp16, bottom = dp16)
+            .shadow(Theme.elevation.dp16, shape = Theme.shape.cornerExtra)
             .clip(Theme.shape.cornerExtra)
-            .background(tertiaryContainer)
+            .background(surface)
             .padding(start = dp16, end = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

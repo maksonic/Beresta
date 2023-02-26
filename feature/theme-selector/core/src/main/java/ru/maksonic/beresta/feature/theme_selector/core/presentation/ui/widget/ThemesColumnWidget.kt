@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.theme_selector.core.presentation.ui
+package ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.widget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,10 +17,7 @@ import ru.maksonic.beresta.feature.theme_selector.api.ThemeUi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onTertiary
-import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -56,7 +53,7 @@ private fun ThemeItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (item.isSelected) onTertiaryContainer else tertiaryContainer
+    val backgroundColor = if (item.isSelected) onSurface else transparent
 
     Row(
         modifier
@@ -71,14 +68,14 @@ private fun ThemeItem(
 
         Icon(
             imageVector = item.icon,
-            tint = onTertiary,
+            tint = onBackground,
             contentDescription = "",
             modifier = modifier.padding(start = dp8)
         )
 
         Text(
             text = item.title,
-            style = TextDesign.title.copy(color = onTertiary),
+            style = TextDesign.title.copy(color = onBackground),
             modifier = modifier.padding(start = dp8)
         )
     }

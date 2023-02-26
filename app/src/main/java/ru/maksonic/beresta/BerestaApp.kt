@@ -53,6 +53,7 @@ import ru.maksonic.beresta.feature.splash_screen.core.BerestaSplashScreen
 import ru.maksonic.beresta.feature.splash_screen.core.SplashViewModel
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorCore
+import ru.maksonic.beresta.feature.theme_selector.core.data.ThemeRepository
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.ThemeSelectorBottomSheet
 import ru.maksonic.beresta.navigation.graph_builder.FeatureApiStore
@@ -122,7 +123,8 @@ class BerestaApp : Application() {
     }
 
     private val themeSelectorFeatureModule = module {
-        viewModel { ThemeSelectorViewModel(selector = get()) }
+        single<ThemeRepository> { ThemeRepository.Core() }
+        viewModel { ThemeSelectorViewModel(selector = get(), repository = get()) }
         single<ThemeSelectorApi.Theme> { ThemeSelectorCore(datastore = get()) }
         single<ThemeSelectorApi.Ui> { ThemeSelectorBottomSheet() }
     }

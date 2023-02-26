@@ -34,6 +34,7 @@ data class ThemesCollection(val data: Array<ThemeUi>) {
 }
 
 data class ColorPalette(
+    val id: Int,
     val palette: ThemeColorPalette,
     val isSelected: Boolean = false,
     val color: Color = Color.Transparent

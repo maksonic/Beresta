@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.ui.widget.functional.animation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
@@ -12,8 +13,8 @@ import androidx.compose.runtime.Composable
 fun AnimateFadeInOut(visible: Boolean, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut()
+        enter = fadeIn(tween()),
+        exit = fadeOut(tween())
     ) {
         content()
     }

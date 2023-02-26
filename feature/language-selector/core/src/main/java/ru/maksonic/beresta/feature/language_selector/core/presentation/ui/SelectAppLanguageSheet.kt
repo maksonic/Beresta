@@ -99,8 +99,7 @@ private fun LanguageItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor =
-        animateColorAsState(if (item.isSelected) onTertiaryContainer else tertiaryContainer)
+    val backgroundColor = if (item.isSelected) onSurface else transparent
 
     Row(
         modifier
@@ -109,7 +108,7 @@ private fun LanguageItem(
             .height(Theme.widgetSize.modalSheetItemHeight)
             .clip(Theme.shape.cornerNormal)
             .clickAction(rippleColor = primary) { onChangeLang() }
-            .drawBehind { drawRect(backgroundColor.value) },
+            .drawBehind { drawRect(backgroundColor) },
         verticalAlignment = Alignment.CenterVertically
     ) {
 

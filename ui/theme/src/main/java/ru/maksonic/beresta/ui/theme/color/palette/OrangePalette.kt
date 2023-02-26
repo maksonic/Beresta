@@ -8,10 +8,18 @@ import ru.maksonic.beresta.ui.theme.color.Palette
 val lightOrangePalette = baseLightPalette.copy(
     primary = Palette.mustardBrown,
     tertiary = Palette.peachOrange,
+    onTertiary = Palette.mustardBrown,
     tertiaryContainer = Palette.serenade,
     onTertiaryContainer = Palette.frangipane,
+    surface = Palette.serenade,
+    onSurface = Palette.frangipane,
     surfaceVariant = Palette.blanchedAlmond,
     onSurfaceVariant = Palette.serenade,
+)
+
+val outlinedOrangePalette = baseLightPalette.copy(
+    primary = Palette.vividGamboge,
+    onSurface = Palette.blanchedAlmond
 )
 
 val darkOrangePalette = baseDarkPalette.copy(primary = Palette.peachOrange)

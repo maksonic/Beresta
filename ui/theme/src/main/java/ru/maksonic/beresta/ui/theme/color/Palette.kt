@@ -7,13 +7,19 @@ import androidx.compose.ui.graphics.Color
  */
 object Palette {
     //Black
-    val black = Color(0xFF000000)
-    val nero = Color(0xFF212121)
     val mineShaft = Color(0xFF313131)
     val tundora = Color(0xFF414141)
     val doveGray = Color(0xFF616161)
     val gray = Color(0xFF868686)
     val alto = Color(0xFFDFDFDF)
+    val alto2 = Color(0xFFF0F0F0)
+    //Black
+    val black = Color(0xFF000000)
+    val nero = Color(0xFF212121)
+    val chineseSilver  = Color(0xFFCCCCCC)
+    val lightSilver = Color(0xFFd9d9d9)
+    val platinum = Color(0xFFE6E6E6)
+    val antiFlashWhite = Color(0xFFf2f2f2)
     //Blue
     val azureRadiance = Color(0xFF0374F4)
     val coolBlack = Color(0xFF013065)
