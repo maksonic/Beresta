@@ -1,7 +1,5 @@
 package ru.maksonic.beresta.feature.theme_selector.core.presentation.ui
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
-import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.widget.ThemesColumnWidget
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.widget.palette_picker.ThemePaletteColorPickerWidget
@@ -26,7 +24,7 @@ import ru.maksonic.beresta.ui.widget.sheet.BaseBottomDialogSheetWithIndicator
 /**
  * @Author maksonic on 20.02.2023
  */
-class ThemeSelectorBottomSheet : ThemeSelectorApi.Ui {
+class ThemeSelectorBottomSheet : ThemeSelectorUiApi {
 
     @Composable
     override fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit) {
@@ -44,13 +42,12 @@ private fun Content(
     val model = viewModel.model.collectAsState().value
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
-        val scrollState = ScrollState(0)
 
         Column(
             modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .verticalScroll(scrollState)) {
+                .verticalScroll(ScrollState(0))) {
 
             ThemePaletteColorPickerWidget(
                 filledPalettes = model.palettes.filled,
@@ -59,10 +56,7 @@ private fun Content(
                 onChangePalette = { item -> viewModel.setThemePalette(item) }
             )
 
-            Divider(
-                modifier
-                    .fillMaxWidth()
-                    .padding(top = dp16, bottom = dp16), color = tertiary)
+            Divider(modifier.padding(top = dp16, bottom = dp16), color = tertiary)
 
             ThemesColumnWidget(
                 themesCollection = model.themes,

@@ -43,7 +43,7 @@ internal fun ExpandableSearchBar(
     val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
     val backgroundColor =
         animateColorAsState(if (model.isExpandedBar) background else searchBarCollapsedColor())
-    val clip = animateDpAsState(if (model.isExpandedBar) dp0 else 50.dp)
+    val clip = animateDpAsState(if (model.isExpandedBar) dp0 else 25.dp)
     val height = animateDpAsState(
         if (model.isExpandedBar) expandedBarHeight else Theme.widgetSize.searchBarCollapsedHeight,
         animationSpec = tween()

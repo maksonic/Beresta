@@ -51,9 +51,13 @@ import ru.maksonic.beresta.feature.search_bar.core.presentation.ui.SearchBarWidg
 import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
 import ru.maksonic.beresta.feature.splash_screen.core.BerestaSplashScreen
 import ru.maksonic.beresta.feature.splash_screen.core.SplashViewModel
+import ru.maksonic.beresta.feature.theme_selector.api.SystemThemeCheckerApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemePaletteSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
+import ru.maksonic.beresta.feature.theme_selector.core.ThemePaletteSelectorCore
 import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorCore
-import ru.maksonic.beresta.feature.theme_selector.core.data.ThemeRepository
+import ru.maksonic.beresta.feature.theme_selector.core.SystemThemeCheckerCore
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.ThemeSelectorBottomSheet
 import ru.maksonic.beresta.navigation.graph_builder.FeatureApiStore
@@ -74,6 +78,7 @@ class BerestaApp : Application() {
         single {
             MainActivityProgram(
                 themeSelector = get(),
+                paletteSelector = get(),
                 languageSelector = get(),
                 languageProvider = get()
             )
@@ -123,10 +128,17 @@ class BerestaApp : Application() {
     }
 
     private val themeSelectorFeatureModule = module {
-        single<ThemeRepository> { ThemeRepository.Core() }
-        viewModel { ThemeSelectorViewModel(selector = get(), repository = get()) }
-        single<ThemeSelectorApi.Theme> { ThemeSelectorCore(datastore = get()) }
-        single<ThemeSelectorApi.Ui> { ThemeSelectorBottomSheet() }
+        viewModel {
+            ThemeSelectorViewModel(
+                themeSelector = get(),
+                paletteSelector = get(),
+                themeChecker = get()
+            )
+        }
+        single<SystemThemeCheckerApi> { SystemThemeCheckerCore() }
+        single<ThemeSelectorApi> { ThemeSelectorCore(datastore = get()) }
+        single<ThemePaletteSelectorApi> { ThemePaletteSelectorCore(datastore = get()) }
+        single<ThemeSelectorUiApi> { ThemeSelectorBottomSheet() }
     }
 
     private val languageSelectorFeatureModule = module {

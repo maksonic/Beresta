@@ -5,16 +5,30 @@ import ru.maksonic.beresta.ui.theme.color.Palette
 /**
  * @Author maksonic on 26.02.2023
  */
-val lightBluePalette = baseLightPalette.copy(
-    primary = Palette.coolBlack,
-    tertiary = Palette.anakiwa,
-    onTertiary = Palette.coolBlack,
-    tertiaryContainer = Palette.solitude,
-    onTertiaryContainer = Palette.paleCornflowerBlue,
-    surface = Palette.solitude,
-    onSurface = Palette.paleCornflowerBlue,
-    surfaceVariant = Palette.frenchPassLight,
-    onSurfaceVariant = Palette.solitude,
+val filledLightBluePalette = baseLightPalette.copy(
+    primary = Palette.Blue.coolBlack,
+    tertiary = Palette.Blue.anakiwa,
+    onTertiary = Palette.Blue.coolBlack,
+    tertiaryContainer = Palette.Blue.solitude,
+    onTertiaryContainer = Palette.Blue.paleCornflowerBlue,
+    surface = Palette.Blue.solitude,
+    onSurface = Palette.Blue.paleCornflowerBlue,
+    surfaceVariant = Palette.Blue.frenchPassLight,
+    onSurfaceVariant = Palette.Blue.frenchPassLight,
 )
-val darkBluePalette = baseDarkPalette.copy(primary = Palette.anakiwa)
-val highContrastBluePalette = highContrastPalette.copy(primary = Palette.azureRadiance)
+val filledDarkBluePalette = baseDarkPalette.copy(
+    primary = Palette.Blue.anakiwa,
+    onPrimary = Palette.Blue.eerieBlue,
+    primaryContainer = Palette.Blue.cloudBurst,
+    tertiary = Palette.Blue.anakiwa,
+    onTertiary = Palette.Blue.anakiwa,
+    tertiaryContainer = Palette.Blue.yankeesBlue,
+    onTertiaryContainer = Palette.Blue.japaneseIndigo,
+    surface = Palette.Blue.yankeesBlue,
+    onSurface = Palette.Blue.japaneseIndigo,
+    surfaceVariant = Palette.Blue.japaneseIndigo,
+    onSurfaceVariant = Palette.Blue.policeBlue,
+    background = Palette.Blue.eerieBlue
+)
+val outlinedDarkBluePalette = baseDarkPalette.copy(primary = Palette.Blue.anakiwa)
+val highContrastBluePalette = highContrastPalette.copy(primary = Palette.Blue.azureRadiance)

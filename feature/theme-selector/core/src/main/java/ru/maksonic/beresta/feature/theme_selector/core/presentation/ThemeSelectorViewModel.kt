@@ -2,95 +2,113 @@ package ru.maksonic.beresta.feature.theme_selector.core.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.maksonic.beresta.feature.theme_selector.api.ColorPalette
+import ru.maksonic.beresta.feature.theme_selector.api.SystemThemeCheckerApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemePaletteSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
-import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
-import ru.maksonic.beresta.feature.theme_selector.core.data.Palettes
-import ru.maksonic.beresta.feature.theme_selector.core.data.ThemeRepository
 import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
+import ru.maksonic.beresta.ui.theme.color.AppThemePalette
 
 /**
  * @Author maksonic on 20.02.2023
  */
-data class Model(
-    val currentTheme: AppTheme = AppTheme.SYSTEM,
-    val themes: ThemesCollection,
-    val currentPalette: ThemeColorPalette = ThemeColorPalette.BLUE,
-    val palettes: Palettes
-)
-
 class ThemeSelectorViewModel(
-    private val selector: ThemeSelectorApi.Theme,
-    repository: ThemeRepository
+    private val themeSelector: ThemeSelectorApi,
+    private val paletteSelector: ThemePaletteSelectorApi,
+    private val themeChecker: SystemThemeCheckerApi,
 ) : ViewModel() {
 
-    private val _model = MutableStateFlow(
-        Model(themes = repository.themes, palettes = repository.palettes)
-    )
-    val model = _model.asStateFlow()
+    private val _featureState = MutableStateFlow(FeatureState())
+    val model = _featureState.asStateFlow()
 
     init {
+        initFeatureState()
+    }
+
+    private fun initFeatureState() {
         viewModelScope.launch {
-            combine(selector.currentTheme, selector.currentPalette) { theme, palette ->
-                _model.update { model -> model.copy(currentTheme = theme) }
-                updateThemeSelectionState(theme.ordinal)
-                updatePaletteSelectionState(palette.ordinal)
+            val isEnabledDarkMode = themeChecker.isEnabledSystemDarkMode
+            val themeState = themeSelector.currentTheme
+            val paletteState = paletteSelector.currentPalette
+
+            combine(isEnabledDarkMode, themeState, paletteState) { isDarkTheme, theme, palette ->
+                _featureState.update { model ->
+                    return@update model.copy(
+                        currentTheme = theme,
+                        currentLightPalette = palette.light,
+                        currentDarkPalette = palette.dark,
+                        isDarkTheme = isDarkTheme
+                    )
+                }
+                updateThemeSelection(theme.ordinal)
+                updatePaletteSelection()
             }.collect()
         }
     }
 
-    private fun updateThemeSelectionState(themeOrdinal: Int) {
-        _model.update { model ->
+    private fun updateThemeSelection(themeOrdinal: Int) {
+        _featureState.update { model ->
             val selectedTheme = model.themes.data.map { item ->
                 val isSelected = item.theme.ordinal == themeOrdinal
                 item.copy(isSelected = isSelected)
             }.toTypedArray()
-            model.copy(themes = model.themes.copy(data = selectedTheme))
+
+            return@update model.copy(themes = model.themes.copy(data = selectedTheme))
         }
     }
 
-    private fun updatePaletteSelectionState(paletteOrdinal: Int) {
-        _model.update { model ->
-            val selectedFilledPalette = compareSelection(model.palettes.filled, paletteOrdinal)
-            val selectedOutlinedPalette = compareSelection(model.palettes.outlined, paletteOrdinal)
-            model.copy(
-                palettes = model.palettes.copy(
-                    filled = selectedFilledPalette,
-                    outlined = selectedOutlinedPalette
-                )
+    private fun updatePaletteSelection() {
+        val light = model.value.currentLightPalette
+        val dark = model.value.currentDarkPalette
+        val palette = when (model.value.currentTheme) {
+            AppTheme.LIGHT -> light
+            AppTheme.SYSTEM -> if (model.value.isDarkTheme) dark else light
+            else -> dark
+        }
+
+        _featureState.update { model ->
+            val filledPalette = check(model.palettes.filled, palette.ordinal)
+            val outlinedPalette = check(model.palettes.outlined, palette.ordinal)
+
+            return@update model.copy(
+                palettes = model.palettes.copy(filled = filledPalette, outlined = outlinedPalette),
             )
         }
     }
 
-    private fun compareSelection(
-        array: Array<ColorPalette>,
-        paletteOrdinal: Int
-    ): Array<ColorPalette> = array.map { item ->
+    private fun check(array: Array<ColorPalette>, paletteOrdinal: Int): Array<ColorPalette> =
+        array.map { item ->
         val isSelected = item.palette.ordinal == paletteOrdinal
-        item.copy(isSelected = isSelected)
+
+        return@map item.copy(isSelected = isSelected)
     }.toTypedArray()
 
-    fun setTheme(appTheme: AppTheme) {
-        viewModelScope.launch {
-            updateThemeSelectionState(appTheme.ordinal)
-            selector.setTheme(appTheme)
-            if (appTheme == AppTheme.HIGH_CONTRAST) {
-                setThemePalette(ThemeColorPalette.BLUE)
-            }
+    private fun setDefaultPaletteWhenHighContrastThemeEnabled(appTheme: AppTheme) {
+        if (appTheme == AppTheme.HIGH_CONTRAST) {
+            setThemePalette(AppThemePalette.BLUE)
         }
     }
 
-    fun setThemePalette(palette: ThemeColorPalette) {
+    fun setTheme(appTheme: AppTheme) {
         viewModelScope.launch {
-            updatePaletteSelectionState(palette.ordinal)
-            selector.setColorPalette(palette)
+            updateThemeSelection(appTheme.ordinal)
+            themeSelector.setTheme(appTheme)
+            setDefaultPaletteWhenHighContrastThemeEnabled(appTheme)
+        }
+    }
+
+    fun setThemePalette(palette: AppThemePalette) {
+        viewModelScope.launch {
+            val isDark = when (model.value.currentTheme) {
+                AppTheme.LIGHT -> false
+                AppTheme.SYSTEM -> model.value.isDarkTheme
+                AppTheme.DARK -> true
+                AppTheme.HIGH_CONTRAST -> true
+            }
+            updatePaletteSelection()
+            paletteSelector.setPalette(isDark, palette)
         }
     }
 }

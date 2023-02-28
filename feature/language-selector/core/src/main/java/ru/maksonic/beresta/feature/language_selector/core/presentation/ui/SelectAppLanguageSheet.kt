@@ -1,12 +1,6 @@
 package ru.maksonic.beresta.feature.language_selector.core.presentation.ui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,7 +18,10 @@ import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.color.onBackground
+import ru.maksonic.beresta.ui.theme.color.onSurface
+import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -114,13 +111,13 @@ private fun LanguageItem(
 
         Text(
             item.language.title,
-            style = TextDesign.title.copy(color = onTertiary),
+            style = TextDesign.title.copy(color = onBackground),
             modifier = modifier.padding(start = dp8)
         )
         Spacer(modifier.weight(1f))
         Text(
             text = translatedLangHint,
-            style = TextDesign.bodySecondary.copy(color = onTertiary),
+            style = TextDesign.bodySecondary.copy(color = onBackground),
             modifier = modifier.padding(end = dp8)
         )
     }

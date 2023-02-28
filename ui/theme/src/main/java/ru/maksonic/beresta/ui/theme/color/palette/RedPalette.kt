@@ -5,20 +5,35 @@ import ru.maksonic.beresta.ui.theme.color.Palette
 /**
  * @Author maksonic on 25.02.2023
  */
-val lightRedPalette = baseLightPalette.copy(
-    primary = Palette.blood,
-    tertiary = Palette.roseBud,
-    onTertiary = Palette.blood,
-    tertiaryContainer = Palette.mistyRose,
-    onTertiaryContainer = Palette.melon,
-    surface = Palette.mistyRose,
-    onSurface = Palette.melon,
-    surfaceVariant = Palette.cinderella,
-    onSurfaceVariant = Palette.mistyRose,
+val filledLightRedPalette = baseLightPalette.copy(
+    primary = Palette.Red.blood,
+    tertiary = Palette.Red.roseBud,
+    onTertiary = Palette.Red.blood,
+    tertiaryContainer = Palette.Red.mistyRose,
+    onTertiaryContainer = Palette.Red.melon,
+    surface = Palette.Red.mistyRose,
+    onSurface = Palette.Red.melon,
+    surfaceVariant = Palette.Red.cinderella,
+    onSurfaceVariant = Palette.Red.cinderella,
 )
-val outlinedRedPalette = baseLightPalette.copy(
-    primary = Palette.coralRed,
-    onSurface = Palette.cinderella
+val filledDarkRedPalette = baseDarkPalette.copy(
+    primary = Palette.Red.roseBud,
+    onPrimary = Palette.Red.licorice,
+    primaryContainer = Palette.Red.temptress,
+    tertiary = Palette.Red.roseBud,
+    onTertiary = Palette.Red.roseBud,
+    tertiaryContainer = Palette.Red.darkSienna,
+    onTertiaryContainer = Palette.Red.caputMortuum,
+    surface = Palette.Red.darkSienna,
+    onSurface = Palette.Red.caputMortuum,
+    surfaceVariant = Palette.Red.caputMortuum,
+    onSurfaceVariant = Palette.Red.garnet,
+    background = Palette.Red.licorice
 )
-val darkRedPalette = baseDarkPalette.copy(primary = Palette.roseBud)
-val highContrastRedPalette = highContrastPalette.copy(primary = Palette.coralRed)
+val outlinedLightRedPalette = baseLightPalette.copy(
+    primary = Palette.Red.coralRed,
+    onSurface = Palette.Red.cinderella,
+    onSurfaceVariant = Palette.Red.cinderella
+)
+val outlinedDarkRedPalette = baseDarkPalette.copy(primary = Palette.Red.roseBud)
+val highContrastRedPalette = highContrastPalette.copy(primary = Palette.Red.coralRed)

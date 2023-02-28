@@ -25,13 +25,14 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
+import ru.maksonic.beresta.feature.theme_selector.api.SystemThemeCheckerApi
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.HighContrastTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
-import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
+import ru.maksonic.beresta.ui.theme.color.PaletteStore
 import ru.maksonic.beresta.ui.theme.color.background
 
 class MainActivity : ComponentActivity() {
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
     private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AppNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
+    private val systemThemeChecker: SystemThemeCheckerApi by inject()
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,9 +58,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             navigator.navController = rememberAnimatedNavController()
-
             val model = sandbox.model.collectAsStateWithLifecycle(lifecycle).value
             val isDarkTheme = isSystemInDarkTheme()
+            systemThemeChecker.check(isDarkTheme)
 
             AnimatedContent(
                 modifier = Modifier.fillMaxSize(),
@@ -103,7 +105,7 @@ class MainActivity : ComponentActivity() {
         theme: AppTheme,
         isDark: Boolean,
         language: BerestaLanguage,
-        palette: ThemeColorPalette,
+        palette: PaletteStore,
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
         AppTheme.SYSTEM -> { content ->
             AppTheme(
@@ -136,7 +138,7 @@ class MainActivity : ComponentActivity() {
             HighContrastTheme(
                 darkTheme = true,
                 provideLanguages = language,
-                palette = palette,
+                palette = palette.dark,
                 content = content
             )
         }

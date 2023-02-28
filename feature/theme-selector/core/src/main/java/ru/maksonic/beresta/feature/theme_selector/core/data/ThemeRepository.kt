@@ -4,7 +4,7 @@ import ru.maksonic.beresta.feature.theme_selector.api.ColorPalette
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeUi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemesCollection
 import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
+import ru.maksonic.beresta.ui.theme.color.AppThemePalette
 import ru.maksonic.beresta.ui.theme.icons.*
 
 /**
@@ -33,42 +33,37 @@ data class Palettes(
     }
 }
 
-interface ThemeRepository {
-    val themes: ThemesCollection
-    val palettes: Palettes
-
-    class Core : ThemeRepository {
-        private val themesData = arrayOf(
-            ThemeUi(id = AppTheme.SYSTEM.ordinal, AppTheme.SYSTEM, icon = AppIcon.ThemeSystem),
-            ThemeUi(id = AppTheme.LIGHT.ordinal, AppTheme.LIGHT, icon = AppIcon.ThemeLight),
-            ThemeUi(id = AppTheme.DARK.ordinal, AppTheme.DARK, icon = AppIcon.ThemeNight),
-            ThemeUi(
-                id = AppTheme.HIGH_CONTRAST.ordinal,
-                AppTheme.HIGH_CONTRAST,
-                icon = AppIcon.ThemeContrast
-            )
+internal object ThemeRepository {
+    private val themesData = arrayOf(
+        ThemeUi(id = AppTheme.SYSTEM.ordinal, AppTheme.SYSTEM, icon = AppIcon.ThemeSystem),
+        ThemeUi(id = AppTheme.LIGHT.ordinal, AppTheme.LIGHT, icon = AppIcon.ThemeLight),
+        ThemeUi(id = AppTheme.DARK.ordinal, AppTheme.DARK, icon = AppIcon.ThemeNight),
+        ThemeUi(
+            id = AppTheme.HIGH_CONTRAST.ordinal,
+            AppTheme.HIGH_CONTRAST,
+            icon = AppIcon.ThemeContrast
         )
+    )
 
-        private val filledPalette = arrayOf(
-            ColorPalette(0, ThemeColorPalette.BLUE),
-            ColorPalette(1, ThemeColorPalette.GREEN),
-            ColorPalette(2, ThemeColorPalette.PURPLE),
-            ColorPalette(3, ThemeColorPalette.RED),
-            ColorPalette(4, ThemeColorPalette.ORANGE),
-            ColorPalette(5, ThemeColorPalette.YELLOW),
-        )
+    private val filledPalette = arrayOf(
+        ColorPalette(0, AppThemePalette.BLUE),
+        ColorPalette(1, AppThemePalette.GREEN),
+        ColorPalette(2, AppThemePalette.PURPLE),
+        ColorPalette(3, AppThemePalette.RED),
+        ColorPalette(4, AppThemePalette.ORANGE),
+        ColorPalette(5, AppThemePalette.YELLOW),
+    )
 
-        private val outlinedPalette = arrayOf(
-            ColorPalette(0, ThemeColorPalette.BLACK_OUT),
-            ColorPalette(1, ThemeColorPalette.BLUE_OUT),
-            ColorPalette(2, ThemeColorPalette.GREEN_OUT),
-            ColorPalette(3, ThemeColorPalette.PURPLE_OUT),
-            ColorPalette(4, ThemeColorPalette.RED_OUT),
-            ColorPalette(5, ThemeColorPalette.ORANGE_OUT),
-            ColorPalette(6, ThemeColorPalette.YELLOW_OUT)
-        )
+    private val outlinedPalette = arrayOf(
+        ColorPalette(0, AppThemePalette.BLACK_OUT),
+        ColorPalette(1, AppThemePalette.BLUE_OUT),
+        ColorPalette(2, AppThemePalette.GREEN_OUT),
+        ColorPalette(3, AppThemePalette.PURPLE_OUT),
+        ColorPalette(4, AppThemePalette.RED_OUT),
+        ColorPalette(5, AppThemePalette.ORANGE_OUT),
+        ColorPalette(6, AppThemePalette.YELLOW_OUT)
+    )
 
-        override val themes = ThemesCollection(themesData)
-        override val palettes = Palettes(filled = filledPalette, outlined = outlinedPalette)
-    }
+    val themes = ThemesCollection(themesData)
+    val palettes = Palettes(filled = filledPalette, outlined = outlinedPalette)
 }

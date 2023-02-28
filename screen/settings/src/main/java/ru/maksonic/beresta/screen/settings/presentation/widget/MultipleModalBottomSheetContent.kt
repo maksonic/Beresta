@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.get
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
-import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
 import ru.maksonic.beresta.screen.settings.presentation.SendMessage
 import ru.maksonic.beresta.screen.settings.Msg
 
@@ -26,7 +26,7 @@ internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: ModalSheetContent,
     languageSheet: LanguageSelectorApi.Ui = get(),
-    themeSheet: ThemeSelectorApi.Ui = get(),
+    themeSheet: ThemeSelectorUiApi = get(),
     modalSheetState: () -> ModalBottomSheetState,
     modifier: Modifier
 ) {

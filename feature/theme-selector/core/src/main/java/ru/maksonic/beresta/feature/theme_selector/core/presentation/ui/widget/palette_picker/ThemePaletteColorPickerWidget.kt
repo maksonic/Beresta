@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import ru.maksonic.beresta.feature.theme_selector.api.ColorPalette
 import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
+import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.AppThemePalette
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
@@ -15,12 +16,34 @@ internal fun ThemePaletteColorPickerWidget(
     filledPalettes: Array<ColorPalette>,
     outlinedPalettes: Array<ColorPalette>,
     currentTheme: () -> AppTheme,
-    onChangePalette: (ThemeColorPalette) -> Unit,
+    onChangePalette: (AppThemePalette) -> Unit,
 ) {
+    val outlinedColors = arrayOf(
+        Theme.color.black,
+        Theme.color.blue,
+        Theme.color.green,
+        Theme.color.purple,
+        Theme.color.red,
+        Theme.color.orange,
+        Theme.color.yellow,
+    )
+    //Remove outlined black color for filled palette
+    val filledColors = outlinedColors.drop(1).toTypedArray()
+
     Column {
         AnimateFadeInOut(currentTheme() != AppTheme.HIGH_CONTRAST) {
-            ThemePaletteOutlinedColorPicker(outlinedPalettes, onChangePalette)
+            PickerRowContainer(
+                isFilledPalette = false,
+                palettes = outlinedPalettes,
+                colors = outlinedColors,
+                onChangePalette = onChangePalette
+            )
         }
-        ThemePaletteFilledColorPicker(filledPalettes, onChangePalette)
+        PickerRowContainer(
+            isFilledPalette = true,
+            palettes = filledPalettes,
+            colors = filledColors,
+            onChangePalette = onChangePalette
+        )
     }
 }

@@ -5,10 +5,11 @@ import ru.maksonic.beresta.ui.theme.color.Palette
 /**
  * @Author maksonic on 26.02.2023
  */
-val outlinedBlackPalette = baseLightPalette.copy(
+val outlinedLightBlackPalette = baseLightPalette.copy(
     primary = Palette.nero,
     onSurface = Palette.alto,
+    onSurfaceVariant = Palette.alto,
     onBackground = Palette.black
 )
-val darkBlackPalette = baseDarkPalette.copy(primary = Palette.mineShaft)
+val outlinedDarkBlackPalette = baseDarkPalette.copy(primary = Palette.snow)
 val highContrastBlackPalette = highContrastPalette.copy(primary = Palette.nero)

@@ -4,7 +4,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import ru.maksonic.beresta.feature.language_selector.api.provider.BerestaLanguage
 import ru.maksonic.beresta.ui.theme.color.AppColor
-import ru.maksonic.beresta.ui.theme.color.ThemeColorPalette
+import ru.maksonic.beresta.ui.theme.color.AppThemePalette
+import ru.maksonic.beresta.ui.theme.color.PaletteStore
 import ru.maksonic.beresta.ui.theme.color.palette.*
 import ru.maksonic.beresta.ui.theme.component.AppImage
 
@@ -28,39 +29,39 @@ fun BerestaTheme(
 fun AppTheme(
     darkTheme: Boolean = false,
     provideLanguages: BerestaLanguage,
-    palette: ThemeColorPalette = ThemeColorPalette.RED,
+    palette: PaletteStore,
     content: @Composable () -> Unit
 ) {
-    val lightPalette = when (palette) {
-        ThemeColorPalette.BLUE -> lightBluePalette
-        ThemeColorPalette.GREEN -> lightGreenPalette
-        ThemeColorPalette.PURPLE -> lightPurplePalette
-        ThemeColorPalette.RED -> lightRedPalette
-        ThemeColorPalette.ORANGE -> lightOrangePalette
-        ThemeColorPalette.YELLOW -> lightYellowPalette
-        ThemeColorPalette.BLACK_OUT -> outlinedBlackPalette
-        ThemeColorPalette.BLUE_OUT -> baseLightPalette
-        ThemeColorPalette.GREEN_OUT -> outlinedGreenPalette
-        ThemeColorPalette.PURPLE_OUT -> outlinedPurplePalette
-        ThemeColorPalette.RED_OUT -> outlinedRedPalette
-        ThemeColorPalette.ORANGE_OUT -> outlinedOrangePalette
-        ThemeColorPalette.YELLOW_OUT -> outlinedYellowPalette
+    val lightPalette = when (palette.light) {
+        AppThemePalette.BLUE -> filledLightBluePalette
+        AppThemePalette.GREEN -> filledLightGreenPalette
+        AppThemePalette.PURPLE -> filledLightPurplePalette
+        AppThemePalette.RED -> filledLightRedPalette
+        AppThemePalette.ORANGE -> filledLightOrangePalette
+        AppThemePalette.YELLOW -> filledLightYellowPalette
+        AppThemePalette.BLACK_OUT -> outlinedLightBlackPalette
+        AppThemePalette.BLUE_OUT -> baseLightPalette
+        AppThemePalette.GREEN_OUT -> outlinedLightGreenPalette
+        AppThemePalette.PURPLE_OUT -> outlinedLightPurplePalette
+        AppThemePalette.RED_OUT -> outlinedLightRedPalette
+        AppThemePalette.ORANGE_OUT -> outlinedLightOrangePalette
+        AppThemePalette.YELLOW_OUT -> outlinedLightYellowPalette
     }
 
-    val darkPalette = when (palette) {
-        ThemeColorPalette.BLUE -> darkBluePalette
-        ThemeColorPalette.GREEN -> darkGreenPalette
-        ThemeColorPalette.PURPLE -> darkPurplePalette
-        ThemeColorPalette.RED -> darkRedPalette
-        ThemeColorPalette.ORANGE -> darkOrangePalette
-        ThemeColorPalette.YELLOW -> darkYellowPalette
-        ThemeColorPalette.BLACK_OUT -> darkBlackPalette
-        ThemeColorPalette.BLUE_OUT -> baseDarkPalette
-        ThemeColorPalette.GREEN_OUT -> baseDarkPalette
-        ThemeColorPalette.PURPLE_OUT -> baseDarkPalette
-        ThemeColorPalette.RED_OUT -> baseDarkPalette
-        ThemeColorPalette.ORANGE_OUT -> baseDarkPalette
-        ThemeColorPalette.YELLOW_OUT -> baseDarkPalette
+    val darkPalette = when (palette.dark) {
+        AppThemePalette.BLUE -> filledDarkBluePalette
+        AppThemePalette.GREEN -> filledDarkGreenPalette
+        AppThemePalette.PURPLE -> filledDarkPurplePalette
+        AppThemePalette.RED -> filledDarkRedPalette
+        AppThemePalette.ORANGE -> filledDarkOrangePalette
+        AppThemePalette.YELLOW -> filledDarkYellowPalette
+        AppThemePalette.BLACK_OUT -> outlinedDarkBlackPalette
+        AppThemePalette.BLUE_OUT -> outlinedDarkBluePalette
+        AppThemePalette.GREEN_OUT -> outlinedDarkGreenPalette
+        AppThemePalette.PURPLE_OUT -> outlinedDarkPurplePalette
+        AppThemePalette.RED_OUT -> outlinedDarkRedPalette
+        AppThemePalette.ORANGE_OUT -> outlinedDarkOrangePalette
+        AppThemePalette.YELLOW_OUT -> outlinedDarkYellowPalette
     }
     BerestaTheme(
         lightPalette = lightPalette,
@@ -75,23 +76,23 @@ fun AppTheme(
 fun HighContrastTheme(
     darkTheme: Boolean = true,
     provideLanguages: BerestaLanguage,
-    palette: ThemeColorPalette = ThemeColorPalette.BLUE,
+    palette: AppThemePalette = AppThemePalette.BLUE,
     content: @Composable () -> Unit
 ) {
     val contrastPalette = when (palette) {
-        ThemeColorPalette.BLUE -> highContrastBluePalette
-        ThemeColorPalette.GREEN -> highContrastGreenPalette
-        ThemeColorPalette.PURPLE -> highContrastPurplePalette
-        ThemeColorPalette.RED -> highContrastRedPalette
-        ThemeColorPalette.ORANGE -> highContrastOrangePalette
-        ThemeColorPalette.YELLOW -> highContrastYellowPalette
-        ThemeColorPalette.BLACK_OUT -> highContrastBlackPalette
-        ThemeColorPalette.BLUE_OUT -> highContrastPalette
-        ThemeColorPalette.GREEN_OUT -> highContrastPalette
-        ThemeColorPalette.PURPLE_OUT -> highContrastPalette
-        ThemeColorPalette.RED_OUT -> highContrastPalette
-        ThemeColorPalette.ORANGE_OUT -> highContrastPalette
-        ThemeColorPalette.YELLOW_OUT -> highContrastPalette
+        AppThemePalette.BLUE -> highContrastBluePalette
+        AppThemePalette.GREEN -> highContrastGreenPalette
+        AppThemePalette.PURPLE -> highContrastPurplePalette
+        AppThemePalette.RED -> highContrastRedPalette
+        AppThemePalette.ORANGE -> highContrastOrangePalette
+        AppThemePalette.YELLOW -> highContrastYellowPalette
+        AppThemePalette.BLACK_OUT -> highContrastBlackPalette
+        AppThemePalette.BLUE_OUT -> highContrastPalette
+        AppThemePalette.GREEN_OUT -> highContrastPalette
+        AppThemePalette.PURPLE_OUT -> highContrastPalette
+        AppThemePalette.RED_OUT -> highContrastPalette
+        AppThemePalette.ORANGE_OUT -> highContrastPalette
+        AppThemePalette.YELLOW_OUT -> highContrastPalette
     }
 
     BerestaTheme(

@@ -4,13 +4,15 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
+import ru.maksonic.beresta.feature.theme_selector.api.ThemePaletteSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
 
 /**
  * @Author maksonic on 18.02.2023
  */
 class MainActivityProgram(
-    private val themeSelector: ThemeSelectorApi.Theme,
+    private val themeSelector: ThemeSelectorApi,
+    private val paletteSelector: ThemePaletteSelectorApi,
     private val languageSelector: LanguageSelectorApi.Lang,
     private val languageProvider: LanguageProvider,
 ) : ElmProgram<Msg, Cmd> {
@@ -44,8 +46,8 @@ class MainActivityProgram(
     }
 
     private suspend fun readThemePaletteFromDatastore(consumer: (Msg) -> Unit) {
-        themeSelector.currentPalette.collectLatest { savedThemePalette ->
-            consumer(Msg.Inner.SetAppThemePalette(savedThemePalette))
+        paletteSelector.currentPalette.collectLatest { savedLightAndDarkPalette ->
+            consumer(Msg.Inner.SetAppThemePalette(savedLightAndDarkPalette))
         }
     }
 }

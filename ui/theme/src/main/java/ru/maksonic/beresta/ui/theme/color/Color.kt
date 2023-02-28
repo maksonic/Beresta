@@ -13,16 +13,6 @@ val LocalAppColors = staticCompositionLocalOf<AppColor> {
     error("No colors provided")
 }
 
-enum class ThemeColorPalette {
-    BLACK_OUT,
-    BLUE, BLUE_OUT,
-    GREEN, GREEN_OUT,
-    PURPLE, PURPLE_OUT,
-    RED, RED_OUT,
-    ORANGE, ORANGE_OUT,
-    YELLOW, YELLOW_OUT
-}
-
 @Stable
 data class AppColor(
     val primary: Color,
