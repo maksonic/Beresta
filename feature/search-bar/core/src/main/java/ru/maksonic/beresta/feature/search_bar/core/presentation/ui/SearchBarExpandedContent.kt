@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg
 import ru.maksonic.beresta.ui.theme.Theme
@@ -113,7 +113,7 @@ private fun TopBar(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SearchListResult(
-    notes: NotesCollection,
+    notes: NoteUi.Collection,
     notesApi: NotesListApi.Ui,
     modifier: Modifier = Modifier
 ) {

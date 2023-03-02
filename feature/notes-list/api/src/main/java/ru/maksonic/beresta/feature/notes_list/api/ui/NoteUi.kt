@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.feature.notes_list.api.ui
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import kotlinx.parcelize.Parcelize
 
 /**
  * @Author maksonic on 21.02.2023
@@ -25,4 +27,13 @@ data class NoteUi(
             dateCreation = "12:00 AM - 1 January 1970",
         )
     }
+
+    @Stable
+    @Immutable
+    data class Collection(val data: List<NoteUi>) {
+        companion object {
+            val Empty = Collection(emptyList())
+        }
+    }
 }
+

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg
 import ru.maksonic.beresta.feature.search_bar.core.presentation.SearchBarSandbox
@@ -29,7 +29,7 @@ class SearchBarWidget : SearchBarApi.Ui {
 
     @Composable
     override fun Widget(
-        notesCollection: NotesCollection,
+        notesCollection: NoteUi.Collection,
         searchTopBarBackground: () -> Color,
         searchBarCollapsedColor: () -> Color,
         modifier: Modifier
@@ -51,7 +51,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     sandbox: SearchBarSandbox = koinViewModel(),
     notesList: NotesListApi.Ui = get(),
-    notesCollection: NotesCollection,
+    notesCollection: NoteUi.Collection,
     searchTopBarBackground: () -> Color,
     searchBarCollapsedColor: () -> Color,
 ) {

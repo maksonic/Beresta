@@ -51,7 +51,7 @@ internal fun NoteListItemContent(
         onLongClick = { /*send(Msg.Ui.OnNoteLongClicked(note.id)) */},
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
-        modifier = modifier.padding(top = dp12, start = dp16, end = dp16)
+        modifier = modifier.padding(bottom = dp12, start = dp16, end = dp16)
 
     ) {
         Column(

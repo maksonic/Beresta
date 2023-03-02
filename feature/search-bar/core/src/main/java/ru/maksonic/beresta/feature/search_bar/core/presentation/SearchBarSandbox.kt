@@ -3,7 +3,6 @@ package ru.maksonic.beresta.feature.search_bar.core.presentation
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
 
 /**
  * @Author maksonic on 21.02.2023
@@ -47,7 +46,7 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model()) {
         return UpdatedModel(
             model = model.copy(
                 searchQuery = msg.updatedQuery,
-                searchList = NotesCollection(searchResult)
+                searchList = NoteUi.Collection(searchResult)
             )
         )
     }

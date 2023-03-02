@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 
 /**
  * @Author maksonic on 21.02.2023
@@ -14,7 +14,7 @@ interface SearchBarApi {
     interface Ui {
         @Composable
         fun Widget(
-            notesCollection: NotesCollection,
+            notesCollection: NoteUi.Collection,
             searchTopBarBackground: () -> Color,
             searchBarCollapsedColor: () -> Color,
             modifier: Modifier

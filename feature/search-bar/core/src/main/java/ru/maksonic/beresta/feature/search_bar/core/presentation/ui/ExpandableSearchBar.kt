@@ -39,8 +39,8 @@ internal fun ExpandableSearchBar(
     val expandedBarHeight = boxScope.maxHeight
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val topPadding = animateDpAsState(if (model.isExpandedBar) dp0 else statusBarHeight.plus(20.dp))
-    val startPadding = animateDpAsState(if (model.isExpandedBar) dp0 else dp16)
-    val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
+    val startPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
+    val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else dp16)
     val backgroundColor =
         animateColorAsState(if (model.isExpandedBar) background else searchBarCollapsedColor())
     val clip = animateDpAsState(if (model.isExpandedBar) dp0 else 25.dp)

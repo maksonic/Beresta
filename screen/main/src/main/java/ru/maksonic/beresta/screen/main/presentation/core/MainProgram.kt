@@ -1,11 +1,9 @@
 package ru.maksonic.beresta.screen.main.presentation.core
 
-import ru.maksonic.beresta.core.ResourceProvider
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesCollection
 
 /**
  * @Author maksonic on 21.02.2023
@@ -28,7 +26,7 @@ class MainProgram(
                 val sorted = notes.sortedWith(comparator = compareByDescending<NoteUi> { note ->
                     note.isPinned
                 }.thenBy { it.id })
-                consumer(Msg.Inner.FetchedNotesCollection(NotesCollection(sorted)))
+                consumer(Msg.Inner.FetchedNotesCollection(NoteUi.Collection(sorted)))
             }
         }.onFailure { fail ->
           //  val message =

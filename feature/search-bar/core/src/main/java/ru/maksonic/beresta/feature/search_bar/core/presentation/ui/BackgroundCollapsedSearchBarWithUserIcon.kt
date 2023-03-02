@@ -30,9 +30,9 @@ internal fun BackgroundCollapsedSearchBarWithUserIcon(
         Box(
             modifier
                 .fillMaxWidth()
-                .height(Theme.widgetSize.topBarMediumHeight), contentAlignment = Alignment.CenterEnd
+                .height(Theme.widgetSize.topBarMediumHeight), contentAlignment = Alignment.CenterStart
         ) {
-            UserAccountCircleAvatarTopBarWidget(modifier.padding(top = dp8, end = dp16))
+            UserAccountCircleAvatarTopBarWidget(modifier.padding(top = dp8, start = dp16))
         }
     }
 }

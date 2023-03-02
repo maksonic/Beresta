@@ -13,4 +13,9 @@ data class BaseModel(
     val isErrorRefreshing: Boolean = false,
     val isError: Boolean = false,
     val errorMsg: String? = "",
-)
+) {
+    companion object {
+        val Initial = BaseModel()
+        val InitialWithLoading = BaseModel(isLoading = true)
+    }
+}
