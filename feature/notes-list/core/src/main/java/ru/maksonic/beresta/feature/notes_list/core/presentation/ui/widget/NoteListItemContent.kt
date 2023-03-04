@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
+import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.primaryContainer
@@ -37,8 +38,8 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
  */
 @Composable
 internal fun NoteListItemContent(
-    onNoteClicked: () -> Unit,
-    onNoteLongClicked: () -> Unit,
+    onNoteClicked: (id: Long) -> Unit,
+    onNoteLongClicked: (id: Long) -> Unit,
     note: NoteUi,
     modifier: Modifier = Modifier
 ) {
@@ -47,8 +48,8 @@ internal fun NoteListItemContent(
     )
 
     BoxWithScaleInOutOnClick(
-        onClick = { /*send(Msg.Ui.OnNoteClicked(note.id))*/ },
-        onLongClick = { /*send(Msg.Ui.OnNoteLongClicked(note.id)) */},
+        onClick = { onNoteClicked(note.id) },
+        onLongClick = { onNoteLongClicked(note.id) },
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
         modifier = modifier.padding(bottom = dp12, start = dp16, end = dp16)

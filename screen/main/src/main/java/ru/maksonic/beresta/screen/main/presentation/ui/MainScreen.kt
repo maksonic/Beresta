@@ -81,6 +81,7 @@ private fun Content(
                 notesList.FetchedNotesWidget(
                     notes = model.notes,
                     scrollState = { scrollState },
+                    router = router,
                     modifier = Modifier
                 )
             }
@@ -88,7 +89,7 @@ private fun Content(
 
         MainBottomIdlePanelWidget(sandbox::sendMsg, isScrollTop = { isScrollUp })
 
-        editNote.Widget(isNotesScrollTop = { isScrollUp }, modifier)
+        editNote.Widget(isNotesScrollUp = { isScrollUp }, modifier)
 
         AnimateFadeInOut(!searchBarVisibility.value) {
             searchBar.Widget(

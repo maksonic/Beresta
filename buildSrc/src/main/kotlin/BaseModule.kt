@@ -52,6 +52,11 @@ sealed class BaseModule(val path: String, val namespace: String) {
             namespace = "ru.maksonic.beresta.screen.main"
         )
 
+        object EditNote : BaseModule(
+            path = ":screen:edit-note",
+            namespace = "ru.maksonic.beresta.screen.edit_note"
+        )
+
         object Settings : BaseModule(
             path = ":screen:settings",
             namespace = "ru.maksonic.beresta.screen.settings"

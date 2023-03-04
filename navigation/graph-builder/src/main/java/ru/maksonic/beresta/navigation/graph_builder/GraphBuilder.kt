@@ -38,13 +38,9 @@ interface GraphBuilder {
                     splashScreen(apiStore.splash, this)
                     onboardingScreen(apiStore.onboarding, this)
                     mainScreen(this)
+                    editNoteScreen(this)
                     settingsScreen(this, DEF_ANIM_SPEED)
                     trashListScreen(this, DEF_ANIM_SPEED)
-                    /*
-
-                     settingsScreen(this, DEF_ANIM_SPEED)
-                     trashListScreen(this, DEF_ANIM_SPEED)
-                     editNoteScreen(this)*/
                 }
             }
         }

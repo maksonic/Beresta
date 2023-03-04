@@ -8,6 +8,7 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.EmptyNotesWidgetContent
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.FetchedNotesWidgetContent
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.NoteListItemContent
+import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 
 /**
  * @Author maksonic on 21.02.2023
@@ -18,9 +19,10 @@ class NotesListWidget : NotesListApi.Ui {
     override fun FetchedNotesWidget(
         notes: NoteUi.Collection,
         scrollState: () -> LazyListState,
+        router: MainScreenRouter,
         modifier: Modifier
     ) {
-        FetchedNotesWidgetContent(notes = notes, scrollState = scrollState)
+        FetchedNotesWidgetContent(notes = notes, scrollState = scrollState, router = router)
     }
 
     @Composable
@@ -30,12 +32,14 @@ class NotesListWidget : NotesListApi.Ui {
 
     @Composable
     override fun NoteItem(
-        onNoteClicked: () -> Unit,
-        onNoteLongClicked: () -> Unit,
+        onNoteClicked: (id: Long) -> Unit,
+        onNoteLongClicked: (id: Long) -> Unit,
         note: NoteUi,
         modifier: Modifier
     ) {
         NoteListItemContent(onNoteClicked, onNoteLongClicked, note, modifier)
     }
 }
+
+
 

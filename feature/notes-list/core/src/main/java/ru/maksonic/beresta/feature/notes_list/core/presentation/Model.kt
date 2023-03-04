@@ -14,10 +14,13 @@ data class Model(
     val notes: NoteUi.Collection = NoteUi.Collection.Empty,
     val filters: FilterChipUi.Collection = FilterChipUi.Collection.Preview,
     val errorMsg: String = "Неизвестная ошибка",
-) : ElmModel
+    val isSelectionState: Boolean = false,
+    ) : ElmModel
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
+        data class OnNoteClicked(val id: Long): Ui()
+        data class OnNoteLongClicked(val id: Long): Ui()
         data class OnChipFilterClicked(val id: Int): Ui()
     }
 
@@ -31,4 +34,5 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
+    data class ShowNoteForEdit(val id: Long) : Eff()
 }

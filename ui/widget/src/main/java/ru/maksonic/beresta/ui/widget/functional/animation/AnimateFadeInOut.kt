@@ -10,11 +10,11 @@ import androidx.compose.runtime.Composable
  * @Author maksonic on 21.01.2023
  */
 @Composable
-fun AnimateFadeInOut(visible: Boolean, content: @Composable () -> Unit) {
+fun AnimateFadeInOut(visible: Boolean, tweenValue: Int = 300, content: @Composable () -> Unit) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(tween()),
-        exit = fadeOut(tween())
+        enter = fadeIn(tween(tweenValue)),
+        exit = fadeOut(tween(tweenValue))
     ) {
         content()
     }

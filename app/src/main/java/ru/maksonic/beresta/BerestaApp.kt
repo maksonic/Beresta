@@ -23,8 +23,9 @@ import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
 import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
-import ru.maksonic.beresta.feature.edit_note.core.EditNoteSandbox
-import ru.maksonic.beresta.feature.edit_note.core.presentation.ui.EditNoteWidget
+import ru.maksonic.beresta.feature.edit_note.core.fab.core.AddNoteSandbox
+import ru.maksonic.beresta.feature.edit_note.core.fab.ui.AddNoteFabWidget
+import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
@@ -55,9 +56,9 @@ import ru.maksonic.beresta.feature.theme_selector.api.SystemThemeCheckerApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemePaletteSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorApi
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
+import ru.maksonic.beresta.feature.theme_selector.core.SystemThemeCheckerCore
 import ru.maksonic.beresta.feature.theme_selector.core.ThemePaletteSelectorCore
 import ru.maksonic.beresta.feature.theme_selector.core.ThemeSelectorCore
-import ru.maksonic.beresta.feature.theme_selector.core.SystemThemeCheckerCore
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.ThemeSelectorBottomSheet
 import ru.maksonic.beresta.navigation.graph_builder.FeatureApiStore
@@ -186,7 +187,8 @@ class BerestaApp : Application() {
 
     private val editNoteFeatureModule = module {
         viewModel { EditNoteSandbox() }
-        single<EditNoteApi.Ui> { EditNoteWidget() }
+        viewModel { AddNoteSandbox() }
+        single<EditNoteApi.Ui> { AddNoteFabWidget() }
     }
 
     private val modules = listOf(

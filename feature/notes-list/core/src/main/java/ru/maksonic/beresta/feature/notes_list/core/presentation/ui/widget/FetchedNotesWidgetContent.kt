@@ -14,12 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
+import ru.maksonic.beresta.feature.notes_list.core.presentation.Eff
 import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter.FilterChipsWidget
+import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 
@@ -34,8 +38,11 @@ internal fun FetchedNotesWidgetContent(
     modifier: Modifier = Modifier,
     notes: NoteUi.Collection,
     scrollState: () -> LazyListState,
+    router: MainScreenRouter,
     sandbox: NotesListSandbox = koinViewModel(),
 ) {
+    HandleEffects(sandbox.effects, router)
+
     LaunchedEffect(Unit) {
         /**
          * Fetched notes from MainSandbox are passed here and apply to:
@@ -70,8 +77,8 @@ internal fun FetchedNotesWidgetContent(
             }
             items(items = model.notes.data, key = { note -> note.id }) { note ->
                 NoteListItemContent(
-                    onNoteClicked = {},
-                    onNoteLongClicked = {},
+                    onNoteClicked = { id -> sandbox.sendMsg(Msg.Ui.OnNoteClicked(id)) },
+                    onNoteLongClicked = { id -> sandbox.sendMsg(Msg.Ui.OnNoteLongClicked(id)) },
                     note = note,
                     modifier = modifier.animateItemPlacement()
                 )
@@ -93,5 +100,14 @@ internal fun FetchedNotesWidgetContent(
                 translationY = chipsTransition.value.toPx()
             }
         )
+    }
+}
+
+@Composable
+private fun HandleEffects(effects: Flow<Eff>, router: MainScreenRouter) {
+    HandleEffectsWithLifecycle(effects) { eff ->
+        when (eff) {
+            is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
+        }
     }
 }

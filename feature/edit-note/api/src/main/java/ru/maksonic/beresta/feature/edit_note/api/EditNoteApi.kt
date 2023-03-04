@@ -10,6 +10,6 @@ interface EditNoteApi {
 
     interface Ui {
         @Composable
-        fun Widget(isNotesScrollTop: () -> Boolean ,modifier: Modifier)
+        fun Widget(isNotesScrollUp: () -> Boolean, modifier: Modifier)
     }
 }

@@ -16,6 +16,8 @@ class NotesListSandbox : Sandbox<Model, Msg, Cmd, Eff>(
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedNotesCollection -> fetchedNotes(model, msg)
         is Msg.Ui.OnChipFilterClicked -> onFilterChipClicked(model, msg)
+        is Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
+        is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
     }
 
     private fun fetchedNotes(model: Model, msg: Msg.Inner.FetchedNotesCollection): UpdateResult =
@@ -26,5 +28,30 @@ class NotesListSandbox : Sandbox<Model, Msg, Cmd, Eff>(
             note.copy(isSelected = note.id == msg.id)
         })
         return UpdatedModel(model.copy(filters = afterSelect))
+    }
+
+    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
+        if (model.isSelectionState)
+            baseOnNoteAction(model, msg.id)
+        else
+            UpdatedModel(model, effects = setOf(Eff.ShowNoteForEdit(msg.id)))
+
+
+    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult =
+        baseOnNoteAction(model, msg.id)
+
+    private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {
+        val afterSelectNotes = model.notes.copy(data = model.notes.data.map { note ->
+            return@map if (note.id == noteId) note.copy(isSelected = !note.isSelected) else note
+        })
+
+        val isSelected = afterSelectNotes.data.map { it.isSelected }.contains(true)
+
+        return UpdatedModel(
+            model.copy(
+                notes = afterSelectNotes,
+                isSelectionState = isSelected,
+            ),
+        )
     }
 }

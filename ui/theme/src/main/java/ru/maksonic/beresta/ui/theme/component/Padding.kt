@@ -14,6 +14,7 @@ val LocalAppPadding = staticCompositionLocalOf<AppPadding> {
 }
 
 data class AppPadding(
+    val dp0: Dp,
     val dp2: Dp,
     val dp4: Dp,
     val dp6: Dp,
@@ -30,6 +31,7 @@ data class AppPadding(
 )
 
 val paddings = AppPadding(
+    dp0 = 0.dp,
     dp2 = 2.dp,
     dp4 = 4.dp,
     dp6 = 6.dp,
@@ -45,6 +47,7 @@ val paddings = AppPadding(
     dp72 = 72.dp
 )
 
+val dp0 @Composable get() = Theme.padding.dp0
 val dp2 @Composable get() = Theme.padding.dp2
 val dp4 @Composable get() = Theme.padding.dp4
 val dp6 @Composable get() = Theme.padding.dp6
