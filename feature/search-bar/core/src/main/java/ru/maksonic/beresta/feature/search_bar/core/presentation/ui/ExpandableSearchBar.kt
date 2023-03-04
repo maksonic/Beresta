@@ -20,6 +20,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
@@ -38,7 +39,7 @@ internal fun ExpandableSearchBar(
     val dp0 = 0.dp
     val expandedBarHeight = boxScope.maxHeight
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val topPadding = animateDpAsState(if (model.isExpandedBar) dp0 else statusBarHeight.plus(20.dp))
+    val topPadding = animateDpAsState(if (model.isExpandedBar) dp0 else statusBarHeight.plus(dp4))
     val startPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
     val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else dp16)
     val backgroundColor =

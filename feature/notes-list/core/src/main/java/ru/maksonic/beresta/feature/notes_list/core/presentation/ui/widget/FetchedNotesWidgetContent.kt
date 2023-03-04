@@ -20,7 +20,6 @@ import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter.FilterChipsWidget
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 
@@ -49,9 +48,9 @@ internal fun FetchedNotesWidgetContent(
     val isVisibleFirstNote = scrollState().isVisibleFirstItem()
     val isScrollUp = scrollState().isScrollUp()
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val topBarMediumHeight = Theme.widgetSize.topBarMediumHeight
-    val chipsTrans = animateDpAsState(
-        if (isVisibleFirstNote.value) 0.dp else if (isScrollUp) 0.dp else -topBarMediumHeight,
+    val topBarNormalHeight = Theme.widgetSize.topBarNormalHeight
+    val chipsTransition = animateDpAsState(
+        if (isVisibleFirstNote.value) 0.dp else if (isScrollUp) 0.dp else -topBarNormalHeight,
         animationSpec = tween()
     )
 
@@ -59,13 +58,13 @@ internal fun FetchedNotesWidgetContent(
 
         LazyColumn(
             state = scrollState(),
-            modifier = modifier.padding(top = topBarMediumHeight),
+            modifier = modifier.padding(top = Theme.widgetSize.noteChipsContainerHeight),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 Spacer(
                     modifier.height(
-                        Theme.widgetSize.topBarNormalHeight.plus(statusBarHeight).plus(dp12)
+                        Theme.widgetSize.noteChipsContainerHeight.plus(statusBarHeight)
                     )
                 )
             }
@@ -91,7 +90,7 @@ internal fun FetchedNotesWidgetContent(
             isVisibleFirstNote = { isVisibleFirstNote.value },
             send = sandbox::sendMsg,
             modifier = modifier.graphicsLayer {
-                translationY = chipsTrans.value.toPx()
+                translationY = chipsTransition.value.toPx()
             }
         )
     }

@@ -19,8 +19,8 @@ data class FilterChipUi(
             private val chipsPreview = listOf(
                 FilterChipUi(0, "All", true),
                 FilterChipUi(1, "Maksonic"),
-                FilterChipUi(2, "Sample"),
-                FilterChipUi(3, "Some bullshit"),
+                FilterChipUi(2, "Some shit"),
+                FilterChipUi(3, "Folder"),
                 FilterChipUi(4, "Other"),
                 FilterChipUi(5, "Fresh"),
                 FilterChipUi(6, "My secrets"),

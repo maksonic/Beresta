@@ -8,7 +8,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.UserAccountCircleAvatarTopBarWidget
 
@@ -30,9 +29,11 @@ internal fun BackgroundCollapsedSearchBarWithUserIcon(
         Box(
             modifier
                 .fillMaxWidth()
-                .height(Theme.widgetSize.topBarMediumHeight), contentAlignment = Alignment.CenterStart
+                .height(Theme.widgetSize.topBarNormalHeight)
+                .drawBehind { drawRect(searchTopBarBackground()) },
+            contentAlignment = Alignment.CenterStart
         ) {
-            UserAccountCircleAvatarTopBarWidget(modifier.padding(top = dp8, start = dp16))
+            UserAccountCircleAvatarTopBarWidget(modifier.padding(start = dp16))
         }
     }
 }
