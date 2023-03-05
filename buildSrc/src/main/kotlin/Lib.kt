@@ -57,6 +57,7 @@ object Lib {
     object Compose {
         const val activity = "androidx.activity:activity-compose:${Version.activityCompose}"
         const val bom = "androidx.compose:compose-bom:${Version.composeBom}"
+        const val foundation = "androidx.compose.foundation:foundation"
         const val lifecycle =
             "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycle}"
         const val material = "androidx.compose.material:material"

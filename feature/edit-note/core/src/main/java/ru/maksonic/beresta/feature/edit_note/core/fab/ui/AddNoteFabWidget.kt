@@ -8,13 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.update
@@ -53,6 +54,7 @@ class AddNoteFabWidget : EditNoteApi.Ui {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Content(
     isScrollUp: () -> Boolean,
@@ -60,6 +62,14 @@ private fun Content(
     sandbox: AddNoteSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsState().value
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    SideEffect {
+        if (model.isExpandedFab)
+            keyboardController?.show()
+        else
+            keyboardController?.hide()
+    }
 
     BackHandler(model.isExpandedFab) {
         if (model.isExpandedFab) {
@@ -69,20 +79,25 @@ private fun Content(
 
     HandleUiEffects(
         effects = sandbox.effects,
-        showSearchBar = { searchBar.searchBarVisibilityState.update { true } },
+        showSearchBar = {
+            searchBar.searchBarVisibilityState.update { true }
+        },
         hideSearchBar = { searchBar.searchBarVisibilityState.update { false } }
     )
 
-    FabContainer(send = sandbox::sendMsg, isExpanded = model.isExpandedFab, isScrollUp = isScrollUp)
+    FabContainer(
+        send = sandbox::sendMsg,
+        isExpanded = model.isExpandedFab,
+        isScrollUp = isScrollUp,
+    )
 }
 
-
 @Composable
-fun FabContainer(
+private fun FabContainer(
     send: FabSendMessage,
     isExpanded: Boolean,
     isScrollUp: () -> Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         val fullHeight = this.maxHeight
@@ -121,11 +136,10 @@ fun FabContainer(
                 .background(primary),
             contentAlignment = Alignment.BottomEnd
         ) {
-
             EditNoteScreen(
-                isExpandedFab = isExpanded,
+                isExpandedFab = { isExpanded },
                 collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
-                modifier = modifier.alpha(expandedContentAlpha.value)
+                modifier = modifier.alpha(expandedContentAlpha.value),
             )
 
             AnimateFadeInOut(!isExpanded, tweenValue = DURATION) {

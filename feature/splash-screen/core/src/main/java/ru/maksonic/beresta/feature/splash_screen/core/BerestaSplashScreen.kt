@@ -21,6 +21,7 @@ import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
 import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.widget.functional.animation.pulsating
 
@@ -68,7 +69,7 @@ private fun SplashContent(modifier: Modifier) {
                 .padding(top = 60.dp)
                 .size(150.dp)
                 .pulsating(PULSE_FRACTION),
-            colorFilter = ColorFilter.tint(color = onSurface)
+            colorFilter = ColorFilter.tint(color = onBackground)
         )
 
         Spacer(modifier.weight(1f))

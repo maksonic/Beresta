@@ -9,6 +9,7 @@ import ru.maksonic.beresta.elm.*
 @Stable
 data class Model(
     val base: BaseModel = BaseModel(isLoading = true),
+    val inputTitle: String = "",
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
@@ -17,7 +18,7 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-
+        data class UpdateInputTitle(val text: String): Inner()
     }
 }
 
