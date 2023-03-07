@@ -52,7 +52,6 @@ dependencies {
     implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.NotesList.Api.path))
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
-    implementation(project(BaseModule.Data.Common.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Navigation.Router.path))

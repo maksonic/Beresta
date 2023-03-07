@@ -3,12 +3,12 @@ package ru.maksonic.beresta.feature.language_selector.core.presentation.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.LanguageUi
@@ -47,7 +47,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     viewModel: LanguageSelectorViewModel = koinViewModel()
 ) {
-    val languages = viewModel.languages.collectAsState().value
+    val languages = viewModel.languages.collectAsStateWithLifecycle().value
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
 

@@ -43,6 +43,6 @@ internal fun SearchBarCollapsedContent(modifier: Modifier = Modifier) {
                 .weight(1f)
                 .padding(start = dp12)
         )
-        IconAction(icon = { AppIcon.VoiceEnter }, tint = onTertiary) {}
+      //  IconAction(icon = { AppIcon.VoiceEnter }, tint = onTertiary) {}
     }
 }

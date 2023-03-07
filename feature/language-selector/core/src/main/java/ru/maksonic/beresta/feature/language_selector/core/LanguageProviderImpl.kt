@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.language_selector.core
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.maksonic.beresta.feature.language_selector.api.LanguageStore
 import ru.maksonic.beresta.feature.language_selector.api.provider.AppLanguage
@@ -14,15 +13,16 @@ class LanguageProviderImpl(
     private val langConverter: LanguageJsonToDataConverter
 ) : LanguageProvider {
 
-    override suspend fun provideLanguage(language: AppLanguage): Flow<BerestaLanguage> = flow {
+    override suspend fun provideLanguage(currentLanguage: AppLanguage) = flow {
         langConverter.getLangDataFromJson().collect { store ->
             store.onSuccess { data ->
                 val berestaLanguage = BerestaLanguage(
-                    langTitle = langTitle(language, data),
-                    translatedLanguage = translated(language, data),
-                    onboarding = onboardingText(language, data),
-                    shared = shared(language, data),
-                    settings = settingsText(language, data)
+                    langTitle = langTitle(currentLanguage, data),
+                    translatedLanguage = translated(currentLanguage, data),
+                    onboarding = onboardingText(currentLanguage, data),
+                    shared = shared(currentLanguage, data),
+                    settings = settingsText(currentLanguage, data),
+                    editNote = editNotesText(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }
@@ -51,6 +51,13 @@ class LanguageProviderImpl(
         AppLanguage.ENGLISH -> data.english.langOnboardingData
         AppLanguage.CHINESE -> data.chinese.langOnboardingData
         AppLanguage.CHINESE_TR -> data.chineseTr.langOnboardingData
+    }
+
+    private fun editNotesText(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.editor
+        AppLanguage.ENGLISH -> data.english.editor
+        AppLanguage.CHINESE -> data.chinese.editor
+        AppLanguage.CHINESE_TR -> data.chineseTr.editor
     }
 
     private fun settingsText(language: AppLanguage, data: LanguageStore) = when (language) {

@@ -11,9 +11,9 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -48,7 +48,7 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 fun SettingsScreen(router: SettingsScreenRouter, sandbox: SettingsSandbox = koinViewModel()) {
 
-    val model = sandbox.model.collectAsState().value
+    val model = sandbox.model.collectAsStateWithLifecycle().value
 
     HandleUiEffects(sandbox.effects, router, modalSheetState = model.modalBottomSheetState)
 

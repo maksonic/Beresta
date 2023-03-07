@@ -3,9 +3,9 @@ package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.get
@@ -34,7 +34,7 @@ class SearchBarWidget : SearchBarApi.Ui {
         searchBarCollapsedColor: () -> Color,
         modifier: Modifier
     ) {
-        val isVisible = searchBarVisibility.collectAsState().value
+        val isVisible = searchBarVisibility.collectAsStateWithLifecycle().value
         AnimateFadeInOut(visible = isVisible) {
             Content(
                 notesCollection = notesCollection,
@@ -56,7 +56,7 @@ private fun Content(
     searchBarCollapsedColor: () -> Color,
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notesCollection))
-    val model = sandbox.model.collectAsState().value
+    val model = sandbox.model.collectAsStateWithLifecycle().value
 
     Box(modifier.fillMaxSize()) {
         BackgroundCollapsedSearchBarWithUserIcon(searchTopBarBackground)

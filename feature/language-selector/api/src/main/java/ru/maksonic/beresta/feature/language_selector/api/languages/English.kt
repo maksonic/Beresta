@@ -2,10 +2,7 @@ package ru.maksonic.beresta.feature.language_selector.api.languages
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
-import ru.maksonic.beresta.feature.language_selector.api.components.LangSharedData
-import ru.maksonic.beresta.feature.language_selector.api.components.LangOnboardingData
-import ru.maksonic.beresta.feature.language_selector.api.components.LangSettingsScreenData
-import ru.maksonic.beresta.feature.language_selector.api.components.TranslatedLanguage
+import ru.maksonic.beresta.feature.language_selector.api.components.*
 
 /**
  * @Author maksonic on 17.02.2023
@@ -16,5 +13,6 @@ data class English(
     @SerializedName("translated_language") val translatedLanguage: TranslatedLanguage,
     @SerializedName("onboarding") val langOnboardingData: LangOnboardingData,
     @SerializedName("shared") val shared: LangSharedData,
-    @SerializedName("settings") val settings: LangSettingsScreenData
+    @SerializedName("settings") val settings: LangSettingsScreenData,
+    @SerializedName("editor") val editor: LangEditorData
 )

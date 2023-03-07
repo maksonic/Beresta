@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
@@ -39,7 +39,7 @@ private fun Content(
     modifier: Modifier = Modifier,
     viewModel: ThemeSelectorViewModel = koinViewModel()
 ) {
-    val model = viewModel.model.collectAsState().value
+    val model = viewModel.model.collectAsStateWithLifecycle().value
 
     BaseBottomDialogSheetWithIndicator(isVisibleSheet, hideSheet) {
 

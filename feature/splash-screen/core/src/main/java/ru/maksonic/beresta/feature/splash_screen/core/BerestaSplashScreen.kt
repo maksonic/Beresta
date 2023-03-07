@@ -1,28 +1,22 @@
 package ru.maksonic.beresta.feature.splash_screen.core
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
 import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
-import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.widget.functional.animation.pulsating
 
 /**
@@ -35,7 +29,7 @@ class BerestaSplashScreen : SplashApi {
     @Composable
     override fun Screen(router: SplashScreenRouter) {
         val viewModel: SplashViewModel = koinViewModel()
-        val state = viewModel.destination.collectAsState().value
+        val state = viewModel.destination.collectAsStateWithLifecycle().value
 
         SideEffect { if (state.isNavigate) router.toOnboardingOrMain(state.route) }
 

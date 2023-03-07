@@ -56,6 +56,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(Lib.Android.datastore)
     implementation(platform((Lib.Compose.bom)))
+    implementation(Lib.Compose.lifecycle)
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)

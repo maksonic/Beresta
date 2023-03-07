@@ -1,21 +1,21 @@
 package ru.maksonic.beresta.feature.edit_note.core.fab.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.update
@@ -28,6 +28,7 @@ import ru.maksonic.beresta.feature.edit_note.core.fab.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.EditNoteScreen
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.onPrimary
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.component.dp0
@@ -44,7 +45,7 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  */
 internal typealias FabSendMessage = (Msg) -> Unit
 
-private const val DURATION = 450
+private const val DURATION = 400
 
 class AddNoteFabWidget : EditNoteApi.Ui {
 
@@ -54,7 +55,6 @@ class AddNoteFabWidget : EditNoteApi.Ui {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Content(
     isScrollUp: () -> Boolean,
@@ -62,14 +62,6 @@ private fun Content(
     sandbox: AddNoteSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsState().value
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    SideEffect {
-        if (model.isExpandedFab)
-            keyboardController?.show()
-        else
-            keyboardController?.hide()
-    }
 
     BackHandler(model.isExpandedFab) {
         if (model.isExpandedFab) {
@@ -99,12 +91,24 @@ private fun FabContainer(
     isScrollUp: () -> Boolean,
     modifier: Modifier = Modifier,
 ) {
-    BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+    BoxWithConstraints(
+        modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomEnd
+    ) {
         val fullHeight = this.maxHeight
         val fullWidth = this.maxWidth
         val fabSize = Theme.widgetSize.btnFabSize
         val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        val containerClip = animateDpAsState(if (isExpanded) 0.dp else dp16)
+        val fabColor = animateColorAsState(
+            if (isExpanded) background.copy(alpha = 0.5f) else primary, animationSpec = tween(
+                DURATION
+            )
+        )
+        val containerClip = animateDpAsState(
+            if (isExpanded) 0.dp else dp16, animationSpec = tween(
+                DURATION
+            )
+        )
         val containerElevation = animateDpAsState(if (!isScrollUp()) Theme.elevation.dp4 else 0.dp)
         val containerHeight = animateDpAsState(
             if (isExpanded) fullHeight else fabSize, animationSpec = tween(DURATION)
@@ -116,8 +120,7 @@ private fun FabContainer(
             if (isExpanded) dp0 else navBarHeight.plus(dp12), tween(DURATION)
         )
         val containerEndPadding = animateDpAsState(if (isExpanded) dp0 else dp16, tween(DURATION))
-        val expandedContentAlpha =
-            animateFloatAsState(if (isExpanded) 1f else 0f, tween(DURATION))
+        val expandedContentAlpha = animateFloatAsState(if (isExpanded) 1f else 0f)
 
         Box(
             modifier
@@ -133,16 +136,18 @@ private fun FabContainer(
                     shape = RoundedCornerShape(containerClip.value)
                 )
                 .clip(RoundedCornerShape(containerClip.value))
-                .background(primary),
+                .drawBehind { drawRect(fabColor.value) },
             contentAlignment = Alignment.BottomEnd
         ) {
-            EditNoteScreen(
-                isExpandedFab = { isExpanded },
-                collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
-                modifier = modifier.alpha(expandedContentAlpha.value),
-            )
+            if (isExpanded) {
+                EditNoteScreen(
+                    isExpandedFab = { true },
+                    collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
+                    modifier = modifier.alpha(expandedContentAlpha.value)
+                )
+            }
 
-            AnimateFadeInOut(!isExpanded, tweenValue = DURATION) {
+            AnimateFadeInOut(!isExpanded) {
                 Box(
                     modifier
                         .fillMaxSize()

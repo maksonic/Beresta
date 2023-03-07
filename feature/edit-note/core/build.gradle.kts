@@ -61,6 +61,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Widget.path))
     implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Compose.foundation)
+    implementation(Lib.Compose.lifecycle)
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.material3)
     implementation(Lib.Compose.ui)

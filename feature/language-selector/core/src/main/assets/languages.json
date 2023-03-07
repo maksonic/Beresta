@@ -56,6 +56,10 @@
       "title_theme_light": "Светлая",
       "title_theme_night": "Тёмная",
       "title_theme_high_contrast": "Высококонтрастная"
+    },
+    "editor": {
+      "hint_input_title": "Заголовок",
+      "hint_input_message": "Написать:"
     }
   },
   "english": {
@@ -115,6 +119,10 @@
       "title_theme_light": "Light",
       "title_theme_night": "Night",
       "title_theme_high_contrast": "High contrast"
+    },
+    "editor": {
+      "hint_input_title": "Title",
+      "hint_input_message": "Write:"
     }
   },
   "chinese": {
@@ -157,7 +165,6 @@
       "btn_title_cancel": "取消",
       "btn_title_close": "关闭",
       "hint_find_note_search_bar": "查找笔记"
-
     },
     "settings": {
       "top_bar_title": "设置",
@@ -175,6 +182,10 @@
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
       "title_theme_high_contrast": "高对比度"
+    },
+    "editor": {
+      "hint_input_title": "标题",
+      "hint_input_message": "写:"
     }
   },
   "chinese_tr": {
@@ -234,6 +245,10 @@
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
       "title_theme_high_contrast": "高對比度"
+    },
+    "editor": {
+      "hint_input_title": "標題",
+      "hint_input_message": "寫:"
     }
   }
 }

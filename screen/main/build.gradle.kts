@@ -59,6 +59,7 @@ dependencies {
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
 
     implementation(Lib.Accompanist.systemUiController)
+    implementation(Lib.Compose.lifecycle)
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.material3)
     implementation(Lib.Compose.navigation)

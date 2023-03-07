@@ -16,8 +16,9 @@ object Lib {
         //compose
 
         const val activityCompose = "1.6.1"
-        const val composeBom = "2022.10.00"
+        const val composeBom = "2023.01.00"
         const val composeLifecycle = "2.6.0-beta01"
+        const val material3 = "1.1.0-alpha07"
 
         //coroutines
         const val coroutinesAndroid = "1.6.4"
@@ -61,7 +62,7 @@ object Lib {
         const val lifecycle =
             "androidx.lifecycle:lifecycle-runtime-compose:${Version.composeLifecycle}"
         const val material = "androidx.compose.material:material"
-        const val material3 = "androidx.compose.material3:material3"
+        const val material3 = "androidx.compose.material3:material3:${Version.material3}"
         const val navigation = "androidx.navigation:navigation-compose"
         const val ui = "androidx.compose.ui:ui"
         const val uiPreview = "androidx.compose.ui:ui-tooling-preview"

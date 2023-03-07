@@ -56,6 +56,7 @@ dependencies {
     implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.ThemeSelector.Api.path))
 
+    implementation(Lib.Compose.lifecycle)
     implementation(Lib.Compose.material)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)

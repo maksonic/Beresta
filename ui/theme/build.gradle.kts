@@ -53,6 +53,7 @@ dependencies {
     implementation(Lib.Accompanist.systemUiController)
     implementation(platform(Lib.Compose.bom))
     implementation(Lib.Compose.material)
+    implementation(Lib.Compose.material3)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
 }

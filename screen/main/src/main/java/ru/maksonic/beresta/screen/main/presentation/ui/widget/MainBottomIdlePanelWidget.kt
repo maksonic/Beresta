@@ -33,15 +33,14 @@ private val actions = arrayOf(
 @Composable
 fun MainBottomIdlePanelWidget(
     send: SendMessage,
-    isScrollTop: () -> Boolean,
+    isScrollUp: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
 
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val panelHeight = Theme.widgetSize.bottomMainPanelHeight.plus(navBarHeight)
     val panelOffset = animateDpAsState(
-        targetValue = if (isScrollTop()) 0.dp else panelHeight,
-        animationSpec = tween()
+        targetValue = if (isScrollUp()) 0.dp else panelHeight, animationSpec = tween()
     )
 
     Column(

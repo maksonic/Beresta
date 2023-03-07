@@ -2,11 +2,7 @@ package ru.maksonic.beresta.feature.language_selector.api.provider
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
-import ru.maksonic.beresta.feature.language_selector.api.components.LangSharedData
-import ru.maksonic.beresta.feature.language_selector.api.components.OnboardingDataItem
-import ru.maksonic.beresta.feature.language_selector.api.components.LangOnboardingData
-import ru.maksonic.beresta.feature.language_selector.api.components.LangSettingsScreenData
-import ru.maksonic.beresta.feature.language_selector.api.components.TranslatedLanguage
+import ru.maksonic.beresta.feature.language_selector.api.components.*
 
 /**
  * @Author maksonic on 16.02.2023
@@ -31,7 +27,8 @@ data class BerestaLanguage(
         data = Array(ONBOARDINGS_COUNT) { OnboardingDataItem()}
     ),
     val shared: LangSharedData = LangSharedData(),
-    val settings: LangSettingsScreenData = LangSettingsScreenData()
+    val settings: LangSettingsScreenData = LangSettingsScreenData(),
+    val editNote: LangEditorData = LangEditorData()
 )
 
 val text: BerestaLanguage @Composable get() = LocalBerestaLanguage.current

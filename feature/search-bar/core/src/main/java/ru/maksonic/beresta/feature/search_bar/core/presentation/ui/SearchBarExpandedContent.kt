@@ -11,7 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,12 +42,6 @@ internal fun SearchBarExpandedContent(
     notesList: NotesListApi.Ui,
     modifier: Modifier = Modifier
 ) {
-    val focusRequester = remember { FocusRequester() }
-
-    DisposableEffect(Unit) {
-        focusRequester.requestFocus()
-        onDispose { focusRequester.freeFocus() }
-    }
 
     Column(
         modifier
@@ -57,7 +51,7 @@ internal fun SearchBarExpandedContent(
         val statusBarColor = background
 
         SystemStatusBar(backgroundColor = { statusBarColor })
-        TopBar(model = model, send = send, focusRequester = { focusRequester })
+        TopBar(model = model, send = send)
         SearchListResult(notes = model.searchList, notesApi = notesList)
     }
 }
@@ -67,9 +61,14 @@ internal fun SearchBarExpandedContent(
 private fun TopBar(
     model: Model,
     send: SendMessage,
-    focusRequester: () -> FocusRequester,
     modifier: Modifier = Modifier
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     Row(
         modifier
             .fillMaxWidth()
@@ -88,7 +87,8 @@ private fun TopBar(
             singleLine = true,
             textStyle = TextDesign.bodyPrimary,
             colors = TextFieldDefaults.textFieldColors(
-                textColor = onPrimaryContainer,
+                focusedTextColor = onBackground,
+                unfocusedTextColor = onBackground,
                 containerColor = transparent,
                 cursorColor = primary,
                 focusedIndicatorColor = onPrimaryContainer,
@@ -105,7 +105,7 @@ private fun TopBar(
             },
             modifier = modifier
                 .weight(1f)
-                .focusRequester(focusRequester())
+                .focusRequester(focusRequester)
         )
     }
 }

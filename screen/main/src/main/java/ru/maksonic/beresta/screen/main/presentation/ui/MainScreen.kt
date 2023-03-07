@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
@@ -53,7 +54,7 @@ private fun Content(
 ) {
     HandleUiEffects(sandbox.effects, router)
 
-    val model = sandbox.model.collectAsState().value
+    val model = sandbox.model.collectAsStateWithLifecycle().value
     val scrollState = rememberLazyListState()
     val isScrollUp = scrollState.isScrollUp()
     val isVisibleFirstNote = scrollState.isVisibleFirstItem()
@@ -87,7 +88,7 @@ private fun Content(
             }
         }
 
-        MainBottomIdlePanelWidget(sandbox::sendMsg, isScrollTop = { isScrollUp })
+        MainBottomIdlePanelWidget(sandbox::sendMsg, isScrollUp = { isScrollUp })
 
         editNote.Widget(isNotesScrollUp = { isScrollUp }, modifier)
 
