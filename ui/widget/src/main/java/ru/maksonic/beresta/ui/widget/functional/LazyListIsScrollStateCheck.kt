@@ -11,14 +11,26 @@ fun LazyListState.isVisibleFirstItem(): State<Boolean> {
     return remember { derivedStateOf { this.firstVisibleItemIndex == 0 } }
 }
 
-@Composable
-fun LazyListState.isVisibleFirstItemOffset(): State<Boolean> {
-    return remember { derivedStateOf { this.firstVisibleItemScrollOffset == 0 } }
+fun LazyListState.isVisibleFirstItemOffset(): Boolean {
+    val isFirstItemInList = layoutInfo.visibleItemsInfo.firstOrNull()?.index == 0
+
+    return if (isFirstItemInList) {
+        layoutInfo.visibleItemsInfo.firstOrNull()?.offset == 0
+    } else {
+        false
+    }
 }
 
-@Composable
-fun LazyListState.isInvisibleFirstItem(): State<Boolean> {
-    return remember { derivedStateOf { this.firstVisibleItemIndex > 0 } }
+fun LazyListState.isVisibleLastItemOffset(): Boolean {
+    val isLastItemInList =
+        layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
+
+    return if (isLastItemInList) {
+        val lastItem = layoutInfo.visibleItemsInfo.lastOrNull()
+        lastItem == null || lastItem.size + lastItem.offset <= layoutInfo.viewportEndOffset
+    } else {
+        false
+    }
 }
 
 @Composable
@@ -42,7 +54,4 @@ fun LazyListState.isScrollUp(): Boolean {
 fun LazyListState.isScrolledTop() =
     layoutInfo.visibleItemsInfo.firstOrNull()?.index == 0
 
-fun LazyListState.isVisibleLastItemOffset(): Boolean {
-    val lastItem = layoutInfo.visibleItemsInfo.lastOrNull()
-    return lastItem == null || lastItem.size + lastItem.offset <= layoutInfo.viewportEndOffset
-}
+

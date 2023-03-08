@@ -1,11 +1,13 @@
 package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -45,7 +47,7 @@ internal fun FilterChipsWidget(
             .fillMaxWidth()
             .height(chipsBackgroundHeight)
             .drawBehind { drawRect(backgroundColor.value) }
-            .noRippleClickable {  },
+            .noRippleClickable { },
         contentAlignment = Alignment.BottomStart
     ) {
         val lazyRowState = rememberLazyListState()
@@ -64,7 +66,7 @@ internal fun FilterChipsWidget(
                         .weight(1f, false)
                         .rowFadingEdge(
                             startEdgeInitialColor = backgroundColor.value,
-                            isVisibleStartEdge = !isVisibleFirstChipOffset.value,
+                            isVisibleStartEdge = !isVisibleFirstChipOffset,
                             isVisibleEndEdge = !isVisibleLastChipOffset,
                         ),
                     horizontalArrangement = Arrangement.spacedBy(dp8),
