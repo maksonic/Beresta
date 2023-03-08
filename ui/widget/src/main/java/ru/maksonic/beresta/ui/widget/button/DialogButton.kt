@@ -1,8 +1,5 @@
 package ru.maksonic.beresta.ui.widget.button
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -12,10 +9,11 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.color.onPrimary
+import ru.maksonic.beresta.ui.theme.color.onTertiary
+import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
  * @Author maksonic on 22.01.2023
@@ -30,7 +28,7 @@ fun DialogButton(
     ) {
 
     val scope = rememberCoroutineScope()
-    val disabledElevation = Theme.elevation.disable
+    val disabledElevation = Theme.elevation.Level0
     var isEnabled by rememberSaveable {
         mutableStateOf(true)
     }

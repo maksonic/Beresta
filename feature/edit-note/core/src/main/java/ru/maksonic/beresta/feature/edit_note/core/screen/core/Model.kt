@@ -28,6 +28,7 @@ sealed class Msg : ElmMessage {
         data class UpdatedInputMessage(val msgField: TextFieldValue): Inner()
         data class FetchedFabStateValue(val isExpanded: Boolean): Inner()
         data class UpdatedEditorPanelVisibility(val isVisible: Boolean): Inner()
+        object ShowedMaxLengthNoteInputWarning : Inner()
     }
 }
 
@@ -36,5 +37,6 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
+    object ShowSnackMaxLengthNoteExceed : Eff()
     object NavigateBack : Eff()
 }

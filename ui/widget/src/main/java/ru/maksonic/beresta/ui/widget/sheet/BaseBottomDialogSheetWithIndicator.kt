@@ -37,7 +37,7 @@ fun BaseBottomDialogSheetWithIndicator(
             .fillMaxWidth()
             .systemBarsPadding()
             .padding(start = dp16, end = dp16, bottom = dp16)
-            .shadow(Theme.elevation.dp16, shape = Theme.shape.cornerExtra)
+            .shadow(Theme.elevation.Level5, shape = Theme.shape.cornerExtra)
             .clip(Theme.shape.cornerExtra)
             .background(surface)
             .padding(start = dp16, end = dp16),

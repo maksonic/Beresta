@@ -12,11 +12,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.job
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Eff
@@ -24,6 +26,7 @@ import ru.maksonic.beresta.feature.edit_note.core.screen.core.Model
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.NoteMessageInputFieldWidget
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.NoteTitleInputFieldWidget
+import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
@@ -31,10 +34,13 @@ import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.toastLongTime
 
 /**
  * @Author maksonic on 04.03.2023
  */
+private const val KEYBOARD_DELAY = 500L
+
 internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
@@ -42,15 +48,16 @@ fun EditNoteScreen(
     modifier: Modifier = Modifier,
     isExpandedFab: () -> Boolean = { false },
     collapseFabWidget: () -> Unit = {},
+    isVisibleOnFabDraftIndicator: MutableState<Boolean> = mutableStateOf(false),
     router: EditNoteRouter? = null,
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedFabStateValue(isExpandedFab()))
+
     val model = sandbox.model.collectAsStateWithLifecycle().value
 
     HandleEffects(effects = sandbox.effects, router = router)
-
-    Content(model, sandbox::sendMsg, collapseFabWidget, modifier)
+    Content(model, sandbox::sendMsg, collapseFabWidget, isVisibleOnFabDraftIndicator, modifier)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -59,6 +66,7 @@ fun Content(
     model: Model,
     send: SendMessage,
     collapseFabWidget: () -> Unit,
+    isVisibleOnFabDraftIndicator: MutableState<Boolean>,
     modifier: Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -74,12 +82,14 @@ fun Content(
         }
     }
 
+    SideEffect {
+        isVisibleOnFabDraftIndicator.value =
+            model.titleField.text.isNotBlank() || model.messageField.text.isNotBlank()
+    }
+
     LaunchedEffect(Unit) {
         if (model.isExpandedFabState) {
-            this.coroutineContext.job.invokeOnCompletion {
-                keyboardController?.show()
-                titleFocus.requestFocus()
-            }
+            showDelayedKeyboard(titleFocus, keyboardController)
         }
     }
 
@@ -89,7 +99,6 @@ fun Content(
         if (model.isExpandedFabState)
             collapseFabWidget()
     }
-
 
     Box(modifier.fillMaxSize()) {
         Column(
@@ -108,6 +117,7 @@ fun Content(
                 inputValue = model.titleField,
                 updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
                 focusRequester = titleFocus,
+                focusManager = focusManager,
             )
             NoteMessageInputFieldWidget(
                 inputValue = model.messageField,
@@ -167,12 +177,26 @@ private fun TopActionButtonWithEditorPanelContainer(
     }
 }
 
-
 @Composable
 private fun HandleEffects(effects: Flow<Eff>, router: EditNoteRouter?) {
+    val context = LocalContext.current
+    val noteMaxLengthWarning = text.editNote.noteMaxLengthWarning
+
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router?.let { it.onBack() } ?: {}
+            is Eff.ShowSnackMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning)
         }
     }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+private suspend fun showDelayedKeyboard(
+    titleFocus: FocusRequester,
+    keyboardController: SoftwareKeyboardController?
+) {
+    titleFocus.requestFocus()
+    keyboardController?.hide()
+    delay(KEYBOARD_DELAY)
+    keyboardController?.show()
 }

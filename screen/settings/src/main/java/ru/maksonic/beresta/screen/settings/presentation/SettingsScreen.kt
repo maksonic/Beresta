@@ -79,7 +79,7 @@ private fun Content(
         sheetState = modalSheetState(),
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
-        sheetElevation = Theme.elevation.disable,
+        sheetElevation = Theme.elevation.Level0,
         scrimColor = scrim,
         sheetContent = {
             MultipleModalBottomSheetContent(

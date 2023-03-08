@@ -75,7 +75,7 @@ private fun Content(
         sheetState = model.modalBottomSheetState,
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
-        sheetElevation = Theme.elevation.disable,
+        sheetElevation = Theme.elevation.Level0,
         scrimColor = scrim,
         sheetContent = {
             MultipleModalBottomSheetContent(

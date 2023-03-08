@@ -12,21 +12,19 @@ val LocalAppElevation = staticCompositionLocalOf<AppElevation> {
 }
 
 data class AppElevation(
-    val disable: Dp,
-    val dp1: Dp,
-    val dp2: Dp,
-    val dp4: Dp,
-    val dp8: Dp,
-    val dp16: Dp,
-    val topBarScrollable: Dp
+    val Level0: Dp,
+    val Level1: Dp,
+    val Level2: Dp,
+    val Level3: Dp,
+    val Level4: Dp,
+    val Level5: Dp,
 )
 
 val elevations = AppElevation(
-    disable = 0.dp,
-    dp1 = 1.dp,
-    dp2 = 2.dp,
-    dp4 = 4.dp,
-    dp8 = 8.dp,
-    dp16 = 16.dp,
-    topBarScrollable = 4.dp
+    Level0 = 0.0.dp,
+    Level1 = 1.0.dp,
+    Level2 = 3.0.dp,
+    Level3 = 6.0.dp,
+    Level4 = 8.0.dp,
+    Level5 = 12.0.dp,
 )

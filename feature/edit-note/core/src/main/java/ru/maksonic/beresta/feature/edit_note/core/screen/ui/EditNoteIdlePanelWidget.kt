@@ -73,6 +73,7 @@ fun EditNoteIdlePanelWidget(send: SendMessage, isScrollUp: () -> Boolean) {
                 )
             }
         }
+
         Box(
             Modifier
                 .fillMaxWidth()
@@ -84,7 +85,7 @@ fun EditNoteIdlePanelWidget(send: SendMessage, isScrollUp: () -> Boolean) {
                 onClick = {},
                 containerColor = primary,
                 elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = Theme.elevation.disable
+                    defaultElevation = Theme.elevation.Level0
                 ),
                 modifier = Modifier.padding(end = dp16)
             ) {

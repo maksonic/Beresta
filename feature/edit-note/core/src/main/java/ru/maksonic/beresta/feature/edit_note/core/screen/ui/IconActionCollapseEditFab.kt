@@ -10,8 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onBackground
-import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
@@ -23,14 +22,14 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 @Composable
 internal fun IconActionCollapseEditFab(onBtnClicked: () -> Unit, modifier: Modifier = Modifier) {
     BoxWithScaleInOutOnClick(
-        onClick = onBtnClicked,
+        onClick = { onBtnClicked() },
         modifier = modifier
             .statusBarsPadding()
             .padding(start = dp4)
             .size(Theme.widgetSize.minimumTouchTargetSize)
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = surface),
+            colors = CardDefaults.cardColors(containerColor = primaryContainer),
             shape = CircleShape,
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = modifier.size(36.dp),

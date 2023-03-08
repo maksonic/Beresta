@@ -43,7 +43,7 @@ fun PrimaryButton(
 ) {
 
     val scope = rememberCoroutineScope()
-    val disabledElevation = Theme.elevation.disable
+    val disabledElevation = Theme.elevation.Level0
     var isEnabled by rememberSaveable {
         mutableStateOf(true)
     }

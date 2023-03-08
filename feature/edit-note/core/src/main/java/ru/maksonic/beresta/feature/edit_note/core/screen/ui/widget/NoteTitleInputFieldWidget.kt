@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
@@ -27,6 +32,7 @@ internal fun NoteTitleInputFieldWidget(
     inputValue: TextFieldValue,
     updateTitle: (TextFieldValue) -> Unit,
     focusRequester: FocusRequester,
+    focusManager: FocusManager,
     modifier: Modifier = Modifier,
 ) {
     TextField(
@@ -41,6 +47,10 @@ internal fun NoteTitleInputFieldWidget(
         },
         colors = NoteInputDefaultColors,
         maxLines = 500,
+        keyboardActions = KeyboardActions {
+            focusManager.moveFocus(FocusDirection.Next)
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
