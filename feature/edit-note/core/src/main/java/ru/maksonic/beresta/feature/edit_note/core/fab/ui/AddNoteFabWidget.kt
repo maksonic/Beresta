@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +40,6 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.DriveFile
 import ru.maksonic.beresta.ui.theme.icons.Edit
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 23.02.2023
@@ -107,7 +107,6 @@ private fun FabContainer(
         val containerElevation = animateDpAsState(
             if (!isScrollUp()) Theme.elevation.Level3 else Theme.elevation.Level0
         )
-        val containerShape = animateDpAsState(if (isExpanded) 0.dp else dp16, tween(DURATION))
         val containerHeight = animateDpAsState(
             if (isExpanded) fullHeight else fabSize, animationSpec = tween(DURATION)
         )
@@ -119,11 +118,14 @@ private fun FabContainer(
         )
         val containerEndPadding = animateDpAsState(if (isExpanded) dp0 else dp16, tween(DURATION))
         val expandedContentAlpha = animateFloatAsState(if (isExpanded) 1f else 0f, tween(DURATION))
+        val isFullExpanded = containerHeight.value == fullHeight
+        val containerShape = if (isFullExpanded) 0.dp else dp16
+
 
         FloatingActionButton(
             onClick = { send(Msg.Ui.OnCreateNewNoteClicked) },
-            containerColor = fabColor.value,
-            shape = RoundedCornerShape(containerShape.value),
+            containerColor = background,
+            shape = RoundedCornerShape(containerShape),
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = containerElevation.value
             ),
@@ -136,33 +138,29 @@ private fun FabContainer(
                 .width(containerWidth.value),
         ) {
             Box {
-
                 if (isExpanded) {
-                    AnimateFadeInOut(true) {
-                        EditNoteScreen(
-                            isExpandedFab = { true },
-                            collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
-                            isVisibleOnFabDraftIndicator = isNoteNotEmpty,
-                            modifier = modifier.graphicsLayer {
-                                alpha = expandedContentAlpha.value
-                            }
-                        )
-                    }
-                } else {
-                    AnimateFadeInOut(true) {
-
-                        Box(
-                            modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            val icon = if (isNoteNotEmpty.value) AppIcon.DriveFile else AppIcon.Edit
-                            Icon(
-                                imageVector = icon,
-                                tint = onPrimary,
-                                contentDescription = "",
-                                modifier = modifier
-                            )
+                    EditNoteScreen(
+                        isExpandedFab = { true },
+                        collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
+                        isVisibleOnFabDraftIndicator = isNoteNotEmpty,
+                        modifier = modifier.graphicsLayer {
+                            alpha = expandedContentAlpha.value
                         }
+                    )
+                } else {
+                    Box(
+                        modifier
+                            .fillMaxSize()
+                            .drawBehind { drawRect(fabColor.value) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val icon = if (isNoteNotEmpty.value) AppIcon.DriveFile else AppIcon.Edit
+                        Icon(
+                            imageVector = icon,
+                            tint = onPrimary,
+                            contentDescription = "",
+                            modifier = modifier
+                        )
                     }
                 }
 
