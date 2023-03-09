@@ -44,6 +44,8 @@ object Lib {
         const val navigation =
             "com.google.accompanist:accompanist-navigation-animation:${Version.accompanist}"
         const val pager = "com.google.accompanist:accompanist-pager:${Version.accompanist}"
+        const val pagerIndicators =
+            "com.google.accompanist:accompanist-pager-indicators:${Version.accompanist}"
         const val systemUiController =
             "com.google.accompanist:accompanist-systemuicontroller:${Version.accompanist}"
     }

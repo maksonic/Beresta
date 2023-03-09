@@ -130,6 +130,18 @@ sealed class BaseModule(val path: String, val namespace: String) {
             )
         }
 
+        object NoteWallpaperSelector {
+            object Api : BaseModule(
+                path = ":feature:note-wallpaper-selector:api",
+                namespace = "ru.maksonic.beresta.feature.note_wallpaper_selector.api"
+            )
+
+            object Core : BaseModule(
+                path = ":feature:note-wallpaper-selector:core",
+                namespace = "ru.maksonic.beresta.feature.note_wallpaper_selector.core"
+            )
+        }
+
         object SearchBar {
             object Api : BaseModule(
                 path = ":feature:search-bar:api",

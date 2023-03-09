@@ -1,9 +1,6 @@
-package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget
+package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs
 
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -53,6 +50,7 @@ internal fun NoteTitleInputFieldWidget(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier
             .fillMaxWidth()
+            .statusBarsPadding()
             .height(IntrinsicSize.Min)
             .padding(start = dp8, end = dp8)
             .focusRequester(focusRequester)

@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.edit_note.core.screen.ui
+package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.editor
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.PanelItem
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onPrimary
 import ru.maksonic.beresta.ui.theme.color.onTertiary
@@ -21,10 +22,7 @@ import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.theme.icons.AddImage
-import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.Save
-import ru.maksonic.beresta.ui.theme.icons.VoiceEnter
+import ru.maksonic.beresta.ui.theme.icons.*
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
@@ -34,10 +32,16 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 private val idlePanelItems = arrayOf(
     PanelItem(icon = AppIcon.VoiceEnter, msg = Msg.Ui.OnTopBarBackPressed),
     PanelItem(icon = AppIcon.AddImage, msg = Msg.Ui.OnTopBarBackPressed),
+    PanelItem(icon = AppIcon.MakePhoto, msg = Msg.Ui.OnTopBarBackPressed),
+    PanelItem(icon = AppIcon.Wallpaper, msg = Msg.Ui.OnChangeNoteWallpaperClicked),
 )
 
 @Composable
-fun EditNoteIdlePanelWidget(send: SendMessage, isScrollUp: () -> Boolean) {
+fun EditNoteIdlePanelWidget(
+    send: SendMessage,
+    isScrollUp: () -> Boolean,
+    state: EditorPanelState,
+) {
 
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val panelHeight = Theme.widgetSize.bottomMainPanelHeight
@@ -49,8 +53,9 @@ fun EditNoteIdlePanelWidget(send: SendMessage, isScrollUp: () -> Boolean) {
     Box(
         Modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
-            .height(panelHeight),
+            .imePadding()
+            .navigationBarsPadding(),
+        contentAlignment = Alignment.BottomCenter
     ) {
         Row(
             Modifier

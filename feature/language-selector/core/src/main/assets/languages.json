@@ -60,7 +60,8 @@
     "editor": {
       "hint_input_title": "Заголовок",
       "hint_input_message": "Написать:",
-      "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан."
+      "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан.",
+      "top_bar_select_note_wallpaper": "Выбрать обои"
     }
   },
   "english": {
@@ -124,7 +125,8 @@
     "editor": {
       "hint_input_title": "Title",
       "hint_input_message": "Write:",
-      "message_max_note_length_warning": "The note is too long. The text at the end was cut off."
+      "message_max_note_length_warning": "The note is too long. The text at the end was cut off.",
+      "top_bar_select_note_wallpaper": "Select wallpaper"
     }
   },
   "chinese": {
@@ -188,7 +190,8 @@
     "editor": {
       "hint_input_title": "标题",
       "hint_input_message": "写:",
-      "message_max_note_length_warning": "注释太长。 最后的文字被截断了。"
+      "message_max_note_length_warning": "注释太长。 最后的文字被截断了。",
+      "top_bar_select_note_wallpaper": "选择壁纸"
     }
   },
   "chinese_tr": {
@@ -252,7 +255,8 @@
     "editor": {
       "hint_input_title": "標題",
       "hint_input_message": "寫:",
-      "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。"
+      "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。",
+      "top_bar_select_note_wallpaper": "選擇壁紙"
     }
   }
 }

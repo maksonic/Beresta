@@ -10,5 +10,6 @@ import kotlinx.serialization.Serializable
 data class LangEditorData(
     @SerializedName("hint_input_title") val hintInputTitle: String = "",
     @SerializedName("hint_input_message") val hintInputMessage: String = "",
-    @SerializedName("message_max_note_length_warning") val noteMaxLengthWarning: String = ""
+    @SerializedName("message_max_note_length_warning") val noteMaxLengthWarning: String = "",
+    @SerializedName("top_bar_select_note_wallpaper") val topBarTitleSelectNoteWallpaper: String = ""
 )

@@ -1,9 +1,9 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -15,23 +15,24 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Eff
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Model
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
-import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.NoteMessageInputFieldWidget
-import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.NoteTitleInputFieldWidget
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.*
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs.NoteMessageInputFieldWidget
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs.NoteTitleInputFieldWidget
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
+import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSelectorApi
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
-import ru.maksonic.beresta.ui.widget.SystemNavigationBar
-import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.toastLongTime
@@ -43,10 +44,12 @@ private const val KEYBOARD_DELAY = 500L
 
 internal typealias SendMessage = (Msg) -> Unit
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EditNoteScreen(
     modifier: Modifier = Modifier,
     isExpandedFab: () -> Boolean = { false },
+    isFullExpandedFab: () -> Boolean = { false },
     collapseFabWidget: () -> Unit = {},
     isVisibleOnFabDraftIndicator: MutableState<Boolean> = mutableStateOf(false),
     router: EditNoteRouter? = null,
@@ -56,20 +59,32 @@ fun EditNoteScreen(
 
     val model = sandbox.model.collectAsStateWithLifecycle().value
 
-    HandleEffects(effects = sandbox.effects, router = router)
-    Content(model, sandbox::sendMsg, collapseFabWidget, isVisibleOnFabDraftIndicator, modifier)
+    HandleEffects(
+        sandbox.effects,
+        router,
+        collapseFabWidget,
+        modalSheetState = model.modalBottomSheetState
+    )
+
+    Content(
+        model = model,
+        send = sandbox::sendMsg,
+        isVisibleOnFabDraftIndicator = isVisibleOnFabDraftIndicator,
+        isFullExpandedFab = isFullExpandedFab,
+        modifier = modifier
+    )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun Content(
     model: Model,
     send: SendMessage,
-    collapseFabWidget: () -> Unit,
     isVisibleOnFabDraftIndicator: MutableState<Boolean>,
+    isFullExpandedFab: () -> Boolean,
+    wallpaperSelectorApi: NoteWallpaperSelectorApi = get(),
     modifier: Modifier,
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val (titleFocus, messageFocus) = remember { FocusRequester.createRefs() }
     val scrollState = rememberScrollState()
@@ -89,114 +104,117 @@ fun Content(
 
     LaunchedEffect(Unit) {
         if (model.isExpandedFabState) {
-            showDelayedKeyboard(titleFocus, keyboardController)
+            showDelayedKeyboard(send, titleFocus)
         }
     }
 
     BackHandler(model.isExpandedFabState) {
         focusManager.clearFocus()
-        keyboardController?.hide()
-        if (model.isExpandedFabState)
-            collapseFabWidget()
+        send(Msg.Ui.OnTopBarBackPressed)
     }
 
-    Box(modifier.fillMaxSize()) {
-        Column(
-            modifier = modifier
+    ModalBottomSheetLayout(
+        sheetState = model.modalBottomSheetState,
+        sheetBackgroundColor = transparent,
+        sheetContentColor = transparent,
+        sheetElevation = Theme.elevation.Level0,
+        sheetContent = {
+            MultipleModalBottomSheetContent(
+                send = send,
+                currentSheetContent = model.currentSheetContent,
+                modalSheetState = { model.modalBottomSheetState },
+                isFullExpandedFab = isFullExpandedFab,
+                wallpaperSelector = wallpaperSelectorApi,
+                modifier = modifier
+            )
+        },
+        modifier = modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier
                 .fillMaxSize()
                 .background(background)
-                .nestedScroll(nestedScrollConnection)
-                .verticalScroll(scrollState)
-                .imePadding()
-                .noRippleClickable { }
         ) {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .nestedScroll(nestedScrollConnection)
+                    .verticalScroll(scrollState)
+                    .imePadding()
+                    .noRippleClickable { }
+            ) {
 
-            Spacer(modifier.height(Theme.widgetSize.topBarMediumHeight))
+                Spacer(
+                    modifier
+                        .height(Theme.widgetSize.topBarNormalHeight)
+                        .statusBarsPadding()
+                )
 
-            NoteTitleInputFieldWidget(
-                inputValue = model.titleField,
-                updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
-                focusRequester = titleFocus,
-                focusManager = focusManager,
-            )
-            NoteMessageInputFieldWidget(
-                inputValue = model.messageField,
-                updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
-                focusRequester = messageFocus,
+                NoteTitleInputFieldWidget(
+                    inputValue = model.titleField,
+                    updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
+                    focusRequester = titleFocus,
+                    focusManager = focusManager,
+                )
+                NoteMessageInputFieldWidget(
+                    inputValue = model.messageField,
+                    updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
+                    focusRequester = messageFocus,
+                )
+            }
+
+            SystemBarsOverFlowContainer(isVisibleEditorPanel = model.isVisibleEditorPanel, modifier)
+
+            TopBarWithEditorPanelContainer(
+                send = send,
+                editorPanelState = model.editorPanelState,
+                onTopBarBackPressed = { send(Msg.Ui.OnTopBarBackPressed) },
+                isVisibleEditorPanel = model.isVisibleEditorPanel,
+                modifier = modifier
             )
         }
-
-        SystemBarsOverFlowContainer(isVisibleEditorPanel = model.isVisibleEditorPanel, modifier)
-
-        TopActionButtonWithEditorPanelContainer(
-            send = send,
-            onFloatingTopButtonPressed = {
-                keyboardController?.hide()
-                focusManager.clearFocus()
-                if (model.isExpandedFabState) {
-                    collapseFabWidget()
-                } else {
-                    send(Msg.Ui.OnTopBarBackPressed)
-                }
-            },
-            isVisibleEditorPanel = model.isVisibleEditorPanel,
-            modifier = modifier
-        )
     }
 }
 
-@Composable
-private fun SystemBarsOverFlowContainer(isVisibleEditorPanel: Boolean, modifier: Modifier) {
-    val navBarColor =
-        animateColorAsState(if (isVisibleEditorPanel) tertiaryContainer else background)
 
-    Column(modifier.fillMaxSize()) {
-        val statusBarColor = background
-        SystemStatusBar(backgroundColor = { statusBarColor })
-        Spacer(modifier.weight(1f))
-        SystemNavigationBar(backgroundColor = { navBarColor.value })
-    }
-}
-
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
-private fun TopActionButtonWithEditorPanelContainer(
-    send: SendMessage,
-    onFloatingTopButtonPressed: () -> Unit,
-    isVisibleEditorPanel: Boolean,
-    modifier: Modifier
+private fun HandleEffects(
+    effects: Flow<Eff>,
+    router: EditNoteRouter?,
+    collapseFabWidget: () -> Unit,
+    modalSheetState: ModalBottomSheetState,
 ) {
-    Column(
-        modifier
-            .statusBarsPadding()
-            .fillMaxSize()
-            .imePadding()
-    ) {
-        IconActionCollapseEditFab(onBtnClicked = onFloatingTopButtonPressed)
-        Spacer(modifier.weight(1f))
-        EditNoteIdlePanelWidget(send, isScrollUp = { isVisibleEditorPanel })
-    }
-}
-
-@Composable
-private fun HandleEffects(effects: Flow<Eff>, router: EditNoteRouter?) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val scope = rememberCoroutineScope()
     val noteMaxLengthWarning = text.editNote.noteMaxLengthWarning
 
     HandleEffectsWithLifecycle(effects) { eff ->
+
         when (eff) {
             is Eff.NavigateBack -> router?.let { it.onBack() } ?: {}
-            is Eff.ShowSnackMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning)
+            is Eff.ShowToastMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning)
+            is Eff.HideSystemKeyboard -> keyboardController?.hide()
+            is Eff.ShowSystemKeyboard -> keyboardController?.show()
+            is Eff.CollapseFab -> collapseFabWidget()
+            is Eff.HideModalSheet -> {
+                scope.launch {
+                    modalSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                }
+            }
+            is Eff.ShowModalSheet -> {
+                scope.launch {
+                    modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                }
+            }
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
-private suspend fun showDelayedKeyboard(
-    titleFocus: FocusRequester,
-    keyboardController: SoftwareKeyboardController?
-) {
+private suspend fun showDelayedKeyboard(send: SendMessage, titleFocus: FocusRequester) {
     titleFocus.requestFocus()
-    keyboardController?.hide()
+    send(Msg.Inner.HideKeyboard)
     delay(KEYBOARD_DELAY)
-    keyboardController?.show()
+    send(Msg.Inner.ShowKeyboard)
 }

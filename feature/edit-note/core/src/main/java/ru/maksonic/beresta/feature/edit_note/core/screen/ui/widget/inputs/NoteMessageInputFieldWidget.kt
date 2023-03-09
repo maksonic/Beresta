@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget
+package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState

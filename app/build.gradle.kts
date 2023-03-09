@@ -86,6 +86,9 @@ dependencies {
     implementation(project(BaseModule.Feature.EditNote.Api.path))
     implementation(project(BaseModule.Feature.EditNote.Core.path))
 
+    implementation(project(BaseModule.Feature.NoteWallpaperSelector.Api.path))
+    implementation(project(BaseModule.Feature.NoteWallpaperSelector.Core.path))
+
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
 

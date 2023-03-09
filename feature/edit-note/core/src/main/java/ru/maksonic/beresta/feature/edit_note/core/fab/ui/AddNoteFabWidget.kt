@@ -121,7 +121,6 @@ private fun FabContainer(
         val isFullExpanded = containerHeight.value == fullHeight
         val containerShape = if (isFullExpanded) 0.dp else dp16
 
-
         FloatingActionButton(
             onClick = { send(Msg.Ui.OnCreateNewNoteClicked) },
             containerColor = background,
@@ -141,6 +140,7 @@ private fun FabContainer(
                 if (isExpanded) {
                     EditNoteScreen(
                         isExpandedFab = { true },
+                        isFullExpandedFab = { isFullExpanded },
                         collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
                         isVisibleOnFabDraftIndicator = isNoteNotEmpty,
                         modifier = modifier.graphicsLayer {

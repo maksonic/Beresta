@@ -33,6 +33,8 @@ import ru.maksonic.beresta.feature.language_selector.core.LanguageProviderImpl
 import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorCore
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.feature.language_selector.core.presentation.ui.SelectAppLanguageSheet
+import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSelectorApi
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.NoteWallpaperSelectorCore
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
@@ -191,6 +193,10 @@ class BerestaApp : Application() {
         single<EditNoteApi.Ui> { AddNoteFabWidget() }
     }
 
+    private val noteWallpaperSelectorModule = module {
+        single<NoteWallpaperSelectorApi> { NoteWallpaperSelectorCore() }
+    }
+
     private val modules = listOf(
         appModule,
         settingsModule,
@@ -206,7 +212,8 @@ class BerestaApp : Application() {
         notesListFeatureModule,
         notesListFeatureDataModule,
         searchBarFeatureModule,
-        editNoteFeatureModule
+        editNoteFeatureModule,
+        noteWallpaperSelectorModule
     )
 
     override fun onCreate() {
