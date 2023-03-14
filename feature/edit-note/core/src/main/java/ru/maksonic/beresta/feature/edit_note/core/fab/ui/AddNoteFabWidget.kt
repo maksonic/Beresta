@@ -123,7 +123,7 @@ private fun FabContainer(
 
         FloatingActionButton(
             onClick = { send(Msg.Ui.OnCreateNewNoteClicked) },
-            containerColor = background,
+            containerColor = primary,
             shape = RoundedCornerShape(containerShape),
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = containerElevation.value
@@ -140,7 +140,6 @@ private fun FabContainer(
                 if (isExpanded) {
                     EditNoteScreen(
                         isExpandedFab = { true },
-                        isFullExpandedFab = { isFullExpanded },
                         collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
                         isVisibleOnFabDraftIndicator = isNoteNotEmpty,
                         modifier = modifier.graphicsLayer {

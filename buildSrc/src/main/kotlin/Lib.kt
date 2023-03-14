@@ -32,6 +32,10 @@ object Lib {
         //database
         const val room = "2.4.3"
 
+        //image
+        const val coil = "2.2.2"
+        const val glide = "1.0.0-alpha.1"
+
         //sl
         const val koin = "3.3.0"
 
@@ -68,6 +72,13 @@ object Lib {
         const val navigation = "androidx.navigation:navigation-compose"
         const val ui = "androidx.compose.ui:ui"
         const val uiPreview = "androidx.compose.ui:ui-tooling-preview"
+    }
+
+    object Image {
+        const val coil = "io.coil-kt:coil-compose:${Version.coil}"
+        const val glide = "com.github.bumptech.glide:compose:${Version.glide}"
+
+
     }
 
     object JetBrains {

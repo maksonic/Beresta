@@ -14,6 +14,7 @@ data class NoteUi(
     val title: String = "",
     val message: String = "",
     val dateCreation: String = "",
+    val backgroundId: Int = 0,
     val currentFolder: String = "",
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,

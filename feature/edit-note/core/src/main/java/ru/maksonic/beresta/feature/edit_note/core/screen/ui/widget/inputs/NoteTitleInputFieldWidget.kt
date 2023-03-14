@@ -50,7 +50,6 @@ internal fun NoteTitleInputFieldWidget(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier
             .fillMaxWidth()
-            .statusBarsPadding()
             .height(IntrinsicSize.Min)
             .padding(start = dp8, end = dp8)
             .focusRequester(focusRequester)

@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.editor
+package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.PanelItem
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
@@ -20,6 +21,7 @@ import ru.maksonic.beresta.ui.theme.color.onPrimary
 import ru.maksonic.beresta.ui.theme.color.onTertiary
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.*
@@ -29,18 +31,12 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 06.03.2023
  */
-private val idlePanelItems = arrayOf(
-    PanelItem(icon = AppIcon.VoiceEnter, msg = Msg.Ui.OnTopBarBackPressed),
-    PanelItem(icon = AppIcon.AddImage, msg = Msg.Ui.OnTopBarBackPressed),
-    PanelItem(icon = AppIcon.MakePhoto, msg = Msg.Ui.OnTopBarBackPressed),
-    PanelItem(icon = AppIcon.Wallpaper, msg = Msg.Ui.OnChangeNoteWallpaperClicked),
-)
-
 @Composable
-fun EditNoteIdlePanelWidget(
+internal fun EditNoteBottomPanel(
     send: SendMessage,
     isScrollUp: () -> Boolean,
     state: EditorPanelState,
+    modifier: Modifier = Modifier
 ) {
 
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -50,52 +46,48 @@ fun EditNoteIdlePanelWidget(
         animationSpec = tween()
     )
 
+    val keyboardHeight = WindowInsets.Companion.ime.asPaddingValues().calculateBottomPadding()
+    val calculatedPanelPadding = if (keyboardHeight != 0.dp && keyboardHeight > 100.dp)
+        keyboardHeight - navBarHeight
+    else
+        keyboardHeight
+
     Box(
-        Modifier
+        modifier
+            .padding(PaddingValues(bottom = calculatedPanelPadding))
             .fillMaxWidth()
-            .imePadding()
-            .navigationBarsPadding(),
-        contentAlignment = Alignment.BottomCenter
+            .height(panelHeight.plus(navBarHeight)),
+        contentAlignment = Alignment.TopEnd
     ) {
-        Row(
-            Modifier
+        val panelModifier = Modifier
+
+        Column(
+            panelModifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
-                .height(panelHeight)
                 .graphicsLayer {
                     translationY = panelOffset.value.toPx()
                 }
                 .background(tertiaryContainer)
-                .padding(start = dp4)
-                .noRippleClickable { },
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = dp4),
         ) {
-            idlePanelItems.forEach { panelItem ->
-                IconAction(
-                    icon = { panelItem.icon },
-                    action = { send(panelItem.msg) },
-                    tint = onTertiary
-                )
+            when (state) {
+                EditorPanelState.IDLE -> {
+                    EditNoteIdlePanelContent(send, panelHeight, navBarHeight, panelModifier)
+                }
+                EditorPanelState.SELECT_WALLPAPER -> {}
             }
         }
 
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .navigationBarsPadding()
-                .height(panelHeight),
-            contentAlignment = Alignment.CenterEnd
+        FloatingActionButton(
+            onClick = {},
+            containerColor = primary,
+            elevation = FloatingActionButtonDefaults.elevation(
+                defaultElevation = Theme.elevation.Level0
+            ),
+            modifier = Modifier.padding(top = dp12, end = dp16)
         ) {
-            FloatingActionButton(
-                onClick = {},
-                containerColor = primary,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = Theme.elevation.Level0
-                ),
-                modifier = Modifier.padding(end = dp16)
-            ) {
-                Icon(imageVector = AppIcon.Save, contentDescription = "", tint = onPrimary)
-            }
+            Icon(imageVector = AppIcon.Save, contentDescription = "", tint = onPrimary)
         }
     }
 }
+

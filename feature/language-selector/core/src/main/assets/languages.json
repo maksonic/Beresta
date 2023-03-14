@@ -61,7 +61,14 @@
       "hint_input_title": "Заголовок",
       "hint_input_message": "Написать:",
       "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан.",
-      "top_bar_select_note_wallpaper": "Выбрать обои"
+      "message_note_wallpaper_is_not_selected": "Вы не выбрали фон для заметки.",
+      "top_bar_select_note_wallpaper": "Установить фон",
+      "note_wallpaper_category_new": "Новинки",
+      "note_wallpaper_category_soft_colors": "Цвета",
+      "note_wallpaper_category_bright_colors": "Яркие цвета",
+      "note_wallpaper_category_gradients": "Градиенты",
+      "note_wallpaper_category_grids": "Сетка",
+      "note_wallpaper_category_best": "Лучшее"
     }
   },
   "english": {
@@ -126,7 +133,14 @@
       "hint_input_title": "Title",
       "hint_input_message": "Write:",
       "message_max_note_length_warning": "The note is too long. The text at the end was cut off.",
-      "top_bar_select_note_wallpaper": "Select wallpaper"
+      "message_note_wallpaper_is_not_selected": "You have not selected a background for your note.",
+      "top_bar_select_note_wallpaper": "Set note background",
+      "note_wallpaper_category_new": "New",
+      "note_wallpaper_category_soft_colors": "Colors",
+      "note_wallpaper_category_bright_colors": "Bright Colors",
+      "note_wallpaper_category_gradients": "Gradients",
+      "note_wallpaper_category_grids": "Grid",
+      "note_wallpaper_category_best": "Best"
     }
   },
   "chinese": {
@@ -191,7 +205,14 @@
       "hint_input_title": "标题",
       "hint_input_message": "写:",
       "message_max_note_length_warning": "注释太长。 最后的文字被截断了。",
-      "top_bar_select_note_wallpaper": "选择壁纸"
+      "message_note_wallpaper_is_not_selected": "您尚未为笔记选择背景。",
+      "top_bar_select_note_wallpaper": "设置备注背景",
+      "note_wallpaper_category_new": "新",
+      "note_wallpaper_category_soft_colors": "颜色",
+      "note_wallpaper_category_bright_colors": "明亮的颜色",
+      "note_wallpaper_category_gradients": "渐变",
+      "note_wallpaper_category_grids": "网格",
+      "note_wallpaper_category_best": "最佳"
     }
   },
   "chinese_tr": {
@@ -256,7 +277,14 @@
       "hint_input_title": "標題",
       "hint_input_message": "寫:",
       "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。",
-      "top_bar_select_note_wallpaper": "選擇壁紙"
+      "message_note_wallpaper_is_not_selected": "您尚未為筆記選擇背景。",
+      "top_bar_select_note_wallpaper": "設置備註背景",
+      "note_wallpaper_category_new": "新",
+      "note_wallpaper_category_soft_colors": "顏色",
+      "note_wallpaper_category_bright_colors": "明亮的顏色",
+      "note_wallpaper_category_gradients": "漸變",
+      "note_wallpaper_category_grids": "網格",
+      "note_wallpaper_category_best": "最佳"
     }
   }
 }

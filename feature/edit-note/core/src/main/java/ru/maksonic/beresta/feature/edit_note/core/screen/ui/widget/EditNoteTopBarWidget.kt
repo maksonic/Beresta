@@ -15,7 +15,7 @@ import ru.maksonic.beresta.ui.widget.button.IconActionCircleOverflow
  * @Author maksonic on 09.03.2023
  */
 @Composable
-fun EditNoteTopBarWidget(
+internal fun EditNoteTopBarWidget(
     backPressed: () -> Unit,
     menuPressed: () -> Unit,
     modifier: Modifier = Modifier

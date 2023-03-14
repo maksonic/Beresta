@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Navigation.Router.path))
     implementation(Lib.Compose.material)

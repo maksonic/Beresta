@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
-import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.editor.EditNoteIdlePanelWidget
-import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.editor.EditorPanelState
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditNoteBottomPanel
+import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
+import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.widget.SystemStatusBar
 
 /**
  * @Author maksonic on 09.03.2023
@@ -20,15 +22,19 @@ internal fun TopBarWithEditorPanelContainer(
 ) {
     Column(
         modifier
-            .statusBarsPadding()
             .fillMaxSize()
-            .imePadding()
     ) {
+        val statusBarColor = background.copy(alpha = 0.5f)
+        SystemStatusBar(backgroundColor = { statusBarColor })
+
         EditNoteTopBarWidget(backPressed = onTopBarBackPressed, menuPressed = { })
+
         Spacer(modifier.weight(1f))
-        EditNoteIdlePanelWidget(
+
+        EditNoteBottomPanel(
             send = send,
             state = editorPanelState,
-            isScrollUp = { isVisibleEditorPanel })
+            isScrollUp = { isVisibleEditorPanel }
+        )
     }
 }

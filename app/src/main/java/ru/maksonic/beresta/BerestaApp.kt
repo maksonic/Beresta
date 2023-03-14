@@ -34,7 +34,10 @@ import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorCore
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.feature.language_selector.core.presentation.ui.SelectAppLanguageSheet
 import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSelectorApi
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.NoteWallpaperSelectorCore
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.WallpaperSelectorProgram
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.WallpaperSelectorSandbox
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.WallpapersRepository
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.NoteWallpaperSelectorCore
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
@@ -194,6 +197,9 @@ class BerestaApp : Application() {
     }
 
     private val noteWallpaperSelectorModule = module {
+        single { WallpapersRepository }
+        single { WallpaperSelectorProgram(repository = get()) }
+        viewModel { WallpaperSelectorSandbox(program = get()) }
         single<NoteWallpaperSelectorApi> { NoteWallpaperSelectorCore() }
     }
 

@@ -7,8 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -22,11 +20,10 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 @Composable
 fun TopAppBarNormal(
     modifier: Modifier = Modifier,
-    title: String,
-    backgroundColor: () -> Color,
+    title: String = "",
+    backgroundColor: () -> Color = { Color.Transparent },
     backAction: () -> Unit,
     menuActions: @Composable () -> Unit = {},
-
 ) {
     Row(
         modifier
@@ -41,6 +38,5 @@ fun TopAppBarNormal(
         Spacer(modifier.weight(1f))
         menuActions()
         Spacer(modifier.size(dp8))
-
     }
 }
