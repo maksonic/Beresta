@@ -53,7 +53,7 @@ private fun ThemeItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (item.isSelected) onSurface else transparent
+    val backgroundColor = if (item.isSelected) onSecondaryContainer else transparent
 
     Row(
         modifier
@@ -68,14 +68,14 @@ private fun ThemeItem(
 
         Icon(
             imageVector = item.icon,
-            tint = onBackground,
+            tint = onSecondary,
             contentDescription = "",
             modifier = modifier.padding(start = dp8)
         )
 
         Text(
             text = item.title,
-            style = TextDesign.title.copy(color = onBackground),
+            style = TextDesign.title.copy(color = onSecondary),
             modifier = modifier.padding(start = dp8)
         )
     }

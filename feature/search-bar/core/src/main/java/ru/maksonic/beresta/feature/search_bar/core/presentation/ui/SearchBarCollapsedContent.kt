@@ -11,13 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onTertiary
+import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Search
-import ru.maksonic.beresta.ui.theme.icons.VoiceEnter
-import ru.maksonic.beresta.ui.widget.button.IconAction
 
 /**
  * @Author maksonic on 24.02.2023
@@ -33,16 +31,15 @@ internal fun SearchBarCollapsedContent(modifier: Modifier = Modifier) {
     ) {
         Icon(
             imageVector = AppIcon.Search,
-            tint = onTertiary,
+            tint = onSurface,
             contentDescription = "",
         )
         Text(
             text = text.shared.hintFindNote,
-            style = TextDesign.bodyPrimary.copy(color = onTertiary),
+            style = TextDesign.bodyPrimary.copy(color = onSurface),
             modifier = modifier
                 .weight(1f)
                 .padding(start = dp12)
         )
-      //  IconAction(icon = { AppIcon.VoiceEnter }, tint = onTertiary) {}
     }
 }

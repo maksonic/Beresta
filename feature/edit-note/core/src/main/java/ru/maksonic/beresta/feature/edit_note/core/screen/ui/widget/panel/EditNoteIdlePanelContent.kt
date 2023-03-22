@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.PanelItem
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
-import ru.maksonic.beresta.ui.theme.color.onTertiary
+import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.icons.*
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
@@ -42,7 +42,7 @@ internal fun EditNoteIdlePanelContent(
             IconAction(
                 icon = { panelItem.icon },
                 action = { send(panelItem.msg) },
-                tint = onTertiary
+                tint = onSurface
             )
         }
     }

@@ -23,23 +23,20 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 internal typealias SendMessage = (Msg) -> Unit
 
 class SearchBarWidget : SearchBarApi.Ui {
-
     override val searchBarVisibilityState = MutableStateFlow(true)
     private val searchBarVisibility = searchBarVisibilityState.asStateFlow()
 
     @Composable
     override fun Widget(
         notesCollection: NoteUi.Collection,
-        searchTopBarBackground: () -> Color,
-        searchBarCollapsedColor: () -> Color,
+        isVisibleFirstNote: () -> Boolean,
         modifier: Modifier
     ) {
         val isVisible = searchBarVisibility.collectAsStateWithLifecycle().value
         AnimateFadeInOut(visible = isVisible) {
             Content(
                 notesCollection = notesCollection,
-                searchTopBarBackground = searchTopBarBackground,
-                searchBarCollapsedColor = searchBarCollapsedColor,
+                isVisibleFirstNote = isVisibleFirstNote,
                 modifier = modifier
             )
         }
@@ -52,21 +49,20 @@ private fun Content(
     sandbox: SearchBarSandbox = koinViewModel(),
     notesList: NotesListApi.Ui = get(),
     notesCollection: NoteUi.Collection,
-    searchTopBarBackground: () -> Color,
-    searchBarCollapsedColor: () -> Color,
+    isVisibleFirstNote: () -> Boolean
 ) {
     sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notesCollection))
     val model = sandbox.model.collectAsStateWithLifecycle().value
 
     Box(modifier.fillMaxSize()) {
-        BackgroundCollapsedSearchBarWithUserIcon(searchTopBarBackground)
+        BackgroundCollapsedSearchBarWithUserIcon()
 
         SearchBarOverflowContainer(
             model = model,
             send = sandbox::sendMsg,
             notesList = notesList,
-            searchBarCollapsedColor = searchBarCollapsedColor,
-            modifier = modifier
+            isVisibleFirstNote = isVisibleFirstNote,
+            modifier = Modifier
         )
     }
 }

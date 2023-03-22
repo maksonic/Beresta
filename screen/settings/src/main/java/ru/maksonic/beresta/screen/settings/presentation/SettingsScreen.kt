@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -80,7 +79,6 @@ private fun Content(
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
         sheetElevation = Theme.elevation.Level0,
-        scrimColor = scrim,
         sheetContent = {
             MultipleModalBottomSheetContent(
                 send = send,
@@ -130,12 +128,12 @@ private fun HandleUiEffects(
             is Eff.NavigateBack -> router.onBack()
             is Eff.HideModalSheet -> {
                 scope.launch {
-                    modalSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                    modalSheetState.hide()
                 }
             }
             is Eff.ShowModalSheet -> {
                 scope.launch {
-                    modalSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                    modalSheetState.show()
                 }
             }
         }

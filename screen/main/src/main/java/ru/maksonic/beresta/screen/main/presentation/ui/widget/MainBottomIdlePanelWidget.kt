@@ -2,7 +2,6 @@ package ru.maksonic.beresta.screen.main.presentation.ui.widget
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,12 +12,11 @@ import ru.maksonic.beresta.screen.main.presentation.MainBottomPanelItem
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onTertiary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.*
+import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.button.IconAction
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 21.02.2023
@@ -43,28 +41,29 @@ fun MainBottomIdlePanelWidget(
         targetValue = if (isScrollUp()) 0.dp else panelHeight, animationSpec = tween()
     )
 
-    Column(
-        modifier
+    SurfacePro(
+        tonalElevation = Theme.tonal.Level4,
+        modifier = modifier
             .fillMaxWidth()
             .height(panelHeight)
             .graphicsLayer {
                 translationY = panelOffset.value.toPx()
             }
-            .background(tertiaryContainer)
-            .noRippleClickable {}
     ) {
-        Row(
-            modifier
-                .padding(start = dp4)
-                .height(Theme.widgetSize.bottomMainPanelHeight),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            actions.forEach { panelItem ->
-                IconAction(
-                    icon = { panelItem.icon },
-                    action = { send(panelItem.msg) },
-                    tint = onTertiary
-                )
+        Column(modifier.height(panelHeight)) {
+            Row(
+                modifier
+                    .padding(start = dp4)
+                    .height(Theme.widgetSize.bottomMainPanelHeight),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                actions.forEach { panelItem ->
+                    IconAction(
+                        icon = { panelItem.icon },
+                        action = { send(panelItem.msg) },
+                        tint = onSurface
+                    )
+                }
             }
         }
     }

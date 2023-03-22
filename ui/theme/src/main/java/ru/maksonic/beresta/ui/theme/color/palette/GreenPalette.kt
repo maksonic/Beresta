@@ -6,35 +6,63 @@ import ru.maksonic.beresta.ui.theme.color.Palette
  * @Author maksonic on 25.02.2023
  */
 val filledLightGreenPalette = baseLightPalette.copy(
-    primary = Palette.Green.vividMalachite,
+    primary = Palette.Green.electricGreen,
+    onPrimary = Palette.Green.vividMalachite,
+    onPrimaryContainer = Palette.Green.seaweed,
+    secondary = Palette.Orange.blanchedAlmond,
+    onSecondary = Palette.Green.seaweed,
+    secondaryContainer = Palette.Green.nyanza,
+    onSecondaryContainer = Palette.Green.menthol,
     tertiary = Palette.Green.mintGreen,
     onTertiary = Palette.Green.vividMalachite,
-    tertiaryContainer = Palette.Green.nyanza,
-    onTertiaryContainer = Palette.Green.menthol,
-    surface = Palette.Green.nyanza,
-    onSurface = Palette.Green.menthol,
+    tertiaryContainer = Palette.Green.vividMalachite,
+    onTertiaryContainer = Palette.white,
+    background = Palette.Green.mintCream,
+    surface = Palette.Green.mintCream,
+    onSurface = Palette.Green.vividMalachite,
     surfaceVariant = Palette.Green.snowyMint,
-    onSurfaceVariant = Palette.Green.snowyMint,
+    onSurfaceVariant = Palette.Green.menthol,
+    inverseSurface = Palette.Green.vividMalachite,
+    inversePrimary = Palette.Orange.peachOrange,
+    surfaceTint = Palette.Green.electricGreen,
 )
 val filledDarkGreenPalette = baseDarkPalette.copy(
-    primary = Palette.Green.mintGreen,
-    onPrimary = Palette.Green.seaweed,
-    primaryContainer = Palette.Green.calPolyPomonaGreen,
-    tertiary = Palette.Green.mintGreen,
-    onTertiary = Palette.Green.mintGreen,
-    tertiaryContainer = Palette.Green.phthaloGreen,
-    onTertiaryContainer = Palette.Green.mughalGreen,
-    surface = Palette.Green.phthaloGreen,
-    onSurface = Palette.Green.mughalGreen,
-    surfaceVariant = Palette.Green.mughalGreen,
-    onSurfaceVariant = Palette.Green.japaneseLaurel,
-    background = Palette.Green.seaweed
+    primary = Palette.Green.x0,
+    onPrimary = Palette.Green.x0,
+    primaryContainer = Palette.Green.x2,
+    onPrimaryContainer = Palette.white,
+    secondary = Palette.Green.x4,
+    onSecondary = Palette.white,
+    secondaryContainer = Palette.Green.x2,
+    onSecondaryContainer = Palette.Green.x5,
+    tertiary = Palette.doveGray,
+    onTertiary = Palette.white,
+    tertiaryContainer = Palette.Green.x0,
+    onTertiaryContainer = Palette.Green.x1,
+    background = Palette.Green.x1,
+    surface = Palette.Green.x1,
+    surfaceVariant = Palette.Green.x3,
+    onSurfaceVariant = Palette.Green.x4,
+    surfaceTint = Palette.black,
+    inverseOnSurface = Palette.Green.x4,
+    inversePrimary = Palette.Green.x5,
 )
 val outlinedLightGreenPalette = baseLightPalette.copy(
+    onPrimary = Palette.Green.vividMalachite,
+    tertiary = Palette.Green.mintGreen,
+    onTertiary = Palette.Green.vividMalachite,
+    tertiaryContainer = Palette.Green.electricGreen,
+    onTertiaryContainer = Palette.nero,
+    inversePrimary = Palette.Orange.peachOrange,
     primary = Palette.Green.electricGreen,
-    onPrimary = Palette.nero,
-    onSurface = Palette.Green.snowyMint,
-    onSurfaceVariant = Palette.Green.snowyMint
+    )
+val outlinedDarkGreenPalette = baseDarkPalette.copy(
+    primary = Palette.Green.mintGreen,
+    tertiaryContainer = Palette.Green.mintGreen,
+    onPrimary = Palette.Green.mintGreen
 )
-val outlinedDarkGreenPalette = baseDarkPalette.copy(primary = Palette.Green.mintGreen)
-val highContrastGreenPalette = highContrastPalette.copy(primary = Palette.Green.electricGreen)
+val highContrastGreenPalette = highContrastPalette.copy(
+    primary = Palette.Green.electricGreen,
+    tertiaryContainer = Palette.Green.electricGreen,
+    onPrimary = Palette.Green.electricGreen
+)

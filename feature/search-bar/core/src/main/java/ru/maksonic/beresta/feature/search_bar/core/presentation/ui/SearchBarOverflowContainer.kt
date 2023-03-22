@@ -19,7 +19,7 @@ internal fun SearchBarOverflowContainer(
     model: Model,
     send: SendMessage,
     notesList: NotesListApi.Ui,
-    searchBarCollapsedColor: () -> Color,
+    isVisibleFirstNote: () -> Boolean,
     modifier: Modifier,
 ) {
 
@@ -36,7 +36,7 @@ internal fun SearchBarOverflowContainer(
             send = send,
             boxScope = boxScope,
             notesList = notesList,
-            searchBarCollapsedColor = searchBarCollapsedColor
+            isVisibleFirstNote = isVisibleFirstNote
         )
     }
 }

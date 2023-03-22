@@ -15,30 +15,34 @@ val LocalAppColors = staticCompositionLocalOf<AppColor> {
 
 @Stable
 data class AppColor(
-    val primary: Color,
-    val onPrimary: Color,
-    val primaryContainer: Color,
-    val onPrimaryContainer: Color,
-    val secondary: Color,
-    val onSecondary: Color,
-    val secondaryContainer: Color,
-    val onSecondaryContainer: Color,
-    val tertiary: Color,
-    val onTertiary: Color,
-    val tertiaryContainer: Color,
-    val onTertiaryContainer: Color,
-    val error: Color,
-    val onError: Color,
-    val errorContainer: Color,
-    val onErrorContainer: Color,
-    val background: Color,
-    val onBackground: Color,
-    val surface: Color,
-    val onSurface: Color,
-    val surfaceVariant: Color,
-    val onSurfaceVariant: Color,
-    val outline: Color,
-    val shadow: Color,
+    val primary : Color,
+    val onPrimary : Color,
+    val primaryContainer : Color,
+    val onPrimaryContainer : Color,
+    val secondary : Color,
+    val onSecondary : Color,
+    val secondaryContainer : Color,
+    val onSecondaryContainer : Color,
+    val tertiary : Color,
+    val onTertiary : Color,
+    val tertiaryContainer : Color,
+    val onTertiaryContainer : Color,
+    val error : Color,
+    val errorContainer : Color,
+    val onError : Color,
+    val onErrorContainer : Color,
+    val background : Color,
+    val onBackground : Color,
+    val surface : Color,
+    val onSurface : Color,
+    val surfaceVariant : Color,
+    val onSurfaceVariant : Color,
+    val outline : Color,
+    val inverseOnSurface : Color,
+    val inverseSurface : Color,
+    val inversePrimary : Color,
+    val surfaceTint : Color,
+    val outlineVariant : Color,
     val scrim: Color,
     val transparent: Color,
     val idle: Color,
@@ -74,6 +78,10 @@ val onSurface: Color @Composable get() = Theme.color.onSurface
 val surfaceVariant: Color @Composable get() = Theme.color.surfaceVariant
 val onSurfaceVariant: Color @Composable get() = Theme.color.onSurfaceVariant
 val outline: Color @Composable get() = Theme.color.outline
-val shadow: Color @Composable get() = Theme.color.shadow
+val inverseOnSurface : Color @Composable get() = Theme.color.inverseOnSurface
+val inverseSurface : Color @Composable get() = Theme.color.inverseSurface
+val inversePrimary : Color @Composable get() = Theme.color.inversePrimary
+val surfaceTint : Color @Composable get() = Theme.color.surfaceTint
+val outlineVariant : Color @Composable get() = Theme.color.outlineVariant
 val scrim: Color @Composable get() = Theme.color.scrim
 val transparent: Color @Composable get() = Theme.color.transparent

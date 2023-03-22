@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.note_wallpaper_selector.core
+package ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core
 
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.*

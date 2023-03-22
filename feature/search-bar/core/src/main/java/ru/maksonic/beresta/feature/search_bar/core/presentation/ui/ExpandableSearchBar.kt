@@ -17,8 +17,7 @@ import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.widget.functional.clickAction
@@ -33,7 +32,7 @@ internal fun ExpandableSearchBar(
     send: SendMessage,
     notesList: NotesListApi.Ui,
     boxScope: BoxWithConstraintsScope,
-    searchBarCollapsedColor: () -> Color,
+    isVisibleFirstNote: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
     val dp0 = 0.dp
@@ -42,8 +41,8 @@ internal fun ExpandableSearchBar(
     val topPadding = animateDpAsState(if (model.isExpandedBar) dp0 else statusBarHeight.plus(dp4))
     val startPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
     val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else dp16)
-    val backgroundColor =
-        animateColorAsState(if (model.isExpandedBar) background else searchBarCollapsedColor())
+    val searchBarColor =
+        animateColorAsState(if (isVisibleFirstNote()) surfaceVariant else onSurfaceVariant)
     val clip = animateDpAsState(if (model.isExpandedBar) dp0 else 25.dp)
     val height = animateDpAsState(
         if (model.isExpandedBar) expandedBarHeight else Theme.widgetSize.searchBarCollapsedHeight,
@@ -59,7 +58,7 @@ internal fun ExpandableSearchBar(
             .fillMaxWidth()
             .height(height.value)
             .clip(RoundedCornerShape(clip.value))
-            .drawBehind { drawRect(backgroundColor.value) }
+            .drawBehind { drawRect(searchBarColor.value) }
             .then(clickModifier)
     ) {
         val collapsedContentAlpha = animateFloatAsState(

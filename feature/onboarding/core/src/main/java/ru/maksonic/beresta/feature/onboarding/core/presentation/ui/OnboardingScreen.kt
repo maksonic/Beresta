@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -156,12 +155,12 @@ private fun HandleUiEffects(
             is Eff.NavigateToMain -> router.toMain()
             is Eff.HideModalSheet -> {
                 scope.launch {
-                    bottomSheetState.animateTo(ModalBottomSheetValue.Hidden)
+                    bottomSheetState.hide()
                 }
             }
             is Eff.ShowModalSheet -> {
                 scope.launch {
-                    bottomSheetState.animateTo(ModalBottomSheetValue.Expanded)
+                    bottomSheetState.show()
                 }
             }
         }

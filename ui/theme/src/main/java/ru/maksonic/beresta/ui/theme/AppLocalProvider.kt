@@ -29,6 +29,7 @@ fun AppLocalProvider(
         LocalAppShape provides shapes,
         LocalRippleTheme provides AppRipple,
         LocalBerestaLanguage provides languages,
+        LocalAppTonal provides tonalElevations,
         content = content
     )
 }

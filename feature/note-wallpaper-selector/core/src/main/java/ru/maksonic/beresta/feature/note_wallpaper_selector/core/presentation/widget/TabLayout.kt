@@ -34,7 +34,7 @@ internal fun TabLayout(
 
     ScrollableTabRow(
         backgroundColor = transparent,
-        contentColor = onBackground,
+        contentColor = onPrimary,
         selectedTabIndex = pagerState().currentPage,
         divider = { Spacer(modifier = modifier.height(5.dp)) },
         edgePadding = dp16,
@@ -45,8 +45,8 @@ internal fun TabLayout(
             TabWithoutRipple(
                 text = { Text(text = page.title) },
                 selected = pagerState().currentPage == index,
-                selectedContentColor = primary,
-                unselectedContentColor = secondary,
+                selectedContentColor = onPrimary,
+                unselectedContentColor = outline,
                 onClick = {
                     scope.launch {
                         pagerState().animateScrollToPage(index)
@@ -71,6 +71,6 @@ private fun TabIndicator(
             .height(dp4)
             .padding(start = dp8, end = dp8)
             .clip(CircleShape)
-            .background(primary)
+            .background(onPrimary)
     )
 }

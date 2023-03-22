@@ -16,7 +16,7 @@ import ru.maksonic.beresta.feature.theme_selector.api.ThemeSelectorUiApi
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ThemeSelectorViewModel
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.widget.ThemesColumnWidget
 import ru.maksonic.beresta.feature.theme_selector.core.presentation.ui.widget.palette_picker.ThemePaletteColorPickerWidget
-import ru.maksonic.beresta.ui.theme.color.tertiary
+import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.sheet.BaseBottomDialogSheetWithIndicator
@@ -56,7 +56,7 @@ private fun Content(
                 onChangePalette = { item -> viewModel.setThemePalette(item) }
             )
 
-            Divider(modifier.padding(top = dp16, bottom = dp16), color = tertiary)
+            Divider(modifier.padding(top = dp16, bottom = dp16), color = onSecondaryContainer)
 
             ThemesColumnWidget(
                 themesCollection = model.themes,

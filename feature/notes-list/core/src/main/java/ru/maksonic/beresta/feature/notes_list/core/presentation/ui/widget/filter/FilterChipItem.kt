@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.SendMessage
@@ -25,14 +27,12 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 @Composable
 internal fun FilterChipItem(
     item: FilterChipUi,
-    isVisibleFirstNote: () -> Boolean,
     send: SendMessage,
     modifier: Modifier = Modifier
 ) {
-    val titleColor = if (item.isSelected) onPrimary else onBackground
-    val backgroundColor = if (item.isSelected) primary else {
-        if (isVisibleFirstNote()) surfaceVariant else onTertiaryContainer
-    }
+    val titleColor = if (item.isSelected) onTertiaryContainer else onBackground
+    val backgroundColor = if (item.isSelected) tertiaryContainer else transparent
+    val borderColor = if (item.isSelected) transparent else outline
 
     BoxWithScaleInOutOnClick(onClick = { send(Msg.Ui.OnChipFilterClicked(item.id)) }) {
 
@@ -40,6 +40,7 @@ internal fun FilterChipItem(
             modifier
                 .height(Theme.widgetSize.filterChipHeight)
                 .clip(CircleShape)
+                .border(1.dp, borderColor, CircleShape)
                 .drawBehind { drawRect(backgroundColor) },
             contentAlignment = Alignment.Center
 

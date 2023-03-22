@@ -1,6 +1,9 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,7 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
-import ru.maksonic.beresta.ui.theme.color.secondary
+import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp8
 
@@ -39,7 +42,7 @@ internal fun NoteTitleInputFieldWidget(
         placeholder = {
             Text(
                 text.editNote.hintInputTitle,
-                style = TextDesign.header.copy(color = secondary)
+                style = TextDesign.header.copy(color = outline)
             )
         },
         colors = NoteInputDefaultColors,

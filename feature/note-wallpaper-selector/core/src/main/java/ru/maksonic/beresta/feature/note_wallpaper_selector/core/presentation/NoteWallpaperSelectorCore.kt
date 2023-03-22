@@ -18,24 +18,17 @@ import kotlinx.coroutines.flow.*
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSelectorApi
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.Eff
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.Msg
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.WallpaperSelectorSandbox
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.NoteWallpaper
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.WallpaperCategory
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.widget.TabLayout
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Eff
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Msg
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorSandbox
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.widget.TopBarContainer
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.widget.WallpaperPager
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.onPrimary
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Restart
 import ru.maksonic.beresta.ui.widget.SystemNavigationBar
-import ru.maksonic.beresta.ui.widget.SystemStatusBar
-import ru.maksonic.beresta.ui.widget.bar.TopAppBarNormal
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.toastShortTime
@@ -47,7 +40,6 @@ internal typealias SendMessage = (Msg) -> Unit
 
 class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
     private val mutableNoteWallpaper = MutableStateFlow(0)
-
     override val currentWallpaper: StateFlow<Int>
         get() = mutableNoteWallpaper.asStateFlow()
 
@@ -87,7 +79,6 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
                     .fillMaxSize()
             ) {
                 val systemBarsColor = tertiaryContainer
-                SystemStatusBar(backgroundColor = { systemBarsColor })
                 TopBarContainer(
                     wallpapers = model.wallpapers,
                     pagerState = { pagerState },
@@ -117,14 +108,14 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
                             hideSheet()
                         }
                     },
-                    containerColor = primary,
+                    containerColor = tertiaryContainer,
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = dp16)
                 ) {
                     Text(
                         text = text.editNote.topBarTitleSelectNoteWallpaper,
-                        style = TextDesign.title.copy(color = onPrimary)
+                        style = TextDesign.title.copy(color = onTertiaryContainer)
                     )
                 }
 
@@ -134,12 +125,12 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
                         sandbox.sendMsg(Msg.Ui.ApplySelectedWallpaper)
                         hideSheet()
                     },
-                    containerColor = primary
+                    containerColor = inversePrimary
                 ) {
                     Icon(
                         imageVector = AppIcon.Restart,
                         contentDescription = "",
-                        tint = onPrimary
+                        tint = onTertiary
                     )
                 }
             }

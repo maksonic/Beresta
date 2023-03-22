@@ -6,10 +6,17 @@ import ru.maksonic.beresta.ui.theme.color.Palette
  * @Author maksonic on 26.02.2023
  */
 val outlinedLightBlackPalette = baseLightPalette.copy(
+    onPrimary = Palette.nero,
+    onSecondary = Palette.nero,
+    tertiary = Palette.nero,
+    onTertiary = Palette.white,
+    tertiaryContainer = Palette.nero,
+    onTertiaryContainer = Palette.white,
+    inversePrimary = Palette.black,
     primary = Palette.nero,
-    onSurface = Palette.alto,
-    onSurfaceVariant = Palette.alto,
-    onBackground = Palette.black
 )
-val outlinedDarkBlackPalette = baseDarkPalette.copy(primary = Palette.snow)
-val highContrastBlackPalette = highContrastPalette.copy(primary = Palette.nero)
+val outlinedDarkBlackPalette = baseDarkPalette.copy(
+    primary = Palette.white,
+    tertiaryContainer = Palette.white,
+    onPrimary = Palette.white
+)

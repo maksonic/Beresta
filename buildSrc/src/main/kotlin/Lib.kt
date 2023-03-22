@@ -18,7 +18,7 @@ object Lib {
         const val activityCompose = "1.6.1"
         const val composeBom = "2023.01.00"
         const val composeLifecycle = "2.6.0-beta01"
-        const val material3 = "1.1.0-alpha07"
+        const val material3 = "1.1.0-alpha08"
 
         //coroutines
         const val coroutinesAndroid = "1.6.4"

@@ -8,9 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onBackground
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.secondary
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.functional.rippleClickable
@@ -48,7 +46,7 @@ internal fun SettingClickableItem(
 
         Text(
             text = hint,
-            style = TextDesign.bodyPrimary.copy(color = secondary),
+            style = TextDesign.bodyPrimary.copy(color = outline),
             modifier = modifier.padding(end = dp16)
         )
     }

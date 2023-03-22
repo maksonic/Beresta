@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.Msg
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Msg
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.NoteWallpaper
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme

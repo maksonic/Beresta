@@ -12,7 +12,7 @@ import ru.maksonic.beresta.ui.theme.Theme
  */
 object AppRipple : RippleTheme {
     @Composable
-    override fun defaultColor(): Color = Theme.color.onPrimary
+    override fun defaultColor(): Color = Theme.color.inverseOnSurface
 
     @Composable
     override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(

@@ -18,10 +18,7 @@ import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onBackground
-import ru.maksonic.beresta.ui.theme.color.onSurface
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.transparent
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -96,7 +93,7 @@ private fun LanguageItem(
     onChangeLang: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = if (item.isSelected) onSurface else transparent
+    val backgroundColor = if (item.isSelected) onSecondaryContainer else transparent
 
     Row(
         modifier
@@ -111,13 +108,13 @@ private fun LanguageItem(
 
         Text(
             item.language.title,
-            style = TextDesign.title.copy(color = onBackground),
+            style = TextDesign.title.copy(color = onSecondary),
             modifier = modifier.padding(start = dp8)
         )
         Spacer(modifier.weight(1f))
         Text(
             text = translatedLangHint,
-            style = TextDesign.bodySecondary.copy(color = onBackground),
+            style = TextDesign.bodySecondary.copy(color = inverseSurface),
             modifier = modifier.padding(end = dp8)
         )
     }

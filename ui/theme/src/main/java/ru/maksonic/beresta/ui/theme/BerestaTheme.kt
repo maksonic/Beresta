@@ -86,13 +86,7 @@ fun HighContrastTheme(
         AppThemePalette.RED -> highContrastRedPalette
         AppThemePalette.ORANGE -> highContrastOrangePalette
         AppThemePalette.YELLOW -> highContrastYellowPalette
-        AppThemePalette.BLACK_OUT -> highContrastBlackPalette
-        AppThemePalette.BLUE_OUT -> highContrastPalette
-        AppThemePalette.GREEN_OUT -> highContrastPalette
-        AppThemePalette.PURPLE_OUT -> highContrastPalette
-        AppThemePalette.RED_OUT -> highContrastPalette
-        AppThemePalette.ORANGE_OUT -> highContrastPalette
-        AppThemePalette.YELLOW_OUT -> highContrastPalette
+        else -> highContrastPalette
     }
 
     BerestaTheme(

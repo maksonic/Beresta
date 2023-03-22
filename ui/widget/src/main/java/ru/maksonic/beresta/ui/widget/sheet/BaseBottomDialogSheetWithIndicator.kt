@@ -14,8 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.theme.color.tertiary
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
 
 /**
@@ -39,7 +38,7 @@ fun BaseBottomDialogSheetWithIndicator(
             .padding(start = dp16, end = dp16, bottom = dp16)
             .shadow(Theme.elevation.Level5, shape = Theme.shape.cornerExtra)
             .clip(Theme.shape.cornerExtra)
-            .background(surface)
+            .background(secondaryContainer)
             .padding(start = dp16, end = dp16),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -49,7 +48,7 @@ fun BaseBottomDialogSheetWithIndicator(
 }
 
 @Composable
-private fun SheetIndicator(modifier: Modifier = Modifier, tint: Color = tertiary) {
+private fun SheetIndicator(modifier: Modifier = Modifier, tint: Color = onSecondaryContainer) {
     Box(
         modifier
             .fillMaxWidth()

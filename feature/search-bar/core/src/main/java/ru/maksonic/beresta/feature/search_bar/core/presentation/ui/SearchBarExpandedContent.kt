@@ -73,7 +73,7 @@ private fun TopBar(
         modifier
             .fillMaxWidth()
             .height(Theme.widgetSize.topBarNormalHeight)
-            .padding(start = dp4, end = dp16),
+            .padding(start = dp8, end = dp16),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -91,9 +91,9 @@ private fun TopBar(
                 unfocusedTextColor = onBackground,
                 containerColor = transparent,
                 cursorColor = primary,
-                focusedIndicatorColor = onPrimaryContainer,
-                unfocusedIndicatorColor = secondary,
-                disabledIndicatorColor = secondaryContainer,
+                focusedIndicatorColor = outline,
+                unfocusedIndicatorColor = outline,
+                disabledIndicatorColor = outline,
                 selectionColors = TextSelectionColors(handleColor = primary, onSurfaceVariant),
             ),
             trailingIcon = {

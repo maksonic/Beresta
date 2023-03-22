@@ -5,9 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
-import kotlinx.coroutines.flow.MutableStateFlow
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.Msg
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Msg
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.NoteWallpaper
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.WallpaperCategory
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.SendMessage

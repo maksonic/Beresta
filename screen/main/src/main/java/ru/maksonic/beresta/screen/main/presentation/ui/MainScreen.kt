@@ -1,11 +1,12 @@
 package ru.maksonic.beresta.screen.main.presentation.ui
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -23,10 +24,6 @@ import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.widget.MainBottomIdlePanelWidget
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
-import ru.maksonic.beresta.ui.theme.color.surfaceVariant
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
@@ -60,11 +57,6 @@ private fun Content(
     val isVisibleFirstNote = scrollState.isVisibleFirstItem()
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val searchBarVisibility = remember { mutableStateOf(false) }
-    val searchBarBackgroundColor =
-        animateColorAsState(if (isVisibleFirstNote.value) background else tertiaryContainer)
-    val searchBarColor = animateColorAsState(
-        if (isVisibleFirstNote.value) surfaceVariant else onTertiaryContainer
-    )
     val searchBarScrollOffset = animateDpAsState(
         if (isVisibleFirstNote.value) 0.dp else {
             if (isScrollUp) 0.dp else -Theme.widgetSize.topBarMediumHeight.plus(statusBarHeight)
@@ -95,8 +87,7 @@ private fun Content(
         AnimateFadeInOut(!searchBarVisibility.value) {
             searchBar.Widget(
                 notesCollection = model.notes,
-                searchTopBarBackground = { searchBarBackgroundColor.value },
-                searchBarCollapsedColor = { searchBarColor.value },
+                isVisibleFirstNote = { isVisibleFirstNote.value },
                 modifier = modifier.graphicsLayer {
                     translationY = searchBarScrollOffset.value.toPx()
                 }

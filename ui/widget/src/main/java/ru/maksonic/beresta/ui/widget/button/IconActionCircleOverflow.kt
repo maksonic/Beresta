@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onBackground
-import ru.maksonic.beresta.ui.theme.color.primaryContainer
+import ru.maksonic.beresta.ui.theme.color.inverseOnSurface
+import ru.maksonic.beresta.ui.theme.color.onSurface
 
 /**
  * @Author maksonic on 09.03.2023
@@ -30,13 +30,13 @@ fun IconActionCircleOverflow(
         modifier = modifier.size(Theme.widgetSize.minimumTouchTargetSize)
     ) {
         Card(
-            colors = CardDefaults.cardColors(containerColor = primaryContainer),
+            colors = CardDefaults.cardColors(containerColor = inverseOnSurface),
             shape = CircleShape,
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = modifier.size(36.dp),
         ) {
             Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Icon(imageVector = icon, contentDescription = "", tint = onBackground)
+                Icon(imageVector = icon, contentDescription = "", tint = onSurface)
             }
         }
     }

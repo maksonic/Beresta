@@ -16,4 +16,5 @@ object Theme {
     val padding: AppPadding @Composable get() = LocalAppPadding.current
     val dimen: AppDimen @Composable get() = LocalAppDimen.current
     val shape: AppShape @Composable get() = LocalAppShape.current
+    val tonal: AppTonal @Composable get() = LocalAppTonal.current
 }

@@ -30,9 +30,7 @@ import ru.maksonic.beresta.feature.edit_note.core.fab.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.EditNoteScreen
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.onPrimary
-import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp0
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -102,7 +100,7 @@ private fun FabContainer(
         val fabSize = Theme.widgetSize.btnFabSize
         val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val fabColor = animateColorAsState(
-            if (isExpanded) background else primary, animationSpec = tween(DURATION)
+            if (isExpanded) surface else tertiaryContainer, animationSpec = tween(DURATION)
         )
         val containerElevation = animateDpAsState(
             if (!isScrollUp()) Theme.elevation.Level3 else Theme.elevation.Level0
@@ -118,12 +116,13 @@ private fun FabContainer(
         )
         val containerEndPadding = animateDpAsState(if (isExpanded) dp0 else dp16, tween(DURATION))
         val expandedContentAlpha = animateFloatAsState(if (isExpanded) 1f else 0f, tween(DURATION))
+        val collapsedContentAlpha = animateFloatAsState(if (isExpanded) 0f else 1f, tween(DURATION))
         val isFullExpanded = containerHeight.value == fullHeight
         val containerShape = if (isFullExpanded) 0.dp else dp16
 
         FloatingActionButton(
             onClick = { send(Msg.Ui.OnCreateNewNoteClicked) },
-            containerColor = primary,
+            containerColor = surface,
             shape = RoundedCornerShape(containerShape),
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = containerElevation.value
@@ -156,13 +155,14 @@ private fun FabContainer(
                         val icon = if (isNoteNotEmpty.value) AppIcon.DriveFile else AppIcon.Edit
                         Icon(
                             imageVector = icon,
-                            tint = onPrimary,
+                            tint = onTertiaryContainer,
                             contentDescription = "",
-                            modifier = modifier
+                            modifier = modifier.graphicsLayer {
+                                alpha = collapsedContentAlpha.value
+                            }
                         )
                     }
                 }
-
             }
         }
     }

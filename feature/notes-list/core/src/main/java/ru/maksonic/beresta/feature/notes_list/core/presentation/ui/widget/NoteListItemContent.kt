@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.ButtonElevation
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,10 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.ui.theme.BerestaTheme
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.primaryContainer
-import ru.maksonic.beresta.ui.theme.color.secondary
-import ru.maksonic.beresta.ui.theme.color.secondaryContainer
+import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp12
@@ -44,7 +44,7 @@ internal fun NoteListItemContent(
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = animateColorAsState(
-        targetValue = if (note.isSelected) secondaryContainer else primaryContainer
+        targetValue = if (note.isSelected) secondary else primaryContainer
     )
 
     BoxWithScaleInOutOnClick(
@@ -63,17 +63,17 @@ internal fun NoteListItemContent(
             TopPanelIndication(isPinned = { note.isPinned })
             Text(
                 text = note.title,
-                style = TextDesign.title,
+                style = TextDesign.title.copy(color = onPrimaryContainer),
                 modifier = modifier
             )
             Text(
                 text = note.message,
-                style = TextDesign.bodyPrimary,
+                style = TextDesign.bodyPrimary.copy(color = onPrimaryContainer),
                 modifier = modifier.padding(top = dp8)
             )
             Text(
                 text = note.dateCreation,
-                style = TextDesign.captionSmall.copy(color = secondary),
+                style = TextDesign.captionSmall.copy(color = inverseSurface),
                 modifier = modifier.padding(top = dp16, bottom = dp24)
             )
         }

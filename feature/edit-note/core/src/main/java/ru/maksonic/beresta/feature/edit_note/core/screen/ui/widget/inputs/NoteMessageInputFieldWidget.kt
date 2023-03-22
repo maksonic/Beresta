@@ -12,7 +12,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
-import ru.maksonic.beresta.ui.theme.color.secondary
+import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp8
 
@@ -34,7 +34,7 @@ internal fun NoteMessageInputFieldWidget(
         placeholder = {
             Text(
                 text.editNote.hintInputMessage,
-                style = TextDesign.bodyPrimary.copy(color = secondary)
+                style = TextDesign.bodyPrimary.copy(color = outline)
             )
         },
         colors = NoteInputDefaultColors,

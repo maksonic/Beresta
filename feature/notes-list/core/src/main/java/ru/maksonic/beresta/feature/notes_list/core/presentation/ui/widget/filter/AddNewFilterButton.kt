@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.icons.Add
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.widget.button.IconAction
@@ -23,9 +23,9 @@ internal fun AddNewFilterButton(modifier: Modifier = Modifier) {
         modifier
             .size(Theme.widgetSize.filterChipHeight)
             .clip(CircleShape)
-            .border(1.dp, primary, CircleShape)
+            .border(1.dp, onSurface, CircleShape)
     ) {
-        IconAction(icon = { AppIcon.Add }, tint = primary) {
+        IconAction(icon = { AppIcon.Add }, tint = onSurface) {
 
         }
     }

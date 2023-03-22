@@ -15,8 +15,7 @@ interface SearchBarApi {
         @Composable
         fun Widget(
             notesCollection: NoteUi.Collection,
-            searchTopBarBackground: () -> Color,
-            searchBarCollapsedColor: () -> Color,
+            isVisibleFirstNote: () -> Boolean,
             modifier: Modifier
         )
 
