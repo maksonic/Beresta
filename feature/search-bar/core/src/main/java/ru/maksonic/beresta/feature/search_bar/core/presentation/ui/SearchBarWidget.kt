@@ -2,9 +2,9 @@ package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +30,8 @@ class SearchBarWidget : SearchBarApi.Ui {
     override fun Widget(
         notesCollection: NoteUi.Collection,
         isVisibleFirstNote: () -> Boolean,
+        isSelectedNotesState: () -> Boolean,
+        isScrollInProgress: () -> Boolean,
         modifier: Modifier
     ) {
         val isVisible = searchBarVisibility.collectAsStateWithLifecycle().value
@@ -37,6 +39,8 @@ class SearchBarWidget : SearchBarApi.Ui {
             Content(
                 notesCollection = notesCollection,
                 isVisibleFirstNote = isVisibleFirstNote,
+                isSelectedNotesState = isSelectedNotesState,
+                isScrollInProgress = isScrollInProgress,
                 modifier = modifier
             )
         }
@@ -49,20 +53,24 @@ private fun Content(
     sandbox: SearchBarSandbox = koinViewModel(),
     notesList: NotesListApi.Ui = get(),
     notesCollection: NoteUi.Collection,
-    isVisibleFirstNote: () -> Boolean
+    isVisibleFirstNote: () -> Boolean,
+    isScrollInProgress: () -> Boolean,
+    isSelectedNotesState: () -> Boolean
 ) {
-    sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notesCollection))
+    sandbox.send(Msg.Inner.FetchedNotesCollection(notesCollection))
     val model = sandbox.model.collectAsStateWithLifecycle().value
 
     Box(modifier.fillMaxSize()) {
-        BackgroundCollapsedSearchBarWithUserIcon()
+        BackgroundCollapsedSearchBarWithUserIcon(isSelectedNotesState)
 
         SearchBarOverflowContainer(
             model = model,
-            send = sandbox::sendMsg,
+            send = sandbox::send,
             notesList = notesList,
             isVisibleFirstNote = isVisibleFirstNote,
-            modifier = Modifier
+            isSelectedNotesState = isSelectedNotesState,
+            isScrollInProgress = isScrollInProgress,
+            modifier = Modifier.navigationBarsPadding()
         )
     }
 }

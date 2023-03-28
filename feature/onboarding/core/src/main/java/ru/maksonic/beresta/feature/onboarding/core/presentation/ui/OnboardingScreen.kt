@@ -58,7 +58,7 @@ private fun Content(
     router: OnboardingRouter
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle().value
-    val send = sandbox::sendMsg
+    val send = sandbox::send
     val pagerState = rememberPagerState()
     val isLastCurrentPage = pagerState.currentPage == LAST_ONBOARDING_PAGE
 

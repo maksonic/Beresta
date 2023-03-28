@@ -11,7 +11,6 @@ private typealias Result = UpdatedModel<WidgetModel, Set<Cmd>, Set<Eff>>
 class AddNoteSandbox : Sandbox<WidgetModel, Msg, Cmd, Eff>(initialModel = WidgetModel()) {
 
     override fun update(msg: Msg, model: WidgetModel): Result = when (msg) {
-
         is Msg.Ui.OnCreateNewNoteClicked -> onCreateNoteClicked(model)
         is Msg.Ui.OnCollapseFabClicked -> onTopBarBackPressed(model)
     }

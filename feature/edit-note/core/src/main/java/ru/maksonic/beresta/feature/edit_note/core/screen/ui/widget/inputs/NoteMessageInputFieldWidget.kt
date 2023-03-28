@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -21,20 +20,19 @@ import ru.maksonic.beresta.ui.theme.component.dp8
  */
 @Composable
 internal fun NoteMessageInputFieldWidget(
-    inputValue: TextFieldValue,
-    updateMessage: (TextFieldValue) -> Unit,
+    message: String,
+    updateMessage: (String) -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
 
     TextField(
-        value = inputValue,
+        value = message,
         onValueChange = { inputText -> updateMessage(inputText) },
         textStyle = TextDesign.bodyPrimary,
         placeholder = {
             Text(
-                text.editNote.hintInputMessage,
-                style = TextDesign.bodyPrimary.copy(color = outline)
+                text.editNote.hintInputMessage, style = TextDesign.bodyPrimary.copy(color = outline)
             )
         },
         colors = NoteInputDefaultColors,

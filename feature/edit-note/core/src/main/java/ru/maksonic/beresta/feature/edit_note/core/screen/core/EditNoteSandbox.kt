@@ -5,20 +5,25 @@ import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.BottomSheetEditorState
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.SheetContent
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 
 /**
  * @Author maksonic on 04.03.2023
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class EditNoteSandbox : Sandbox<Model, Msg, Cmd, Eff>(
+class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model(),
+    initialCmd = setOf(Cmd.FetchNote),
+    subscriptions = listOf(program)
 ) {
     companion object {
         private const val MAX_NOTE_LENGTH = 15000
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchedNoteResult -> UpdatedModel(model.copy(currentNote = msg.note))
+        is Msg.Inner.OnSaveNoteClicked -> onSaveNoteClicked(model)
 
         is Msg.Ui.OnTopBarBackPressed -> topBarBackPressed(model)
         is Msg.Ui.OnChangeNoteWallpaperClicked -> onChangeNoteWallpaperPanelClicked(model)
@@ -34,6 +39,18 @@ class EditNoteSandbox : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Inner.FetchedFabStateValue -> afterFetchedFabState(model, msg)
         is Msg.Inner.ShowedMaxLengthNoteInputWarning -> showedToastMaxLengthNoteExceed(model)
         is Msg.Inner.ResetBottomSheetContent -> resetBottomSheetContent(model)
+    }
+
+    private fun onSaveNoteClicked(model: Model): UpdateResult {
+        val resetModel = NoteUi.Default
+        val cmd = if (model.currentNote.id == 0L)
+            Cmd.SaveNote(model.currentNote) else Cmd.UpdateCurrentNote(model.currentNote)
+        val eff = if (model.isNewNote) Eff.CollapseFab else Eff.ShowToastMaxLengthNoteExceed
+        return UpdatedModel(
+            model.copy(currentNote = resetModel),
+            commands = setOf(cmd),
+            effects = setOf(eff)
+        )
     }
 
     private fun topBarBackPressed(model: Model): UpdateResult {
@@ -74,37 +91,43 @@ class EditNoteSandbox : Sandbox<Model, Msg, Cmd, Eff>(
     private fun onEditFabExpanded(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.SetInitialExpandedState))
 
-    private fun afterFetchedFabState(model: Model, msg: Msg.Inner.FetchedFabStateValue): UpdateResult =
+    private fun afterFetchedFabState(
+        model: Model,
+        msg: Msg.Inner.FetchedFabStateValue
+    ): UpdateResult =
         UpdatedModel(model.copy(isNewNote = msg.isExpanded))
 
 
     private fun updatedNoteTitle(model: Model, msg: Msg.Inner.UpdatedInputTitle): UpdateResult {
-        val croppedInput = msg.textField.text.take(MAX_NOTE_LENGTH)
-        val isShowWarning = if (msg.textField.text.length > MAX_NOTE_LENGTH)
+        val croppedInput = msg.text.take(MAX_NOTE_LENGTH)
+        val isShowWarning = if (msg.text.length > MAX_NOTE_LENGTH)
             setOf(Eff.ShowToastMaxLengthNoteExceed)
         else
             emptySet()
 
         return UpdatedModel(
-            model = model.copy(titleField = msg.textField.copy(croppedInput)),
+            model = model.copy(currentNote = model.currentNote.copy(title = croppedInput)),
             effects = isShowWarning
         )
     }
 
     private fun updatedNoteMessage(model: Model, msg: Msg.Inner.UpdatedInputMessage): UpdateResult {
-        val croppedInput = msg.msgField.text.take(MAX_NOTE_LENGTH)
-        val isShowWarning = if (msg.msgField.text.length > MAX_NOTE_LENGTH)
+        val croppedInput = msg.text.take(MAX_NOTE_LENGTH)
+        val isShowWarning = if (msg.text.length > MAX_NOTE_LENGTH)
             setOf(Eff.ShowToastMaxLengthNoteExceed)
         else
             emptySet()
 
         return UpdatedModel(
-            model = model.copy(messageField = msg.msgField.copy(croppedInput)),
+            model = model.copy(currentNote = model.currentNote.copy(message = croppedInput)),
             effects = isShowWarning
         )
     }
 
-    private fun updateNoteWallpaper(model: Model, msg: Msg.Inner.UpdatedNoteWallpaper): UpdateResult =
+    private fun updateNoteWallpaper(
+        model: Model,
+        msg: Msg.Inner.UpdatedNoteWallpaper
+    ): UpdateResult =
         UpdatedModel(model.copy(currentNote = model.currentNote.copy(backgroundId = msg.id)))
 
     private fun updatedEditorPanelVisibility(
@@ -116,8 +139,13 @@ class EditNoteSandbox : Sandbox<Model, Msg, Cmd, Eff>(
         UpdatedModel(model, effects = setOf(Eff.ShowToastMaxLengthNoteExceed))
 
 
-    private fun updatedCreateNoteFabIcon(model: Model, msg: Msg.Inner.UpdatedFabIcon): UpdateResult {
-        val isDraftIcon = model.titleField.text.isNotBlank() || model.messageField.text.isNotBlank()
+    private fun updatedCreateNoteFabIcon(
+        model: Model,
+        msg: Msg.Inner.UpdatedFabIcon
+    ): UpdateResult {
+        val isDraftIcon =
+            model.currentNote.title.isNotBlank() || model.currentNote.message.isNotBlank()
+
         msg.fabIconState.value = isDraftIcon
         return UpdatedModel(model)
     }

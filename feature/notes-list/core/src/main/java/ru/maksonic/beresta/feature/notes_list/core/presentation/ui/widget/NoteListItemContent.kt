@@ -1,33 +1,18 @@
 package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.ButtonElevation
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.*
-import ru.maksonic.beresta.ui.theme.component.Shape
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp12
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp24
-import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
@@ -36,6 +21,8 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 /**
  * @Author maksonic on 21.02.2023
  */
+private const val MAX_TITLE_LENGTH = 100
+private const val MAX_MESSAGE_LENGTH = 200
 @Composable
 internal fun NoteListItemContent(
     onNoteClicked: (id: Long) -> Unit,
@@ -52,7 +39,7 @@ internal fun NoteListItemContent(
         onLongClick = { onNoteLongClicked(note.id) },
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
-        modifier = modifier.padding(bottom = dp12, start = dp16, end = dp16)
+        modifier = modifier.padding(bottom = dp12, start = dp6, end = dp6)
 
     ) {
         Column(
@@ -62,14 +49,19 @@ internal fun NoteListItemContent(
         ) {
             TopPanelIndication(isPinned = { note.isPinned })
             Text(
-                text = note.title,
+                text = note.title.take(MAX_TITLE_LENGTH),
                 style = TextDesign.title.copy(color = onPrimaryContainer),
-                modifier = modifier
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                modifier = modifier.padding(end = dp8)
             )
             Text(
-                text = note.message,
+                text = note.message.take(MAX_MESSAGE_LENGTH),
                 style = TextDesign.bodyPrimary.copy(color = onPrimaryContainer),
-                modifier = modifier.padding(top = dp8)
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                modifier = modifier.padding(top = dp8, end = dp8)
             )
             Text(
                 text = note.dateCreation,
@@ -120,6 +112,6 @@ fun BottomPanelIndication(modifier: Modifier = Modifier) {
 @Composable
 private fun NoteItemPreview() {
     BerestaTheme {
-        NoteListItemContent({}, {}, note = NoteUi.preview)
+        NoteListItemContent({}, {}, note = NoteUi.Preview)
     }
 }

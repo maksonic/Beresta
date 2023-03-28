@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
-import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.SurfacePro
+import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.animation.rowFadingEdge
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
@@ -27,33 +27,28 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleLastItemOffset
 internal fun FilterChipsWidget(
     chipsCollection: FilterChipUi.Collection,
     isVisibleFirstNote: () -> Boolean,
-    send: SendMessage,
+    onChipFilterClicked: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val searchBarContainerHeight = Theme.widgetSize.topBarNormalHeight
-    val chipsContainerHeight = Theme.widgetSize.noteChipsContainerHeight
-    val chipsBackgroundHeight = searchBarContainerHeight + chipsContainerHeight + statusBarHeight
-    val tonal = animateDpAsState(
-        if (isVisibleFirstNote()) Theme.tonal.Level0 else Theme.tonal.Level4
-    )
+    val tonal =
+        animateDpAsState(if (isVisibleFirstNote()) Theme.tonal.Level0 else Theme.tonal.Level4)
 
     SurfacePro(tonalElevation = tonal.value, modifier = modifier) { resultColor ->
 
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(chipsBackgroundHeight),
-            contentAlignment = Alignment.BottomStart
-        ) {
+        Column(Modifier.fillMaxWidth()) {
             val lazyRowState = rememberLazyListState()
             val isVisibleFirstChipOffset = lazyRowState.isVisibleFirstItemOffset()
             val isVisibleLastChipOffset = lazyRowState.isVisibleLastItemOffset()
 
+            SystemStatusBar()
+            Box(modifier.height(Theme.widgetSize.topBarNormalHeight))
+
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(start = dp16, bottom = dp12)
+                    .height(Theme.widgetSize.noteChipsContainerHeight)
+                    .padding(start = dp16),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 OverscrollBehavior {
                     LazyRow(
@@ -70,7 +65,7 @@ internal fun FilterChipsWidget(
                     ) {
                         items(chipsCollection.data, key = { chip -> chip.id }) { item ->
 
-                            FilterChipItem(item, send)
+                            FilterChipItem(item, onChipFilterClicked)
                         }
                     }
                     AddNewFilterButton(modifier = Modifier.padding(start = dp12, end = dp16))

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Feature.EditNote.Api.path))
     implementation(project(BaseModule.Feature.NotesList.Api.path))
+    implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
 
     implementation(Lib.Accompanist.systemUiController)

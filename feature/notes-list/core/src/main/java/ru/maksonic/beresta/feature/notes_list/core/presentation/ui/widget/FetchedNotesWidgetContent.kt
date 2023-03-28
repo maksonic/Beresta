@@ -1,111 +1,107 @@
 package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.Flow
-import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
+import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.core.presentation.Eff
-import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
-import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter.FilterChipsWidget
-import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.isScrollUp
-import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
+import ru.maksonic.beresta.ui.theme.component.dp10
+import ru.maksonic.beresta.ui.widget.functional.ANIMATION_DURATION_NORMAL
 
 /**
  * @Author maksonic on 22.02.2023
  */
-internal typealias SendMessage = (Msg) -> Unit
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FetchedNotesWidgetContent(
     modifier: Modifier = Modifier,
     notes: NoteUi.Collection,
-    scrollState: () -> LazyListState,
-    router: MainScreenRouter,
-    sandbox: NotesListSandbox = koinViewModel(),
+    chips: FilterChipUi.Collection,
+    onNoteClicked: (id: Long) -> Unit,
+    onNoteLongPressed: (id: Long) -> Unit,
+    onChipFilterClicked: (id: Int) -> Unit,
+    sharedScroll: NotesListSharedScrollState
 ) {
-    HandleEffects(sandbox.effects, router)
-
-    LaunchedEffect(Unit) {
-        /**
-         * Fetched notes from MainSandbox are passed here and apply to:
-         * @see [ru.maksonic.beresta.feature.notes_list.core.presentation.Model.notes]
-         * */
-        sandbox.sendMsg(Msg.Inner.FetchedNotesCollection(notes))
-    }
-
-    val model = sandbox.model.collectAsState().value
-    val isVisibleFirstNote = scrollState().isVisibleFirstItem()
-    val isScrollUp = scrollState().isScrollUp()
-    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val topBarNormalHeight = Theme.widgetSize.topBarNormalHeight
     val chipsTransition = animateDpAsState(
-        if (isVisibleFirstNote.value) 0.dp else if (isScrollUp) 0.dp else -topBarNormalHeight,
-        animationSpec = tween()
+        if (sharedScroll.isVisibleFirstNote()) 0.dp
+        else if (sharedScroll.isScrollUp()) 0.dp else -topBarNormalHeight,
+        animationSpec = tween(ANIMATION_DURATION_NORMAL)
     )
 
     Box(modifier = modifier.fillMaxSize()) {
 
-        LazyColumn(
-            state = scrollState(),
-            modifier = modifier.padding(top = Theme.widgetSize.noteChipsContainerHeight),
-            horizontalAlignment = Alignment.CenterHorizontally
+        LazyVerticalStaggeredGrid(
+            state = sharedScroll.state(),
+            columns = StaggeredGridCells.Fixed(sharedScroll.gridCellsCount()),
+            contentPadding = PaddingValues(all = dp10),
+            modifier = modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(top = topBarNormalHeight)
         ) {
-            item {
-                Spacer(
-                    modifier.height(
-                        Theme.widgetSize.noteChipsContainerHeight.plus(statusBarHeight)
-                    )
-                )
+
+            items(sharedScroll.gridCellsCount()) {
+                Box(modifier.height(Theme.widgetSize.noteChipsContainerHeight))
             }
-            items(items = model.notes.data, key = { note -> note.id }) { note ->
+
+            items(items = notes.data, key = { note -> note.id }) { note ->
                 NoteListItemContent(
-                    onNoteClicked = { id -> sandbox.sendMsg(Msg.Ui.OnNoteClicked(id)) },
-                    onNoteLongClicked = { id -> sandbox.sendMsg(Msg.Ui.OnNoteLongClicked(id)) },
+                    onNoteClicked = { id -> onNoteClicked(id) },
+                    onNoteLongClicked = { id -> onNoteLongPressed(id) },
                     note = note,
-                    modifier = modifier.animateItemPlacement()
+                    modifier = modifier.animateContentSize()
                 )
             }
 
-            item {
-                Spacer(
-                    modifier
-                        .navigationBarsPadding()
-                        .height(Theme.widgetSize.bottomMainPanelHeight)
+            items(sharedScroll.gridCellsCount()) {
+                val listBottomPadding = animateDpAsState(
+                    if (sharedScroll.isSelectionState())
+                        Theme.widgetSize.bottomPanelHeightSelected
+                    else
+                        Theme.widgetSize.bottomMainPanelHeight
+                )
+
+                Box(
+                    modifier.height(listBottomPadding.value)
                 )
             }
         }
+
         FilterChipsWidget(
-            chipsCollection = model.filters,
-            isVisibleFirstNote = { isVisibleFirstNote.value },
-            send = sandbox::sendMsg,
+            chipsCollection = chips,
+            isVisibleFirstNote = sharedScroll.isVisibleFirstNoteOffset,
+            onChipFilterClicked = onChipFilterClicked,
             modifier = modifier.graphicsLayer {
                 translationY = chipsTransition.value.toPx()
             }
         )
     }
-}
 
-@Composable
-private fun HandleEffects(effects: Flow<Eff>, router: MainScreenRouter) {
-    HandleEffectsWithLifecycle(effects) { eff ->
-        when (eff) {
-            is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
+    if (notes.data.isEmpty()) {
+        val searchBarContainerHeight = Theme.widgetSize.topBarNormalHeight
+        val chipsContainerHeight = Theme.widgetSize.noteChipsContainerHeight
+        val emptyNotesWidgetPadding = searchBarContainerHeight + chipsContainerHeight
+
+        Box(
+            modifier
+                .statusBarsPadding()
+                .padding(top = emptyNotesWidgetPadding)
+        ) {
+            EmptyNotesWidgetContent()
         }
     }
 }

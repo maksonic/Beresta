@@ -21,7 +21,9 @@ data class NoteUi(
     val isMovedToTrash: Boolean = false
 ) : Parcelable {
     companion object {
-        val preview = NoteUi(
+        val Default = NoteUi()
+
+        val Preview = NoteUi(
             id = 0,
             title = "Note title preview",
             message = "Note message preview",

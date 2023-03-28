@@ -50,5 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
+    implementation(project(BaseModule.Feature.NotesList.Api.path))
     implementation(Lib.Koin.compose)
 }

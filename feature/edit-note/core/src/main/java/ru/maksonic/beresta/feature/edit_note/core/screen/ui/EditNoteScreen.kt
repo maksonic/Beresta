@@ -62,7 +62,7 @@ fun EditNoteScreen(
     router: EditNoteRouter? = null,
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
-    sandbox.sendMsg(Msg.Inner.FetchedFabStateValue(isExpandedFab()))
+    sandbox.send(Msg.Inner.FetchedFabStateValue(isExpandedFab()))
 
     val model = sandbox.model.collectAsStateWithLifecycle().value
     val focusManager = LocalFocusManager.current
@@ -78,7 +78,7 @@ fun EditNoteScreen(
 
     Content(
         model = model,
-        send = sandbox::sendMsg,
+        send = sandbox::send,
         isVisibleOnFabDraftIndicator = isVisibleOnFabDraftIndicator,
         focusManager = focusManager,
         titleFocus = titleFocus,
@@ -149,13 +149,13 @@ fun Content(
             )
 
             NoteTitleInputFieldWidget(
-                inputValue = model.titleField,
+                title = model.currentNote.title,
                 updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
                 focusRequester = titleFocus,
                 focusManager = focusManager,
             )
             NoteMessageInputFieldWidget(
-                inputValue = model.messageField,
+                message = model.currentNote.message,
                 updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
                 focusRequester = messageFocus,
             )
@@ -169,6 +169,7 @@ fun Content(
 
         TopBarWithEditorPanelContainer(
             send = send,
+            currentNote = model.currentNote,
             editorPanelState = model.editorPanelState,
             onTopBarBackPressed = { send(Msg.Ui.OnTopBarBackPressed) },
             isVisibleEditorPanel = model.isVisibleEditorPanel,
@@ -228,7 +229,7 @@ private fun HandleEffects(
                     keyboardController?.show()
                 }
             }
-            is Eff.NavigateBack -> router?.let { it.onBack() } ?: {}
+            is Eff.NavigateBack -> router?.let { it.onBack() }
             is Eff.ShowToastMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning)
             is Eff.HideSystemKeyboard -> {
                 focusManager.clearFocus()

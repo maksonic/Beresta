@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
@@ -28,11 +30,11 @@ import ru.maksonic.beresta.ui.widget.SurfacePro
 @Composable
 internal fun EditNoteBottomPanel(
     send: SendMessage,
+    currentNote: NoteUi,
     isScrollUp: () -> Boolean,
     state: EditorPanelState,
     modifier: Modifier = Modifier
 ) {
-
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val panelHeight = Theme.widgetSize.bottomMainPanelHeight
     val panelOffset = animateDpAsState(
@@ -74,7 +76,7 @@ internal fun EditNoteBottomPanel(
         }
 
         FloatingActionButton(
-            onClick = {},
+            onClick = { send(Msg.Inner.OnSaveNoteClicked(currentNote)) },
             containerColor = tertiaryContainer,
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = Theme.elevation.Level0

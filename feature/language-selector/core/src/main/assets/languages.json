@@ -38,7 +38,13 @@
       "btn_title_save": "Сохранить",
       "btn_title_cancel": "Отменить",
       "btn_title_close": "Закрыть",
-      "hint_find_note_search_bar": "Найти заметку"
+      "btn_title_hide": "Скрыть",
+      "btn_title_pin": "Закрепить",
+      "btn_title_unpin": "Открепить",
+      "btn_title_replace": "Переместить",
+      "btn_title_remove": "Удалить",
+      "hint_find_note_search_bar": "Найти заметку",
+      "hint_selected_notes_count_bottom_bar": "Выбрано заметок: "
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -110,7 +116,14 @@
       "btn_title_save": "Save",
       "btn_title_cancel": "Cancel",
       "btn_title_close": "Close",
-      "hint_find_note_search_bar": "Find note"
+      "btn_title_hide": "Hide",
+      "btn_title_pin": "Pin",
+      "btn_title_unpin": "Unpin",
+      "btn_title_replace": "Move",
+      "btn_title_remove": "Remove",
+      "hint_find_note_search_bar": "Find note",
+      "hint_selected_notes_count_bottom_bar": "Notes selected: "
+
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -182,7 +195,13 @@
       "btn_title_save": "节省",
       "btn_title_cancel": "取消",
       "btn_title_close": "关闭",
-      "hint_find_note_search_bar": "查找笔记"
+      "btn_title_hide": "隐藏",
+      "btn_title_pin": "修理",
+      "btn_title_unpin": "取消固定",
+      "btn_title_replace": "移动",
+      "btn_title_remove": "删除",
+      "hint_find_note_search_bar": "查找笔记",
+      "hint_selected_notes_count_bottom_bar": "所选笔记： "
     },
     "settings": {
       "top_bar_title": "设置",
@@ -254,7 +273,13 @@
       "btn_title_save": "保存",
       "btn_title_cancel": "取消",
       "btn_title_close": "關閉",
-      "hint_find_note_search_bar": "查找筆記"
+      "btn_title_hide": "隱藏",
+      "btn_title_pin": "修理",
+      "btn_title_unpin": "取消固定",
+      "btn_title_replace": "移動",
+      "btn_title_remove": "刪除",
+      "hint_find_note_search_bar": "查找筆記",
+      "hint_selected_notes_count_bottom_bar": "所選筆記： "
     },
     "settings": {
       "top_bar_title": "設置",

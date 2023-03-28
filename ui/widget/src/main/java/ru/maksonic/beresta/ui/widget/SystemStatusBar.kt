@@ -10,10 +10,16 @@ import androidx.compose.ui.graphics.Color
  * @Author maksonic on 11.01.2023
  */
 @Composable
-fun SystemStatusBar(backgroundColor: () -> Color, modifier: Modifier = Modifier) {
+fun SystemStatusBar(
+    modifier: Modifier = Modifier,
+    backgroundColor: () -> Color = { Color.Transparent },
+) {
     val height = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     Box(modifier = modifier
         .fillMaxWidth()
         .height(height)
         .drawBehind { drawRect(backgroundColor()) })
 }
+
+val StatusBarHeight
+    @Composable get() = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()

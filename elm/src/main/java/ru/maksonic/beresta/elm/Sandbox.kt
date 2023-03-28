@@ -36,7 +36,7 @@ abstract class Sandbox<T : ElmModel, M : ElmMessage, C : ElmCommand, E : ElmEffe
 
     protected abstract fun update(msg: M, model: T): UpdatedModel<T, Set<C>, Set<E>>
 
-    override fun sendMsg(msg: M) {
+    override fun send(msg: M) {
         val (newModel, commands, effects) = update(msg, mutableModel.value)
         mutableModel.value = newModel
         executePrograms(commands)
@@ -46,7 +46,7 @@ abstract class Sandbox<T : ElmModel, M : ElmMessage, C : ElmCommand, E : ElmEffe
     private fun executePrograms(programs: Set<C>?) = programs?.forEach { command ->
         subscriptions.forEach { subscription ->
             viewModelScope.launch {
-                subscription.executeProgram(command, ::sendMsg)
+                subscription.executeProgram(command, ::send)
             }
         }
     }

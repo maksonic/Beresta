@@ -17,7 +17,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -29,14 +28,14 @@ import ru.maksonic.beresta.ui.theme.component.dp8
  */
 @Composable
 internal fun NoteTitleInputFieldWidget(
-    inputValue: TextFieldValue,
-    updateTitle: (TextFieldValue) -> Unit,
+    title: String,
+    updateTitle: (String) -> Unit,
     focusRequester: FocusRequester,
     focusManager: FocusManager,
     modifier: Modifier = Modifier,
 ) {
     TextField(
-        value = inputValue,
+        value = title,
         onValueChange = { inputText -> updateTitle(inputText) },
         textStyle = TextDesign.topBar,
         placeholder = {

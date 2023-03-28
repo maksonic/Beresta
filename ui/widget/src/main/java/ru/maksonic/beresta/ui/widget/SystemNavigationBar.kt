@@ -17,3 +17,6 @@ fun SystemNavigationBar(backgroundColor: () -> Color, modifier: Modifier = Modif
         .height(height)
         .drawBehind { drawRect(backgroundColor()) })
 }
+
+val SystemNavigationBarHeight
+    @Composable get() = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()

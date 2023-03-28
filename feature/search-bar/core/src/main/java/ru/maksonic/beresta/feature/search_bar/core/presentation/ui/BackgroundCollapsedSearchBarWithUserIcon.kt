@@ -1,5 +1,7 @@
 package ru.maksonic.beresta.feature.search_bar.core.presentation.ui
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -7,25 +9,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.core.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.Share
+import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.clickAction
 
 /**
  * @Author maksonic on 22.02.2023
  */
 @Composable
-internal fun BackgroundCollapsedSearchBarWithUserIcon(modifier: Modifier = Modifier) {
-    Box(
+internal fun BackgroundCollapsedSearchBarWithUserIcon(
+    isSelectedState: () -> Boolean,
+    modifier: Modifier = Modifier
+) {
+    val shareIconTransition = animateDpAsState(if (isSelectedState()) 0.dp else 68.dp, tween())
+
+    Row(
         modifier
             .padding(start = dp16)
             .statusBarsPadding()
-            .height(Theme.widgetSize.topBarNormalHeight),
-        contentAlignment = Alignment.CenterStart
+            .height(Theme.widgetSize.topBarNormalHeight)
+            .padding(end = dp8),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = R.drawable.placeholder_user_avatar),
@@ -35,5 +48,9 @@ internal fun BackgroundCollapsedSearchBarWithUserIcon(modifier: Modifier = Modif
                 .size(36.dp)
                 .clickAction(rippleColor = primary) { }
         )
+        Spacer(modifier.weight(1f))
+        IconAction(icon = { AppIcon.Share }, action = {}, modifier = modifier.graphicsLayer {
+            translationX = shareIconTransition.value.toPx()
+        })
     }
 }

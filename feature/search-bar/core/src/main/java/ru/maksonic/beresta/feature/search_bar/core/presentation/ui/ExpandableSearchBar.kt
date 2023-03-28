@@ -20,6 +20,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp56
 import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
@@ -33,6 +34,8 @@ internal fun ExpandableSearchBar(
     notesList: NotesListApi.Ui,
     boxScope: BoxWithConstraintsScope,
     isVisibleFirstNote: () -> Boolean,
+    isSelectedNotesState: () -> Boolean,
+    isScrollInProgress: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
     val dp0 = 0.dp
@@ -40,7 +43,9 @@ internal fun ExpandableSearchBar(
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val topPadding = animateDpAsState(if (model.isExpandedBar) dp0 else statusBarHeight.plus(dp4))
     val startPadding = animateDpAsState(if (model.isExpandedBar) dp0 else 68.dp)
-    val endPadding = animateDpAsState(if (model.isExpandedBar) dp0 else dp16)
+    val isSelectedStatePaddingEnd = if (isSelectedNotesState()) 64.dp else dp16
+    val endPadding =
+        animateDpAsState(if (model.isExpandedBar) dp0 else isSelectedStatePaddingEnd)
     val searchBarColor =
         animateColorAsState(if (isVisibleFirstNote()) surfaceVariant else onSurfaceVariant)
     val clip = animateDpAsState(if (model.isExpandedBar) dp0 else 25.dp)
@@ -50,7 +55,7 @@ internal fun ExpandableSearchBar(
     )
     val clickModifier = if (model.isExpandedBar)
         Modifier.noRippleClickable { }
-    else Modifier.clickAction(rippleColor = primary) { send(Msg.Ui.OnExpandSearchBarClicked) }
+    else Modifier.clickAction(rippleColor = primary) { if (!isScrollInProgress()) send(Msg.Ui.OnExpandSearchBarClicked) }
 
     Box(
         modifier

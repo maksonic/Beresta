@@ -16,6 +16,8 @@ interface SearchBarApi {
         fun Widget(
             notesCollection: NoteUi.Collection,
             isVisibleFirstNote: () -> Boolean,
+            isSelectedNotesState: () -> Boolean,
+            isScrollInProgress: () -> Boolean,
             modifier: Modifier
         )
 

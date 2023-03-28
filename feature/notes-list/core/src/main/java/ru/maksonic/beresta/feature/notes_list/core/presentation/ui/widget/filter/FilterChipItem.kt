@@ -13,8 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
-import ru.maksonic.beresta.feature.notes_list.core.presentation.Msg
-import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.TextDesign
@@ -27,14 +25,14 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 @Composable
 internal fun FilterChipItem(
     item: FilterChipUi,
-    send: SendMessage,
+    onChipFilterClicked: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val titleColor = if (item.isSelected) onTertiaryContainer else onBackground
     val backgroundColor = if (item.isSelected) tertiaryContainer else transparent
     val borderColor = if (item.isSelected) transparent else outline
 
-    BoxWithScaleInOutOnClick(onClick = { send(Msg.Ui.OnChipFilterClicked(item.id)) }) {
+    BoxWithScaleInOutOnClick(onClick = { onChipFilterClicked(item.id) }) {
 
         Box(
             modifier

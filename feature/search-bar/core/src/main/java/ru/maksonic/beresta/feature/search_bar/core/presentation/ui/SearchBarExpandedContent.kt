@@ -27,6 +27,7 @@ import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Close
+import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
@@ -47,12 +48,14 @@ internal fun SearchBarExpandedContent(
         modifier
             .fillMaxSize()
             .background(background)
-            .noRippleClickable { }) {
-        val statusBarColor = background
+            .noRippleClickable { }
+    ) {
+        val systemBarsColor = background
 
-        SystemStatusBar(backgroundColor = { statusBarColor })
+        SystemStatusBar(backgroundColor = { systemBarsColor })
         TopBar(model = model, send = send)
         SearchListResult(notes = model.searchList, notesApi = notesList)
+        SystemNavigationBar(backgroundColor = { systemBarsColor })
     }
 }
 
@@ -121,7 +124,9 @@ private fun SearchListResult(
 
     LazyColumn(
         state = scrollState,
-        modifier = modifier.navigationBarsPadding().padding(top = dp8),
+        modifier = modifier
+            .navigationBarsPadding()
+            .padding(top = dp8),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->

@@ -23,8 +23,10 @@ import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
 import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
+import ru.maksonic.beresta.feature.edit_note.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.edit_note.core.fab.core.AddNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.fab.ui.AddNoteFabWidget
+import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteProgram
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
@@ -43,7 +45,6 @@ import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
-import ru.maksonic.beresta.feature.notes_list.core.presentation.NotesListSandbox
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.NotesListWidget
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
@@ -121,7 +122,7 @@ class BerestaApp : Application() {
     }
 
     private val mainScreenModule = module {
-        single { MainProgram(fetchingUseCase = get(), mapper = get()) }
+        single { MainProgram(fetchingUseCase = get(), notesInteractor = get(), mapper = get()) }
         viewModel { MainSandbox(mainProgram = get()) }
     }
 
@@ -169,9 +170,8 @@ class BerestaApp : Application() {
     private val notesListFeatureModule = module {
         single<NotesListApi.Ui> { NotesListWidget() }
         single { NoteUiMapper(dateFormatter = get()) }
-        viewModel { NotesListSandbox() }
-
     }
+
     private val notesListFeatureDataModule = module {
         single { NoteCacheMapper() }
         single {
@@ -191,7 +191,16 @@ class BerestaApp : Application() {
     }
 
     private val editNoteFeatureModule = module {
-        viewModel { EditNoteSandbox() }
+        single<RefactorNoteInteractor> { RefactorNoteInteractor.Impl(repository = get()) }
+        single {
+            EditNoteProgram(
+                interactor = get(),
+                fetchNoteByIdUseCase = get(),
+                mapper = get(),
+                navigator = get()
+            )
+        }
+        viewModel { EditNoteSandbox(program = get()) }
         viewModel { AddNoteSandbox() }
         single<EditNoteApi.Ui> { AddNoteFabWidget() }
     }

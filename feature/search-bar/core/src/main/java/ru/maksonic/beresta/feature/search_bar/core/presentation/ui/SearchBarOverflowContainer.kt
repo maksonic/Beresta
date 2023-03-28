@@ -20,6 +20,8 @@ internal fun SearchBarOverflowContainer(
     send: SendMessage,
     notesList: NotesListApi.Ui,
     isVisibleFirstNote: () -> Boolean,
+    isSelectedNotesState: () -> Boolean,
+    isScrollInProgress: () -> Boolean,
     modifier: Modifier,
 ) {
 
@@ -36,7 +38,9 @@ internal fun SearchBarOverflowContainer(
             send = send,
             boxScope = boxScope,
             notesList = notesList,
-            isVisibleFirstNote = isVisibleFirstNote
+            isVisibleFirstNote = isVisibleFirstNote,
+            isSelectedNotesState = isSelectedNotesState,
+            isScrollInProgress = isScrollInProgress,
         )
     }
 }

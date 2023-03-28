@@ -23,8 +23,6 @@ data class Model constructor(
     val currentNote: NoteUi = NoteUi(),
     val isNewNote: Boolean = false,
     val isVisibleEditorPanel: Boolean = true,
-    val titleField: TextFieldValue = TextFieldValue(""),
-    val messageField: TextFieldValue = TextFieldValue(""),
     val editorPanelState: EditorPanelState = EditorPanelState.IDLE,
     val editorSheet: BottomSheetEditor = BottomSheetEditor()
 ) : ElmModel
@@ -39,8 +37,10 @@ sealed class Msg : ElmMessage {
 
     sealed class Inner : Msg() {
         object ShowKeyboardWithFocusOnTitle : Inner()
-        data class UpdatedInputTitle(val textField: TextFieldValue) : Inner()
-        data class UpdatedInputMessage(val msgField: TextFieldValue) : Inner()
+        data class OnSaveNoteClicked(val note: NoteUi) : Ui()
+        data class FetchedNoteResult(val note: NoteUi): Inner()
+        data class UpdatedInputTitle(val text: String) : Inner()
+        data class UpdatedInputMessage(val text: String) : Inner()
         data class UpdatedFabIcon(val fabIconState: MutableState<Boolean>) : Inner()
         data class UpdatedEditorPanelVisibility(val isVisible: Boolean) : Inner()
         data class UpdatedNoteWallpaper(val id: Int): Inner()
@@ -50,7 +50,11 @@ sealed class Msg : ElmMessage {
     }
 }
 
-sealed class Cmd : ElmCommand {}
+sealed class Cmd : ElmCommand {
+    object FetchNote : Cmd()
+    data class SaveNote(val note: NoteUi) : Cmd()
+    data class UpdateCurrentNote(val note: NoteUi) : Cmd()
+}
 
 sealed class Eff : ElmEffect {
     object SetInitialExpandedState : Eff()

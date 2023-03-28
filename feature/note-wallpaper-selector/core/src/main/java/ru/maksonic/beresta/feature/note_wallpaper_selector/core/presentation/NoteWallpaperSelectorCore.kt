@@ -85,7 +85,7 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
                     hideSheet = hideSheet
                 )
                 WallpaperPager(
-                    send = sandbox::sendMsg,
+                    send = sandbox::send,
                     tabData = model.wallpapers,
                     pagerState = { pagerState },
                     selectedNoteWallpaper = model.selectedWallpaper
@@ -102,9 +102,9 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
                 FloatingActionButton(
                     onClick = {
                         if (model.selectedWallpaper.resourceId == 0) {
-                            sandbox.sendMsg(Msg.Inner.ShowedNotSelectedWallpaperToast)
+                            sandbox.send(Msg.Inner.ShowedNotSelectedWallpaperToast)
                         } else {
-                            sandbox.sendMsg(Msg.Ui.ApplySelectedWallpaper)
+                            sandbox.send(Msg.Ui.ApplySelectedWallpaper)
                             hideSheet()
                         }
                     },
@@ -121,8 +121,8 @@ class NoteWallpaperSelectorCore : NoteWallpaperSelectorApi {
 
                 FloatingActionButton(
                     onClick = {
-                        sandbox.sendMsg(Msg.Ui.SelectWallpaper(NoteWallpaper()))
-                        sandbox.sendMsg(Msg.Ui.ApplySelectedWallpaper)
+                        sandbox.send(Msg.Ui.SelectWallpaper(NoteWallpaper()))
+                        sandbox.send(Msg.Ui.ApplySelectedWallpaper)
                         hideSheet()
                     },
                     containerColor = inversePrimary

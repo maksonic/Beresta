@@ -30,7 +30,6 @@ import ru.maksonic.beresta.screen.settings.presentation.widget.setting_item.Supp
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.scrim
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
@@ -53,7 +52,7 @@ fun SettingsScreen(router: SettingsScreenRouter, sandbox: SettingsSandbox = koin
 
     Content(
         model = model,
-        send = sandbox::sendMsg,
+        send = sandbox::send,
         modalSheetState = { model.modalBottomSheetState },
         currentSheetContent = model.currentSheetContent
     )

@@ -49,7 +49,7 @@ private const val DURATION = 450
 class AddNoteFabWidget : EditNoteApi.Ui {
 
     @Composable
-    override fun Widget(isNotesScrollUp: () -> Boolean, modifier: Modifier) {
+    override fun NewNoteFabWidget(isNotesScrollUp: () -> Boolean, modifier: Modifier) {
         Content(isScrollUp = isNotesScrollUp)
     }
 }
@@ -64,7 +64,7 @@ private fun Content(
 
     BackHandler(model.isExpandedFab) {
         if (model.isExpandedFab) {
-            sandbox.sendMsg(Msg.Ui.OnCollapseFabClicked)
+            sandbox.send(Msg.Ui.OnCollapseFabClicked)
         }
     }
 
@@ -77,7 +77,7 @@ private fun Content(
     )
 
     FabContainer(
-        send = sandbox::sendMsg,
+        send = sandbox::send,
         isExpanded = model.isExpandedFab,
         isScrollUp = isScrollUp,
     )

@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.ui.widget.functional
 
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.*
 
 /**
@@ -17,15 +16,6 @@ fun LazyListState.isVisibleFirstItemOffset(): Boolean {
 
     return if (isFirstItemInList) {
         layoutInfo.visibleItemsInfo.firstOrNull()?.offset == 0
-    } else {
-        false
-    }
-}
-fun LazyGridState.isVisibleFirstItemsLineOffset(): Boolean {
-    val isFirstItemInList = layoutInfo.visibleItemsInfo.firstOrNull()?.index == 0
-
-    return if (isFirstItemInList) {
-        layoutInfo.visibleItemsInfo.firstOrNull()?.offset?.y == 0
     } else {
         false
     }
@@ -60,8 +50,3 @@ fun LazyListState.isScrollUp(): Boolean {
         }
     }.value
 }
-
-fun LazyListState.isScrolledTop() =
-    layoutInfo.visibleItemsInfo.firstOrNull()?.index == 0
-
-

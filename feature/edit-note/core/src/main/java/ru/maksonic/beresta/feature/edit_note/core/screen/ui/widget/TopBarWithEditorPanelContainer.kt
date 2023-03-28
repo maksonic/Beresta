@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditNoteBottomPanel
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
+import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 
@@ -15,6 +16,7 @@ import ru.maksonic.beresta.ui.widget.SystemStatusBar
 @Composable
 internal fun TopBarWithEditorPanelContainer(
     send: SendMessage,
+    currentNote: NoteUi,
     editorPanelState: EditorPanelState,
     onTopBarBackPressed: () -> Unit,
     isVisibleEditorPanel: Boolean,
@@ -33,6 +35,7 @@ internal fun TopBarWithEditorPanelContainer(
 
         EditNoteBottomPanel(
             send = send,
+            currentNote = currentNote,
             state = editorPanelState,
             isScrollUp = { isVisibleEditorPanel }
         )
