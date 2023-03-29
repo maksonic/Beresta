@@ -3,6 +3,8 @@ package ru.maksonic.beresta.feature.notes_list.core.filter.presentation
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +19,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.notes_list.api.NewFolderDialogSharedState
 import ru.maksonic.beresta.ui.theme.color.*
@@ -97,6 +100,8 @@ internal fun FolderCreationDialogContent(
                                 style = TextDesign.captionSmall
                             )
                         },
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedTextColor = onBackground,
                             unfocusedTextColor = outline,
