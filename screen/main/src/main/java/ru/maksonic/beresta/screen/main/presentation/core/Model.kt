@@ -17,19 +17,23 @@ data class Model(
     val notes: NoteUi.Collection = NoteUi.Collection.Empty,
     val filters: FilterChipUi.Collection = FilterChipUi.Collection.Preview,
     val errorMsg: String = "Неизвестная ошибка",
-    val isVisibleTopBar: Boolean = true,
-    val isColoredTopBar: Boolean = false,
     val isVisibleBottomBar: Boolean = true,
     val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
     val isSelectionState: Boolean = false,
     val isShowBottomBarUnpinBtn: Boolean = false,
     val selectedNotesCount: Int = 0,
     val notesGridCount: Int = 1,
+    val isVisibleNewFolderDialog: Boolean = false,
+    val newFolderInputName: String = "",
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object CreateNewNote : Ui()
+        object OnCreateNewNoteClicked : Ui()
+        object OnAddNewFilterFolderClicked : Ui()
+        object OnCreateNewNotesFolderClicked: Ui()
+        object OnDismissFolderCreationDialogClicked: Ui()
+
         // Idle bottom panel messages
         object OnBottomBarSettingsClicked : Ui()
         object OnBottomBarTrashClicked : Ui()
@@ -53,9 +57,7 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class FetchedNotesCollection(val notes: NoteUi.Collection): Inner()
         data class FetchedError(val message: String): Inner()
-        data class SetTopBarVisibility(val value: Boolean) : Inner()
-        data class SetColoredTopBar(val value: Boolean) : Inner()
-        data class SetBottomVisibility(val value: Boolean) : Inner()
+        data class UpdateNewFolderNameInput(val value: String): Inner()
     }
 }
 

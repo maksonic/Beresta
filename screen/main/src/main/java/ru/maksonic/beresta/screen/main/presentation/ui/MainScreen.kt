@@ -2,41 +2,34 @@ package ru.maksonic.beresta.screen.main.presentation.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
+import ru.maksonic.beresta.feature.notes_list.api.NewFolderDialogSharedState
 import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.presentation.core.Eff
 import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
+import ru.maksonic.beresta.screen.main.presentation.core.Model
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.widget.bottom_bar.MainBottomBar
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.*
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 15.02.2023
  */
 internal typealias SendMessage = (Msg) -> Unit
-
-private const val FAB_VISIBILITY_DURATION = 400
 
 @Composable
 fun MainScreen(router: MainScreenRouter) {
@@ -58,15 +51,8 @@ private fun Content(
     val isScrollUp = scrollState.isScrollUp()
     val isVisibleFirstNote = scrollState.isVisibleFirstItem()
     val isVisibleFirstNoteOffset = scrollState.isVisibleFirstItemOffset()
-    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val searchBarVisibility = remember { mutableStateOf(false) }
-    val searchBarScrollOffset = animateDpAsState(
-        if (isVisibleFirstNote.value) 0.dp else {
-            if (isScrollUp) 0.dp else -Theme.widgetSize.topBarMediumHeight.plus(statusBarHeight)
-        },
-        animationSpec = tween(ANIMATION_DURATION_NORMAL)
-    )
-
+    val isExpandedSearchBar = searchBar.sharedExpandSearchState.collectAsState()
+    val isVisibleNewNoteFab = !(model.isSelectionState || isExpandedSearchBar.value)
 
     HandleUiEffects(sandbox.effects, router)
 
@@ -79,24 +65,31 @@ private fun Content(
         contentAlignment = Alignment.BottomCenter
     ) {
 
+        val sharedScrollState = NotesListSharedScrollState(
+            state = { scrollState },
+            isVisibleFirstNote = { isVisibleFirstNote.value },
+            isVisibleFirstNoteOffset = { isVisibleFirstNoteOffset.value },
+            isScrollUp = { isScrollUp },
+            isSelectionState = { model.isSelectionState },
+            gridCellsCount = { model.notesGridCount }
+        )
+
+        val sharedFolderDialogState = NewFolderDialogSharedState(
+            isVisible = model.isVisibleNewFolderDialog,
+            folderInputName = model.newFolderInputName,
+            updateInputField = { name -> sandbox.send(Msg.Inner.UpdateNewFolderNameInput(name)) },
+            onCreateNewFolderClicked = { sandbox.send(Msg.Ui.OnCreateNewNotesFolderClicked) },
+            onDismissClicked = { sandbox.send(Msg.Ui.OnDismissFolderCreationDialogClicked) }
+        )
+
         when {
             model.base.isLoading -> LoadingViewState()
             model.base.isSuccessLoading -> {
-
-                notesList.FetchedNotesWidget(
-                    notes = model.notes,
-                    chips = model.filters,
-                    onNoteClicked = { noteId -> sandbox.send(Msg.Ui.OnNoteClicked(noteId)) },
-                    onNoteLongPressed = { noteId -> sandbox.send(Msg.Ui.OnNoteLongPressed(noteId)) },
-                    onChipFilterClicked = { id -> sandbox.send(Msg.Ui.OnChipFilterClicked(id)) },
-                    sharedScroll = NotesListSharedScrollState(
-                        state = { scrollState },
-                        isVisibleFirstNote = { isVisibleFirstNote.value },
-                        isVisibleFirstNoteOffset = { isVisibleFirstNoteOffset.value },
-                        isScrollUp = { isScrollUp },
-                        isSelectionState = { model.isSelectionState },
-                        gridCellsCount = { model.notesGridCount }
-                    )
+                NotesList(
+                    feature = notesList,
+                    model = model,
+                    send = sandbox::send,
+                    sharedScrollState = sharedScrollState
                 )
             }
         }
@@ -108,31 +101,37 @@ private fun Content(
             selectedCount = { model.selectedNotesCount },
             isShowUnpinItem = model.isShowBottomBarUnpinBtn
         )
+        searchBar.Widget(
+            notesCollection = model.notes,
+            sharedScroll = sharedScrollState
+        )
 
-        AnimatedVisibility(
-            visible = !model.isSelectionState,
-            enter = slideIn(
-                animationSpec = tween(FAB_VISIBILITY_DURATION),
-                initialOffset = { IntOffset(0, 300) }) + fadeIn(tween(FAB_VISIBILITY_DURATION)),
-            exit = slideOut(
-                animationSpec = tween(FAB_VISIBILITY_DURATION),
-                targetOffset = { IntOffset(0, 300) }) + fadeOut(tween(FAB_VISIBILITY_DURATION))
-        ) {
-            editNote.NewNoteFabWidget(isNotesScrollUp = { isScrollUp }, modifier)
-        }
+        editNote.NewNoteFabWidget(
+            isVisible = { isVisibleNewNoteFab },
+            isNotesScrollUp = { isScrollUp },
+            modifier
+        )
 
-        AnimateFadeInOut(!searchBarVisibility.value) {
-            searchBar.Widget(
-                notesCollection = model.notes,
-                isVisibleFirstNote = { isVisibleFirstNoteOffset.value },
-                isSelectedNotesState = { model.isSelectionState },
-                isScrollInProgress = { scrollState.isScrollInProgress },
-                modifier = Modifier.graphicsLayer {
-                    translationY = searchBarScrollOffset.value.toPx()
-                }
-            )
-        }
+        notesList.FolderCreationDialog(sharedFolderDialogState)
     }
+}
+
+@Composable
+private fun NotesList(
+    feature: NotesListApi.Ui,
+    model: Model,
+    send: SendMessage,
+    sharedScrollState: NotesListSharedScrollState
+) {
+    feature.FetchedNotesWidget(
+        notes = model.notes,
+        chips = model.filters,
+        onNoteClicked = { noteId -> send(Msg.Ui.OnNoteClicked(noteId)) },
+        onNoteLongPressed = { noteId -> send(Msg.Ui.OnNoteLongPressed(noteId)) },
+        onChipFilterClicked = { id -> send(Msg.Ui.OnChipFilterClicked(id)) },
+        onAddNewFilterFolderClicked = { send(Msg.Ui.OnCreateNewNotesFolderClicked) },
+        sharedScroll = sharedScrollState
+    )
 }
 
 @Composable

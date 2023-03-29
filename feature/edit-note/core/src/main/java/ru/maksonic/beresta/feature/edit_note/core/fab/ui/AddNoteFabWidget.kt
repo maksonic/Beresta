@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.edit_note.core.fab.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -18,26 +18,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.update
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.core.fab.core.AddNoteSandbox
-import ru.maksonic.beresta.feature.edit_note.core.fab.core.Eff
 import ru.maksonic.beresta.feature.edit_note.core.fab.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.EditNoteScreen
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp0
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.DriveFile
 import ru.maksonic.beresta.ui.theme.icons.Edit
-import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 
 /**
  * @Author maksonic on 23.02.2023
@@ -47,17 +44,33 @@ internal typealias FabSendMessage = (Msg) -> Unit
 private const val DURATION = 450
 
 class AddNoteFabWidget : EditNoteApi.Ui {
+    companion object {
+        private const val FAB_VISIBILITY_DURATION = 400
+    }
 
     @Composable
-    override fun NewNoteFabWidget(isNotesScrollUp: () -> Boolean, modifier: Modifier) {
-        Content(isScrollUp = isNotesScrollUp)
+    override fun NewNoteFabWidget(
+        isVisible: () -> Boolean,
+        isNotesScrollUp: () -> Boolean,
+        modifier: Modifier
+    ) {
+        AnimatedVisibility(
+            visible = isVisible(),
+            enter = slideIn(
+                animationSpec = tween(FAB_VISIBILITY_DURATION),
+                initialOffset = { IntOffset(0, 300) }) + fadeIn(tween(FAB_VISIBILITY_DURATION)),
+            exit = slideOut(
+                animationSpec = tween(FAB_VISIBILITY_DURATION),
+                targetOffset = { IntOffset(0, 300) }) + fadeOut(tween(FAB_VISIBILITY_DURATION))
+        ) {
+            Content(isScrollUp = isNotesScrollUp)
+        }
     }
 }
 
 @Composable
 private fun Content(
     isScrollUp: () -> Boolean,
-    searchBar: SearchBarApi.Ui = get(),
     sandbox: AddNoteSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsState().value
@@ -67,14 +80,6 @@ private fun Content(
             sandbox.send(Msg.Ui.OnCollapseFabClicked)
         }
     }
-
-    HandleUiEffects(
-        effects = sandbox.effects,
-        showSearchBar = {
-            searchBar.searchBarVisibilityState.update { true }
-        },
-        hideSearchBar = { searchBar.searchBarVisibilityState.update { false } }
-    )
 
     FabContainer(
         send = sandbox::send,
@@ -164,20 +169,6 @@ private fun FabContainer(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun HandleUiEffects(
-    effects: Flow<Eff>,
-    showSearchBar: () -> Unit,
-    hideSearchBar: () -> Unit,
-) {
-    HandleEffectsWithLifecycle(effects) { eff ->
-        when (eff) {
-            is Eff.ShowSearchBar -> showSearchBar()
-            is Eff.HideSearchBar -> hideSearchBar()
         }
     }
 }

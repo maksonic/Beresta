@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter
+package ru.maksonic.beresta.feature.notes_list.core.filter.presentation.filter_chips_row
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
@@ -28,6 +28,7 @@ internal fun FilterChipsWidget(
     chipsCollection: FilterChipUi.Collection,
     isVisibleFirstNote: () -> Boolean,
     onChipFilterClicked: (id: Int) -> Unit,
+    onAddNewFilterFolderClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val tonal =
@@ -68,7 +69,10 @@ internal fun FilterChipsWidget(
                             FilterChipItem(item, onChipFilterClicked)
                         }
                     }
-                    AddNewFilterButton(modifier = Modifier.padding(start = dp12, end = dp16))
+                    AddNewFilterButton(
+                        modifier = Modifier.padding(start = dp12, end = dp16),
+                        onClick = onAddNewFilterFolderClicked
+                    )
                 }
             }
         }

@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter
+package ru.maksonic.beresta.feature.notes_list.core.filter.presentation.filter_chips_row
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

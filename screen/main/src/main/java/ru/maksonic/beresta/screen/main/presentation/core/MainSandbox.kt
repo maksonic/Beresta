@@ -17,13 +17,15 @@ class MainSandbox(
     initialCmd = setOf(Cmd.RunFetchingNotesCollection),
     subscriptions = listOf(mainProgram)
 ) {
+    companion object {
+        private const val MAX_FOLDER_LENGTH = 50
+    }
+
+
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedNotesCollection -> fetchedNotes(model, msg)
         is Msg.Inner.FetchedError -> fetchedError(model, msg)
-        is Msg.Ui.CreateNewNote -> onAddNoteClicked(model)
-        is Msg.Inner.SetTopBarVisibility -> setTopBarVisibility(model, msg)
-        is Msg.Inner.SetBottomVisibility -> setBottomBarVisibility(model, msg)
-        is Msg.Inner.SetColoredTopBar -> setColoredTopBar(model, msg)
+        is Msg.Ui.OnCreateNewNoteClicked -> onAddNoteClicked(model)
         is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
         is Msg.Ui.OnBottomBarSettingsClicked -> onSettingsClicked(model)
         is Msg.Ui.OnBottomBarTrashClicked -> onTrashClicked(model)
@@ -39,6 +41,10 @@ class MainSandbox(
         is Msg.Ui.OnReplaceFolderSelectedNotesBottomBarClicked -> UpdatedModel(model)
         is Msg.Ui.OnCancelSelectionClicked -> cancelNotesSelection(model)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
+        is Msg.Ui.OnAddNewFilterFolderClicked -> UpdatedModel(model)
+        is Msg.Inner.UpdateNewFolderNameInput -> updatedNewFolderInputField(model, msg)
+        is Msg.Ui.OnCreateNewNotesFolderClicked -> onCreateNewFolderClicked(model)
+        is Msg.Ui.OnDismissFolderCreationDialogClicked -> onDismissCreateFolderDialogClicked(model)
     }
 
     private fun fetchedNotes(model: Model, msg: Msg.Inner.FetchedNotesCollection): UpdateResult {
@@ -71,20 +77,6 @@ class MainSandbox(
     private fun onAddNoteClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateToAddNewNote))
 
-    private fun setTopBarVisibility(
-        model: Model,
-        msg: Msg.Inner.SetTopBarVisibility
-    ): UpdateResult =
-        UpdatedModel(model.copy(isVisibleTopBar = msg.value))
-
-    private fun setBottomBarVisibility(
-        model: Model, msg: Msg.Inner.SetBottomVisibility
-    ): UpdateResult =
-        UpdatedModel(model.copy(isVisibleBottomBar = msg.value))
-
-    private fun setColoredTopBar(model: Model, msg: Msg.Inner.SetColoredTopBar): UpdateResult =
-        UpdatedModel(model.copy(isColoredTopBar = msg.value))
-
     private fun onSettingsClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateToSettings))
 
@@ -97,6 +89,7 @@ class MainSandbox(
         val count = if (model.notesGridCount == 1) 2 else 1
         return UpdatedModel(model.copy(notesGridCount = count))
     }
+
     private fun onFilterChipClicked(model: Model, msg: Msg.Ui.OnChipFilterClicked): UpdateResult {
         val afterSelect = model.filters.copy(data = model.filters.data.map { note ->
             note.copy(isSelected = note.id == msg.id)
@@ -212,4 +205,19 @@ class MainSandbox(
             commands = setOf(Cmd.RemoveSelected(remove.data))
         )
     }
+
+    private fun updatedNewFolderInputField(
+        model: Model,
+        msg: Msg.Inner.UpdateNewFolderNameInput
+    ): UpdateResult {
+        val croppedInput = msg.value.take(MAX_FOLDER_LENGTH)
+
+        return UpdatedModel(model.copy(newFolderInputName = croppedInput))
+    }
+
+    private fun onCreateNewFolderClicked(model: Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleNewFolderDialog = true, newFolderInputName = ""))
+
+    private fun onDismissCreateFolderDialogClicked(model: Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleNewFolderDialog = false, newFolderInputName = ""))
 }

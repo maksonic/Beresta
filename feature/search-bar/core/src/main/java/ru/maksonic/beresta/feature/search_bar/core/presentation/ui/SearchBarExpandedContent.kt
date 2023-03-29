@@ -40,7 +40,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 internal fun SearchBarExpandedContent(
     model: Model,
     send: SendMessage,
-    notesList: NotesListApi.Ui,
+    notesListFeature: NotesListApi.Ui,
     modifier: Modifier = Modifier
 ) {
 
@@ -54,7 +54,7 @@ internal fun SearchBarExpandedContent(
 
         SystemStatusBar(backgroundColor = { systemBarsColor })
         TopBar(model = model, send = send)
-        SearchListResult(notes = model.searchList, notesApi = notesList)
+        SearchListResult(notes = model.searchList, notesApi = notesListFeature, modifier.weight(1f))
         SystemNavigationBar(backgroundColor = { systemBarsColor })
     }
 }
@@ -124,9 +124,7 @@ private fun SearchListResult(
 
     LazyColumn(
         state = scrollState,
-        modifier = modifier
-            .navigationBarsPadding()
-            .padding(top = dp8),
+        modifier = modifier.padding(top = dp8),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->

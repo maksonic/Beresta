@@ -16,23 +16,26 @@ import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Search
+import ru.maksonic.beresta.ui.widget.functional.clickAction
 
 /**
  * @Author maksonic on 24.02.2023
  */
 @Composable
-internal fun SearchBarCollapsedContent(modifier: Modifier = Modifier) {
+internal fun SearchBarCollapsedContent(modifier: Modifier, onExpandClicked: () -> Unit) {
     Row(
         modifier
             .fillMaxWidth()
             .height(Theme.widgetSize.searchBarCollapsedHeight)
-            .padding(start = dp12),
+            .clickAction { onExpandClicked() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = AppIcon.Search,
             tint = onSurface,
             contentDescription = "",
+            modifier = modifier.padding(start = dp12)
+
         )
         Text(
             text = text.shared.hintFindNote,

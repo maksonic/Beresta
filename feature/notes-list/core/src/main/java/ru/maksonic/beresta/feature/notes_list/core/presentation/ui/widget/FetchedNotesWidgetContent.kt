@@ -15,15 +15,15 @@ import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter.FilterChipsWidget
+import ru.maksonic.beresta.feature.notes_list.core.filter.presentation.filter_chips_row.FilterChipsWidget
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
+import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.widget.functional.ANIMATION_DURATION_NORMAL
 
 /**
  * @Author maksonic on 22.02.2023
  */
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FetchedNotesWidgetContent(
@@ -33,7 +33,10 @@ internal fun FetchedNotesWidgetContent(
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongPressed: (id: Long) -> Unit,
     onChipFilterClicked: (id: Int) -> Unit,
-    sharedScroll: NotesListSharedScrollState
+    onAddNewFilterFolderClicked: () -> Unit,
+    sharedScroll: NotesListSharedScrollState,
+    maxTitleLength: Int,
+    maxMessageLength: Int
 ) {
     val topBarNormalHeight = Theme.widgetSize.topBarNormalHeight
     val chipsTransition = animateDpAsState(
@@ -47,7 +50,7 @@ internal fun FetchedNotesWidgetContent(
         LazyVerticalStaggeredGrid(
             state = sharedScroll.state(),
             columns = StaggeredGridCells.Fixed(sharedScroll.gridCellsCount()),
-            contentPadding = PaddingValues(all = dp10),
+            contentPadding = PaddingValues(top = dp4, start = dp10, end = dp10),
             modifier = modifier
                 .fillMaxSize()
                 .statusBarsPadding()
@@ -63,6 +66,8 @@ internal fun FetchedNotesWidgetContent(
                     onNoteClicked = { id -> onNoteClicked(id) },
                     onNoteLongClicked = { id -> onNoteLongPressed(id) },
                     note = note,
+                    maxTitleLength = maxTitleLength,
+                    maxMessageLength = maxMessageLength,
                     modifier = modifier.animateContentSize()
                 )
             }
@@ -85,6 +90,7 @@ internal fun FetchedNotesWidgetContent(
             chipsCollection = chips,
             isVisibleFirstNote = sharedScroll.isVisibleFirstNoteOffset,
             onChipFilterClicked = onChipFilterClicked,
+            onAddNewFilterFolderClicked = onAddNewFilterFolderClicked,
             modifier = modifier.graphicsLayer {
                 translationY = chipsTransition.value.toPx()
             }

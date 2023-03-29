@@ -21,13 +21,13 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 /**
  * @Author maksonic on 21.02.2023
  */
-private const val MAX_TITLE_LENGTH = 100
-private const val MAX_MESSAGE_LENGTH = 200
 @Composable
 internal fun NoteListItemContent(
+    note: NoteUi,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongClicked: (id: Long) -> Unit,
-    note: NoteUi,
+    maxTitleLength: Int,
+    maxMessageLength: Int,
     modifier: Modifier = Modifier
 ) {
     val backgroundColor = animateColorAsState(
@@ -49,7 +49,7 @@ internal fun NoteListItemContent(
         ) {
             TopPanelIndication(isPinned = { note.isPinned })
             Text(
-                text = note.title.take(MAX_TITLE_LENGTH),
+                text = note.title.take(maxTitleLength),
                 style = TextDesign.title.copy(color = onPrimaryContainer),
                 maxLines = 1,
                 softWrap = false,
@@ -57,7 +57,7 @@ internal fun NoteListItemContent(
                 modifier = modifier.padding(end = dp8)
             )
             Text(
-                text = note.message.take(MAX_MESSAGE_LENGTH),
+                text = note.message.take(maxMessageLength),
                 style = TextDesign.bodyPrimary.copy(color = onPrimaryContainer),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -112,6 +112,6 @@ fun BottomPanelIndication(modifier: Modifier = Modifier) {
 @Composable
 private fun NoteItemPreview() {
     BerestaTheme {
-        NoteListItemContent({}, {}, note = NoteUi.Preview)
+        NoteListItemContent(note = NoteUi.Preview, {}, {}, 20, 20)
     }
 }

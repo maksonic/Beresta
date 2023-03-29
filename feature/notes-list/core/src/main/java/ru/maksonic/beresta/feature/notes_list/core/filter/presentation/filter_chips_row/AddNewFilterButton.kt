@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes_list.core.presentation.ui.widget.filter
+package ru.maksonic.beresta.feature.notes_list.core.filter.presentation.filter_chips_row
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -18,15 +18,13 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
  * @Author maksonic on 02.03.2023
  */
 @Composable
-internal fun AddNewFilterButton(modifier: Modifier = Modifier) {
+internal fun AddNewFilterButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(
         modifier
             .size(Theme.widgetSize.filterChipHeight)
             .clip(CircleShape)
             .border(1.dp, onSurface, CircleShape)
     ) {
-        IconAction(icon = { AppIcon.Add }, tint = onSurface) {
-
-        }
+        IconAction(icon = { AppIcon.Add }, tint = onSurface, action = onClick)
     }
 }

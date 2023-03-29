@@ -21,5 +21,5 @@ fun SystemStatusBar(
         .drawBehind { drawRect(backgroundColor()) })
 }
 
-val StatusBarHeight
+val SystemStatusBarHeight
     @Composable get() = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
