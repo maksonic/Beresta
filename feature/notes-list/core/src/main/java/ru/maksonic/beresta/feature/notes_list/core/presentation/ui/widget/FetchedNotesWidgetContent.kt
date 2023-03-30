@@ -12,10 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
-import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
+import org.koin.androidx.compose.get
+import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
+import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.core.filter.presentation.filter_chips_row.FilterChipsWidget
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
 import ru.maksonic.beresta.ui.theme.component.dp4
@@ -32,11 +33,11 @@ internal fun FetchedNotesWidgetContent(
     chips: FilterChipUi.Collection,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongPressed: (id: Long) -> Unit,
-    onChipFilterClicked: (id: Int) -> Unit,
-    onAddNewFilterFolderClicked: () -> Unit,
+    onChipFilterClicked: (id: Long) -> Unit,
     sharedScroll: NotesListSharedScrollState,
     maxTitleLength: Int,
-    maxMessageLength: Int
+    maxMessageLength: Int,
+    filters: FoldersListApi.Ui = get()
 ) {
     val topBarNormalHeight = Theme.widgetSize.topBarNormalHeight
     val chipsTransition = animateDpAsState(
@@ -86,11 +87,10 @@ internal fun FetchedNotesWidgetContent(
             }
         }
 
-        FilterChipsWidget(
+        filters.FolderChipsWidget(
             chipsCollection = chips,
             isVisibleFirstNote = sharedScroll.isVisibleFirstNoteOffset,
             onChipFilterClicked = onChipFilterClicked,
-            onAddNewFilterFolderClicked = onAddNewFilterFolderClicked,
             modifier = modifier.graphicsLayer {
                 translationY = chipsTransition.value.toPx()
             }

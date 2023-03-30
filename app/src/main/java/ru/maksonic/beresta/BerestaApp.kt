@@ -22,12 +22,23 @@ import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
 import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
+import ru.maksonic.beresta.data.notes_folders.NotesFoldersRepositoryImpl
+import ru.maksonic.beresta.data.notes_folders.cache.FoldersCacheDataSource
+import ru.maksonic.beresta.data.notes_folders.cache.NoteFolderCacheMapper
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.edit_note.core.fab.core.AddNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.fab.ui.AddNoteFabWidget
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteProgram
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
+import ru.maksonic.beresta.feature.folders_list.api.domain.FetchFoldersListUseCase
+import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersInteractor
+import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersRepository
+import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
+import ru.maksonic.beresta.feature.folders_list.api.ui.NoteFolderToChipMapper
+import ru.maksonic.beresta.feature.folders_list.core.presentation.FoldersListUiCore
+import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.CreateNewFolderDialogSandbox
+import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.NewFolderDialogProgram
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
@@ -39,13 +50,13 @@ import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSele
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorProgram
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorSandbox
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.WallpapersRepository
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.NoteWallpaperSelectorCore
-import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.NoteWallpaperSelectorUiCore
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
-import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.NotesListWidget
+import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.NotesListUiCore
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingVisibilityDatastore
@@ -122,7 +133,15 @@ class BerestaApp : Application() {
     }
 
     private val mainScreenModule = module {
-        single { MainProgram(fetchingUseCase = get(), notesInteractor = get(), mapper = get()) }
+        single {
+            MainProgram(
+                fetchingUseCase = get(),
+                foldersListUseCase = get(),
+                notesInteractor = get(),
+                notesMapper = get(),
+                foldersMapper = get()
+            )
+        }
         viewModel { MainSandbox(mainProgram = get()) }
     }
 
@@ -168,7 +187,7 @@ class BerestaApp : Application() {
     }
 
     private val notesListFeatureModule = module {
-        single<NotesListApi.Ui> { NotesListWidget() }
+        single<NotesListApi.Ui> { NotesListUiCore() }
         single { NoteUiMapper(dateFormatter = get()) }
     }
 
@@ -209,7 +228,25 @@ class BerestaApp : Application() {
         single { WallpapersRepository }
         single { WallpaperSelectorProgram(repository = get()) }
         viewModel { WallpaperSelectorSandbox(program = get()) }
-        single<NoteWallpaperSelectorApi> { NoteWallpaperSelectorCore() }
+        single<NoteWallpaperSelectorApi> { NoteWallpaperSelectorUiCore() }
+    }
+
+    private val foldersListFeatureModule = module {
+        single { NoteFolderCacheMapper() }
+        single {
+            FoldersCacheDataSource(
+                folderDao = get(),
+                dispatcher = get(named(CoroutineDispatchers.IO))
+            )
+        }
+        single { NoteCacheMapper() }
+        single<NotesFoldersRepository> { NotesFoldersRepositoryImpl(cache = get(), mapper = get()) }
+        single<NotesFoldersInteractor> { NotesFoldersInteractor.Impl(repository = get()) }
+        single { FetchFoldersListUseCase(repository = get()) }
+        single { NoteFolderToChipMapper() }
+        single { NewFolderDialogProgram(interactor = get(), mapper = get()) }
+        viewModel { CreateNewFolderDialogSandbox(program = get()) }
+        single<FoldersListApi.Ui> { FoldersListUiCore() }
     }
 
     private val modules = listOf(
@@ -228,7 +265,8 @@ class BerestaApp : Application() {
         notesListFeatureDataModule,
         searchBarFeatureModule,
         editNoteFeatureModule,
-        noteWallpaperSelectorModule
+        noteWallpaperSelectorModule,
+        foldersListFeatureModule
     )
 
     override fun onCreate() {

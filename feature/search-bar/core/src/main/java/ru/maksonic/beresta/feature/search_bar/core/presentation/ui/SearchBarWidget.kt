@@ -19,8 +19,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
-import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model

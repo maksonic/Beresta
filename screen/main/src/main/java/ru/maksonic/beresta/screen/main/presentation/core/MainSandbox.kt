@@ -17,13 +17,9 @@ class MainSandbox(
     initialCmd = setOf(Cmd.RunFetchingNotesCollection),
     subscriptions = listOf(mainProgram)
 ) {
-    companion object {
-        private const val MAX_FOLDER_LENGTH = 50
-    }
-
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.FetchedNotesCollection -> fetchedNotes(model, msg)
+        is Msg.Inner.FetchedDataResult -> fetchedData(model, msg)
         is Msg.Inner.FetchedError -> fetchedError(model, msg)
         is Msg.Ui.OnCreateNewNoteClicked -> onAddNoteClicked(model)
         is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
@@ -41,23 +37,22 @@ class MainSandbox(
         is Msg.Ui.OnReplaceFolderSelectedNotesBottomBarClicked -> UpdatedModel(model)
         is Msg.Ui.OnCancelSelectionClicked -> cancelNotesSelection(model)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
-        is Msg.Ui.OnAddNewFilterFolderClicked -> UpdatedModel(model)
-        is Msg.Inner.UpdateNewFolderNameInput -> updatedNewFolderInputField(model, msg)
-        is Msg.Ui.OnCreateNewNotesFolderClicked -> onCreateNewFolderClicked(model)
-        is Msg.Ui.OnDismissFolderCreationDialogClicked -> onDismissCreateFolderDialogClicked(model)
+        is Msg.Inner.UpdatedNewFolderDialogVisibility -> updatedDialogVisibility(model, msg)
+
     }
 
-    private fun fetchedNotes(model: Model, msg: Msg.Inner.FetchedNotesCollection): UpdateResult {
-        val sortNotes =
+    private fun fetchedData(model: Model, msg: Msg.Inner.FetchedDataResult): UpdateResult {
+        /*val sortNotes =
             msg.notes.copy(
                 data = msg.notes.data.sortedWith(
                     comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id }
                 )
-            )
+            )*/
         return UpdatedModel(
             model = model.copy(
                 base = model.base.copy(isLoading = false, isSuccessLoading = true, isError = false),
-                notes = sortNotes
+                notes = msg.notes,
+                filters = msg.folders,
             )
         )
     }
@@ -206,18 +201,9 @@ class MainSandbox(
         )
     }
 
-    private fun updatedNewFolderInputField(
+    private fun updatedDialogVisibility(
         model: Model,
-        msg: Msg.Inner.UpdateNewFolderNameInput
-    ): UpdateResult {
-        val croppedInput = msg.value.take(MAX_FOLDER_LENGTH)
-
-        return UpdatedModel(model.copy(newFolderInputName = croppedInput))
-    }
-
-    private fun onCreateNewFolderClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleNewFolderDialog = true, newFolderInputName = ""))
-
-    private fun onDismissCreateFolderDialogClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleNewFolderDialog = false, newFolderInputName = ""))
+        msg: Msg.Inner.UpdatedNewFolderDialogVisibility
+    ): UpdateResult =
+        UpdatedModel(model.copy(isVisibleNewFolderDialog = msg.isVisible))
 }

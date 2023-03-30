@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
-import ru.maksonic.beresta.feature.notes_list.api.NewFolderDialogSharedState
-import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
-import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
+import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.presentation.core.Eff
@@ -25,6 +25,7 @@ import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.widget.bottom_bar.MainBottomBar
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.functional.*
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 15.02.2023
@@ -43,6 +44,7 @@ private fun Content(
     notesList: NotesListApi.Ui = get(),
     searchBar: SearchBarApi.Ui = get(),
     editNote: EditNoteApi.Ui = get(),
+    filters: FoldersListApi.Ui = get(),
     sandbox: MainSandbox = koinViewModel(),
     router: MainScreenRouter
 ) {
@@ -53,8 +55,13 @@ private fun Content(
     val isVisibleFirstNoteOffset = scrollState.isVisibleFirstItemOffset()
     val isExpandedSearchBar = searchBar.sharedExpandSearchState.collectAsState()
     val isVisibleNewNoteFab = !(model.isSelectionState || isExpandedSearchBar.value)
+    val isVisibleNewFolderDialog = filters.dialogVisibilitySharedState.state.collectAsState().value
 
     HandleUiEffects(sandbox.effects, router)
+
+    LaunchedEffect(isVisibleNewFolderDialog) {
+        sandbox.send(Msg.Inner.UpdatedNewFolderDialogVisibility(isVisibleNewFolderDialog))
+    }
 
     BackHandler(model.isSelectionState) {
         sandbox.send(Msg.Ui.OnCancelSelectionClicked)
@@ -72,14 +79,6 @@ private fun Content(
             isScrollUp = { isScrollUp },
             isSelectionState = { model.isSelectionState },
             gridCellsCount = { model.notesGridCount }
-        )
-
-        val sharedFolderDialogState = NewFolderDialogSharedState(
-            isVisible = model.isVisibleNewFolderDialog,
-            folderInputName = model.newFolderInputName,
-            updateInputField = { name -> sandbox.send(Msg.Inner.UpdateNewFolderNameInput(name)) },
-            onCreateNewFolderClicked = { sandbox.send(Msg.Ui.OnCreateNewNotesFolderClicked) },
-            onDismissClicked = { sandbox.send(Msg.Ui.OnDismissFolderCreationDialogClicked) }
         )
 
         when {
@@ -112,7 +111,9 @@ private fun Content(
             modifier
         )
 
-        notesList.FolderCreationDialog(sharedFolderDialogState)
+        AnimateFadeInOut(isVisibleNewFolderDialog) {
+            filters.FolderCreationDialog()
+        }
     }
 }
 
@@ -129,7 +130,6 @@ private fun NotesList(
         onNoteClicked = { noteId -> send(Msg.Ui.OnNoteClicked(noteId)) },
         onNoteLongPressed = { noteId -> send(Msg.Ui.OnNoteLongPressed(noteId)) },
         onChipFilterClicked = { id -> send(Msg.Ui.OnChipFilterClicked(id)) },
-        onAddNewFilterFolderClicked = { send(Msg.Ui.OnCreateNewNotesFolderClicked) },
         sharedScroll = sharedScrollState
     )
 }

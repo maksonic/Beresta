@@ -21,7 +21,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import ru.maksonic.beresta.feature.notes_list.api.NotesListApi
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Model
 import ru.maksonic.beresta.feature.search_bar.core.presentation.Msg

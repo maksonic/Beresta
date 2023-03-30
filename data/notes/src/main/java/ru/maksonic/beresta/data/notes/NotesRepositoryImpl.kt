@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.data.notes
 
-import android.util.Log
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.transform
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
@@ -35,7 +34,6 @@ class NotesRepositoryImpl(
         }
 
     override suspend fun addNewItem(item: NoteDomain) {
-        Log.e("AAA", "ADD -> $item")
         if (item.title.isNotBlank() || item.message.isNotBlank()) {
             val cacheNote = mapper.domainToData(item)
             cache.insertItem(cacheNote)
@@ -43,7 +41,6 @@ class NotesRepositoryImpl(
     }
 
     override suspend fun updateItem(item: NoteDomain) {
-        Log.e("AAA", "UPDATE -> $item")
         val cacheNoteItem = mapper.domainToData(item)
         cache.updateItem(cacheNoteItem)
     }

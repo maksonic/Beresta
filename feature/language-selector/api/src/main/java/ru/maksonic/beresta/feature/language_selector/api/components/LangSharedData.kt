@@ -20,4 +20,5 @@ data class LangSharedData(
     @SerializedName("hint_find_note_search_bar") val hintFindNote: String = "",
     @SerializedName("hint_selected_notes_count_bottom_bar") val hintSelectedNotesCount: String = "",
     @SerializedName("dialog_title_create_new_folder") val titleNewFolder: String = "",
+    @SerializedName("title_pinned_notes_folder") val titlePinnedChipFilter: String = ""
 )

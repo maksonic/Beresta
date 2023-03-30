@@ -48,6 +48,10 @@ include(":feature:search-bar:core")
 
 include(":feature:edit-note:api")
 include(":feature:edit-note:core")
-include(":feature:note-wallpaper-selector")
+
 include(":feature:note-wallpaper-selector:api")
 include(":feature:note-wallpaper-selector:core")
+
+include(":feature:folders-list:api")
+include(":feature:folders-list:core")
+include(":data:notes-folders")

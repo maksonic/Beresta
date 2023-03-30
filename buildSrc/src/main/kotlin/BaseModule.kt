@@ -27,6 +27,10 @@ sealed class BaseModule(val path: String, val namespace: String) {
             path = ":data:notes",
             namespace = "ru.maksonic.beresta.data.notes"
         )
+        object NotesFolders : BaseModule(
+            path = ":data:notes-folders",
+            namespace = "ru.maksonic.beresta.data.notes_folders"
+        )
     }
 
     object Elm : BaseModule(
@@ -176,6 +180,18 @@ sealed class BaseModule(val path: String, val namespace: String) {
             object Core : BaseModule(
                 path = ":feature:edit-note:core",
                 namespace = "ru.maksonic.beresta.feature.edit_note.core"
+            )
+        }
+
+        object FoldersList {
+            object Api : BaseModule(
+                path = ":feature:folders-list:api",
+                namespace = "ru.maksonic.beresta.feature.folders_list.api"
+            )
+
+            object Core : BaseModule(
+                path = ":feature:folders-list:core",
+                namespace = "ru.maksonic.beresta.feature.folders_list.core"
             )
         }
     }

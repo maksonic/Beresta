@@ -53,6 +53,7 @@ dependencies {
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Navigation.Router.path))
+    implementation(project(BaseModule.Feature.FoldersList.Api.path))
     implementation(Lib.Compose.material)
     implementation(Lib.Koin.compose)
 }

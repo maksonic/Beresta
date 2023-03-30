@@ -3,7 +3,7 @@ package ru.maksonic.beresta.screen.main.presentation.core
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.elm.*
-import ru.maksonic.beresta.feature.notes_list.api.ui.FilterChipUi
+import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.MainBottomBarState
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 
@@ -12,10 +12,10 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
  */
 @Stable
 data class Model(
-    val base: BaseModel = BaseModel(isLoading = true),
+    val base: BaseModel = BaseModel.InitialWithLoading,
     val entry: NavBackStackEntry? = null,
     val notes: NoteUi.Collection = NoteUi.Collection.Empty,
-    val filters: FilterChipUi.Collection = FilterChipUi.Collection.Preview,
+    val filters: FilterChipUi.Collection = FilterChipUi.Collection.Empty,
     val errorMsg: String = "Неизвестная ошибка",
     val isVisibleBottomBar: Boolean = true,
     val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
@@ -23,16 +23,12 @@ data class Model(
     val isShowBottomBarUnpinBtn: Boolean = false,
     val selectedNotesCount: Int = 0,
     val notesGridCount: Int = 1,
-    val isVisibleNewFolderDialog: Boolean = false,
-    val newFolderInputName: String = "",
+    val isVisibleNewFolderDialog: Boolean = false
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
         object OnCreateNewNoteClicked : Ui()
-        object OnAddNewFilterFolderClicked : Ui()
-        object OnCreateNewNotesFolderClicked: Ui()
-        object OnDismissFolderCreationDialogClicked: Ui()
 
         // Idle bottom panel messages
         object OnBottomBarSettingsClicked : Ui()
@@ -40,31 +36,36 @@ sealed class Msg : ElmMessage {
         object OnBottomBarOpenFoldersClicked : Ui()
         object OnBottomBarSortNotesByClicked : Ui()
         object OnSwitchViewClicked : Ui()
+
         // Selected bottom panel messages
-        object OnHideSelectedNotesBottomBarClicked: Ui()
-        object OnPinSelectedNotesBottomBarClicked: Ui()
-        object OnReplaceFolderSelectedNotesBottomBarClicked: Ui()
-        object OnRemoveSelectedNotesBottomBarClicked: Ui()
+        object OnHideSelectedNotesBottomBarClicked : Ui()
+        object OnPinSelectedNotesBottomBarClicked : Ui()
+        object OnReplaceFolderSelectedNotesBottomBarClicked : Ui()
+        object OnRemoveSelectedNotesBottomBarClicked : Ui()
         object OnCancelSelectionClicked : Ui()
         object OnSelectAllNotesClicked : Ui()
 
         object OnShareSelectedNotes : Ui()
-        data class OnNoteClicked(val id: Long): Ui()
-        data class OnNoteLongPressed(val id: Long): Ui()
-        data class OnChipFilterClicked(val id: Int): Ui()
+        data class OnNoteClicked(val id: Long) : Ui()
+        data class OnNoteLongPressed(val id: Long) : Ui()
+        data class OnChipFilterClicked(val id: Long) : Ui()
     }
 
     sealed class Inner : Msg() {
-        data class FetchedNotesCollection(val notes: NoteUi.Collection): Inner()
-        data class FetchedError(val message: String): Inner()
-        data class UpdateNewFolderNameInput(val value: String): Inner()
+        data class FetchedDataResult(
+            val notes: NoteUi.Collection,
+            val folders: FilterChipUi.Collection
+        ) : Inner()
+
+        data class FetchedError(val message: String) : Inner()
+        data class UpdatedNewFolderDialogVisibility(val isVisible: Boolean) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
     object RunFetchingNotesCollection : Cmd()
     data class RemoveSelected(val notes: List<NoteUi>) : Cmd()
-    data class UpdatePinnedNotesInCache(val pinned: List<NoteUi>): Cmd()
+    data class UpdatePinnedNotesInCache(val pinned: List<NoteUi>) : Cmd()
 }
 
 sealed class Eff : ElmEffect {

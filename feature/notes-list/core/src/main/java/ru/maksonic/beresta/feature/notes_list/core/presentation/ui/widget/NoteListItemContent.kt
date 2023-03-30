@@ -5,8 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
@@ -30,17 +35,20 @@ internal fun NoteListItemContent(
     maxMessageLength: Int,
     modifier: Modifier = Modifier
 ) {
-    val backgroundColor = animateColorAsState(
-        targetValue = if (note.isSelected) secondary else primaryContainer
-    )
+    val focusRequester = remember { FocusRequester() }
+    val isFocusedItem = rememberSaveable { mutableStateOf(false) }
+    val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
+    val colors = if (isFocusedItem.value) outlineVariant else primaryContainer
+    val backgroundColor = animateColorAsState(if (note.isSelected) isSelectedColors else colors)
 
     BoxWithScaleInOutOnClick(
         onClick = { onNoteClicked(note.id) },
         onLongClick = { onNoteLongClicked(note.id) },
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerBig,
-        modifier = modifier.padding(bottom = dp12, start = dp6, end = dp6)
-
+        modifier = modifier
+            .padding(bottom = dp12, start = dp6, end = dp6)
+            .onFocusChanged { isFocusedItem.value = it.isFocused }
     ) {
         Column(
             modifier

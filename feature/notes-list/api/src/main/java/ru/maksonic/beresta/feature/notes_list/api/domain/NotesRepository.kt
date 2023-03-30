@@ -7,4 +7,6 @@ import ru.maksonic.beresta.core.domain.BaseRepository
  */
 interface NotesRepository : BaseRepository<NoteDomain> {
     suspend fun fetchTrashNotes(): NotesDomainList
+    suspend fun updateAllItems(items: List<NoteDomain>)
+    suspend fun removeEmptyItem(item: NoteDomain)
 }

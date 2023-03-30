@@ -55,6 +55,7 @@ dependencies {
     implementation(project(BaseModule.Data.Common.path))
     implementation(project(BaseModule.Data.Database.path))
     implementation(project(BaseModule.Data.Notes.path))
+    implementation(project(BaseModule.Data.NotesFolders.path))
 
     implementation(project(BaseModule.Elm.path))
 
@@ -88,6 +89,9 @@ dependencies {
 
     implementation(project(BaseModule.Feature.NoteWallpaperSelector.Api.path))
     implementation(project(BaseModule.Feature.NoteWallpaperSelector.Core.path))
+
+    implementation(project(BaseModule.Feature.FoldersList.Api.path))
+    implementation(project(BaseModule.Feature.FoldersList.Core.path))
 
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))

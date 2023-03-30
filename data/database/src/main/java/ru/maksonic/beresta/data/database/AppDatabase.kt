@@ -12,11 +12,12 @@ object AppDatabase {
     private const val DB_VERSION = 1
 
     @Database(
-        entities = [NoteCache::class],
+        entities = [NoteCache::class, NoteFolderCache::class],
         version = DB_VERSION, exportSchema = false
     )
     @TypeConverters(DateOfItemCreationConverter::class)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun noteDao(): NoteDao
+        abstract fun noteFolderDao(): NoteFolderDao
     }
 }

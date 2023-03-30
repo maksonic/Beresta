@@ -1,9 +1,8 @@
 package ru.maksonic.beresta.feature.search_bar.api
 
 import androidx.compose.runtime.Composable
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import ru.maksonic.beresta.feature.notes_list.api.NotesListSharedScrollState
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 
 /**
