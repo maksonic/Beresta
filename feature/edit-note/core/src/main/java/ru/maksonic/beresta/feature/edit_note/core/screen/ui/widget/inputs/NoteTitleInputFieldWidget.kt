@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -46,15 +44,12 @@ internal fun NoteTitleInputFieldWidget(
         },
         colors = NoteInputDefaultColors,
         maxLines = 500,
-        keyboardActions = KeyboardActions {
-            focusManager.moveFocus(FocusDirection.Next)
-        },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
+         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .padding(start = dp8, end = dp8)
             .focusRequester(focusRequester)
-            .verticalScroll(rememberScrollState(), false)
     )
 }

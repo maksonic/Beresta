@@ -16,6 +16,7 @@ interface NotesListApi {
         fun FetchedNotesWidget(
             notes: NoteUi.Collection,
             chips: FilterChipUi.Collection,
+            selectedNotes: Set<NoteUi>,
             onNoteClicked: (id: Long) -> Unit,
             onNoteLongPressed: (id: Long) -> Unit,
             onChipFilterClicked: (id: Long) -> Unit,

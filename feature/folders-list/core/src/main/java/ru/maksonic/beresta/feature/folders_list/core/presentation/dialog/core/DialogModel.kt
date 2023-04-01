@@ -11,6 +11,8 @@ import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 data class DialogModel(
     val base: BaseModel = BaseModel.Initial,
     val folderInputName: String = "",
+    val supportingText: String = "0/50",
+    val isEmptyFieldError: Boolean = false
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
@@ -22,14 +24,16 @@ sealed class Msg : ElmMessage {
 
     sealed class Inner : Msg() {
         data class UpdateNewFolderNameInput(val value: String) : Inner()
+      //  object UpdateSupportTextValue : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    data class AddNewFolderToCache(val folder: FilterChipUi) : Cmd()
+    data class SaveNewFolderToCache(val folder: FilterChipUi) : Cmd()
 }
 
 sealed class Eff : ElmEffect {
+    object ShowEmptyFieldError : Eff()
     object ShowNewFolderDialog : Eff()
     object HideNewFolderDialog : Eff()
 }

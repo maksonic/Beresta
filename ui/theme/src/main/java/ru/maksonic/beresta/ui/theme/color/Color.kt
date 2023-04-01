@@ -44,6 +44,9 @@ data class AppColor(
     val surfaceTint : Color,
     val outlineVariant : Color,
     val scrim: Color,
+    val snack: Color,
+    val onSnack: Color,
+    val onSnackContainer: Color,
     val transparent: Color,
     val idle: Color,
     val black: Color,
@@ -85,3 +88,6 @@ val surfaceTint : Color @Composable get() = Theme.color.surfaceTint
 val outlineVariant : Color @Composable get() = Theme.color.outlineVariant
 val scrim: Color @Composable get() = Theme.color.scrim
 val transparent: Color @Composable get() = Theme.color.transparent
+val snack: Color @Composable get() = Theme.color.snack
+val onSnack: Color @Composable get() = Theme.color.onSnack
+val onSnackContainer: Color @Composable get() = Theme.color.onSnackContainer

@@ -24,7 +24,8 @@ val filledLightYellowPalette = baseLightPalette.copy(
     inverseSurface = Palette.Yellow.buddhaGold,
     inversePrimary = Palette.Purple.paleViolet,
     surfaceTint = Palette.Yellow.bananaYellow,
-    outlineVariant = Palette.Yellow.cosmicLatte
+    outlineVariant = Palette.Yellow.cosmicLatte,
+    onSnackContainer = Palette.Yellow.blond
 )
 val filledDarkYellowPalette = baseDarkPalette.copy(
     primary = Palette.Yellow.x0,
@@ -46,7 +47,8 @@ val filledDarkYellowPalette = baseDarkPalette.copy(
     surfaceTint = Palette.black,
     inverseOnSurface = Palette.Yellow.x5,
     inversePrimary = Palette.Yellow.x5,
-    outlineVariant = Palette.Yellow.x3
+    outlineVariant = Palette.Yellow.x3,
+    onSnackContainer = Palette.Yellow.blond
 )
 val outlinedLightYellowPalette = baseLightPalette.copy(
     onPrimary = Palette.Yellow.buddhaGold,
@@ -55,14 +57,17 @@ val outlinedLightYellowPalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.nero,
     inversePrimary = Palette.Purple.paleViolet,
     primary = Palette.Yellow.bananaYellow,
+    onSnackContainer = Palette.Yellow.blond
 )
 val outlinedDarkYellowPalette = baseDarkPalette.copy(
     primary = Palette.Yellow.pastelYellow,
     tertiaryContainer = Palette.Yellow.pastelYellow,
-    onPrimary = Palette.Yellow.pastelYellow
+    onPrimary = Palette.Yellow.pastelYellow,
+    onSnackContainer = Palette.Yellow.blond
 )
 val highContrastYellowPalette = highContrastPalette.copy(
     primary = Palette.Yellow.bananaYellow,
     tertiaryContainer = Palette.Yellow.bananaYellow,
-    onPrimary = Palette.Yellow.bananaYellow
+    onPrimary = Palette.Yellow.bananaYellow,
+    onSnackContainer = Palette.Yellow.bananaYellow
 )

@@ -50,13 +50,13 @@ internal fun SelectionBarStateContent(
         MainBottomPanelItem(
             label = text.shared.btnTitleReplace,
             icon = AppIcon.MoveFolder,
-            action = { send(Msg.Ui.OnReplaceFolderSelectedNotesBottomBarClicked) }
+            action = { send(Msg.Ui.OnReplaceNoteToFolderClicked) }
         ),
 
         MainBottomPanelItem(
             label = text.shared.btnTitleRemove,
             icon = AppIcon.MoveTrash,
-            action = { send(Msg.Ui.OnRemoveSelectedNotesBottomBarClicked) }
+            action = { send(Msg.Ui.OnRemoveSelectedNotesClicked) }
         ),
     )
 
@@ -143,7 +143,7 @@ fun SelectedNotesCount(countNotes: () -> Int, modifier: Modifier = Modifier) {
             }
         ) { targetCount ->
             Text(
-                text = "$targetCount",
+                text = " $targetCount",
                 style = TextDesign.bodyPrimary.copy(
                     color = onPrimary,
                     fontWeight = FontWeight.Bold

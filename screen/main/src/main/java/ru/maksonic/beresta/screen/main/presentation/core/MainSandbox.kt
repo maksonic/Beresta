@@ -3,7 +3,6 @@ package ru.maksonic.beresta.screen.main.presentation.core
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.notes_list.api.ui.MainBottomBarState
-import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 
 /**
  * @Author maksonic on 16.01.2023
@@ -33,25 +32,24 @@ class MainSandbox(
         is Msg.Ui.OnNoteLongPressed -> onNoteLongClicked(model, msg)
         is Msg.Ui.OnHideSelectedNotesBottomBarClicked -> UpdatedModel(model)
         is Msg.Ui.OnPinSelectedNotesBottomBarClicked -> onPinSelectedNotesClicked(model)
-        is Msg.Ui.OnRemoveSelectedNotesBottomBarClicked -> onRemoveSelectedNotesClicked(model)
-        is Msg.Ui.OnReplaceFolderSelectedNotesBottomBarClicked -> UpdatedModel(model)
+        is Msg.Ui.OnRemoveSelectedNotesClicked -> onRemoveSelectedNotesClicked(model)
+        is Msg.Ui.OnRemoveNotesUndoClicked -> onRemoveSelectedNotesUndoClicked(model)
+        is Msg.Ui.OnReplaceNoteToFolderClicked -> replaceSelectedNotesToFolder(model, msg)
         is Msg.Ui.OnCancelSelectionClicked -> cancelNotesSelection(model)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
         is Msg.Inner.UpdatedNewFolderDialogVisibility -> updatedDialogVisibility(model, msg)
-
+        is Msg.Inner.HideRemovedNotesSnack -> hiddenSnack(model)
+        //is Msg.Inner.ShowRemovedNotesSnack -> showedSnack(model)
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedDataResult): UpdateResult {
-        /*val sortNotes =
-            msg.notes.copy(
-                data = msg.notes.data.sortedWith(
-                    comparator = compareByDescending<NoteUi> { it.isPinned }.thenBy { it.id }
-                )
-            )*/
+        val notes = msg.notes.copy(data = msg.notes.data.filter { !it.isMovedToTrash })
+
         return UpdatedModel(
             model = model.copy(
                 base = model.base.copy(isLoading = false, isSuccessLoading = true, isError = false),
-                notes = msg.notes,
+                notes = notes,
+                allNotes = msg.notes.data,
                 filters = msg.folders,
             )
         )
@@ -106,59 +104,57 @@ class MainSandbox(
         baseOnNoteAction(model, msg.id)
 
     private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {
-        var counter = model.selectedNotesCount
-        val updateCounter = { isSelected: Boolean -> if (isSelected) counter++ else counter-- }
-        val afterSelectNotes = model.notes.copy(data = model.notes.data.map { note ->
-            if (note.id == noteId) updateCounter(!note.isSelected)
-            return@map if (note.id == noteId) note.copy(isSelected = !note.isSelected) else note
-        })
-        val isSelected = afterSelectNotes.data.map { it.isSelected }.contains(true)
-        val selectedNotes = afterSelectNotes.data.filter { it.isSelected }
-        val isShowUnpinButton = !selectedNotes.map { it.isPinned }.contains(false)
+        val selectedList = model.selectedNotes.toMutableSet().also { list ->
+            model.notes.data.forEach { note ->
+                if (noteId == note.id) {
+                    if (list.contains(note)) list.remove(note) else list.add(note)
+                }
+            }
+        }.toSet()
+
+        val isSelected = selectedList.isNotEmpty()
+        val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
         val bottomBarState =
             if (isSelected) MainBottomBarState.SELECTION else MainBottomBarState.IDLE
 
         return UpdatedModel(
             model.copy(
-                notes = afterSelectNotes,
+                selectedNotes = selectedList,
                 isSelectionState = isSelected,
                 bottomBarState = bottomBarState,
                 isShowBottomBarUnpinBtn = isShowUnpinButton,
-                selectedNotesCount = counter
+                selectedNotesCount = selectedList.count()
             )
         )
     }
 
     private fun onSelectAllNotesClicked(model: Model): UpdateResult {
-        var selectedCount = 0
-        val isAllSelected = model.notes.data.all { note -> note.isSelected }
-        val notes = model.notes.copy(data = model.notes.data.map { note ->
-            selectedCount = if (isAllSelected) 0 else model.notes.data.map { it.isSelected }.count()
-            return@map note.copy(isSelected = !isAllSelected)
-        })
-        val isSelected = notes.data.map { it.isSelected }.contains(true)
-        val isShowUnpinButton = notes.data.all { note -> note.isPinned }
+        val selectedList = model.selectedNotes.toMutableSet().also { list ->
+            if (list.containsAll(model.notes.data)) list.clear()
+            else list.addAll(model.notes.data)
+        }.toSet()
+
+        val isSelected = selectedList.isNotEmpty()
+        val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
         val bottomBarState =
             if (isSelected) MainBottomBarState.SELECTION else MainBottomBarState.IDLE
 
         return UpdatedModel(
             model = model.copy(
-                notes = notes,
+                selectedNotes = selectedList,
                 isSelectionState = isSelected,
                 isShowBottomBarUnpinBtn = isShowUnpinButton,
-                selectedNotesCount = selectedCount,
+                selectedNotesCount = selectedList.count(),
                 bottomBarState = bottomBarState
             ),
         )
     }
 
     private fun cancelNotesSelection(model: Model): UpdateResult {
-        val unselectedAll =
-            model.notes.copy(data = model.notes.data.map { it.copy(isSelected = false) })
         return UpdatedModel(
             model = model.copy(
-                notes = unselectedAll,
                 isSelectionState = false,
+                selectedNotes = emptySet(),
                 selectedNotesCount = 0,
                 bottomBarState = MainBottomBarState.IDLE
             )
@@ -166,11 +162,12 @@ class MainSandbox(
     }
 
     private fun onPinSelectedNotesClicked(model: Model): UpdateResult {
-        val selectedNotes = model.notes.copy(data = model.notes.data.filter { it.isSelected })
-        val isSelectedContainsUnpinnedNotes = selectedNotes.data.map { it.isPinned }.contains(false)
+        val selectedNotes = model.selectedNotes
+        val isSelectedContainsUnpinnedNotes =
+            selectedNotes.map { note -> note.isPinned }.contains(false)
         val notes = model.notes.copy(data = model.notes.data.map { note ->
             val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
-            return@map if (note.isSelected) note.copy(isPinned = isPinned) else note
+            return@map if (selectedNotes.contains(note)) note.copy(isPinned = isPinned) else note
         })
 
         return UpdatedModel(
@@ -180,24 +177,49 @@ class MainSandbox(
     }
 
     private fun replaceSelectedNotesToFolder(
-        model: Model, msg: Msg.Ui.OnReplaceFolderSelectedNotesBottomBarClicked
+        model: Model, msg: Msg.Ui.OnReplaceNoteToFolderClicked
     ): UpdateResult = UpdatedModel(model)
 
     private fun onRemoveSelectedNotesClicked(model: Model): UpdateResult {
-        val remove = model.notes.copy(data = model.notes.data.map { note ->
-            return@map note.copy(isMovedToTrash = note.isSelected)
-        })
+        val selectedNotes = model.selectedNotes
+        val removedNotes = model.removedNotes.toMutableSet().also { list ->
+            if (list.containsAll(selectedNotes)) list.removeAll(selectedNotes) else list.addAll(
+                selectedNotes
+            )
+        }.toSet()
 
+        val remove = model.notes.copy(data = model.notes.data.map { note ->
+            val isRemoved = removedNotes.contains(note)
+            return@map note.copy(isMovedToTrash = isRemoved)
+        })
         val notes = remove.copy(data = remove.data.filter { !it.isMovedToTrash })
 
         return UpdatedModel(
             model.copy(
                 notes = notes,
+                selectedNotes = emptySet(),
+                removedNotes = removedNotes,
                 isSelectionState = false,
                 bottomBarState = MainBottomBarState.IDLE,
-                selectedNotesCount = 0
+                selectedNotesCount = 0,
+                isVisibleUndoRemoveNotesSnack = true
             ),
-            commands = setOf(Cmd.RemoveSelected(remove.data))
+            commands = setOf(Cmd.RemoveSelected(remove.data)),
+        )
+    }
+
+    private fun onRemoveSelectedNotesUndoClicked(model: Model): UpdateResult {
+        val undoRemoved = model.notes.copy(data = model.notes.data.toMutableList().also { notes ->
+            notes.addAll(model.removedNotes.map { it.copy(isMovedToTrash = false) })
+        }.toList())
+
+        return UpdatedModel(
+            model = model.copy(
+                notes = undoRemoved,
+                removedNotes = emptySet(),
+                isVisibleUndoRemoveNotesSnack = false
+            ),
+            commands = setOf(Cmd.UndoRemoved(undoRemoved.data)),
         )
     }
 
@@ -206,4 +228,11 @@ class MainSandbox(
         msg: Msg.Inner.UpdatedNewFolderDialogVisibility
     ): UpdateResult =
         UpdatedModel(model.copy(isVisibleNewFolderDialog = msg.isVisible))
+
+    private fun showedSnack(model: Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleUndoRemoveNotesSnack = true))
+
+
+    private fun hiddenSnack(model: Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleUndoRemoveNotesSnack = false, removedNotes = emptySet()))
 }

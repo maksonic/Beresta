@@ -20,6 +20,7 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.functional.ANIMATION_DURATION_NORMAL
 
 /**
@@ -31,6 +32,7 @@ internal fun FetchedNotesWidgetContent(
     modifier: Modifier = Modifier,
     notes: NoteUi.Collection,
     chips: FilterChipUi.Collection,
+    selectedNotes: Set<NoteUi>,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongPressed: (id: Long) -> Unit,
     onChipFilterClicked: (id: Long) -> Unit,
@@ -46,43 +48,38 @@ internal fun FetchedNotesWidgetContent(
         animationSpec = tween(ANIMATION_DURATION_NORMAL)
     )
 
+    val listBottomPadding = animateDpAsState(
+        if (sharedScroll.isSelectionState())
+            Theme.widgetSize.bottomPanelHeightSelected.plus(SystemNavigationBarHeight)
+        else
+            Theme.widgetSize.bottomMainPanelHeight.plus(SystemNavigationBarHeight)
+    )
+
     Box(modifier = modifier.fillMaxSize()) {
 
         LazyVerticalStaggeredGrid(
             state = sharedScroll.state(),
             columns = StaggeredGridCells.Fixed(sharedScroll.gridCellsCount()),
-            contentPadding = PaddingValues(top = dp4, start = dp10, end = dp10),
+            contentPadding = PaddingValues(
+                top = Theme.widgetSize.noteChipsContainerHeight.plus(dp4),
+                start = dp10,
+                end = dp10,
+                bottom = listBottomPadding.value
+            ),
             modifier = modifier
                 .fillMaxSize()
                 .statusBarsPadding()
                 .padding(top = topBarNormalHeight)
         ) {
 
-            items(sharedScroll.gridCellsCount()) {
-                Box(modifier.height(Theme.widgetSize.noteChipsContainerHeight))
-            }
-
             items(items = notes.data, key = { note -> note.id }) { note ->
                 NoteListItemContent(
                     onNoteClicked = { id -> onNoteClicked(id) },
                     onNoteLongClicked = { id -> onNoteLongPressed(id) },
-                    note = note,
+                    note = note.copy(isSelected = selectedNotes.contains(note)),
                     maxTitleLength = maxTitleLength,
                     maxMessageLength = maxMessageLength,
                     modifier = modifier.animateContentSize()
-                )
-            }
-
-            items(sharedScroll.gridCellsCount()) {
-                val listBottomPadding = animateDpAsState(
-                    if (sharedScroll.isSelectionState())
-                        Theme.widgetSize.bottomPanelHeightSelected
-                    else
-                        Theme.widgetSize.bottomMainPanelHeight
-                )
-
-                Box(
-                    modifier.height(listBottomPadding.value)
                 )
             }
         }

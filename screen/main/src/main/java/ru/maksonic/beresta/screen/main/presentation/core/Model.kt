@@ -15,15 +15,19 @@ data class Model(
     val base: BaseModel = BaseModel.InitialWithLoading,
     val entry: NavBackStackEntry? = null,
     val notes: NoteUi.Collection = NoteUi.Collection.Empty,
+    val allNotes: List<NoteUi> = emptyList(),
+    val selectedNotes: Set<NoteUi> = emptySet(),
+    val removedNotes: Set<NoteUi> = emptySet(),
     val filters: FilterChipUi.Collection = FilterChipUi.Collection.Empty,
-    val errorMsg: String = "Неизвестная ошибка",
+    val errorMsg: String = "",
     val isVisibleBottomBar: Boolean = true,
     val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
     val isSelectionState: Boolean = false,
     val isShowBottomBarUnpinBtn: Boolean = false,
     val selectedNotesCount: Int = 0,
     val notesGridCount: Int = 1,
-    val isVisibleNewFolderDialog: Boolean = false
+    val isVisibleNewFolderDialog: Boolean = false,
+    val isVisibleUndoRemoveNotesSnack: Boolean = false,
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
@@ -40,8 +44,8 @@ sealed class Msg : ElmMessage {
         // Selected bottom panel messages
         object OnHideSelectedNotesBottomBarClicked : Ui()
         object OnPinSelectedNotesBottomBarClicked : Ui()
-        object OnReplaceFolderSelectedNotesBottomBarClicked : Ui()
-        object OnRemoveSelectedNotesBottomBarClicked : Ui()
+        object OnReplaceNoteToFolderClicked : Ui()
+        object OnRemoveSelectedNotesClicked : Ui()
         object OnCancelSelectionClicked : Ui()
         object OnSelectAllNotesClicked : Ui()
 
@@ -49,6 +53,7 @@ sealed class Msg : ElmMessage {
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongPressed(val id: Long) : Ui()
         data class OnChipFilterClicked(val id: Long) : Ui()
+        object OnRemoveNotesUndoClicked : Ui()
     }
 
     sealed class Inner : Msg() {
@@ -59,12 +64,14 @@ sealed class Msg : ElmMessage {
 
         data class FetchedError(val message: String) : Inner()
         data class UpdatedNewFolderDialogVisibility(val isVisible: Boolean) : Inner()
+        object HideRemovedNotesSnack : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
     object RunFetchingNotesCollection : Cmd()
     data class RemoveSelected(val notes: List<NoteUi>) : Cmd()
+    data class UndoRemoved(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: List<NoteUi>) : Cmd()
 }
 

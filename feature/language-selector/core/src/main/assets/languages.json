@@ -47,7 +47,9 @@
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_notes_count_bottom_bar": "Выбрано заметок: ",
       "dialog_title_create_new_folder": "Новая папка",
-      "title_pinned_notes_folder": "Все заметки"
+      "title_pinned_notes_folder": "Все заметки",
+      "hint_error_empty_folder_name": "Название не может быть пустым.",
+      "hint_removed_notes_count": "Удалено заметок:"
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -126,10 +128,11 @@
       "btn_title_remove": "Remove",
       "btn_title_create": "Create",
       "hint_find_note_search_bar": "Find note",
-      "hint_selected_notes_count_bottom_bar": "Notes selected: ",
+      "hint_selected_notes_count_bottom_bar": "Notes selected:",
       "dialog_title_create_new_folder": "New folder",
-      "title_pinned_notes_folder": "All"
-
+      "title_pinned_notes_folder": "All",
+      "hint_error_empty_folder_name": "Folder name cannot be empty.",
+      "hint_removed_notes_count": "Removed notes:"
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -210,7 +213,9 @@
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_notes_count_bottom_bar": "所选笔记： ",
       "dialog_title_create_new_folder": "新建文件夹",
-      "title_pinned_notes_folder": "所有笔记"
+      "title_pinned_notes_folder": "所有笔记",
+      "hint_error_empty_folder_name": "文件夹名称不能为空。",
+      "hint_removed_notes_count": "删除的注释:"
     },
     "settings": {
       "top_bar_title": "设置",
@@ -291,7 +296,9 @@
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_notes_count_bottom_bar": "所選筆記： ",
       "dialog_title_create_new_folder": "新建文件夾",
-      "title_pinned_notes_folder": "所有筆記"
+      "title_pinned_notes_folder": "所有筆記",
+      "hint_error_empty_folder_name": "文件夾名稱不能為空。",
+      "hint_removed_notes_count": "刪除的筆記:"
     },
     "settings": {
       "top_bar_title": "設置",

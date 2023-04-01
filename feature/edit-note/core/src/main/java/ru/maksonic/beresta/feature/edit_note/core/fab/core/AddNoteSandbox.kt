@@ -16,8 +16,8 @@ class AddNoteSandbox : Sandbox<WidgetModel, Msg, Cmd, Eff>(initialModel = Widget
     }
 
     private fun onCreateNoteClicked(model: WidgetModel): Result =
-        UpdatedModel(model.copy(isExpandedFab = true), effects = setOf(Eff.HideSearchBar))
+        UpdatedModel(model.copy(isExpandedFab = true))
 
     private fun onTopBarBackPressed(model: WidgetModel): Result =
-        UpdatedModel(model.copy(isExpandedFab = false), effects = setOf(Eff.ShowSearchBar))
+        UpdatedModel(model.copy(isExpandedFab = false))
 }

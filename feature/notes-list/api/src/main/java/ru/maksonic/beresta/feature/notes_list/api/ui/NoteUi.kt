@@ -40,3 +40,6 @@ data class NoteUi(
     }
 }
 
+fun NoteUi.isEmpty() = this.title.isBlank() && this.message.isBlank()
+
+

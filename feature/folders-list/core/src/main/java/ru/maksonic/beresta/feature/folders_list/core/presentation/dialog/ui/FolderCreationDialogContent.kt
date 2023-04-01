@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -23,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.CreateNewFolderDialogSandbox
+import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.DialogModel
 import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.Eff
 import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.Msg
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
@@ -38,9 +40,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 29.03.2023
  */
-private const val MAX_FOLDER_LENGTH = 50
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun FolderCreationDialogContent(
     modifier: Modifier = Modifier,
@@ -78,6 +78,7 @@ internal fun FolderCreationDialogContent(
                     .padding(bottom = dp16)
                     .noRippleClickable { }
             ) {
+
                 Column(
                     modifier
                         .fillMaxWidth()
@@ -89,37 +90,9 @@ internal fun FolderCreationDialogContent(
                         style = TextDesign.topBar,
                         modifier = modifier.padding(dp16)
                     )
-                    OutlinedTextField(
-                        value = model.folderInputName,
-                        onValueChange = {
-                            sandbox.send(Msg.Inner.UpdateNewFolderNameInput(it))
-                        },
-                        textStyle = TextDesign.bodyPrimary,
-                        singleLine = true,
-                        supportingText = {
-                            Text(
-                                text = "${model.folderInputName.count()}/$MAX_FOLDER_LENGTH",
-                                style = TextDesign.captionSmall
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedTextColor = onBackground,
-                            unfocusedTextColor = outline,
-                            focusedBorderColor = tertiaryContainer,
-                            unfocusedBorderColor = outline,
-                            cursorColor = primary,
-                            selectionColors = TextSelectionColors(
-                                handleColor = primary,
-                                backgroundColor = onSurfaceVariant
-                            ),
-                        ),
-                        shape = Shape.cornerBig,
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .focusRequester(focusRequester)
-                    )
+
+                    InputFolderName(model, sandbox::send, focusManager , focusRequester)
+
                     Row(
                         modifier.padding(top = dp16),
                         horizontalArrangement = Arrangement.spacedBy(dp16)
@@ -146,6 +119,66 @@ internal fun FolderCreationDialogContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InputFolderName(
+    model: DialogModel,
+    send: (Msg) -> Unit,
+    focusManager: FocusManager,
+    focusRequester: FocusRequester,
+    modifier: Modifier = Modifier
+) {
+
+    OutlinedTextField(
+        value = model.folderInputName,
+        onValueChange = {
+            send(Msg.Inner.UpdateNewFolderNameInput(it))
+        },
+        textStyle = TextDesign.bodyPrimary,
+        singleLine = true,
+        supportingText = {
+            InputCounterHint(
+                counterValue = model.supportingText,
+                isError = model.isEmptyFieldError
+            )
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
+        keyboardActions = KeyboardActions(onDone = {
+            send(Msg.Ui.OnCreateNewNotesFolderClicked)
+            if (!model.isEmptyFieldError) {
+                focusManager.clearFocus()
+            }
+        }),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedTextColor = onBackground,
+            unfocusedTextColor = outline,
+            focusedBorderColor = tertiaryContainer,
+            unfocusedBorderColor = outline,
+            cursorColor = primary,
+            errorBorderColor = error,
+            errorTextColor = error,
+            errorSupportingTextColor = error,
+            selectionColors = TextSelectionColors(
+                handleColor = primary,
+                backgroundColor = onSurfaceVariant
+            ),
+        ),
+        shape = Shape.cornerBig,
+        isError = model.isEmptyFieldError,
+        modifier = modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+    )
+}
+
+@Composable
+private fun InputCounterHint(counterValue: String, isError: Boolean) {
+    val caption = if (isError) text.shared.hintErrorEmptyFolderName else counterValue
+    val color = if (isError) error else onBackground
+
+    Text(text = caption, style = TextDesign.captionSmall.copy(color = color))
+}
+
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>, updateDialogVisibility: (isVisible: Boolean) -> Unit,
@@ -154,6 +187,7 @@ private fun HandleUiEffects(
         when (eff) {
             is Eff.ShowNewFolderDialog -> updateDialogVisibility(true)
             is Eff.HideNewFolderDialog -> updateDialogVisibility(false)
+            is Eff.ShowEmptyFieldError -> {}
         }
     }
 }

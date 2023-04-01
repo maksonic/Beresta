@@ -16,7 +16,8 @@ class CreateNewFolderDialogSandbox(
     subscriptions = listOf(program)
 ) {
     companion object {
-        private const val MAX_FOLDER_LENGTH = 50
+        private const val MAX_FOLDER_NAME_LENGTH = 50
+        private const val INITIAL_SUPPORTING_TEXT = "0/$MAX_FOLDER_NAME_LENGTH"
     }
 
     override fun update(msg: Msg, model: DialogModel): UpdateResult = when (msg) {
@@ -30,9 +31,16 @@ class CreateNewFolderDialogSandbox(
         model: DialogModel,
         msg: Msg.Inner.UpdateNewFolderNameInput
     ): UpdateResult {
-        val croppedInput = msg.value.take(MAX_FOLDER_LENGTH)
+        val croppedInput = msg.value.take(MAX_FOLDER_NAME_LENGTH)
+        val supportingText = "${croppedInput.count()}/$MAX_FOLDER_NAME_LENGTH"
 
-        return UpdatedModel(model.copy(folderInputName = croppedInput))
+        return UpdatedModel(
+            model.copy(
+                folderInputName = croppedInput,
+                supportingText = supportingText,
+                isEmptyFieldError = false
+            )
+        )
     }
 
     private fun onAddNewFolderClicked(model: DialogModel): UpdateResult =
@@ -40,15 +48,30 @@ class CreateNewFolderDialogSandbox(
             model.copy(folderInputName = ""), effects = setOf(Eff.ShowNewFolderDialog)
         )
 
-    private fun onCreateNewFolderClicked(model: DialogModel): UpdateResult =
-        UpdatedModel(
-            model.copy(folderInputName = ""),
-            commands = setOf(Cmd.AddNewFolderToCache(FilterChipUi(title = model.folderInputName))),
-            effects = setOf(Eff.HideNewFolderDialog)
+    private fun onCreateNewFolderClicked(model: DialogModel): UpdateResult {
+        val isError = model.folderInputName.isBlank()
+        val command = if (isError) emptySet() else
+            setOf(Cmd.SaveNewFolderToCache(FilterChipUi(title = model.folderInputName)))
+        val effect = if (isError) emptySet() else setOf(Eff.HideNewFolderDialog)
+
+        return UpdatedModel(
+            model.copy(
+                folderInputName = "",
+                supportingText = INITIAL_SUPPORTING_TEXT,
+                isEmptyFieldError = isError
+            ),
+            commands = command,
+            effects = effect
         )
+    }
 
     private fun onDismissCreateFolderDialogClicked(model: DialogModel): UpdateResult =
         UpdatedModel(
-            model.copy(folderInputName = ""), effects = setOf(Eff.HideNewFolderDialog)
+            model.copy(
+                folderInputName = "",
+                isEmptyFieldError = false,
+                supportingText = INITIAL_SUPPORTING_TEXT
+            ),
+            effects = setOf(Eff.HideNewFolderDialog)
         )
 }

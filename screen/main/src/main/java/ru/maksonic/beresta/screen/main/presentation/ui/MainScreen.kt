@@ -72,6 +72,7 @@ private fun Content(
         contentAlignment = Alignment.BottomCenter
     ) {
 
+
         val sharedScrollState = NotesListSharedScrollState(
             state = { scrollState },
             isVisibleFirstNote = { isVisibleFirstNote.value },
@@ -98,7 +99,9 @@ private fun Content(
             isScrollUp = { isScrollUp },
             isSelectionState = { model.isSelectionState },
             selectedCount = { model.selectedNotesCount },
-            isShowUnpinItem = model.isShowBottomBarUnpinBtn
+            removedCount = { model.removedNotes.count() },
+            isShowUnpinItem = model.isShowBottomBarUnpinBtn,
+            isVisibleUndoRemoveNotesSnack = model.isVisibleUndoRemoveNotesSnack
         )
         searchBar.Widget(
             notesCollection = model.notes,
@@ -127,6 +130,7 @@ private fun NotesList(
     feature.FetchedNotesWidget(
         notes = model.notes,
         chips = model.filters,
+        selectedNotes = model.selectedNotes,
         onNoteClicked = { noteId -> send(Msg.Ui.OnNoteClicked(noteId)) },
         onNoteLongPressed = { noteId -> send(Msg.Ui.OnNoteLongPressed(noteId)) },
         onChipFilterClicked = { id -> send(Msg.Ui.OnChipFilterClicked(id)) },

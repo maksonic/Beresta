@@ -29,6 +29,7 @@ class NotesListUiCore : NotesListApi.Ui {
     override fun FetchedNotesWidget(
         notes: NoteUi.Collection,
         chips: FilterChipUi.Collection,
+        selectedNotes: Set<NoteUi>,
         onNoteClicked: (id: Long) -> Unit,
         onNoteLongPressed: (id: Long) -> Unit,
         onChipFilterClicked: (id: Long) -> Unit,
@@ -37,6 +38,7 @@ class NotesListUiCore : NotesListApi.Ui {
         FetchedNotesWidgetContent(
             notes = notes,
             chips = chips,
+            selectedNotes = selectedNotes,
             onNoteClicked = onNoteClicked,
             onNoteLongPressed = onNoteLongPressed,
             onChipFilterClicked = onChipFilterClicked,

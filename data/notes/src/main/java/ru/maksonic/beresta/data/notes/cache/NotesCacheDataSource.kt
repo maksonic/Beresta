@@ -17,12 +17,7 @@ class NotesCacheDataSource(
     private val noteDao: NoteDao,
     private val dispatcher: CoroutineDispatcher,
 ) : BaseCacheSource<NoteCache>(noteDao, dispatcher) {
-    fun fetchCachedNotes(): NotesCacheList =
-        noteDao.fetchCacheItemsList()
-            .transform { notes ->
-                val isNotTrash = notes.filter { note -> !note.isMovedToTrash }
-                emit(isNotTrash)
-            }.flowOn(dispatcher)
+    fun fetchCachedNotes(): NotesCacheList = noteDao.fetchCacheItemsList().flowOn(dispatcher)
 
     fun fetchCachedTrashNotes(): NotesCacheList = noteDao.fetchCacheItemsList()
         .transform { notes ->

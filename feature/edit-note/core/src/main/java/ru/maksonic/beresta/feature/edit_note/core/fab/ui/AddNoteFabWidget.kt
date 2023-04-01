@@ -7,8 +7,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,6 +33,7 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.DriveFile
 import ru.maksonic.beresta.ui.theme.icons.Edit
+import ru.maksonic.beresta.ui.widget.button.FloatingFabButton
 
 /**
  * @Author maksonic on 23.02.2023
@@ -125,13 +124,11 @@ private fun FabContainer(
         val isFullExpanded = containerHeight.value == fullHeight
         val containerShape = if (isFullExpanded) 0.dp else dp16
 
-        FloatingActionButton(
+        FloatingFabButton(
             onClick = { send(Msg.Ui.OnCreateNewNoteClicked) },
-            containerColor = surface,
+            fabColor = surface,
             shape = RoundedCornerShape(containerShape),
-            elevation = FloatingActionButtonDefaults.elevation(
-                defaultElevation = containerElevation.value
-            ),
+            shadowElevation = containerElevation.value,
             modifier = modifier
                 .padding(
                     bottom = containerBottomPadding.value,
@@ -141,16 +138,7 @@ private fun FabContainer(
                 .width(containerWidth.value),
         ) {
             Box {
-                if (isExpanded) {
-                    EditNoteScreen(
-                        isExpandedFab = { true },
-                        collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
-                        isVisibleOnFabDraftIndicator = isNoteNotEmpty,
-                        modifier = modifier.graphicsLayer {
-                            alpha = expandedContentAlpha.value
-                        }
-                    )
-                } else {
+                if (!isExpanded) {
                     Box(
                         modifier
                             .fillMaxSize()
@@ -167,6 +155,15 @@ private fun FabContainer(
                             }
                         )
                     }
+                } else {
+                    EditNoteScreen(
+                        isExpandedFab = { true },
+                        collapseFabWidget = { send(Msg.Ui.OnCollapseFabClicked) },
+                        isVisibleOnFabDraftIndicator = isNoteNotEmpty,
+                        modifier = modifier.graphicsLayer {
+                            alpha = expandedContentAlpha.value
+                        }
+                    )
                 }
             }
         }

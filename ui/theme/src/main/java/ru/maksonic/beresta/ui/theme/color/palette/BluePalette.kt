@@ -25,8 +25,9 @@ val filledLightBluePalette = baseLightPalette.copy(
     inverseSurface = Palette.Blue.coolBlack,
     inversePrimary = Palette.Red.roseBud,
     surfaceTint = Palette.Blue.azureRadiance,
-    outlineVariant = Palette.Blue.solitude
-)
+    outlineVariant = Palette.Blue.solitude,
+    onSnackContainer = Palette.Blue.anakiwa,
+    )
 val filledDarkBluePalette = baseDarkPalette.copy(
     primary = Palette.Blue.x0,
     onPrimary = Palette.Blue.x0,
@@ -47,16 +48,19 @@ val filledDarkBluePalette = baseDarkPalette.copy(
     surfaceTint = Palette.black,
     inverseOnSurface = Palette.Blue.x4,
     inversePrimary = Palette.Blue.x5,
-    outlineVariant = Palette.Blue.x3
-)
+    outlineVariant = Palette.Blue.x3,
+    onSnackContainer = Palette.Blue.anakiwa,
+    )
 val outlinedDarkBluePalette = baseDarkPalette.copy(
     primary = Palette.Blue.anakiwa,
     tertiaryContainer = Palette.Blue.anakiwa,
-    onPrimary = Palette.Blue.anakiwa
-)
+    onPrimary = Palette.Blue.anakiwa,
+    onSnackContainer = Palette.Blue.anakiwa,
+    )
 val highContrastBluePalette = highContrastPalette.copy(
     primary = Palette.Blue.azureRadiance,
     tertiaryContainer = Palette.Blue.azureRadiance,
     onTertiaryContainer = Palette.white,
-    onPrimary = Palette.Blue.azureRadiance
-)
+    onPrimary = Palette.Blue.azureRadiance,
+    onSnackContainer = Palette.Blue.azureRadiance,
+    )

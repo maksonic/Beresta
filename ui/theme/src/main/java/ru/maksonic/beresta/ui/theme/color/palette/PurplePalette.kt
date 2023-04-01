@@ -24,8 +24,9 @@ val filledLightPurplePalette = baseLightPalette.copy(
     inverseSurface = Palette.Purple.deepViolet,
     inversePrimary = Palette.Green.mintGreen,
     surfaceTint = Palette.Purple.electricViolet,
-    outlineVariant = Palette.Purple.magnolia
-)
+    outlineVariant = Palette.Purple.magnolia,
+    onSnackContainer = Palette.Purple.mauve
+    )
 val filledDarkPurplePalette = baseDarkPalette.copy(
     primary = Palette.Purple.x0,
     onPrimary = Palette.Purple.x0,
@@ -46,7 +47,8 @@ val filledDarkPurplePalette = baseDarkPalette.copy(
     onSurfaceVariant = Palette.Purple.x4,
     inverseOnSurface = Palette.Purple.x4,
     inversePrimary = Palette.Purple.x5,
-    outlineVariant = Palette.Purple.x3
+    outlineVariant = Palette.Purple.x3,
+    onSnackContainer = Palette.Purple.mauve
 )
 val outlinedLightPurplePalette = baseLightPalette.copy(
     onPrimary = Palette.Purple.deepViolet,
@@ -55,15 +57,18 @@ val outlinedLightPurplePalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.white,
     inversePrimary = Palette.Green.mintGreen,
     primary = Palette.Purple.electricViolet,
+    onSnackContainer = Palette.Purple.mauve
 )
 val outlinedDarkPurplePalette = baseDarkPalette.copy(
     primary = Palette.Purple.paleViolet,
     tertiaryContainer = Palette.Purple.paleViolet,
-    onPrimary = Palette.Purple.paleViolet
+    onPrimary = Palette.Purple.paleViolet,
+    onSnackContainer = Palette.Purple.mauve
 )
 val highContrastPurplePalette = highContrastPalette.copy(
     primary = Palette.Purple.electricViolet,
     tertiaryContainer = Palette.Purple.electricViolet,
     onTertiaryContainer = Palette.white,
-    onPrimary = Palette.Purple.electricViolet
+    onPrimary = Palette.Purple.electricViolet,
+    onSnackContainer = Palette.Purple.electricViolet
 )

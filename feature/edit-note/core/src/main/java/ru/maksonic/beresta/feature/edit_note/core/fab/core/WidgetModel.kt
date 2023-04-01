@@ -26,6 +26,4 @@ sealed class Msg : ElmMessage {
 sealed class Cmd : ElmCommand {}
 
 sealed class Eff : ElmEffect {
-    object ShowSearchBar : Eff()
-    object HideSearchBar : Eff()
 }

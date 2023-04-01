@@ -1,8 +1,12 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
@@ -10,11 +14,15 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -44,6 +52,7 @@ import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.toastLongTime
+import kotlin.math.roundToInt
 
 /**
  * @Author maksonic on 04.03.2023
@@ -74,6 +83,7 @@ fun EditNoteScreen(
         collapseFabWidget = collapseFabWidget,
         focusManager = focusManager,
         titleFocus = titleFocus,
+        isVisibleOnFabDraftIndicator = isVisibleOnFabDraftIndicator,
     )
 
     Content(
@@ -87,6 +97,7 @@ fun EditNoteScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Content(
     model: Model,
@@ -108,6 +119,7 @@ fun Content(
             }
         }
     }
+
 
     LaunchedEffect(Unit) {
         if (model.isNewNote && model.editorSheet.state != BottomSheetEditorState.EXPANDED) {
@@ -136,35 +148,44 @@ fun Content(
     ) {
         ScreenBackground(model.currentNote.backgroundId)
 
-        Column(
+        LazyColumn(
             modifier = modifier
+                .systemBarsPadding()
+                .imePadding()
                 .fillMaxSize()
-                .nestedScroll(nestedScrollConnection)
-                .verticalScroll(scrollState)
         ) {
-            Spacer(
-                modifier
-                    .statusBarsPadding()
-                    .height(Theme.widgetSize.topBarNormalHeight)
-            )
 
-            NoteTitleInputFieldWidget(
-                title = model.currentNote.title,
-                updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
-                focusRequester = titleFocus,
-                focusManager = focusManager,
-            )
-            NoteMessageInputFieldWidget(
-                message = model.currentNote.message,
-                updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
-                focusRequester = messageFocus,
-            )
+            item {
+                Spacer(
+                    modifier
+                        .statusBarsPadding()
+                        .height(Theme.widgetSize.topBarNormalHeight)
+                )
+            }
+            item {
+                NoteTitleInputFieldWidget(
+                    title = model.currentNote.title,
+                    updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
+                    focusRequester = titleFocus,
+                    focusManager = focusManager,
+                )
+            }
 
-            Spacer(
-                modifier
-                    .statusBarsPadding()
-                    .height(Theme.widgetSize.topBarNormalHeight)
-            )
+            item {
+                NoteMessageInputFieldWidget(
+                    message = model.currentNote.message,
+                    updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
+                    focusRequester = messageFocus,
+                )
+            }
+
+            item {
+                Spacer(
+                    modifier
+                        .statusBarsPadding()
+                        .height(Theme.widgetSize.topBarNormalHeight)
+                )
+            }
         }
 
         TopBarWithEditorPanelContainer(
@@ -210,6 +231,7 @@ private fun HandleEffects(
     effects: Flow<Eff>,
     router: EditNoteRouter?,
     collapseFabWidget: () -> Unit,
+    isVisibleOnFabDraftIndicator: MutableState<Boolean>,
     focusManager: FocusManager,
     titleFocus: FocusRequester,
 ) {
@@ -223,9 +245,9 @@ private fun HandleEffects(
         when (eff) {
             is Eff.SetInitialExpandedState -> {
                 scope.launch {
-                    titleFocus.requestFocus()
                     keyboardController?.hide()
                     delay(KEYBOARD_DELAY)
+                    titleFocus.requestFocus()
                     keyboardController?.show()
                 }
             }
@@ -236,6 +258,7 @@ private fun HandleEffects(
                 keyboardController?.hide()
             }
             is Eff.CollapseFab -> collapseFabWidget()
+            is Eff.ResetFabDraftIconState -> isVisibleOnFabDraftIndicator.value = false
         }
     }
 }

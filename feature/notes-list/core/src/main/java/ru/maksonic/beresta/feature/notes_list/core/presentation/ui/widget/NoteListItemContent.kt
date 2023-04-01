@@ -35,7 +35,6 @@ internal fun NoteListItemContent(
     maxMessageLength: Int,
     modifier: Modifier = Modifier
 ) {
-    val focusRequester = remember { FocusRequester() }
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
     val colors = if (isFocusedItem.value) outlineVariant else primaryContainer

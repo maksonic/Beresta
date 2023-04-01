@@ -46,10 +46,11 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         val cmd = if (model.currentNote.id == 0L)
             Cmd.SaveNote(model.currentNote) else Cmd.UpdateCurrentNote(model.currentNote)
         val eff = if (model.isNewNote) Eff.CollapseFab else Eff.ShowToastMaxLengthNoteExceed
+
         return UpdatedModel(
             model.copy(currentNote = resetModel),
             commands = setOf(cmd),
-            effects = setOf(eff)
+            effects = setOf(eff, Eff.ResetFabDraftIconState)
         )
     }
 

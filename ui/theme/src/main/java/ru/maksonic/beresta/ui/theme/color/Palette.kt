@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Color
  * @Author maksonic on 08.11.2022
  */
 object Palette {
-    val carmineRed = Color(0xFFB00020)
     val black = Color(0xFF000000)
     val netural10 = Color(0xFF1C1B1F)
     val nero = Color(0xFF212121)
@@ -23,9 +22,13 @@ object Palette {
     val white = Color(0xFFFFFFFF)
     val transparent = Color(0x00000000)
     val error = Color(0xFFB3261E)
+    val errorDark = Color(0xFFF2B8B5)
     val onError = Color(0xFFFFFFFF)
+    val onErrorDark = Color(0xFF601410)
     val errorContainer = Color(0xFFF9DEDC)
+    val errorContainerDark = Color(0xFF8C1D18)
     val onErrorContainer = Color(0xFF410E0B)
+    val onErrorContainerDark = Color(0xFFF9DEDC)
 
     object Blue {
         val x0 = Color(0xFF70FFFA)

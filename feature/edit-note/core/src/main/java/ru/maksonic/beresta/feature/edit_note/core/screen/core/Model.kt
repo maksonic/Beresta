@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.edit_note.core.screen.core
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.text.input.TextFieldValue
 import ru.maksonic.beresta.elm.*
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.BottomSheetEditorState
@@ -62,4 +61,5 @@ sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
     object HideSystemKeyboard : Eff()
     object CollapseFab : Eff()
+    object ResetFabDraftIconState : Eff()
 }

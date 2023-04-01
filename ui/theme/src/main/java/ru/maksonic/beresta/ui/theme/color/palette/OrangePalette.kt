@@ -25,8 +25,9 @@ val filledLightOrangePalette = baseLightPalette.copy(
     inverseSurface = Palette.Orange.mustardBrown,
     inversePrimary = Palette.Yellow.pastelYellow,
     surfaceTint = Palette.Orange.vividGamboge,
-    outlineVariant = Palette.Orange.serenade
-)
+    outlineVariant = Palette.Orange.serenade,
+    onSnackContainer = Palette.Orange.frangipane
+    )
 val filledDarkOrangePalette = baseDarkPalette.copy(
     primary = Palette.Orange.x0,
     onPrimary = Palette.Orange.x0,
@@ -47,8 +48,9 @@ val filledDarkOrangePalette = baseDarkPalette.copy(
     surfaceTint = Palette.black,
     inverseOnSurface = Palette.Orange.x4,
     inversePrimary = Palette.Orange.x5,
-    outlineVariant = Palette.Orange.x3
-)
+    outlineVariant = Palette.Orange.x3,
+    onSnackContainer = Palette.Orange.frangipane
+    )
 val outlinedLightOrangePalette = baseLightPalette.copy(
     onPrimary = Palette.Orange.mustardBrown,
     onTertiary = Palette.Orange.mustardBrown,
@@ -56,14 +58,17 @@ val outlinedLightOrangePalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.white,
     inversePrimary = Palette.Yellow.pastelYellow,
     primary = Palette.Orange.vividGamboge,
-)
+    onSnackContainer = Palette.Orange.frangipane
+    )
 val outlinedDarkOrangePalette = baseDarkPalette.copy(
     primary = Palette.Orange.peachOrange,
     tertiaryContainer = Palette.Orange.peachOrange,
-    onPrimary = Palette.Orange.peachOrange
-)
+    onPrimary = Palette.Orange.peachOrange,
+    onSnackContainer = Palette.Orange.frangipane
+    )
 val highContrastOrangePalette = highContrastPalette.copy(
     primary = Palette.Orange.vividGamboge,
     tertiaryContainer = Palette.Orange.vividGamboge,
-    onPrimary = Palette.Orange.vividGamboge
-)
+    onPrimary = Palette.Orange.vividGamboge,
+    onSnackContainer = Palette.Orange.vividGamboge
+    )

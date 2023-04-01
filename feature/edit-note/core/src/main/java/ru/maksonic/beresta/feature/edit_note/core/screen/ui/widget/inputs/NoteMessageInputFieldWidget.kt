@@ -2,13 +2,17 @@ package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -36,6 +40,8 @@ internal fun NoteMessageInputFieldWidget(
             )
         },
         colors = NoteInputDefaultColors,
+        keyboardActions = KeyboardActions.Default,
+        keyboardOptions = KeyboardOptions.Default,
         maxLines = 500,
         minLines = 10,
         modifier = modifier

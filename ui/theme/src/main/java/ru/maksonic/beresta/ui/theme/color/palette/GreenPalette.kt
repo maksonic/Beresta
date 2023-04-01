@@ -25,7 +25,9 @@ val filledLightGreenPalette = baseLightPalette.copy(
     inverseSurface = Palette.Green.vividMalachite,
     inversePrimary = Palette.Orange.peachOrange,
     surfaceTint = Palette.Green.electricGreen,
-    outlineVariant = Palette.Green.nyanza
+    outlineVariant = Palette.Green.nyanza,
+    onSnackContainer = Palette.Green.menthol,
+
     )
 val filledDarkGreenPalette = baseDarkPalette.copy(
     primary = Palette.Green.x0,
@@ -47,8 +49,9 @@ val filledDarkGreenPalette = baseDarkPalette.copy(
     surfaceTint = Palette.black,
     inverseOnSurface = Palette.Green.x4,
     inversePrimary = Palette.Green.x5,
-    outlineVariant = Palette.Green.x3
-)
+    outlineVariant = Palette.Green.x3,
+    onSnackContainer = Palette.Green.menthol,
+    )
 val outlinedLightGreenPalette = baseLightPalette.copy(
     onPrimary = Palette.Green.vividMalachite,
     onTertiary = Palette.Green.vividMalachite,
@@ -56,14 +59,17 @@ val outlinedLightGreenPalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.nero,
     inversePrimary = Palette.Orange.peachOrange,
     primary = Palette.Green.electricGreen,
+    onSnackContainer = Palette.Green.menthol,
     )
 val outlinedDarkGreenPalette = baseDarkPalette.copy(
     primary = Palette.Green.mintGreen,
     tertiaryContainer = Palette.Green.mintGreen,
-    onPrimary = Palette.Green.mintGreen
-)
+    onPrimary = Palette.Green.mintGreen,
+    onSnackContainer = Palette.Green.menthol,
+    )
 val highContrastGreenPalette = highContrastPalette.copy(
     primary = Palette.Green.electricGreen,
     tertiaryContainer = Palette.Green.electricGreen,
-    onPrimary = Palette.Green.electricGreen
-)
+    onPrimary = Palette.Green.electricGreen,
+    onSnackContainer = Palette.Green.electricGreen,
+    )

@@ -24,7 +24,8 @@ val filledLightRedPalette = baseLightPalette.copy(
     inverseSurface = Palette.Red.blood,
     inversePrimary = Palette.Orange.peachOrange,
     surfaceTint = Palette.Red.coralRed,
-    outlineVariant = Palette.Red.mistyRose
+    outlineVariant = Palette.Red.mistyRose,
+    onSnackContainer = Palette.Red.melon
 )
 val filledDarkRedPalette = baseDarkPalette.copy(
     primary = Palette.Red.x0,
@@ -46,7 +47,8 @@ val filledDarkRedPalette = baseDarkPalette.copy(
     surfaceTint = Palette.black,
     inverseOnSurface = Palette.Red.x4,
     inversePrimary = Palette.Red.x5,
-    outlineVariant = Palette.Red.x3
+    outlineVariant = Palette.Red.x3,
+    onSnackContainer = Palette.Red.melon
 )
 val outlinedLightRedPalette = baseLightPalette.copy(
     onPrimary = Palette.Red.blood,
@@ -55,15 +57,18 @@ val outlinedLightRedPalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.white,
     inversePrimary = Palette.Orange.peachOrange,
     primary = Palette.Red.coralRed,
+    onSnackContainer = Palette.Red.melon
 )
 val outlinedDarkRedPalette = baseDarkPalette.copy(
     primary = Palette.Red.roseBud,
     tertiaryContainer = Palette.Red.roseBud,
-    onPrimary = Palette.Red.roseBud
+    onPrimary = Palette.Red.roseBud,
+    onSnackContainer = Palette.Red.melon
 )
 val highContrastRedPalette = highContrastPalette.copy(
     primary = Palette.Red.coralRed,
     tertiaryContainer = Palette.Red.coralRed,
     onTertiaryContainer = Palette.white,
-    onPrimary = Palette.Red.coralRed
+    onPrimary = Palette.Red.coralRed,
+    onSnackContainer = Palette.Red.coralRed
 )

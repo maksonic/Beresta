@@ -14,7 +14,7 @@ class NewFolderDialogProgram(
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Cmd.AddNewFolderToCache -> createFolder(cmd.folder)
+            is Cmd.SaveNewFolderToCache -> createFolder(cmd.folder)
         }
     }
 
