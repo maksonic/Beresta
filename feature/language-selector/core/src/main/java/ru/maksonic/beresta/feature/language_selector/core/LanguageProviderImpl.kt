@@ -22,7 +22,8 @@ class LanguageProviderImpl(
                     onboarding = onboardingText(currentLanguage, data),
                     shared = shared(currentLanguage, data),
                     settings = settingsText(currentLanguage, data),
-                    editNote = editNotesText(currentLanguage, data)
+                    editNote = editNotesText(currentLanguage, data),
+                    folders =  folders(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }
@@ -72,5 +73,12 @@ class LanguageProviderImpl(
         AppLanguage.ENGLISH -> data.english.shared
         AppLanguage.CHINESE -> data.chinese.shared
         AppLanguage.CHINESE_TR -> data.chineseTr.shared
+    }
+
+    private fun folders(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.folders
+        AppLanguage.ENGLISH -> data.english.folders
+        AppLanguage.CHINESE -> data.chinese.folders
+        AppLanguage.CHINESE_TR -> data.chineseTr.folders
     }
 }

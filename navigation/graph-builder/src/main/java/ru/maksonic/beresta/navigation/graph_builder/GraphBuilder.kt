@@ -41,6 +41,7 @@ interface GraphBuilder {
                     editNoteScreen(this)
                     settingsScreen(this, DEF_ANIM_SPEED)
                     trashListScreen(this, DEF_ANIM_SPEED)
+                    foldersListScreen(apiStore.foldersList, this, DEF_ANIM_SPEED)
                 }
             }
         }

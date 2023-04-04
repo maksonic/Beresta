@@ -25,8 +25,9 @@ class AppNavigator : AbstractNavigator(), Router {
         toTrash = { navigate(entry, Destination.TrashList.route) },
         toNoteEditor = { passedId ->
             val noteId = passedId ?: 0L
-            navigate(entry, Destination.EditNote.route.plus(Destination.EditNote.id(noteId)))        }
-
+            navigate(entry, Destination.EditNote.passedArgs(noteId))
+        },
+        toFoldersList = { navigate(entry, Destination.FoldersList.route) }
     )
 
     override fun settingsRouter(entry: NavBackStackEntry) = SettingsScreenRouter(
@@ -38,6 +39,10 @@ class AppNavigator : AbstractNavigator(), Router {
     )
 
     override fun editNoteRouter(entry: NavBackStackEntry) = EditNoteRouter(
+        onBack = ::backPressed
+    )
+
+    override fun foldersRouter(entry: NavBackStackEntry) = FoldersScreenRouter(
         onBack = ::backPressed
     )
 }

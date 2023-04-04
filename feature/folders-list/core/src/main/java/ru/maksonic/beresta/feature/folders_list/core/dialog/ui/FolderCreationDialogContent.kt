@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.ui
+package ru.maksonic.beresta.feature.folders_list.core.dialog.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -23,10 +23,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.CreateNewFolderDialogSandbox
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.DialogModel
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.Eff
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.Msg
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.CreateNewFolderDialogSandbox
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.DialogModel
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.Eff
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.Msg
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.Shape
@@ -86,12 +86,12 @@ internal fun FolderCreationDialogContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text.shared.titleNewFolder,
+                        text.folders.titleNewFolder,
                         style = TextDesign.topBar,
                         modifier = modifier.padding(dp16)
                     )
 
-                    InputFolderName(model, sandbox::send, focusManager , focusRequester)
+                    InputFolderName(model, sandbox::send, focusManager, focusRequester)
 
                     Row(
                         modifier.padding(top = dp16),
@@ -132,7 +132,9 @@ private fun InputFolderName(
     OutlinedTextField(
         value = model.folderInputName,
         onValueChange = {
-            send(Msg.Inner.UpdateNewFolderNameInput(it))
+            if (it != "/n") {
+                send(Msg.Inner.UpdateNewFolderNameInput(it))
+            }
         },
         textStyle = TextDesign.bodyPrimary,
         singleLine = true,
@@ -173,7 +175,7 @@ private fun InputFolderName(
 
 @Composable
 private fun InputCounterHint(counterValue: String, isError: Boolean) {
-    val caption = if (isError) text.shared.hintErrorEmptyFolderName else counterValue
+    val caption = if (isError) text.folders.hintErrorEmptyFolderName else counterValue
     val color = if (isError) error else onBackground
 
     Text(text = caption, style = TextDesign.captionSmall.copy(color = color))
@@ -181,7 +183,8 @@ private fun InputCounterHint(counterValue: String, isError: Boolean) {
 
 @Composable
 private fun HandleUiEffects(
-    effects: Flow<Eff>, updateDialogVisibility: (isVisible: Boolean) -> Unit,
+    effects: Flow<Eff>,
+    updateDialogVisibility: (isVisible: Boolean) -> Unit
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {

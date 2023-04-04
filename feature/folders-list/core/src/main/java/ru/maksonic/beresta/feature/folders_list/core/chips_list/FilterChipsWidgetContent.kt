@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_list.core.presentation.widget.chips_list
+package ru.maksonic.beresta.feature.folders_list.core.chips_list
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
@@ -29,6 +29,7 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleLastItemOffset
 @Composable
 internal fun FilterChipsWidgetContent(
     chipsCollection: FilterChipUi.Collection,
+    currentSelectedChipId: Long,
     isVisibleFirstNote: () -> Boolean,
     onChipFilterClicked: (id: Long) -> Unit,
     onAddNewFilterFolderClicked: () -> Unit,
@@ -69,7 +70,8 @@ internal fun FilterChipsWidgetContent(
                     ) {
 
                         items(chipsCollection.data, key = { chip -> chip.id }) { item ->
-                            FilterChipItem(item, onChipFilterClicked)
+                            val update = item.copy(isSelected = item.id == currentSelectedChipId)
+                            FilterChipItem(update, onChipFilterClicked)
                         }
                     }
                     AddNewFilterButton(

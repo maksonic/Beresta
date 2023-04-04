@@ -58,6 +58,7 @@ dependencies {
 
     implementation(Lib.Compose.lifecycle)
     implementation(Lib.Compose.material)
+    implementation(Lib.Compose.material3)
     implementation(Lib.Compose.ui)
     implementation(Lib.Compose.uiPreview)
     implementation(Lib.Koin.compose)

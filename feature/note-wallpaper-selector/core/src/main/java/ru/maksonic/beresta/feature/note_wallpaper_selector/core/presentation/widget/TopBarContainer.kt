@@ -3,6 +3,8 @@ package ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.wi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -17,23 +19,27 @@ import ru.maksonic.beresta.ui.widget.bar.TopAppBarNormal
 /**
  * @Author maksonic on 14.03.2023
  */
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun TopBarContainer(
+    scrollBehavior: TopAppBarScrollBehavior,
     wallpapers: WallpaperCategory.Collection,
     pagerState: () -> PagerState,
     hideSheet: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    SurfacePro(tonalElevation = Theme.tonal.Level2) {
+    val tonalElevation = Theme.tonal.Level2
+    SurfacePro(tonalElevation = tonalElevation) { color ->
 
-        Column(modifier.statusBarsPadding().padding(bottom = dp16)) {
+        Column(modifier.padding(bottom = dp16)) {
 
             TopAppBarNormal(
+                scrollBehavior = scrollBehavior,
                 title = text.editNote.topBarTitleSelectNoteWallpaper,
-                backAction = { hideSheet() },
+                tonal = Theme.tonal.Level0,
+                onBackAction = { hideSheet() },
             )
-            TabLayout(wallpapers, pagerState)
+            TabLayout(wallpapers, pagerState, layoutBackground = color)
         }
     }
 }

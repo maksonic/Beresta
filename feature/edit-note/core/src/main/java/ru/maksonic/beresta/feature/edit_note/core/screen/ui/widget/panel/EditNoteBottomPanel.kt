@@ -3,35 +3,22 @@ package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.RippleAlpha
-import androidx.compose.material.ripple.RippleTheme
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.isEmpty
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
-import ru.maksonic.beresta.ui.theme.component.NoRippleTheme
+import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
@@ -39,8 +26,6 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Save
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.button.FloatingFabButton
-import ru.maksonic.beresta.ui.widget.functional.clickAction
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 06.03.2023
@@ -76,9 +61,10 @@ internal fun EditNoteBottomPanel(
         val panelModifier = Modifier
         val fabElevation =
             animateDpAsState(if (isScrollUp()) Theme.tonal.Level0 else Theme.tonal.Level3)
+        val fabUnselectedColor = tertiaryContainer.copy(alpha = 0.35f).compositeOver(background)
         val saveNoteFabColor =
-            animateColorAsState(if (currentNote.isEmpty()) outline.copy(alpha = 0.5f)
-            else tertiaryContainer)
+            animateColorAsState(
+                if (currentNote.isEmpty()) fabUnselectedColor else tertiaryContainer)
         val fabIconColor =
             animateColorAsState(if (currentNote.isEmpty()) Theme.color.black.copy(alpha = 0.4f)
             else onTertiaryContainer)

@@ -24,7 +24,7 @@ class MainSandbox(
         is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
         is Msg.Ui.OnBottomBarSettingsClicked -> onSettingsClicked(model)
         is Msg.Ui.OnBottomBarTrashClicked -> onTrashClicked(model)
-        is Msg.Ui.OnBottomBarOpenFoldersClicked -> UpdatedModel(model)
+        is Msg.Ui.OnBottomBarFoldersClicked -> onFoldersListClicked(model)
         is Msg.Ui.OnBottomBarSortNotesByClicked -> UpdatedModel(model)
         is Msg.Ui.OnSwitchViewClicked -> onSwitchGridCountClicked(model)
         is Msg.Ui.OnChipFilterClicked -> onFilterChipClicked(model, msg)
@@ -38,12 +38,14 @@ class MainSandbox(
         is Msg.Ui.OnCancelSelectionClicked -> cancelNotesSelection(model)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
         is Msg.Inner.UpdatedNewFolderDialogVisibility -> updatedDialogVisibility(model, msg)
-        is Msg.Inner.HideRemovedNotesSnack -> hiddenSnack(model)
-        //is Msg.Inner.ShowRemovedNotesSnack -> showedSnack(model)
+        is Msg.Inner.HideRemovedNotesSnack -> onHideSnack(model)
+        is Msg.Inner.UpdateCurrentSelectedFolder -> updatedFolderSelection(model, msg)
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedDataResult): UpdateResult {
         val notes = msg.notes.copy(data = msg.notes.data.filter { !it.isMovedToTrash })
+        val initialCurrentFolderId =
+            msg.folders.data.find { folder -> folder.id == 0L }?.id ?: model.currentSelectedFolderId
 
         return UpdatedModel(
             model = model.copy(
@@ -51,6 +53,7 @@ class MainSandbox(
                 notes = notes,
                 allNotes = msg.notes.data,
                 filters = msg.folders,
+                currentSelectedFolderId = initialCurrentFolderId
             )
         )
     }
@@ -78,17 +81,19 @@ class MainSandbox(
     private fun onTrashClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateToTrash))
 
+    private fun onFoldersListClicked(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.NavigateToFoldersList))
+
     private fun onSwitchGridCountClicked(model: Model): UpdateResult {
         val count = if (model.notesGridCount == 1) 2 else 1
         return UpdatedModel(model.copy(notesGridCount = count))
     }
 
-    private fun onFilterChipClicked(model: Model, msg: Msg.Ui.OnChipFilterClicked): UpdateResult {
-        val afterSelect = model.filters.copy(data = model.filters.data.map { note ->
-            note.copy(isSelected = note.id == msg.id)
-        })
-        return UpdatedModel(model.copy(filters = afterSelect))
-    }
+    private fun onFilterChipClicked(model: Model, msg: Msg.Ui.OnChipFilterClicked): UpdateResult =
+        UpdatedModel(
+            model = model.copy(currentSelectedFolderId = msg.id),
+            effects = setOf(Eff.UpdateFolderSelection(msg.id))
+        )
 
     private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
         if (model.isSelectionState)
@@ -229,10 +234,11 @@ class MainSandbox(
     ): UpdateResult =
         UpdatedModel(model.copy(isVisibleNewFolderDialog = msg.isVisible))
 
-    private fun showedSnack(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleUndoRemoveNotesSnack = true))
-
-
-    private fun hiddenSnack(model: Model): UpdateResult =
+    private fun onHideSnack(model: Model): UpdateResult =
         UpdatedModel(model.copy(isVisibleUndoRemoveNotesSnack = false, removedNotes = emptySet()))
+
+    private fun updatedFolderSelection(
+        model: Model,
+        msg: Msg.Inner.UpdateCurrentSelectedFolder
+    ): UpdateResult = UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
 }

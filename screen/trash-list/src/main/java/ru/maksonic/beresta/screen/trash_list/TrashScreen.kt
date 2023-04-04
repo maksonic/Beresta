@@ -1,16 +1,15 @@
 package ru.maksonic.beresta.screen.trash_list
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import ru.maksonic.beresta.navigation.router.router.TrashScreenRouter
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.widget.SystemNavigationBar
-import ru.maksonic.beresta.ui.widget.SystemStatusBar
-import ru.maksonic.beresta.ui.widget.bar.TopAppBarNormal
+import ru.maksonic.beresta.ui.widget.bar.TopAppBarCollapsingLarge
 
 /**
  * @Author maksonic on 24.02.2023
@@ -20,22 +19,23 @@ fun TrashScreen(router: TrashScreenRouter) {
     Content(router)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(router: TrashScreenRouter, modifier: Modifier = Modifier) {
-    Column(
-        modifier
-            .fillMaxSize()
-            .background(background)
-    ) {
-        val topBarBackground = background
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-        SystemStatusBar(backgroundColor = { topBarBackground })
-        TopAppBarNormal(
-            title = "Trash",
-            backgroundColor = { topBarBackground },
-            backAction = router.onBack
-        )
-        Spacer(modifier.weight(1f))
-        SystemNavigationBar(backgroundColor = { topBarBackground })
+    Scaffold(
+        topBar = {
+            TopAppBarCollapsingLarge(
+                scrollBehavior = scrollBehavior,
+                title = "Trash screen",
+                onBackAction = { router.onBack }
+            )
+        },
+        containerColor = background,
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { paddings ->
+
     }
 }

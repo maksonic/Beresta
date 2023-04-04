@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -28,12 +29,13 @@ import ru.maksonic.beresta.ui.widget.tab.TabWithoutRipple
 internal fun TabLayout(
     wallpapers: WallpaperCategory.Collection,
     pagerState: () -> PagerState,
+    layoutBackground: Color,
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
 
     ScrollableTabRow(
-        backgroundColor = transparent,
+        backgroundColor = layoutBackground,
         contentColor = onPrimary,
         selectedTabIndex = pagerState().currentPage,
         divider = { Spacer(modifier = modifier.height(5.dp)) },

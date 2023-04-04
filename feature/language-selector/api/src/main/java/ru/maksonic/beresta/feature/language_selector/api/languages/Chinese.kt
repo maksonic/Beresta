@@ -14,5 +14,6 @@ data class Chinese(
     @SerializedName("onboarding") val langOnboardingData: LangOnboardingData,
     @SerializedName("shared") val shared: LangSharedData,
     @SerializedName("settings") val settings: LangSettingsScreenData,
-    @SerializedName("editor") val editor: LangEditorData
+    @SerializedName("editor") val editor: LangEditorData,
+    @SerializedName("folders") val folders: LangFoldersListData
 )

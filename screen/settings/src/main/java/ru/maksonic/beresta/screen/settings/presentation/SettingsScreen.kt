@@ -1,17 +1,19 @@
 package ru.maksonic.beresta.screen.settings.presentation
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -30,10 +32,8 @@ import ru.maksonic.beresta.screen.settings.presentation.widget.setting_item.Supp
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.transparent
-import ru.maksonic.beresta.ui.widget.SystemStatusBar
-import ru.maksonic.beresta.ui.widget.bar.TopAppBarNormal
+import ru.maksonic.beresta.ui.widget.bar.TopAppBarCollapsingLarge
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 
@@ -58,7 +58,7 @@ fun SettingsScreen(router: SettingsScreenRouter, sandbox: SettingsSandbox = koin
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     model: Model,
@@ -68,10 +68,8 @@ private fun Content(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberLazyListState()
-    val firstVisibleItem = scrollState.isVisibleFirstItem()
-    val topBarColor = animateColorAsState(
-        targetValue = if (firstVisibleItem.value) background else tertiaryContainer
-    )
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
     ModalBottomSheetLayout(
         sheetState = modalSheetState(),
@@ -87,22 +85,31 @@ private fun Content(
             )
         }
     ) {
-        Column(modifier.fillMaxWidth().background(background)) {
+
+        Scaffold(
+            topBar = {
+                TopAppBarCollapsingLarge(
+                    scrollBehavior = scrollBehavior,
+                    title = text.settings.topBarTitle,
+                    onBackAction = { send(Msg.Ui.OnTopBarBackPressed) }
+                )
+            },
+            containerColor = background,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) { paddings ->
             val themeHint = when (model.currentTheme) {
                 AppTheme.SYSTEM -> text.settings.titleThemeSystem
                 AppTheme.LIGHT -> text.settings.titleThemeLight
                 AppTheme.DARK -> text.settings.themeTitleNight
                 AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
-            SystemStatusBar(backgroundColor = { topBarColor.value })
 
-            TopAppBarNormal(
-                title = text.settings.topBarTitle,
-                backgroundColor = { topBarColor.value },
-                backAction = { send(Msg.Ui.OnTopBarBackPressed) }
-            )
-
-            LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
+            LazyColumn(
+                state = scrollState,
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues = paddings)
+            ) {
                 item {
                     GeneralSettingsItem(send, themeHint)
                     AccountSettingsItem(send)
@@ -110,6 +117,30 @@ private fun Content(
                 }
             }
         }
+
+        /*Column(modifier.fillMaxWidth().background(background)) {
+                val themeHint = when (model.currentTheme) {
+                    AppTheme.SYSTEM -> text.settings.titleThemeSystem
+                    AppTheme.LIGHT -> text.settings.titleThemeLight
+                    AppTheme.DARK -> text.settings.themeTitleNight
+                    AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
+                }
+                SystemStatusBar(backgroundColor = { topBarColor.value })
+
+                TopAppBarNormal(
+                    title = text.settings.topBarTitle,
+                    backgroundColor = { topBarColor.value },
+                    backAction = { send(Msg.Ui.OnTopBarBackPressed) }
+                )
+
+                LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
+                    item {
+                        GeneralSettingsItem(send, themeHint)
+                        AccountSettingsItem(send)
+                        SupportSettingsItem(send)
+                    }
+                }
+            }*/
     }
 }
 

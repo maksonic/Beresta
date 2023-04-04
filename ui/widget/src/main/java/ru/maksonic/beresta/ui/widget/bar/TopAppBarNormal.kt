@@ -1,42 +1,50 @@
 package ru.maksonic.beresta.ui.widget.bar
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
+import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.button.IconAction
 
 /**
  * @Author maksonic on 16.01.2023
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarNormal(
-    modifier: Modifier = Modifier,
-    title: String = "",
-    backgroundColor: () -> Color = { Color.Transparent },
-    backAction: () -> Unit,
-    menuActions: @Composable () -> Unit = {},
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    title: String,
+    tonal: Dp? = Theme.tonal.Level2,
+    onBackAction: () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
-    Row(
-        modifier
-            .fillMaxWidth()
-            .height(Theme.widgetSize.topBarNormalHeight)
-            .drawBehind { drawRect(backgroundColor()) },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier.size(dp8))
-        IconAction(icon = { AppIcon.ArrowBack }, action = backAction)
-        Text(text = title, style = TextDesign.topBar, modifier = modifier.padding(start = dp8))
-        Spacer(modifier.weight(1f))
-        menuActions()
-        Spacer(modifier.size(dp8))
+
+    val defaultTonal =
+        animateDpAsState(
+            if (scrollBehavior?.state?.collapsedFraction == 0f) Theme.tonal.Level0
+            else Theme.tonal.Level2
+        )
+
+    val tonalElevation = tonal ?: defaultTonal.value
+
+    SurfacePro(tonalElevation = tonalElevation) { color ->
+
+        TopAppBar(
+            scrollBehavior = scrollBehavior,
+            title = { Text(title) },
+            navigationIcon = { IconAction(icon = { AppIcon.ArrowBack }, action = onBackAction) },
+            actions = actions,
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = color,
+                scrolledContainerColor = color,
+                titleContentColor = onBackground
+            )
+        )
     }
 }

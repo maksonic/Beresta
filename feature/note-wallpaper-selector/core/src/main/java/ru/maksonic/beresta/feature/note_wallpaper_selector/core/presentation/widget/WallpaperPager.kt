@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.wi
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -22,6 +23,7 @@ fun WallpaperPager(
     selectedNoteWallpaper: NoteWallpaper,
     tabData: WallpaperCategory.Collection,
     pagerState: () -> PagerState,
+    modifier: Modifier
 ) {
     val wallpapersCategoryTitle = arrayOf(
         text.editNote.noteWallpaperCategoryNew,
@@ -31,12 +33,17 @@ fun WallpaperPager(
         text.editNote.noteWallpaperCategoryGrids,
         text.editNote.noteWallpaperCategoryBest,
     )
+
     LaunchedEffect(Unit) {
         send(Msg.Inner.FillWallpaperCategoryTitle(wallpapersCategoryTitle))
     }
 
     OverscrollBehavior {
-        HorizontalPager(state = pagerState(), count = tabData.data.count()) { index ->
+        HorizontalPager(
+            state = pagerState(),
+            count = tabData.data.count(),
+            modifier = modifier
+        ) { index ->
             tabData.data.forEachIndexed { categoryIndex, category ->
                 if (categoryIndex == index) {
                     Page(

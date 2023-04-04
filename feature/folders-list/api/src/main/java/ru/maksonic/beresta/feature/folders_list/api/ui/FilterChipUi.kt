@@ -10,8 +10,12 @@ data class FilterChipUi(
     val id: Long = 0,
     val title: String = "",
     val isSelected: Boolean = false,
+    val isCurrent: Boolean = false,
     val isPinned: Boolean = false,
 ) {
+    companion object {
+        val InitialSelected = FilterChipUi(0, "All", isSelected = true, isCurrent = true, true)
+    }
 
     @Stable
     @Immutable

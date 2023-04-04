@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core
+package ru.maksonic.beresta.feature.folders_list.core.dialog.core
 
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.*

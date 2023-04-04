@@ -16,8 +16,8 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
  * @Author maksonic on 21.02.2023
  */
 class MainProgram(
-    private val fetchingUseCase: FetchNotesUseCase,
-    private val foldersListUseCase: FetchFoldersListUseCase,
+    private val fetchNotesUseCase: FetchNotesUseCase,
+    private val fetchFoldersUseCase: FetchFoldersListUseCase,
     private val notesInteractor: RefactorNoteInteractor,
     private val notesMapper: NoteUiMapper,
     private val foldersMapper: NoteFolderToChipMapper
@@ -29,24 +29,23 @@ class MainProgram(
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.RunFetchingNotesCollection -> fetchNotes(consumer)
-            is Cmd.RemoveSelected -> moveSelectedToTrash(cmd.notes, consumer)
-            is Cmd.UpdatePinnedNotesInCache -> updatePinned(cmd.pinned)
+            is Cmd.RemoveSelected -> moveSelectedNotesToTrash(cmd.notes, consumer)
+            is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
             is Cmd.UndoRemoved -> undoRemovedNotesFromTrash(cmd.notes)
         }
     }
 
     private suspend fun fetchNotes(consumer: (Msg) -> Unit) {
-
         runCatching {
-            combine(fetchingUseCase(), foldersListUseCase()) { notesDomain, folders ->
-                val chips = foldersMapper.mapListTo(folders).sortedByDescending { it.id }
-                val pinnedChip = FilterChipUi(title = "All", isSelected = true, isPinned = true)
-                val pinnedChipList = mutableListOf(pinnedChip).also { it.addAll(chips) }
+            combine(fetchNotesUseCase(), fetchFoldersUseCase()) { notesDomain, folders ->
                 val notes = notesMapper.mapListTo(notesDomain)
                 val sorted = notes.sortedWith(comparator = compareByDescending<NoteUi> { note ->
                     note.isPinned
                 }.thenBy { it.id })
 
+                val chips = foldersMapper.mapListTo(folders).sortedByDescending { it.id }
+                val pinnedChip = FilterChipUi.InitialSelected
+                val pinnedChipList = mutableListOf(pinnedChip).also { it.addAll(chips) }
                 val sortedChips = pinnedChipList
                     .sortedWith(comparator = compareByDescending { chip -> chip.isPinned })
 
@@ -65,12 +64,12 @@ class MainProgram(
         }
     }
 
-    private suspend fun updatePinned(notes: List<NoteUi>) {
+    private suspend fun updatePinnedNotes(notes: List<NoteUi>) {
         val notesDomain = notesMapper.mapListFrom(notes)
         notesInteractor.updateAll(notesDomain)
     }
 
-    private suspend fun moveSelectedToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
+    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
         val remove = notes.filter { it.isMovedToTrash }
         val notesDomain = notesMapper.mapListFrom(remove)
         notesInteractor.updateAll(notesDomain)

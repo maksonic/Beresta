@@ -1,15 +1,13 @@
 package ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,11 +22,12 @@ import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.cor
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorSandbox
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.widget.TopBarContainer
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.widget.WallpaperPager
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Restart
-import ru.maksonic.beresta.ui.widget.SystemNavigationBar
+import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import ru.maksonic.beresta.ui.widget.toastShortTime
@@ -55,7 +54,7 @@ class NoteWallpaperSelectorUiCore : NoteWallpaperSelectorApi {
         Content(hideSheet = hideSheet)
     }
 
-    @OptIn(ExperimentalPagerApi::class)
+    @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
     @Composable
     private fun Content(
         modifier: Modifier = Modifier,
@@ -66,72 +65,72 @@ class NoteWallpaperSelectorUiCore : NoteWallpaperSelectorApi {
 
         val model = sandbox.model.collectAsStateWithLifecycle().value
         val pagerState = rememberPagerState()
+        val scrollBehavior =
+            TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-        Box(
-            modifier
-                .fillMaxSize()
-                .background(background)
-                .noRippleClickable { },
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            Column(
-                modifier
-                    .fillMaxSize()
-            ) {
-                val systemBarsColor = tertiaryContainer
+        Scaffold(
+            topBar = {
                 TopBarContainer(
+                    scrollBehavior = scrollBehavior,
                     wallpapers = model.wallpapers,
                     pagerState = { pagerState },
                     hideSheet = hideSheet
                 )
+            },
+            containerColor = background,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) { paddings ->
+
+            Box(
+                modifier.fillMaxSize().noRippleClickable {  },
+                contentAlignment = Alignment.BottomEnd
+            ) {
                 WallpaperPager(
                     send = sandbox::send,
                     tabData = model.wallpapers,
                     pagerState = { pagerState },
-                    selectedNoteWallpaper = model.selectedWallpaper
+                    selectedNoteWallpaper = model.selectedWallpaper,
+                    modifier = modifier.padding(paddingValues = paddings)
                 )
-                SystemNavigationBar(backgroundColor = { systemBarsColor })
-            }
 
-            Row(
-                modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(start = dp16, end = dp16, bottom = dp16)
-            ) {
-                FloatingActionButton(
-                    onClick = {
-                        if (model.selectedWallpaper.resourceId == 0) {
-                            sandbox.send(Msg.Inner.ShowedNotSelectedWallpaperToast)
-                        } else {
+                Row(
+                    modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(start = dp16, end = dp16, bottom = dp16)
+                ) {
+                    PrimaryButton(
+                        action = {
+                            if (model.selectedWallpaper.resourceId == 0) {
+                                sandbox.send(Msg.Inner.ShowedNotSelectedWallpaperToast)
+                            } else {
+                                sandbox.send(Msg.Ui.ApplySelectedWallpaper)
+                                hideSheet()
+                            }
+                        },
+                        title = text.editNote.topBarTitleSelectNoteWallpaper,
+                        elevation = androidx.compose.material.ButtonDefaults.elevation(
+                            defaultElevation = Theme.elevation.Level3
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = dp16)
+                    )
+
+                    FloatingActionButton(
+                        onClick = {
+                            sandbox.send(Msg.Ui.SelectWallpaper(NoteWallpaper()))
                             sandbox.send(Msg.Ui.ApplySelectedWallpaper)
                             hideSheet()
-                        }
-                    },
-                    containerColor = tertiaryContainer,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = dp16)
-                ) {
-                    Text(
-                        text = text.editNote.topBarTitleSelectNoteWallpaper,
-                        style = TextDesign.title.copy(color = onTertiaryContainer)
-                    )
-                }
-
-                FloatingActionButton(
-                    onClick = {
-                        sandbox.send(Msg.Ui.SelectWallpaper(NoteWallpaper()))
-                        sandbox.send(Msg.Ui.ApplySelectedWallpaper)
-                        hideSheet()
-                    },
-                    containerColor = inversePrimary
-                ) {
-                    Icon(
-                        imageVector = AppIcon.Restart,
-                        contentDescription = "",
-                        tint = onTertiary
-                    )
+                        },
+                        containerColor = inversePrimary
+                    ) {
+                        Icon(
+                            imageVector = AppIcon.Restart,
+                            contentDescription = "",
+                            tint = onTertiary
+                        )
+                    }
                 }
             }
         }

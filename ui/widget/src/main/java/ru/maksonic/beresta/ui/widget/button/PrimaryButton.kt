@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ButtonElevation
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,11 +31,14 @@ fun PrimaryButton(
     titleColor: Color = onTertiaryContainer,
     backgroundColor: Color = tertiaryContainer,
     border: BorderStroke = BorderStroke(0.dp, transparent),
+    elevation: ButtonElevation = ButtonDefaults.elevation(
+        defaultElevation = 0.dp,
+        pressedElevation = 0.dp,
+        disabledElevation = 0.dp
+    ),
     clickTimeOut: Long = 300
 ) {
-
     val scope = rememberCoroutineScope()
-    val disabledElevation = Theme.elevation.Level0
     var isEnabled by rememberSaveable {
         mutableStateOf(true)
     }
@@ -54,11 +58,7 @@ fun PrimaryButton(
         ),
         shape = Shape.primaryBtn,
         border = border,
-        elevation = ButtonDefaults.elevation(
-            defaultElevation = disabledElevation,
-            pressedElevation = disabledElevation,
-            disabledElevation = disabledElevation
-        ),
+        elevation = elevation,
         modifier = modifier.height(Theme.widgetSize.btnPrimaryHeight)
     ) {
         Text(text = title, color = titleColor, style = TextDesign.title)

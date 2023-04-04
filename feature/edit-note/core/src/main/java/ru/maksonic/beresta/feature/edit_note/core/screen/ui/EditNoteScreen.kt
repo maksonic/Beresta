@@ -1,28 +1,16 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusTarget
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -50,9 +38,8 @@ import ru.maksonic.beresta.ui.theme.R
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.toastLongTime
-import kotlin.math.roundToInt
 
 /**
  * @Author maksonic on 04.03.2023
@@ -97,7 +84,6 @@ fun EditNoteScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Content(
     model: Model,
@@ -109,17 +95,11 @@ fun Content(
     wallpaperSelectorApi: NoteWallpaperSelectorApi = get(),
     modifier: Modifier,
 ) {
-    val fetchedWallpaperResId = wallpaperSelectorApi.currentWallpaper.collectAsState()
-    val scrollState = rememberScrollState()
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                send(Msg.Inner.UpdatedEditorPanelVisibility(isVisible = available.y > 0f))
-                return Offset.Zero
-            }
-        }
-    }
+    val scrollState = rememberLazyListState()
+    val isScrollUp = scrollState.isScrollUp()
 
+    val fetchedWallpaperResId = wallpaperSelectorApi.currentWallpaper.collectAsState()
+    val maxLines = 500
 
     LaunchedEffect(Unit) {
         if (model.isNewNote && model.editorSheet.state != BottomSheetEditorState.EXPANDED) {
@@ -140,15 +120,17 @@ fun Content(
         send(Msg.Ui.OnTopBarBackPressed)
     }
 
-    Box(
+    BoxWithConstraints(
         modifier
             .fillMaxSize()
             .background(background)
-            .noRippleClickable { }
     ) {
+        val maxHeight = this.maxHeight
+
         ScreenBackground(model.currentNote.backgroundId)
 
         LazyColumn(
+            state = scrollState,
             modifier = modifier
                 .systemBarsPadding()
                 .imePadding()
@@ -168,6 +150,8 @@ fun Content(
                     updateTitle = { titleField -> send(Msg.Inner.UpdatedInputTitle(titleField)) },
                     focusRequester = titleFocus,
                     focusManager = focusManager,
+                    maxLines = maxLines,
+                    modifier.heightIn(max = maxHeight)
                 )
             }
 
@@ -176,6 +160,8 @@ fun Content(
                     message = model.currentNote.message,
                     updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
                     focusRequester = messageFocus,
+                    maxLines = maxLines,
+                    modifier.heightIn(max = maxHeight)
                 )
             }
 
@@ -193,7 +179,7 @@ fun Content(
             currentNote = model.currentNote,
             editorPanelState = model.editorPanelState,
             onTopBarBackPressed = { send(Msg.Ui.OnTopBarBackPressed) },
-            isVisibleEditorPanel = model.isVisibleEditorPanel,
+            isVisibleEditorPanel = isScrollUp,
             modifier = modifier
         )
 

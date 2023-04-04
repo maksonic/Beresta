@@ -14,7 +14,9 @@ abstract class SharedUiState<T>(initial: T) {
     fun updateState(newValue: T) {
         mutableState.update { newValue }
     }
-    fun updateState(block: (MutableStateFlow<T>) -> MutableStateFlow<T>) {
-        block(mutableState)
+
+    fun updateState(updateBlock: (T) -> T) {
+        val newState = updateBlock(mutableState.value)
+        mutableState.value = newState
     }
 }

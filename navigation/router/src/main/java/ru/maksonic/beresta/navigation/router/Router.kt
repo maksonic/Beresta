@@ -13,4 +13,5 @@ interface Router {
     fun settingsRouter(entry: NavBackStackEntry): SettingsScreenRouter
     fun trashRouter(entry: NavBackStackEntry): TrashScreenRouter
     fun editNoteRouter(entry: NavBackStackEntry): EditNoteRouter
+    fun foldersRouter(entry: NavBackStackEntry): FoldersScreenRouter
 }

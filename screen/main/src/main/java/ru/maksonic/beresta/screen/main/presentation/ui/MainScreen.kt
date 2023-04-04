@@ -55,12 +55,23 @@ private fun Content(
     val isVisibleFirstNoteOffset = scrollState.isVisibleFirstItemOffset()
     val isExpandedSearchBar = searchBar.sharedExpandSearchState.collectAsState()
     val isVisibleNewNoteFab = !(model.isSelectionState || isExpandedSearchBar.value)
-    val isVisibleNewFolderDialog = filters.dialogVisibilitySharedState.state.collectAsState().value
+    val filtersUiSharedState = filters.sharedUiState.state.collectAsState().value
+    val isVisibleNewFolderDialog = filtersUiSharedState.isVisibleDialog
 
-    HandleUiEffects(sandbox.effects, router)
+    HandleUiEffects(
+        effects = sandbox.effects,
+        router = router,
+        updateCurrentSelectedFolder = { id ->
+            filters.sharedUiState.updateState { old -> old.copy(currentFolderId = id) }
+        }
+    )
 
     LaunchedEffect(isVisibleNewFolderDialog) {
         sandbox.send(Msg.Inner.UpdatedNewFolderDialogVisibility(isVisibleNewFolderDialog))
+    }
+
+    LaunchedEffect(filtersUiSharedState.currentFolderId) {
+        sandbox.send(Msg.Inner.UpdateCurrentSelectedFolder(filtersUiSharedState.currentFolderId))
     }
 
     BackHandler(model.isSelectionState) {
@@ -71,7 +82,6 @@ private fun Content(
         modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-
 
         val sharedScrollState = NotesListSharedScrollState(
             state = { scrollState },
@@ -130,6 +140,7 @@ private fun NotesList(
     feature.FetchedNotesWidget(
         notes = model.notes,
         chips = model.filters,
+        currentSelectedChipId = model.currentSelectedFolderId,
         selectedNotes = model.selectedNotes,
         onNoteClicked = { noteId -> send(Msg.Ui.OnNoteClicked(noteId)) },
         onNoteLongPressed = { noteId -> send(Msg.Ui.OnNoteLongPressed(noteId)) },
@@ -139,13 +150,19 @@ private fun NotesList(
 }
 
 @Composable
-private fun HandleUiEffects(effects: Flow<Eff>, router: MainScreenRouter) {
+private fun HandleUiEffects(
+    effects: Flow<Eff>,
+    router: MainScreenRouter,
+    updateCurrentSelectedFolder: (id: Long) -> Unit
+) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.NavigateToAddNewNote -> router.toNoteEditor(0)
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
+            is Eff.NavigateToFoldersList -> router.toFoldersList()
+            is Eff.UpdateFolderSelection -> updateCurrentSelectedFolder(eff.currentSelectedId)
         }
     }
 }

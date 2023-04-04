@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
@@ -20,9 +19,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Msg
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.NoteWallpaper
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.SendMessage
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.Msg
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.component.dp8
@@ -42,10 +41,8 @@ internal fun Page(
 ) {
     val configuration = LocalConfiguration.current
     val cellsCount = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 6 else 3
-    val scrollState = rememberLazyGridState()
 
     LazyVerticalGrid(
-        state = scrollState,
         columns = GridCells.Fixed(cellsCount),
         contentPadding = PaddingValues(dp8),
         modifier = modifier.fillMaxSize()

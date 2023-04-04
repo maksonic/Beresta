@@ -31,7 +31,7 @@ fun IdleBarStateContent(
             action = { send(Msg.Ui.OnBottomBarTrashClicked) }),
         MainBottomPanelItem(
             icon = AppIcon.FolderOpen,
-            action = { send(Msg.Ui.OnBottomBarOpenFoldersClicked) }),
+            action = { send(Msg.Ui.OnBottomBarFoldersClicked) }),
         MainBottomPanelItem(
             icon = AppIcon.SortBy,
             action = { send(Msg.Ui.OnBottomBarSortNotesByClicked) }),

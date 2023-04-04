@@ -70,7 +70,6 @@ fun MainBottomBar(
                     text = text.shared.hintRemovedNotesCount.plus(" ${removedCount()}"),
                     style = TextDesign.bodyPrimary.copy(color = onSnack)
                 )
-
             }
         }
 

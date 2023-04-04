@@ -33,6 +33,7 @@ internal fun FetchedNotesWidgetContent(
     notes: NoteUi.Collection,
     chips: FilterChipUi.Collection,
     selectedNotes: Set<NoteUi>,
+    currentSelectedChipId: Long,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongPressed: (id: Long) -> Unit,
     onChipFilterClicked: (id: Long) -> Unit,
@@ -86,6 +87,7 @@ internal fun FetchedNotesWidgetContent(
 
         filters.FolderChipsWidget(
             chipsCollection = chips,
+            currentSelectedChipId = currentSelectedChipId,
             isVisibleFirstNote = sharedScroll.isVisibleFirstNoteOffset,
             onChipFilterClicked = onChipFilterClicked,
             modifier = modifier.graphicsLayer {
@@ -95,16 +97,6 @@ internal fun FetchedNotesWidgetContent(
     }
 
     if (notes.data.isEmpty()) {
-        val searchBarContainerHeight = Theme.widgetSize.topBarNormalHeight
-        val chipsContainerHeight = Theme.widgetSize.noteChipsContainerHeight
-        val emptyNotesWidgetPadding = searchBarContainerHeight + chipsContainerHeight
-
-        Box(
-            modifier
-                .statusBarsPadding()
-                .padding(top = emptyNotesWidgetPadding)
-        ) {
-            EmptyNotesWidgetContent()
-        }
+        EmptyNotesWidgetContent()
     }
 }

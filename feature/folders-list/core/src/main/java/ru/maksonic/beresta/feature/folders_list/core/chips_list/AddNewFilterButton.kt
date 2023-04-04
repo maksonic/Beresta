@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_list.core.presentation.widget.chips_list
+package ru.maksonic.beresta.feature.folders_list.core.chips_list
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

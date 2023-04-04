@@ -36,9 +36,11 @@ import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersInteracto
 import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersRepository
 import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.folders_list.api.ui.NoteFolderToChipMapper
-import ru.maksonic.beresta.feature.folders_list.core.presentation.FoldersListUiCore
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.CreateNewFolderDialogSandbox
-import ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core.NewFolderDialogProgram
+import ru.maksonic.beresta.feature.folders_list.core.FoldersListUiCore
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.CreateNewFolderDialogSandbox
+import ru.maksonic.beresta.feature.folders_list.core.dialog.core.NewFolderDialogProgram
+import ru.maksonic.beresta.feature.folders_list.core.screen.core.FoldersListProgram
+import ru.maksonic.beresta.feature.folders_list.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.language_selector.api.LanguageSelectorApi
 import ru.maksonic.beresta.feature.language_selector.api.provider.LanguageProvider
 import ru.maksonic.beresta.feature.language_selector.core.LanguageJsonToDataConverter
@@ -121,7 +123,7 @@ class BerestaApp : Application() {
     }
 
     private val navigationModule = module {
-        single { FeatureApiStore(splash = get(), onboarding = get()) }
+        single { FeatureApiStore(splash = get(), onboarding = get(), foldersList = get()) }
         single<GraphBuilder> { GraphBuilder.Core(navigator = get(), apiStore = get()) }
         single { AppNavigator() }
     }
@@ -135,8 +137,8 @@ class BerestaApp : Application() {
     private val mainScreenModule = module {
         single {
             MainProgram(
-                fetchingUseCase = get(),
-                foldersListUseCase = get(),
+                fetchNotesUseCase = get(),
+                fetchFoldersUseCase = get(),
                 notesInteractor = get(),
                 notesMapper = get(),
                 foldersMapper = get()
@@ -244,8 +246,18 @@ class BerestaApp : Application() {
         single<NotesFoldersInteractor> { NotesFoldersInteractor.Impl(repository = get()) }
         single { FetchFoldersListUseCase(repository = get()) }
         single { NoteFolderToChipMapper() }
+        //dialog
         single { NewFolderDialogProgram(interactor = get(), mapper = get()) }
         viewModel { CreateNewFolderDialogSandbox(program = get()) }
+        //screen
+        single {
+            FoldersListProgram(
+                foldersListUseCase = get(),
+                mapper = get(),
+                foldersInteractor = get()
+            )
+        }
+        viewModel { FoldersScreenSandbox(program = get()) }
         single<FoldersListApi.Ui> { FoldersListUiCore() }
     }
 

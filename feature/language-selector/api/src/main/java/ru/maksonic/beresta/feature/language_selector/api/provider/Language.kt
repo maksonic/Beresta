@@ -28,7 +28,8 @@ data class BerestaLanguage(
     ),
     val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData(),
-    val editNote: LangEditorData = LangEditorData()
+    val editNote: LangEditorData = LangEditorData(),
+    val folders : LangFoldersListData = LangFoldersListData()
 )
 
 val text: BerestaLanguage @Composable get() = LocalBerestaLanguage.current

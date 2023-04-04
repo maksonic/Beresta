@@ -9,7 +9,6 @@ object Destination : AbstractDestination("root") {
     object Main : AbstractDestination("main")
     object Settings : AbstractDestination("settings")
     object TrashList : AbstractDestination("trash_list")
-    object EditNote : AbstractDestination("edit_note") {
-        fun id(noteId: Long) = "/${noteId}"
-    }
+    object EditNote : AbstractDestination("edit_note", argKey = "noteId")
+    object FoldersList : AbstractDestination("folders_list")
 }

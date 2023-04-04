@@ -46,10 +46,8 @@
       "btn_title_create": "Создать",
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_notes_count_bottom_bar": "Выбрано заметок: ",
-      "dialog_title_create_new_folder": "Новая папка",
-      "title_pinned_notes_folder": "Все заметки",
-      "hint_error_empty_folder_name": "Название не может быть пустым.",
-      "hint_removed_notes_count": "Удалено заметок:"
+      "hint_removed_notes_count": "Удалено заметок:",
+      "hint_no_notes": "Нет заметок"
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -80,6 +78,13 @@
       "note_wallpaper_category_gradients": "Градиенты",
       "note_wallpaper_category_grids": "Сетка",
       "note_wallpaper_category_best": "Лучшее"
+    },
+    "folders": {
+      "top_bar_title": "Управление папками",
+      "dialog_title_create_new_folder": "Новая папка",
+      "title_pinned_notes_folder": "Все заметки",
+      "hint_error_empty_folder_name": "Название не может быть пустым.",
+      "btn_title_crete_folder": "Создать папку"
     }
   },
   "english": {
@@ -129,10 +134,8 @@
       "btn_title_create": "Create",
       "hint_find_note_search_bar": "Find note",
       "hint_selected_notes_count_bottom_bar": "Notes selected:",
-      "dialog_title_create_new_folder": "New folder",
-      "title_pinned_notes_folder": "All",
-      "hint_error_empty_folder_name": "Folder name cannot be empty.",
-      "hint_removed_notes_count": "Removed notes:"
+      "hint_removed_notes_count": "Removed notes:",
+      "hint_no_notes": "No notes"
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -163,6 +166,13 @@
       "note_wallpaper_category_gradients": "Gradients",
       "note_wallpaper_category_grids": "Grid",
       "note_wallpaper_category_best": "Best"
+    },
+    "folders": {
+      "top_bar_title": "Folder Management",
+      "dialog_title_create_new_folder": "New folder",
+      "title_pinned_notes_folder": "All",
+      "hint_error_empty_folder_name": "Folder name cannot be empty.",
+      "btn_title_crete_folder": "Create new folder"
     }
   },
   "chinese": {
@@ -212,10 +222,8 @@
       "btn_title_create": "创造",
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_notes_count_bottom_bar": "所选笔记： ",
-      "dialog_title_create_new_folder": "新建文件夹",
-      "title_pinned_notes_folder": "所有笔记",
-      "hint_error_empty_folder_name": "文件夹名称不能为空。",
-      "hint_removed_notes_count": "删除的注释:"
+      "hint_removed_notes_count": "删除的注释:",
+      "hint_no_notes": "没有笔记"
     },
     "settings": {
       "top_bar_title": "设置",
@@ -246,6 +254,13 @@
       "note_wallpaper_category_gradients": "渐变",
       "note_wallpaper_category_grids": "网格",
       "note_wallpaper_category_best": "最佳"
+    },
+    "folders": {
+      "top_bar_title": "文件夹管理",
+      "dialog_title_create_new_folder": "新建文件夹",
+      "title_pinned_notes_folder": "所有笔记",
+      "hint_error_empty_folder_name": "文件夹名称不能为空。",
+      "btn_title_crete_folder": "创建新文件夹"
     }
   },
   "chinese_tr": {
@@ -295,10 +310,8 @@
       "btn_title_create": "創造",
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_notes_count_bottom_bar": "所選筆記： ",
-      "dialog_title_create_new_folder": "新建文件夾",
-      "title_pinned_notes_folder": "所有筆記",
-      "hint_error_empty_folder_name": "文件夾名稱不能為空。",
-      "hint_removed_notes_count": "刪除的筆記:"
+      "hint_removed_notes_count": "刪除的筆記:",
+      "hint_no_notes": "沒有筆記"
     },
     "settings": {
       "top_bar_title": "設置",
@@ -329,6 +342,13 @@
       "note_wallpaper_category_gradients": "漸變",
       "note_wallpaper_category_grids": "網格",
       "note_wallpaper_category_best": "最佳"
+    },
+    "folders": {
+      "top_bar_title": "文件夾管理",
+      "dialog_title_create_new_folder": "新建文件夾",
+      "title_pinned_notes_folder": "所有筆記",
+      "hint_error_empty_folder_name": "文件夾名稱不能為空。",
+      "btn_title_crete_folder": "創建新文件夾"
     }
   }
 }

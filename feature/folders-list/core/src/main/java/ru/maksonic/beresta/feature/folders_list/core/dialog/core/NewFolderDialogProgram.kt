@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_list.core.presentation.dialog.core
+package ru.maksonic.beresta.feature.folders_list.core.dialog.core
 
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersInteractor

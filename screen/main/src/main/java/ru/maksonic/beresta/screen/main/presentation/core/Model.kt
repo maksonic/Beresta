@@ -28,6 +28,7 @@ data class Model(
     val notesGridCount: Int = 1,
     val isVisibleNewFolderDialog: Boolean = false,
     val isVisibleUndoRemoveNotesSnack: Boolean = false,
+    val currentSelectedFolderId: Long = FilterChipUi.InitialSelected.id
 ) : ElmModel
 
 sealed class Msg : ElmMessage {
@@ -37,7 +38,7 @@ sealed class Msg : ElmMessage {
         // Idle bottom panel messages
         object OnBottomBarSettingsClicked : Ui()
         object OnBottomBarTrashClicked : Ui()
-        object OnBottomBarOpenFoldersClicked : Ui()
+        object OnBottomBarFoldersClicked : Ui()
         object OnBottomBarSortNotesByClicked : Ui()
         object OnSwitchViewClicked : Ui()
 
@@ -64,6 +65,7 @@ sealed class Msg : ElmMessage {
 
         data class FetchedError(val message: String) : Inner()
         data class UpdatedNewFolderDialogVisibility(val isVisible: Boolean) : Inner()
+        data class UpdateCurrentSelectedFolder(val id: Long): Inner()
         object HideRemovedNotesSnack : Inner()
     }
 }
@@ -80,4 +82,6 @@ sealed class Eff : ElmEffect {
     object NavigateToSettings : Eff()
     object NavigateToTrash : Eff()
     data class ShowNoteForEdit(val id: Long) : Eff()
+    object NavigateToFoldersList : Eff()
+    data class UpdateFolderSelection(val currentSelectedId: Long) : Eff()
 }

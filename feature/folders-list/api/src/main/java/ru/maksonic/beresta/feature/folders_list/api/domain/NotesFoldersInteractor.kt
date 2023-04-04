@@ -5,13 +5,13 @@ package ru.maksonic.beresta.feature.folders_list.api.domain
  */
 interface NotesFoldersInteractor {
     suspend fun addFolder(folder: NoteFolderDomain)
-    suspend fun renameFolder(folder: NoteFolderDomain)
+    suspend fun updateFolder(folder: NoteFolderDomain)
     suspend fun removeFolder(folder: NoteFolderDomain)
 
 
     class Impl(private val repository: NotesFoldersRepository) : NotesFoldersInteractor {
         override suspend fun addFolder(folder: NoteFolderDomain) = repository.addNewItem(folder)
-        override suspend fun renameFolder(folder: NoteFolderDomain) = repository.updateItem(folder)
+        override suspend fun updateFolder(folder: NoteFolderDomain) = repository.updateItem(folder)
         override suspend fun removeFolder(folder: NoteFolderDomain) = repository.removeItem(folder)
     }
 }

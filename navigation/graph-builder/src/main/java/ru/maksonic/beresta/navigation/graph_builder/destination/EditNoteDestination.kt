@@ -15,8 +15,8 @@ import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 @OptIn(ExperimentalAnimationApi::class)
 internal fun NavGraphBuilder.editNoteScreen(navigator: AppNavigator) {
     composable(
-        route = Destination.EditNote.route.plus("/{noteId}"),
-        arguments = listOf(navArgument("noteId") { type = NavType.LongType })
+        route = Destination.EditNote.routeWithArg,
+        arguments = listOf(navArgument(Destination.EditNote.passedKey) { type = NavType.LongType })
     ) { navBackStackEntry ->
         val router = navigator.editNoteRouter(navBackStackEntry)
         EditNoteScreen(router = router)
