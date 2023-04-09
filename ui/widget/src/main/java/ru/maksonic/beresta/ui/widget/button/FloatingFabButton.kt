@@ -25,7 +25,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 @Composable
 fun FloatingFabButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     enabled: Boolean = true,
     fabColor: Color = tertiaryContainer,
     rippleColor: Color = onTertiaryContainer,

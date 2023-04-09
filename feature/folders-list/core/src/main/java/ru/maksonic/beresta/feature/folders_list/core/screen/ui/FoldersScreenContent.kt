@@ -1,8 +1,8 @@
 package ru.maksonic.beresta.feature.folders_list.core.screen.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,19 +12,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
+import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersSharedUiState
+import ru.maksonic.beresta.feature.folders_list.api.ui.updateDialogVisibility
 import ru.maksonic.beresta.feature.folders_list.core.applyInitialChipTitleForLanguage
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Eff
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Msg
+import ru.maksonic.beresta.feature.folders_list.core.screen.ui.widget.BottomBarSelectionContainer
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
+import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectedItemsPanelUiApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.LoadingViewState
 import ru.maksonic.beresta.ui.widget.bar.TopAppBarCollapsingLarge
-import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
@@ -40,6 +42,7 @@ internal fun FoldersScreenContent(
     modifier: Modifier = Modifier,
     api: FoldersListApi.Ui = get(),
     sandbox: FoldersScreenSandbox = koinViewModel(),
+    panelCounter: SelectedItemsPanelUiApi = get(),
     router: FoldersScreenRouter,
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle().value
@@ -48,9 +51,7 @@ internal fun FoldersScreenContent(
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        updateFolderSelection = { id ->
-            api.sharedUiState.updateState { old -> old.copy(currentFolderId = id) }
-        }
+        sharedUiState = api.sharedUiState
     )
 
     LaunchedEffect(sharedUiState.currentFolderId) {
@@ -59,6 +60,10 @@ internal fun FoldersScreenContent(
 
     LaunchedEffect(sharedUiState.isVisibleDialog) {
         sandbox.send(Msg.Inner.UpdatedNewFolderDialogVisibility(sharedUiState.isVisibleDialog))
+    }
+
+    BackHandler(model.isSelectionState) {
+        sandbox.send(Msg.Ui.OnCancelSelectionClicked)
     }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
@@ -96,14 +101,13 @@ internal fun FoldersScreenContent(
             }
         }
 
-        PrimaryButton(
-            action = { api.sharedUiState.updateState { old -> old.copy(isVisibleDialog = true) } },
-            title = text.folders.btnTitleCreateNewFolder,
-            elevation = ButtonDefaults.elevation(defaultElevation = Theme.elevation.Level3),
-            modifier = modifier
-                .fillMaxWidth()
-                .navigationBarsPadding()
-                .padding(start = dp16, end = dp16, bottom = dp16)
+        BottomBarSelectionContainer(
+            send = sandbox::send,
+            panelCounterApi = panelCounter,
+            selectedCount = { model.selectedFoldersCount },
+            isShowUnpin = model.isSelectionState,
+            isSelectionState = model.isSelectionState,
+            isScrolledToBottom = { !scrollState.canScrollForward },
         )
 
         AnimateFadeInOut(model.isVisibleNewFolderDialog) {
@@ -114,12 +118,20 @@ internal fun FoldersScreenContent(
 
 @Composable
 private fun HandleUiEffects(
-    effects: Flow<Eff>, router: FoldersScreenRouter, updateFolderSelection: (id: Long) -> Unit,
+    effects: Flow<Eff>,
+    router: FoldersScreenRouter,
+    sharedUiState: SharedUiState<FoldersSharedUiState>,
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
-            is Eff.UpdateFolderSelection -> updateFolderSelection(eff.id)
+            is Eff.UpdateFolderSelection -> {
+                sharedUiState.updateState { state -> state.copy(currentFolderId = eff.id) }
+            }
+            is Eff.UpdatePassedEditableFolderId -> {
+                sharedUiState.updateState { state -> state.copy(passedForEditFolderId = eff.id) }
+            }
+            is Eff.ShowFolderDialog -> sharedUiState.updateDialogVisibility(true)
         }
     }
 }

@@ -12,9 +12,11 @@ data class FilterChipUi(
     val isSelected: Boolean = false,
     val isCurrent: Boolean = false,
     val isPinned: Boolean = false,
+    val isMovedToTrash: Boolean = false
 ) {
     companion object {
         val InitialSelected = FilterChipUi(0, "All", isSelected = true, isCurrent = true, true)
+        val Empty = FilterChipUi(0, "", isSelected = false, isCurrent = false, false)
     }
 
     @Stable
@@ -24,16 +26,15 @@ data class FilterChipUi(
             private val chipsPreview = listOf(
                 FilterChipUi(0, "All", true),
                 FilterChipUi(1, "Maksonic"),
-                FilterChipUi(2, "Some shit"),
-                FilterChipUi(3, "Folder"),
-                FilterChipUi(4, "Other"),
-                FilterChipUi(5, "Fresh"),
-                FilterChipUi(6, "My secrets"),
-                FilterChipUi(7, "Test"),
+                FilterChipUi(2, "Preview"),
             )
             val Empty = Collection(emptyList())
             val Preview = Collection(chipsPreview)
         }
     }
 }
+
+fun List<FilterChipUi>.sortByPinnedThenByDescendingId() =
+    this.sortedWith(comparator = compareByDescending<FilterChipUi> { chip -> chip.isPinned }
+        .thenByDescending { chip -> chip.id })
 

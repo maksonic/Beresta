@@ -21,9 +21,15 @@ sealed class Msg : ElmMessage {
         object OnCreateNewNoteClicked : Ui()
         object OnCollapseFabClicked : Ui()
     }
+
+    sealed class Inner : Msg() {
+        data class UpdatedFabState(val value: Boolean) : Inner()
+    }
 }
 
 sealed class Cmd : ElmCommand {}
 
 sealed class Eff : ElmEffect {
+    object SetExpandFabSharedState : Eff()
+    object SetCollapseFabSharedState : Eff()
 }

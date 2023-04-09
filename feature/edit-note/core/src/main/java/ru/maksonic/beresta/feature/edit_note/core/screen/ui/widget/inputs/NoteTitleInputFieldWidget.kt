@@ -1,8 +1,6 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.inputs
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,14 +44,14 @@ internal fun NoteTitleInputFieldWidget(
         },
         colors = NoteInputDefaultColors,
         maxLines = maxLines,
-         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
-         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier
-            .fillMaxWidth()
-            .padding(start = dp8, end = dp8)
             .focusRequester(focusRequester)
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .padding(start = dp8, end = dp8)
             .verticalScroll(rememberScrollState(), false)
             .imePadding()
-
     )
 }

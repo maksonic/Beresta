@@ -15,7 +15,6 @@ data class Model(
     val base: BaseModel = BaseModel.InitialWithLoading,
     val entry: NavBackStackEntry? = null,
     val notes: NoteUi.Collection = NoteUi.Collection.Empty,
-    val allNotes: List<NoteUi> = emptyList(),
     val selectedNotes: Set<NoteUi> = emptySet(),
     val removedNotes: Set<NoteUi> = emptySet(),
     val filters: FilterChipUi.Collection = FilterChipUi.Collection.Empty,
@@ -60,7 +59,7 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class FetchedDataResult(
             val notes: NoteUi.Collection,
-            val folders: FilterChipUi.Collection
+            val chips: FilterChipUi.Collection
         ) : Inner()
 
         data class FetchedError(val message: String) : Inner()

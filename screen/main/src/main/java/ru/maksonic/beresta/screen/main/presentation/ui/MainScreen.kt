@@ -17,6 +17,7 @@ import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListSharedScrollState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
+import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectedItemsPanelUiApi
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.presentation.core.Eff
 import ru.maksonic.beresta.screen.main.presentation.core.MainSandbox
@@ -45,6 +46,7 @@ private fun Content(
     searchBar: SearchBarApi.Ui = get(),
     editNote: EditNoteApi.Ui = get(),
     filters: FoldersListApi.Ui = get(),
+    panelCounter: SelectedItemsPanelUiApi = get(),
     sandbox: MainSandbox = koinViewModel(),
     router: MainScreenRouter
 ) {
@@ -111,7 +113,8 @@ private fun Content(
             selectedCount = { model.selectedNotesCount },
             removedCount = { model.removedNotes.count() },
             isShowUnpinItem = model.isShowBottomBarUnpinBtn,
-            isVisibleUndoRemoveNotesSnack = model.isVisibleUndoRemoveNotesSnack
+            isVisibleUndoRemoveNotesSnack = model.isVisibleUndoRemoveNotesSnack,
+            panelCounterApi = panelCounter
         )
         searchBar.Widget(
             notesCollection = model.notes,

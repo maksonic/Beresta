@@ -21,6 +21,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabUiSharedState
+import ru.maksonic.beresta.feature.edit_note.api.collapseFab
+import ru.maksonic.beresta.feature.edit_note.api.resetDraftFabIcon
+import ru.maksonic.beresta.feature.edit_note.api.showDraftFabIcon
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Eff
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Model
@@ -44,42 +49,38 @@ import ru.maksonic.beresta.ui.widget.toastLongTime
 /**
  * @Author maksonic on 04.03.2023
  */
-private const val KEYBOARD_DELAY = 500L
-
 internal typealias SendMessage = (Msg) -> Unit
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditNoteScreen(
     modifier: Modifier = Modifier,
-    isExpandedFab: () -> Boolean = { false },
-    collapseFabWidget: () -> Unit = {},
-    isVisibleOnFabDraftIndicator: MutableState<Boolean> = mutableStateOf(false),
+    sharedFabUiState: SharedUiState<EditNoteFabUiSharedState> = EditNoteFabUiSharedState.Initial,
     router: EditNoteRouter? = null,
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
-    sandbox.send(Msg.Inner.FetchedFabStateValue(isExpandedFab()))
-
     val model = sandbox.model.collectAsStateWithLifecycle().value
+    val fabUiState = sharedFabUiState.state.collectAsState().value
     val focusManager = LocalFocusManager.current
-    val (titleFocus, messageFocus) = remember { FocusRequester.createRefs() }
+    val titleFocus = remember { FocusRequester() }
 
-    HandleEffects(
+    HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        collapseFabWidget = collapseFabWidget,
         focusManager = focusManager,
         titleFocus = titleFocus,
-        isVisibleOnFabDraftIndicator = isVisibleOnFabDraftIndicator,
+        sharedFabUiState = sharedFabUiState,
     )
+
+    LaunchedEffect(fabUiState.isExpandedFab) {
+        sandbox.send(Msg.Inner.FetchedFabStateValue(fabUiState.isExpandedFab))
+    }
 
     Content(
         model = model,
         send = sandbox::send,
-        isVisibleOnFabDraftIndicator = isVisibleOnFabDraftIndicator,
         focusManager = focusManager,
         titleFocus = titleFocus,
-        messageFocus = messageFocus,
+        fabUiState = fabUiState,
         modifier = modifier
     )
 }
@@ -88,27 +89,23 @@ fun EditNoteScreen(
 fun Content(
     model: Model,
     send: SendMessage,
-    isVisibleOnFabDraftIndicator: MutableState<Boolean>,
     focusManager: FocusManager,
     titleFocus: FocusRequester,
-    messageFocus: FocusRequester,
+    fabUiState: EditNoteFabUiSharedState,
     wallpaperSelectorApi: NoteWallpaperSelectorApi = get(),
     modifier: Modifier,
 ) {
     val scrollState = rememberLazyListState()
     val isScrollUp = scrollState.isScrollUp()
-
     val fetchedWallpaperResId = wallpaperSelectorApi.currentWallpaper.collectAsState()
     val maxLines = 500
+    val isNewNote = model.isNewNote && model.editorSheet.state != BottomSheetEditorState.EXPANDED
+    val isShowKeyboard = isNewNote && fabUiState.isEndExpand
 
-    LaunchedEffect(Unit) {
-        if (model.isNewNote && model.editorSheet.state != BottomSheetEditorState.EXPANDED) {
+    LaunchedEffect(isShowKeyboard) {
+        if (isShowKeyboard) {
             send(Msg.Inner.ShowKeyboardWithFocusOnTitle)
         }
-    }
-
-    SideEffect {
-        send(Msg.Inner.UpdatedFabIcon(isVisibleOnFabDraftIndicator))
     }
 
     LaunchedEffect(fetchedWallpaperResId.value) {
@@ -116,16 +113,14 @@ fun Content(
     }
 
     BackHandler(model.isNewNote) {
-        focusManager.clearFocus()
         send(Msg.Ui.OnTopBarBackPressed)
     }
 
-    BoxWithConstraints(
+    Box(
         modifier
             .fillMaxSize()
             .background(background)
     ) {
-        val maxHeight = this.maxHeight
 
         ScreenBackground(model.currentNote.backgroundId)
 
@@ -144,6 +139,7 @@ fun Content(
                         .height(Theme.widgetSize.topBarNormalHeight)
                 )
             }
+
             item {
                 NoteTitleInputFieldWidget(
                     title = model.currentNote.title,
@@ -151,7 +147,6 @@ fun Content(
                     focusRequester = titleFocus,
                     focusManager = focusManager,
                     maxLines = maxLines,
-                    modifier.heightIn(max = maxHeight)
                 )
             }
 
@@ -159,9 +154,7 @@ fun Content(
                 NoteMessageInputFieldWidget(
                     message = model.currentNote.message,
                     updateMessage = { msgField -> send(Msg.Inner.UpdatedInputMessage(msgField)) },
-                    focusRequester = messageFocus,
                     maxLines = maxLines,
-                    modifier.heightIn(max = maxHeight)
                 )
             }
 
@@ -197,10 +190,7 @@ fun Content(
 }
 
 @Composable
-private fun ScreenBackground(
-    backgroundResId: Int,
-    modifier: Modifier = Modifier
-) {
+private fun ScreenBackground(backgroundResId: Int, modifier: Modifier = Modifier) {
     val noteBackground = if (backgroundResId == 0) R.drawable.color_transparent else backgroundResId
 
     AsyncImage(
@@ -213,13 +203,12 @@ private fun ScreenBackground(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun HandleEffects(
+private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: EditNoteRouter?,
-    collapseFabWidget: () -> Unit,
-    isVisibleOnFabDraftIndicator: MutableState<Boolean>,
     focusManager: FocusManager,
     titleFocus: FocusRequester,
+    sharedFabUiState: SharedUiState<EditNoteFabUiSharedState>
 ) {
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -231,10 +220,11 @@ private fun HandleEffects(
         when (eff) {
             is Eff.SetInitialExpandedState -> {
                 scope.launch {
-                    keyboardController?.hide()
-                    delay(KEYBOARD_DELAY)
-                    titleFocus.requestFocus()
-                    keyboardController?.show()
+                    titleFocus.requestFocus().let {
+                        keyboardController?.hide()
+                        delay(300L)
+                        keyboardController?.show()
+                    }
                 }
             }
             is Eff.NavigateBack -> router?.let { it.onBack() }
@@ -243,8 +233,12 @@ private fun HandleEffects(
                 focusManager.clearFocus()
                 keyboardController?.hide()
             }
-            is Eff.CollapseFab -> collapseFabWidget()
-            is Eff.ResetFabDraftIconState -> isVisibleOnFabDraftIndicator.value = false
+            is Eff.CollapseFab -> {
+                focusManager.clearFocus()
+                sharedFabUiState.collapseFab()
+            }
+            is Eff.ShowFabDraftIcon -> sharedFabUiState.showDraftFabIcon()
+            is Eff.ResetFabDraftIcon -> sharedFabUiState.resetDraftFabIcon()
         }
     }
 }

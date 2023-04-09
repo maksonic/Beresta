@@ -93,6 +93,9 @@ dependencies {
     implementation(project(BaseModule.Feature.FoldersList.Api.path))
     implementation(project(BaseModule.Feature.FoldersList.Core.path))
 
+    implementation(project(BaseModule.Feature.SelectedItemsCounterPanel.Api.path))
+    implementation(project(BaseModule.Feature.SelectedItemsCounterPanel.Core.path))
+
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
 

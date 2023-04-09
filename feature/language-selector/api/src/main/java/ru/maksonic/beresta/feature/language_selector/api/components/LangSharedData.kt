@@ -17,8 +17,9 @@ data class LangSharedData(
     @SerializedName("btn_title_replace") val btnTitleReplace: String = "",
     @SerializedName("btn_title_remove") val btnTitleRemove: String = "",
     @SerializedName("btn_title_create") val btnTitleCreate: String = "",
+    @SerializedName("btn_title_change") val btnTitleChange: String = "",
     @SerializedName("hint_find_note_search_bar") val hintFindNote: String = "",
-    @SerializedName("hint_selected_notes_count_bottom_bar") val hintSelectedNotesCount: String = "",
+    @SerializedName("hint_selected_items_count") val hintSelectedItemsCount: String = "",
     @SerializedName("hint_removed_notes_count") val hintRemovedNotesCount: String = "",
     @SerializedName("hint_no_notes") val hintNoNotes: String = ""
 )

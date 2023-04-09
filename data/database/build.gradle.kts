@@ -46,4 +46,12 @@ dependencies {
     implementation(Lib.Room.ktx)
     ksp(Lib.Room.compiler)
     implementation(Lib.Koin.compose)
+
+    //Test
+    implementation(Lib.Test.core)
+    testImplementation(Lib.Test.junit)
+    androidTestImplementation(Lib.Test.junitExt)
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation ("com.google.truth:truth:1.1.3")
+    androidTestImplementation ("com.google.truth.extensions:truth-java8-extension:1.1.3")
 }

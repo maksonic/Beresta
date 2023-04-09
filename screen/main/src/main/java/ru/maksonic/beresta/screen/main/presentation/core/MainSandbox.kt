@@ -34,7 +34,7 @@ class MainSandbox(
         is Msg.Ui.OnPinSelectedNotesBottomBarClicked -> onPinSelectedNotesClicked(model)
         is Msg.Ui.OnRemoveSelectedNotesClicked -> onRemoveSelectedNotesClicked(model)
         is Msg.Ui.OnRemoveNotesUndoClicked -> onRemoveSelectedNotesUndoClicked(model)
-        is Msg.Ui.OnReplaceNoteToFolderClicked -> replaceSelectedNotesToFolder(model, msg)
+        is Msg.Ui.OnReplaceNoteToFolderClicked -> replaceSelectedNotesToFolder(model)
         is Msg.Ui.OnCancelSelectionClicked -> cancelNotesSelection(model)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
         is Msg.Inner.UpdatedNewFolderDialogVisibility -> updatedDialogVisibility(model, msg)
@@ -43,16 +43,14 @@ class MainSandbox(
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedDataResult): UpdateResult {
-        val notes = msg.notes.copy(data = msg.notes.data.filter { !it.isMovedToTrash })
         val initialCurrentFolderId =
-            msg.folders.data.find { folder -> folder.id == 0L }?.id ?: model.currentSelectedFolderId
+            msg.chips.data.find { folder -> folder.id == 0L }?.id ?: model.currentSelectedFolderId
 
         return UpdatedModel(
             model = model.copy(
                 base = model.base.copy(isLoading = false, isSuccessLoading = true, isError = false),
-                notes = notes,
-                allNotes = msg.notes.data,
-                filters = msg.folders,
+                notes = msg.notes,
+                filters = msg.chips,
                 currentSelectedFolderId = initialCurrentFolderId
             )
         )
@@ -181,23 +179,17 @@ class MainSandbox(
         )
     }
 
-    private fun replaceSelectedNotesToFolder(
-        model: Model, msg: Msg.Ui.OnReplaceNoteToFolderClicked
-    ): UpdateResult = UpdatedModel(model)
+    private fun replaceSelectedNotesToFolder(model: Model): UpdateResult = UpdatedModel(model)
 
     private fun onRemoveSelectedNotesClicked(model: Model): UpdateResult {
         val selectedNotes = model.selectedNotes
         val removedNotes = model.removedNotes.toMutableSet().also { list ->
-            if (list.containsAll(selectedNotes)) list.removeAll(selectedNotes) else list.addAll(
-                selectedNotes
-            )
+            val isTrashItems = selectedNotes.map { note -> note.copy(isMovedToTrash = true) }
+            list.addAll(isTrashItems)
         }.toSet()
-
-        val remove = model.notes.copy(data = model.notes.data.map { note ->
-            val isRemoved = removedNotes.contains(note)
-            return@map note.copy(isMovedToTrash = isRemoved)
+        val notes = model.notes.copy(data = model.notes.data.filterNot { note ->
+            removedNotes.any { it.id == note.id }
         })
-        val notes = remove.copy(data = remove.data.filter { !it.isMovedToTrash })
 
         return UpdatedModel(
             model.copy(
@@ -209,7 +201,7 @@ class MainSandbox(
                 selectedNotesCount = 0,
                 isVisibleUndoRemoveNotesSnack = true
             ),
-            commands = setOf(Cmd.RemoveSelected(remove.data)),
+            commands = setOf(Cmd.RemoveSelected(removedNotes.toList())),
         )
     }
 

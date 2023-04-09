@@ -10,7 +10,10 @@ import androidx.compose.ui.graphics.Color
  * @Author maksonic on 12.01.2023
  */
 @Composable
-fun SystemNavigationBar(backgroundColor: () -> Color, modifier: Modifier = Modifier) {
+fun SystemNavigationBar(
+    modifier: Modifier = Modifier,
+    backgroundColor: () -> Color = { Color.Transparent },
+) {
     val height = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     Box(modifier = modifier
         .fillMaxWidth()

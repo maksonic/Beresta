@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.screen.main.presentation.MainBottomPanelItem
+import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectionBottomPanelItem
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
@@ -18,24 +18,24 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
  * @Author maksonic on 21.02.2023
  */
 @Composable
-fun IdleBarStateContent(
+internal fun BottomBarIdleContent(
     send: SendMessage,
     modifier: Modifier = Modifier
 ) {
     val actions = arrayOf(
-        MainBottomPanelItem(
+        SelectionBottomPanelItem(
             icon = AppIcon.Settings,
             action = { send(Msg.Ui.OnBottomBarSettingsClicked) }),
-        MainBottomPanelItem(
+        SelectionBottomPanelItem(
             icon = AppIcon.Trash,
             action = { send(Msg.Ui.OnBottomBarTrashClicked) }),
-        MainBottomPanelItem(
+        SelectionBottomPanelItem(
             icon = AppIcon.FolderOpen,
             action = { send(Msg.Ui.OnBottomBarFoldersClicked) }),
-        MainBottomPanelItem(
+        SelectionBottomPanelItem(
             icon = AppIcon.SortBy,
             action = { send(Msg.Ui.OnBottomBarSortNotesByClicked) }),
-        MainBottomPanelItem(
+        SelectionBottomPanelItem(
             icon = AppIcon.GridView,
             action = { send(Msg.Ui.OnSwitchViewClicked) }),
     )

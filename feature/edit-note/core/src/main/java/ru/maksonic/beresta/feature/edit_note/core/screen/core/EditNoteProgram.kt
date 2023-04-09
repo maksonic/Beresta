@@ -5,6 +5,7 @@ import ru.maksonic.beresta.feature.edit_note.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 
 /**
@@ -26,7 +27,7 @@ class EditNoteProgram(
     }
 
     private suspend fun fetchNote(consumer: (Msg) -> Unit) {
-        val id = navigator.getLongArgument("noteId")
+        val id = navigator.getLongArgument(Destination.EditNote.passedKey)
 
         runCatching {
             fetchNoteByIdUseCase(id).collect { noteDomain ->

@@ -9,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -24,7 +22,6 @@ import ru.maksonic.beresta.ui.theme.component.dp8
 internal fun NoteMessageInputFieldWidget(
     message: String,
     updateMessage: (String) -> Unit,
-    focusRequester: FocusRequester,
     maxLines: Int,
     modifier: Modifier = Modifier,
 ) {
@@ -35,7 +32,8 @@ internal fun NoteMessageInputFieldWidget(
         textStyle = TextDesign.bodyPrimary,
         placeholder = {
             Text(
-                text.editNote.hintInputMessage, style = TextDesign.bodyPrimary.copy(color = outline)
+                text.editNote.hintInputMessage,
+                style = TextDesign.bodyPrimary.copy(color = outline)
             )
         },
         colors = NoteInputDefaultColors,
@@ -45,9 +43,9 @@ internal fun NoteMessageInputFieldWidget(
         minLines = 10,
         modifier = modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .padding(start = dp8, end = dp8)
             .verticalScroll(rememberScrollState(), false)
-            .focusRequester(focusRequester)
             .imePadding()
     )
 }

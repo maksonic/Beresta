@@ -15,12 +15,14 @@ class FoldersCacheDataSource(
     private val folderDao: NoteFolderDao,
     private val dispatcher: CoroutineDispatcher,
 ) : BaseCacheSource<NoteFolderCache>(folderDao, dispatcher) {
-    fun fetchCachedFolders(): NotesFoldersCacheList = folderDao.fetchCacheItemsList().flowOn(dispatcher)
-    fun fetchCacheFolder(id: Long): NoteFolderCacheItem =
-        folderDao.fetchCacheItemById(id).flowOn(dispatcher)
 
-    suspend fun addFolder(folder: NoteFolderCache) = folderDao.insertItem(folder)
-    suspend fun updateFolder(folder: NoteFolderCache) = folderDao.updateItem(folder)
-    suspend fun removeFolder(folder: NoteFolderCache) = folderDao.deleteItem(folder)
-    suspend fun removeAllFolders(folders: List<NoteFolderCache>) = folderDao.deleteAll(folders)
+    fun fetchCacheFoldersList(): NotesFoldersCacheList =
+        folderDao.fetchFoldersList().flowOn(dispatcher)
+
+    fun fetchCacheFoldersTrashList(): NotesFoldersCacheList =
+        folderDao.fetchFoldersTrashList().flowOn(dispatcher)
+
+
+    fun fetchCacheOneItemById(id: Long): NoteFolderCacheItem =
+        folderDao.fetchCacheOneItemById(id).flowOn(dispatcher)
 }

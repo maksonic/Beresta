@@ -194,6 +194,18 @@ sealed class BaseModule(val path: String, val namespace: String) {
                 namespace = "ru.maksonic.beresta.feature.folders_list.core"
             )
         }
+
+        object SelectedItemsCounterPanel {
+            object Api : BaseModule(
+                path = ":feature:selected-items-counter-panel:api",
+                namespace = "ru.maksonic.beresta.feature.selected_items_counter_panel.api"
+            )
+
+            object Core : BaseModule(
+                path = ":feature:selected-items-counter-panel:core",
+                namespace = "ru.maksonic.beresta.feature.selected_items_counter_panel.core"
+            )
+        }
     }
 
     object Ui {

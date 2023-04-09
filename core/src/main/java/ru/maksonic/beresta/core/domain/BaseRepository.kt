@@ -12,4 +12,5 @@ interface BaseRepository<T> {
     suspend fun updateItem(item: T)
     suspend fun removeItem(item: T)
     suspend fun clearItemsList(items: List<T>)
+    suspend fun updateAllItems(items: List<T>)
 }

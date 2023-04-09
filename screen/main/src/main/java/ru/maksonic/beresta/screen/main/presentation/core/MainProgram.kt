@@ -8,9 +8,11 @@ import ru.maksonic.beresta.feature.edit_note.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.folders_list.api.domain.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.folders_list.api.ui.NoteFolderToChipMapper
+import ru.maksonic.beresta.feature.folders_list.api.ui.sortByPinnedThenByDescendingId
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
+import java.util.*
 
 /**
  * @Author maksonic on 21.02.2023
@@ -39,39 +41,39 @@ class MainProgram(
         runCatching {
             combine(fetchNotesUseCase(), fetchFoldersUseCase()) { notesDomain, folders ->
                 val notes = notesMapper.mapListTo(notesDomain)
-                val sorted = notes.sortedWith(comparator = compareByDescending<NoteUi> { note ->
-                    note.isPinned
-                }.thenBy { it.id })
+                val pinned = notes.filter { it.isPinned }.sortedByDescending { it.pinTime }
+                val other = notes.filter { !it.isPinned }.sortedByDescending { it.id }
+                val result = pinned + other
 
-                val chips = foldersMapper.mapListTo(folders).sortedByDescending { it.id }
-                val pinnedChip = FilterChipUi.InitialSelected
-                val pinnedChipList = mutableListOf(pinnedChip).also { it.addAll(chips) }
-                val sortedChips = pinnedChipList
-                    .sortedWith(comparator = compareByDescending { chip -> chip.isPinned })
+
+                val chips = foldersMapper.mapListTo(folders).toMutableList().also {
+                    val pinnedChip = FilterChipUi.InitialSelected
+                    it.add(pinnedChip)
+                }.toList().sortByPinnedThenByDescendingId()
 
                 consumer(
                     Msg.Inner.FetchedDataResult(
-                        notes = NoteUi.Collection(sorted),
-                        folders = FilterChipUi.Collection(sortedChips)
+                        notes = NoteUi.Collection(result),
+                        chips = FilterChipUi.Collection(chips)
                     )
                 )
             }.collect()
 
         }.onFailure { fail ->
-            //  val message =
-            //       fail.localizedMessage ?: resourceProvider.getString(R.string.error_fetching_notes)
+            // val message =
+            //      fail.localizedMessage ?: resourceProvider.getString(R.string.error_fetching_notes)
             consumer(Msg.Inner.FetchedError("Error"))
         }
     }
 
     private suspend fun updatePinnedNotes(notes: List<NoteUi>) {
-        val notesDomain = notesMapper.mapListFrom(notes)
+        val notesDomain =
+            notesMapper.mapListFrom(notes.map { it.copy(pinTime = Calendar.getInstance()) })
         notesInteractor.updateAll(notesDomain)
     }
 
     private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
-        val remove = notes.filter { it.isMovedToTrash }
-        val notesDomain = notesMapper.mapListFrom(remove)
+        val notesDomain = notesMapper.mapListFrom(notes)
         notesInteractor.updateAll(notesDomain)
 
         delay(SNACK_BAR_VISIBILITY_TIME)

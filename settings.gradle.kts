@@ -55,3 +55,6 @@ include(":feature:note-wallpaper-selector:core")
 include(":feature:folders-list:api")
 include(":feature:folders-list:core")
 include(":data:notes-folders")
+
+include(":feature:selected-items-counter-panel:api")
+include(":feature:selected-items-counter-panel:core")

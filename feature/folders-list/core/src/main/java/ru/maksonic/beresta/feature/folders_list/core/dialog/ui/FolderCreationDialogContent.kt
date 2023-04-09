@@ -22,7 +22,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.job
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersSharedUiState
+import ru.maksonic.beresta.feature.folders_list.api.ui.updateDialogVisibility
 import ru.maksonic.beresta.feature.folders_list.core.dialog.core.CreateNewFolderDialogSandbox
 import ru.maksonic.beresta.feature.folders_list.core.dialog.core.DialogModel
 import ru.maksonic.beresta.feature.folders_list.core.dialog.core.Eff
@@ -44,25 +48,38 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 @Composable
 internal fun FolderCreationDialogContent(
     modifier: Modifier = Modifier,
-    updateDialogVisibility: (isVisible: Boolean) -> Unit,
+    sharedUiState: SharedUiState<FoldersSharedUiState>,
     sandbox: CreateNewFolderDialogSandbox = koinViewModel(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle().value
+    val sharedState = sharedUiState.state.collectAsState().value
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    HandleUiEffects(effects = sandbox.effects, updateDialogVisibility)
+    HandleUiEffects(
+        effects = sandbox.effects,
+        focusManager = focusManager,
+        sharedUiState = sharedUiState
+    )
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        this.coroutineContext.job.invokeOnCompletion {
+            focusRequester.requestFocus()
+        }
+    }
+
+    LaunchedEffect(sharedState.passedForEditFolderId) {
+        sharedState.passedForEditFolderId?.let {
+            sandbox.send(Msg.Inner.FetchedEditableFolderId(it))
+        }
     }
 
     BackHandler(true) {
-        focusManager.clearFocus()
         sandbox.send(Msg.Ui.OnDismissFolderCreationDialogClicked)
     }
 
     Surface(color = scrim, modifier = modifier.focusRequester(focusRequester)) {
+
         Box(
             modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
@@ -97,18 +114,19 @@ internal fun FolderCreationDialogContent(
                         modifier.padding(top = dp16),
                         horizontalArrangement = Arrangement.spacedBy(dp16)
                     ) {
+                        val acceptBtnTitle = if (model.currentEditableFolder.id != 0L)
+                            text.shared.btnTitleChange
+                        else text.shared.btnTitleCreate
+
                         DialogButton(
-                            action = {
-                                focusManager.clearFocus()
-                                sandbox.send(Msg.Ui.OnDismissFolderCreationDialogClicked)
-                            },
+                            action = { sandbox.send(Msg.Ui.OnDismissFolderCreationDialogClicked) },
                             title = text.shared.btnTitleCancel,
                             isDismiss = true,
                             modifier = Modifier.weight(1f)
                         )
                         DialogButton(
                             action = { sandbox.send(Msg.Ui.OnCreateNewNotesFolderClicked) },
-                            title = text.shared.btnTitleCreate,
+                            title = acceptBtnTitle,
                             isDismiss = false,
                             modifier = Modifier.weight(1f)
                         )
@@ -130,12 +148,8 @@ private fun InputFolderName(
 ) {
 
     OutlinedTextField(
-        value = model.folderInputName,
-        onValueChange = {
-            if (it != "/n") {
-                send(Msg.Inner.UpdateNewFolderNameInput(it))
-            }
-        },
+        value = model.currentEditableFolder.title,
+        onValueChange = { send(Msg.Inner.UpdateNewFolderNameInput(it)) },
         textStyle = TextDesign.bodyPrimary,
         singleLine = true,
         supportingText = {
@@ -184,12 +198,18 @@ private fun InputCounterHint(counterValue: String, isError: Boolean) {
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
-    updateDialogVisibility: (isVisible: Boolean) -> Unit
+    focusManager: FocusManager,
+    sharedUiState: SharedUiState<FoldersSharedUiState>
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Eff.ShowNewFolderDialog -> updateDialogVisibility(true)
-            is Eff.HideNewFolderDialog -> updateDialogVisibility(false)
+            is Eff.ShowNewFolderDialog -> sharedUiState.updateDialogVisibility(true)
+            is Eff.HideNewFolderDialog -> {
+                focusManager.clearFocus()
+                sharedUiState.updateState { state ->
+                    state.copy(isVisibleDialog = false, passedForEditFolderId = null)
+                }
+            }
             is Eff.ShowEmptyFieldError -> {}
         }
     }

@@ -15,6 +15,7 @@ class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
         dateCreation = i.dateCreation,
         currentFolder = i.currentFolder,
         isPinned = i.isPinned,
+        pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash
     )
 
@@ -25,6 +26,7 @@ class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
         dateCreation = o.dateCreation,
         currentFolder = o.currentFolder,
         isPinned = o.isPinned,
+        pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash
     )
 }

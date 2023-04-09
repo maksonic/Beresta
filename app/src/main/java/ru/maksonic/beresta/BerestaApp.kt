@@ -31,6 +31,7 @@ import ru.maksonic.beresta.feature.edit_note.core.fab.core.AddNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.fab.ui.AddNoteFabWidget
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteProgram
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.EditNoteSandbox
+import ru.maksonic.beresta.feature.folders_list.api.domain.FetchFolderByIdUseCase
 import ru.maksonic.beresta.feature.folders_list.api.domain.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersInteractor
 import ru.maksonic.beresta.feature.folders_list.api.domain.NotesFoldersRepository
@@ -68,6 +69,8 @@ import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingScr
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.SearchBarSandbox
 import ru.maksonic.beresta.feature.search_bar.core.presentation.ui.SearchBarWidget
+import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectedItemsPanelUiApi
+import ru.maksonic.beresta.feature.selected_items_counter_panel.core.SelectedItemsPanelUiCore
 import ru.maksonic.beresta.feature.splash_screen.api.SplashApi
 import ru.maksonic.beresta.feature.splash_screen.core.BerestaSplashScreen
 import ru.maksonic.beresta.feature.splash_screen.core.SplashViewModel
@@ -245,20 +248,31 @@ class BerestaApp : Application() {
         single<NotesFoldersRepository> { NotesFoldersRepositoryImpl(cache = get(), mapper = get()) }
         single<NotesFoldersInteractor> { NotesFoldersInteractor.Impl(repository = get()) }
         single { FetchFoldersListUseCase(repository = get()) }
+        single { FetchFolderByIdUseCase(repository = get()) }
         single { NoteFolderToChipMapper() }
         //dialog
-        single { NewFolderDialogProgram(interactor = get(), mapper = get()) }
+        single {
+            NewFolderDialogProgram(
+                fetchFolderByIdUseCase = get(),
+                interactor = get(),
+                mapper = get()
+            )
+        }
         viewModel { CreateNewFolderDialogSandbox(program = get()) }
         //screen
         single {
             FoldersListProgram(
-                foldersListUseCase = get(),
+                fetchFoldersUseCase = get(),
                 mapper = get(),
                 foldersInteractor = get()
             )
         }
         viewModel { FoldersScreenSandbox(program = get()) }
         single<FoldersListApi.Ui> { FoldersListUiCore() }
+    }
+
+    private val selectedItemsPanelFeatureModule = module {
+        single<SelectedItemsPanelUiApi> { SelectedItemsPanelUiCore() }
     }
 
     private val modules = listOf(
@@ -278,7 +292,8 @@ class BerestaApp : Application() {
         searchBarFeatureModule,
         editNoteFeatureModule,
         noteWallpaperSelectorModule,
-        foldersListFeatureModule
+        foldersListFeatureModule,
+        selectedItemsPanelFeatureModule
     )
 
     override fun onCreate() {

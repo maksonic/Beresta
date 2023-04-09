@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.folders_list.core.screen.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -14,7 +14,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Model
@@ -37,31 +36,46 @@ internal fun FetchedSuccessListContent(
     scrollState: () -> LazyListState,
     modifier: Modifier = Modifier
 ) {
+    val bottomContentPadding = animateDpAsState(
+        if (model.isSelectionState) Theme.widgetSize.bottomPanelHeightSelected
+        else Theme.widgetSize.btnPrimaryHeight.plus(dp16)
+    )
     LazyColumn(
         state = scrollState(),
         contentPadding = PaddingValues(
             top = dp16,
-            bottom = Theme.widgetSize.btnPrimaryHeight.plus(dp16)
+            bottom = bottomContentPadding.value
         ),
         modifier = modifier.fillMaxSize()
     ) {
         items(folders.data, key = { it.id }) { folder ->
-            val update = folder.copy(isCurrent = folder.id == model.currentSelectedFolderId)
-            FolderItem(update, onFolderClick = { send(Msg.Ui.OnFolderClicked(folder.id)) })
+            val update = folder.copy(
+                isCurrent = folder.id == model.currentSelectedFolderId,
+                isSelected = model.selectedFolders.contains(folder),
+            )
+            FolderItem(
+                folder = update,
+                onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
+                onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
+            )
         }
     }
 }
 
 @Composable
-fun FolderItem(folder: FilterChipUi, onFolderClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun FolderItem(
+    folder: FilterChipUi,
+    onFolderClicked: (id: Long) -> Unit,
+    onFolderLongPressed: (id: Long) -> Unit, modifier: Modifier = Modifier
+) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
     val colors = if (isFocusedItem.value) outlineVariant else primaryContainer
     val backgroundColor = animateColorAsState(if (folder.isSelected) isSelectedColors else colors)
 
     BoxWithScaleInOutOnClick(
-        onClick = onFolderClick,
-        onLongClick = { },
+        onClick = { onFolderClicked(folder.id) },
+        onLongClick = { onFolderLongPressed(folder.id) },
         backgroundColor = { backgroundColor.value },
         shape = Shape.cornerNormal,
         modifier = modifier

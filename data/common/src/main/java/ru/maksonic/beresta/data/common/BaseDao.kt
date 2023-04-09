@@ -19,8 +19,6 @@ abstract class BaseDao<T> {
 
     open fun fetchCacheList(): Flow<List<T>> = emptyFlow()
 
-    open fun fetchCacheItemById(itemId: Long): Flow<T> = emptyFlow()
-
     @Transaction
     @Update
     abstract suspend fun updateItem(item: T)

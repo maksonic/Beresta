@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.notes_list.api.ui.MainBottomBarState
+import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectedItemsPanelUiApi
 import ru.maksonic.beresta.screen.main.presentation.core.Msg
 import ru.maksonic.beresta.screen.main.presentation.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
@@ -41,6 +42,7 @@ fun MainBottomBar(
     removedCount: () -> Int,
     isShowUnpinItem: Boolean,
     isVisibleUndoRemoveNotesSnack: Boolean,
+    panelCounterApi: SelectedItemsPanelUiApi,
     modifier: Modifier = Modifier
 ) {
     val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -92,13 +94,15 @@ fun MainBottomBar(
                     AnimatedContent(targetState = state) { barState ->
                         when (barState) {
                             MainBottomBarState.IDLE -> {
-                                IdleBarStateContent(send)
+                                BottomBarIdleContent(send)
                             }
+
                             MainBottomBarState.SELECTION -> {
-                                SelectionBarStateContent(
+                                BottomBarSelectionContent(
                                     send = send,
                                     selectedCount = selectedCount,
-                                    isShowUnpin = isShowUnpinItem
+                                    isShowUnpin = isShowUnpinItem,
+                                    panelCounterApi = panelCounterApi
                                 )
                             }
                         }

@@ -59,6 +59,7 @@ dependencies {
     implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
     implementation(project(BaseModule.Feature.SearchBar.Api.path))
     implementation(project(BaseModule.Feature.FoldersList.Api.path))
+    implementation(project(BaseModule.Feature.SelectedItemsCounterPanel.Api.path))
 
     implementation(Lib.Accompanist.systemUiController)
     implementation(Lib.Compose.lifecycle)

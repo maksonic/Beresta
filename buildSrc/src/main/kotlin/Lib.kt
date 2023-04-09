@@ -40,8 +40,9 @@ object Lib {
         const val koin = "3.4.2"
 
         //test
+        const val testCoreKtx = "1.5.0"
         const val junit = "4.13.2"
-        const val junitExt = "1.1.3"
+        const val junitExt = "1.1.5"
     }
 
     object Accompanist {
@@ -100,5 +101,8 @@ object Lib {
     object Test {
         const val composeManifest = "androidx.compose.ui:ui-test-manifest"
         const val composeTooling = "androidx.compose.ui:ui-tooling:"
+        const val core = "androidx.test:core-ktx:${Version.testCoreKtx}"
+        const val junit = "junit:junit:${Version.junit}"
+        const val junitExt = "androidx.test.ext:junit-ktx:${Version.junitExt}"
     }
 }

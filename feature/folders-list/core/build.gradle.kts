@@ -49,14 +49,16 @@ android {
 }
 
 dependencies {
-    implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
-    implementation(project(BaseModule.Feature.FoldersList.Api.path))
     implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Data.Common.path))
     implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Elm.path))
     implementation(project(BaseModule.Ui.Theme.path))
     implementation(project(BaseModule.Ui.Widget.path))
+    implementation(project(BaseModule.Feature.LanguageSelector.Api.path))
+    implementation(project(BaseModule.Feature.FoldersList.Api.path))
+    implementation(project(BaseModule.Feature.SelectedItemsCounterPanel.Api.path))
+
     implementation(platform((Lib.Compose.bom)))
     implementation(Lib.Compose.foundation)
     implementation(Lib.Compose.lifecycle)

@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.edit_note.api
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.maksonic.beresta.core.SharedUiState
 
 /**
  * @Author maksonic on 23.02.2023
@@ -13,6 +14,8 @@ interface EditNoteApi {
         fun NewNoteFabWidget(
             isVisible: () -> Boolean, isNotesScrollUp: () -> Boolean, modifier: Modifier
         )
-    }
 
+        val sharedUiState: SharedUiState<EditNoteFabUiSharedState>
+
+    }
 }

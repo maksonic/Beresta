@@ -15,5 +15,5 @@ abstract class BaseCacheSource<T>(
     suspend fun updateItem(item: T) = withContext(dispatcher) { baseDao.updateItem(item) }
     suspend fun updateAll(items: List<T>) = withContext(dispatcher) { baseDao.updateAll(items) }
     suspend fun removeItem(item: T) = withContext(dispatcher) { baseDao.deleteItem(item) }
-    suspend fun clearCache(items: List<T>) = withContext(dispatcher) { baseDao.deleteAll(items)}
+    suspend fun clearCache(items: List<T>) = withContext(dispatcher) { baseDao.deleteAll(items) }
 }

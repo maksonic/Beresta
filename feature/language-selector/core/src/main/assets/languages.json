@@ -44,8 +44,9 @@
       "btn_title_replace": "Переместить",
       "btn_title_remove": "Удалить",
       "btn_title_create": "Создать",
+      "btn_title_change": "Изменить",
       "hint_find_note_search_bar": "Найти заметку",
-      "hint_selected_notes_count_bottom_bar": "Выбрано заметок: ",
+      "hint_selected_items_count": "Выбрано: ",
       "hint_removed_notes_count": "Удалено заметок:",
       "hint_no_notes": "Нет заметок"
     },
@@ -132,8 +133,9 @@
       "btn_title_replace": "Move",
       "btn_title_remove": "Remove",
       "btn_title_create": "Create",
+      "btn_title_change": "Edit",
       "hint_find_note_search_bar": "Find note",
-      "hint_selected_notes_count_bottom_bar": "Notes selected:",
+      "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
       "hint_no_notes": "No notes"
     },
@@ -220,8 +222,9 @@
       "btn_title_replace": "移动",
       "btn_title_remove": "删除",
       "btn_title_create": "创造",
+      "btn_title_change": "编辑",
       "hint_find_note_search_bar": "查找笔记",
-      "hint_selected_notes_count_bottom_bar": "所选笔记： ",
+      "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
       "hint_no_notes": "没有笔记"
     },
@@ -308,8 +311,9 @@
       "btn_title_replace": "移動",
       "btn_title_remove": "刪除",
       "btn_title_create": "創造",
+      "btn_title_change": "編輯",
       "hint_find_note_search_bar": "查找筆記",
-      "hint_selected_notes_count_bottom_bar": "所選筆記： ",
+      "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
       "hint_no_notes": "沒有筆記"
     },

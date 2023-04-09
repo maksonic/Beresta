@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.data.notes_folders
 
-import kotlinx.coroutines.delay
+import android.util.Log
 import kotlinx.coroutines.flow.transform
 import ru.maksonic.beresta.data.notes_folders.cache.FoldersCacheDataSource
 import ru.maksonic.beresta.data.notes_folders.cache.NoteFolderCacheMapper
@@ -17,35 +17,39 @@ class NotesFoldersRepositoryImpl(
     private val mapper: NoteFolderCacheMapper,
 ) : NotesFoldersRepository {
 
-    override fun fetchItemsList(): NotesFoldersDomainList = cache.fetchCachedFolders()
+    override fun fetchItemsList(): NotesFoldersDomainList = cache.fetchCacheFoldersList()
         .transform { cacheFolders ->
             val folders = mapper.listDataToDomain(cacheFolders)
             emit(folders)
         }
 
-    override fun fetchItem(itemId: Long): NoteFolderDomainItem =
-        cache.fetchCacheFolder(itemId).transform { folderItemCache ->
-            val folder = mapper.dataToDomain(folderItemCache)
-            emit(folder)
-        }
+    override fun fetchItem(itemId: Long): NoteFolderDomainItem = cache.fetchCacheOneItemById(itemId)
+        .transform { cacheFolder ->
+            Log.e("AAA", "$cacheFolder")
+            emit(mapper.dataToDomain(cacheFolder)) }
 
     override suspend fun addNewItem(item: NoteFolderDomain) {
         val folder = mapper.domainToData(item)
-        cache.addFolder(folder)
+        cache.insertItem(folder)
     }
 
     override suspend fun updateItem(item: NoteFolderDomain) {
         val folder = mapper.domainToData(item)
-        cache.updateFolder(folder)
+        cache.updateItem(folder)
     }
 
     override suspend fun removeItem(item: NoteFolderDomain) {
         val folder = mapper.domainToData(item)
-        cache.removeFolder(folder)
+        cache.removeItem(folder)
     }
 
     override suspend fun clearItemsList(items: List<NoteFolderDomain>) {
         val folders = mapper.listDomainToData(items)
-        cache.removeAllFolders(folders)
+        cache.clearCache(folders)
+    }
+
+    override suspend fun updateAllItems(items: List<NoteFolderDomain>) {
+        val list = mapper.listDomainToData(items)
+        cache.updateAll(list)
     }
 }

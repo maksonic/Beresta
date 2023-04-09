@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(BaseModule.Core.path))
     implementation(project(BaseModule.Navigation.Router.path))
     implementation(project(BaseModule.Feature.SplashScreen.Api.path))
     implementation(project(BaseModule.Feature.Onboarding.Api.path))

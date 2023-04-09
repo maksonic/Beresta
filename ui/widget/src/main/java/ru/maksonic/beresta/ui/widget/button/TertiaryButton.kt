@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.primary
+import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
@@ -21,7 +21,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 fun TertiaryButton(
     modifier: Modifier = Modifier,
     title: String,
-    color: Color = primary,
+    color: Color = onBackground,
     action: () -> Unit
 ) {
     Box(

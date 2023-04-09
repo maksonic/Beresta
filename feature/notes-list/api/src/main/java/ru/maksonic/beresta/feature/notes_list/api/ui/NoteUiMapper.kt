@@ -14,6 +14,7 @@ class NoteUiMapper(private val dateFormatter: DateFormatter) : Mapper<NoteDomain
         message = o.message,
         currentFolder = o.currentFolder,
         isPinned = o.isPinned,
+        pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash
     )
 
@@ -22,8 +23,10 @@ class NoteUiMapper(private val dateFormatter: DateFormatter) : Mapper<NoteDomain
         title = i.title,
         message = i.message,
         dateCreation = dateFormatter.fetchFormattedDate(i.dateCreation),
+        dateCreationRaw = i.dateCreation,
         currentFolder = i.currentFolder,
         isPinned = i.isPinned,
+        pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash
     )
 }

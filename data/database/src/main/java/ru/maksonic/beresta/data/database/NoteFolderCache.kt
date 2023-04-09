@@ -14,5 +14,6 @@ typealias NoteFolderCacheItem = Flow<NoteFolderCache>
 data class NoteFolderCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val title: String = ""
+    val title: String = "",
+    val isMovedToTrash: Boolean = false,
 )

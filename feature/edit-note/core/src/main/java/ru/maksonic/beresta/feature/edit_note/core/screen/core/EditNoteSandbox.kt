@@ -6,6 +6,7 @@ import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorP
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.BottomSheetEditorState
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.SheetContent
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
+import ru.maksonic.beresta.feature.notes_list.api.ui.isEmpty
 
 /**
  * @Author maksonic on 04.03.2023
@@ -33,7 +34,6 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Inner.ShowKeyboardWithFocusOnTitle -> onEditFabExpanded(model)
         is Msg.Inner.UpdatedInputTitle -> updatedNoteTitle(model, msg)
         is Msg.Inner.UpdatedInputMessage -> updatedNoteMessage(model, msg)
-        is Msg.Inner.UpdatedFabIcon -> updatedCreateNoteFabIcon(model, msg)
         is Msg.Inner.UpdatedEditorPanelVisibility -> updatedEditorPanelVisibility(model, msg)
         is Msg.Inner.UpdatedNoteWallpaper -> updateNoteWallpaper(model, msg)
         is Msg.Inner.FetchedFabStateValue -> afterFetchedFabState(model, msg)
@@ -50,7 +50,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         return UpdatedModel(
             model.copy(currentNote = resetModel),
             commands = setOf(cmd),
-            effects = setOf(eff, Eff.ResetFabDraftIconState)
+            effects = setOf(eff, Eff.ResetFabDraftIcon)
         )
     }
 
@@ -60,11 +60,15 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         else model
 
         val backPressedEffect = if (model.isNewNote) Eff.CollapseFab else Eff.NavigateBack
+        val isNewNotEmptyNote = model.isNewNote && !model.currentNote.isEmpty()
+        val isShowDraftFabIcon =
+            if (isNewNotEmptyNote) Eff.ShowFabDraftIcon else Eff.ResetFabDraftIcon
+
         return UpdatedModel(
             updatedModel.copy(
                 editorSheet = model.editorSheet.copy(currentContent = SheetContent.NOTHING)
             ),
-            effects = setOf(backPressedEffect)
+            effects = setOf(backPressedEffect, isShowDraftFabIcon)
         )
     }
 
@@ -140,22 +144,9 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         UpdatedModel(model, effects = setOf(Eff.ShowToastMaxLengthNoteExceed))
 
 
-    private fun updatedCreateNoteFabIcon(
-        model: Model,
-        msg: Msg.Inner.UpdatedFabIcon
-    ): UpdateResult {
-        val isDraftIcon =
-            model.currentNote.title.isNotBlank() || model.currentNote.message.isNotBlank()
-
-        msg.fabIconState.value = isDraftIcon
-        return UpdatedModel(model)
-    }
-
     private fun resetBottomSheetContent(model: Model): UpdateResult =
         UpdatedModel(
-            model.copy(
-                editorSheet = model.editorSheet.copy(currentContent = SheetContent.NOTHING)
-            )
+            model.copy(editorSheet = model.editorSheet.copy(currentContent = SheetContent.NOTHING))
         )
 }
 

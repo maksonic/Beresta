@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.core
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.*
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
@@ -40,7 +39,6 @@ sealed class Msg : ElmMessage {
         data class FetchedNoteResult(val note: NoteUi): Inner()
         data class UpdatedInputTitle(val text: String) : Inner()
         data class UpdatedInputMessage(val text: String) : Inner()
-        data class UpdatedFabIcon(val fabIconState: MutableState<Boolean>) : Inner()
         data class UpdatedEditorPanelVisibility(val isVisible: Boolean) : Inner()
         data class UpdatedNoteWallpaper(val id: Int): Inner()
         data class FetchedFabStateValue(val isExpanded: Boolean) : Inner()
@@ -61,5 +59,6 @@ sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
     object HideSystemKeyboard : Eff()
     object CollapseFab : Eff()
-    object ResetFabDraftIconState : Eff()
+    object ShowFabDraftIcon : Eff()
+    object ResetFabDraftIcon : Eff()
 }

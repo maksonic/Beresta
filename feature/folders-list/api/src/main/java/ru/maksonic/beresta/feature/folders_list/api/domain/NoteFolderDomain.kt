@@ -8,4 +8,4 @@ import kotlinx.coroutines.flow.Flow
 typealias NotesFoldersDomainList = Flow<List<NoteFolderDomain>>
 typealias NoteFolderDomainItem = Flow<NoteFolderDomain>
 
-data class NoteFolderDomain(val id: Long = 0, val title: String = "")
+data class NoteFolderDomain(val id: Long = 0, val title: String = "", val isMovedToTrash: Boolean)

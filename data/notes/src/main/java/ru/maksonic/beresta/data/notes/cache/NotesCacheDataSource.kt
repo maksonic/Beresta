@@ -17,15 +17,16 @@ class NotesCacheDataSource(
     private val noteDao: NoteDao,
     private val dispatcher: CoroutineDispatcher,
 ) : BaseCacheSource<NoteCache>(noteDao, dispatcher) {
-    fun fetchCachedNotes(): NotesCacheList = noteDao.fetchCacheItemsList().flowOn(dispatcher)
 
-    fun fetchCachedTrashNotes(): NotesCacheList = noteDao.fetchCacheItemsList()
+    fun fetchCacheNotesList(): NotesCacheList = noteDao.fetchNotesList().flowOn(dispatcher)
+
+    fun fetchCacheNotesTrashList(): NotesCacheList = noteDao.fetchNotesTrashList()
         .transform { notes ->
             val trashNotes = notes.filter { note -> note.isMovedToTrash }
             emit(trashNotes)
         }.flowOn(dispatcher)
 
-    fun fetchItemById(itemId: Long): NoteCacheItem =
+    fun fetchCacheOneItemById(itemId: Long): NoteCacheItem =
         noteDao.fetchCacheOneItemById(itemId).flowOn(dispatcher)
 
     suspend fun isNoteIsExist(itemId: Long): Boolean =
