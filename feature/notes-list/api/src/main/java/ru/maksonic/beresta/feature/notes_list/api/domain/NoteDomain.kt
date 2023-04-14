@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.notes_list.api.domain
 
 import kotlinx.coroutines.flow.Flow
-import java.util.*
+import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 21.02.2023
@@ -13,10 +13,10 @@ data class NoteDomain(
     val id: Long = 0L,
     val title: String = "",
     val message: String = "",
-    val dateCreation: Calendar = Calendar.getInstance(),
+    val dateCreation: LocalDateTime = LocalDateTime.now(),
     val currentFolder: String = "",
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
-    val pinTime: Calendar = Calendar.getInstance(),
+    val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false
 )

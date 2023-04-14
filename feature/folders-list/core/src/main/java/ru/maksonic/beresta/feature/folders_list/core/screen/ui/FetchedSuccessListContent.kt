@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -15,15 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Model
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Msg
+import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.*
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Done
+import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 03.04.2023
@@ -85,7 +91,8 @@ private fun FolderItem(
         Row(
             modifier
                 .fillMaxWidth()
-                .padding(top = dp10, bottom = dp10, start = dp8)
+                .padding(top = dp10, bottom = dp10, start = dp8),
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             Box(modifier.size(dp32), contentAlignment = Alignment.Center) {
@@ -102,10 +109,35 @@ private fun FolderItem(
                 text = folder.title,
                 style = TextDesign.title.copy(color = onPrimaryContainer),
                 maxLines = 1,
-                softWrap = false,
                 overflow = TextOverflow.Ellipsis,
-                modifier = modifier.padding(start = dp8, end = dp8)
+                modifier = modifier
+                    .weight(1f)
+                    .padding(start = dp8, end = dp8)
             )
+
+            Text(
+                text = "0",
+                style = TextDesign.bodyPrimaryMedium.copy(color = outline),
+                maxLines = 1,
+                modifier = modifier.padding(end = dp8)
+            )
+
+            Box(
+                modifier
+                    .padding(end = dp8)
+                    .size(dp16)
+            ) {
+                AnimateFadeInOut(
+                    visible = folder.isPinned
+                ) {
+                    Icon(
+                        imageVector = AppIcon.Pin,
+                        modifier = modifier.size(dp16),
+                        tint = primary,
+                        contentDescription = null
+                    )
+                }
+            }
         }
     }
 }

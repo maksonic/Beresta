@@ -1,8 +1,10 @@
 package ru.maksonic.beresta.screen.main.presentation.core
 
+import android.util.Log
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.notes_list.api.ui.MainBottomBarState
+import ru.maksonic.beresta.feature.notes_list.api.ui.sortDescendingPinnedByTimeThenByDate
 
 /**
  * @Author maksonic on 16.01.2023
@@ -171,13 +173,47 @@ class MainSandbox(
         val notes = model.notes.copy(data = model.notes.data.map { note ->
             val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
             return@map if (selectedNotes.contains(note)) note.copy(isPinned = isPinned) else note
-        })
+        }.sortDescendingPinnedByTimeThenByDate())
 
         return UpdatedModel(
             model = model.copy(notes = notes),
             commands = setOf(Cmd.UpdatePinnedNotesInCache(notes.data))
         )
     }
+    /* private fun onPinSelectedNotesClicked(model: Model): UpdateResult {
+        val selectedNotes = model.selectedNotes
+        val isSelectedContainsUnpinnedNotes =
+            selectedNotes.map { note -> note.isPinned }.contains(false)
+        val notes = model.notes.copy(data = model.notes.data.map { note ->
+            val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
+            return@map if (selectedNotes.contains(note)) note.copy(isPinned = isPinned) else note
+        })
+        val pinned = notes.data.filter { it.isPinned }
+        val other = notes.data.filter { !it.isPinned }.sortedByDescending { it.id }
+        val result = other.toMutableList().also { it -> it.addAll(0, pinned.sortedByDescending { it.isPinned }) }
+        return UpdatedModel(
+            model = model.copy(notes = notes.copy(result)),
+            commands = setOf(Cmd.UpdatePinnedNotesInCache(notes.data))
+        )
+    }*/
+
+    /* private fun onPinSelectedNotesClicked(model: Model): UpdateResult {
+        val selectedNotes = model.selectedNotes
+        val isSelectedContainsUnpinnedNotes =
+            selectedNotes.map { note -> note.isPinned }.contains(false)
+        val notes = model.notes.copy(data = model.notes.data.map { note ->
+            val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
+            return@map if (selectedNotes.contains(note)) note.copy(isPinned = isPinned) else note
+        })
+        val pinned = notes.data.filter { it.isPinned }
+        val other = notes.data.filter { !it.isPinned }.sortedByDescending { it.id }
+        val result = other.toMutableList().also { it.addAll(0, pinned) }
+
+        return UpdatedModel(
+            model = model.copy(notes = notes.copy(result)),
+            commands = setOf(Cmd.UpdatePinnedNotesInCache(notes.data))
+        )
+    }*/
 
     private fun replaceSelectedNotesToFolder(model: Model): UpdateResult = UpdatedModel(model)
 

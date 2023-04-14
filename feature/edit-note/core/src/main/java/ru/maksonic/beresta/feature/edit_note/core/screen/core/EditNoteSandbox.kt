@@ -7,6 +7,7 @@ import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.BottomS
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.sheet.SheetContent
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes_list.api.ui.isEmpty
+import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 04.03.2023
@@ -43,8 +44,9 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
     private fun onSaveNoteClicked(model: Model): UpdateResult {
         val resetModel = NoteUi.Default
+        val newNote = model.currentNote.copy(dateCreationRaw = LocalDateTime.now())
         val cmd = if (model.currentNote.id == 0L)
-            Cmd.SaveNote(model.currentNote) else Cmd.UpdateCurrentNote(model.currentNote)
+            Cmd.SaveNote(newNote) else Cmd.UpdateCurrentNote(model.currentNote)
         val eff = if (model.isNewNote) Eff.CollapseFab else Eff.ShowToastMaxLengthNoteExceed
 
         return UpdatedModel(

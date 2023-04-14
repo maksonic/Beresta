@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation.ui
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -24,26 +24,29 @@ enum class ModalSheetContent {
 internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: ModalSheetContent,
+    modalSheetState:  ModalBottomSheetState,
     languageSheet: LanguageSelectorApi.Ui = get(),
     themeSheet: ThemeSelectorUiApi = get(),
-    modalSheetState: () -> ModalBottomSheetState,
     modifier: Modifier
 ) {
-    when (currentSheetContent) {
-        ModalSheetContent.LANGUAGE_SELECTOR -> {
-            languageSheet.BottomSheet(
-                isVisibleSheet = modalSheetState().isVisible,
-                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
-            )
-        }
 
-        ModalSheetContent.THEME_SELECTOR -> {
-            themeSheet.BottomSheet(
-                isVisibleSheet = modalSheetState().isVisible,
-                hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
-            )
-        }
+    Box {
+        when (currentSheetContent) {
+            ModalSheetContent.LANGUAGE_SELECTOR -> {
+                languageSheet.BottomSheet(
+                    isVisibleSheet = modalSheetState.isVisible,
+                    hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
+                )
+            }
 
-        else -> Box(modifier.defaultMinSize(minHeight = 1.dp))
+            ModalSheetContent.THEME_SELECTOR -> {
+                themeSheet.BottomSheet(
+                    isVisibleSheet = modalSheetState.isVisible,
+                    hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
+                )
+            }
+
+            ModalSheetContent.NOTHING -> Box(modifier.size(1.dp))
+        }
     }
 }

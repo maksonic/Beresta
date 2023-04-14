@@ -16,7 +16,6 @@ import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.ResourceProvider
 import ru.maksonic.beresta.core.converter.AssetsReader
 import ru.maksonic.beresta.core.converter.JsonConverter
-import ru.maksonic.beresta.core.domain.DateFormatter
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.data.database.databaseModule
 import ru.maksonic.beresta.data.notes.NotesRepositoryImpl
@@ -50,21 +49,21 @@ import ru.maksonic.beresta.feature.language_selector.core.LanguageSelectorCore
 import ru.maksonic.beresta.feature.language_selector.core.presentation.LanguageSelectorViewModel
 import ru.maksonic.beresta.feature.language_selector.core.presentation.ui.SelectAppLanguageSheet
 import ru.maksonic.beresta.feature.note_wallpaper_selector.api.NoteWallpaperSelectorApi
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorProgram
-import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorSandbox
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.data.WallpapersRepository
 import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.NoteWallpaperSelectorUiCore
-import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorProgram
+import ru.maksonic.beresta.feature.note_wallpaper_selector.core.presentation.core.WallpaperSelectorSandbox
+import ru.maksonic.beresta.feature.notes_list.api.domain.NoteDateFormatter
 import ru.maksonic.beresta.feature.notes_list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes_list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes_list.core.presentation.ui.NotesListUiCore
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
-import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingRepository
 import ru.maksonic.beresta.feature.onboarding.core.data.OnboardingVisibilityDatastore
 import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbox
-import ru.maksonic.beresta.feature.onboarding.core.presentation.Program
+import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingProgram
 import ru.maksonic.beresta.feature.onboarding.core.presentation.ui.OnboardingScreen
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.core.presentation.SearchBarSandbox
@@ -103,7 +102,7 @@ class BerestaApp : Application() {
                 themeSelector = get(),
                 paletteSelector = get(),
                 languageSelector = get(),
-                languageProvider = get()
+                languageProvider = get(),
             )
         }
         viewModel { MainActivitySandbox(mainActivityProgram = get()) }
@@ -118,7 +117,6 @@ class BerestaApp : Application() {
         single<AssetsReader> { AssetsReader.Core(androidContext()) }
         single<JsonConverter> { JsonConverter.Core(assetsReader = get()) }
         single<ResourceProvider> { ResourceProvider.Core(androidContext()) }
-        single { DateFormatter }
     }
 
     private val dataModule = module {
@@ -144,7 +142,9 @@ class BerestaApp : Application() {
                 fetchFoldersUseCase = get(),
                 notesInteractor = get(),
                 notesMapper = get(),
-                foldersMapper = get()
+                foldersMapper = get(),
+                dateFormatter = get(),
+                languageSelector = get()
             )
         }
         viewModel { MainSandbox(mainProgram = get()) }
@@ -153,9 +153,8 @@ class BerestaApp : Application() {
     private val onboardingFeatureModule = module {
         single<OnboardingApi.Visibility> { OnboardingVisibilityDatastore(datastore = get()) }
         single<OnboardingApi.Ui> { OnboardingScreen() }
-        single { OnboardingRepository }
-        single { Program(repository = get(), onboardingVisibility = get()) }
-        viewModel { OnboardingSandbox(program = get()) }
+        single { OnboardingProgram(onboardingVisibility = get()) }
+        viewModel { OnboardingSandbox(onboardingProgram = get()) }
     }
 
     private val themeSelectorFeatureModule = module {
@@ -192,8 +191,9 @@ class BerestaApp : Application() {
     }
 
     private val notesListFeatureModule = module {
+        single<NoteDateFormatter> { NoteDateFormatter.Core() }
         single<NotesListApi.Ui> { NotesListUiCore() }
-        single { NoteUiMapper(dateFormatter = get()) }
+        single { NoteUiMapper() }
     }
 
     private val notesListFeatureDataModule = module {

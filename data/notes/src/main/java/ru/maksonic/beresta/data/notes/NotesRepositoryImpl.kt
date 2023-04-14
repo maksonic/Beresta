@@ -20,7 +20,6 @@ class NotesRepositoryImpl(
     override fun fetchItemsList(): NotesDomainList = cache.fetchCacheNotesList()
         .transform { cacheNotesList ->
             val notes = mapper.listDataToDomain(cacheNotesList)
-            delay(500)
             emit(notes)
         }
 

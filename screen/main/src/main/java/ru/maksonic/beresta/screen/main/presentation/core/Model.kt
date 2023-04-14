@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.screen.main.presentation.core
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.elm.*
@@ -11,6 +12,7 @@ import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
  * @Author maksonic on 16.01.2023
  */
 @Stable
+@Immutable
 data class Model(
     val base: BaseModel = BaseModel.InitialWithLoading,
     val entry: NavBackStackEntry? = null,
@@ -74,6 +76,7 @@ sealed class Cmd : ElmCommand {
     data class RemoveSelected(val notes: List<NoteUi>) : Cmd()
     data class UndoRemoved(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: List<NoteUi>) : Cmd()
+    data class SetNoteFormattedDateCreationStamp(val notes: List<NoteUi>) : Cmd()
 }
 
 sealed class Eff : ElmEffect {

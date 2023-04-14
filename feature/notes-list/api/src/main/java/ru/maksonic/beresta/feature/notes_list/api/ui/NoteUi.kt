@@ -4,8 +4,8 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
-import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
-import java.util.Calendar
+import java.time.Instant
+import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 21.02.2023
@@ -16,12 +16,12 @@ data class NoteUi(
     val title: String = "",
     val message: String = "",
     val dateCreation: String = "",
-    val dateCreationRaw: Calendar = Calendar.getInstance(),
+    val dateCreationRaw: LocalDateTime? = LocalDateTime.now(),
     val backgroundId: Int = 0,
     val currentFolder: String = "",
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
-    val pinTime: Calendar = Calendar.getInstance(),
+    val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false
 ) : Parcelable {
     companion object {
@@ -46,16 +46,14 @@ data class NoteUi(
 
 fun NoteUi.isEmpty() = this.title.isBlank() && this.message.isBlank()
 
+fun List<NoteUi>.sortDescendingPinnedByTimeThenByDate() =
+    this.sortedWith(comparator = compareByDescending<NoteUi> { note -> note.pinTime }
+        .thenByDescending { chip -> chip.dateCreationRaw })
+
 /*
-fun List<NoteUi>.sortByPinnedThenByDescendingId() =
-    this.sortedWith(comparator = compareByDescending<NoteUi> { note -> note.isPinned }
+fun List<NoteUi>.sortDescendingPinnedByTimeThenByDate() =
+    this.sortedWith(comparator = compareByDescending<NoteUi> { note -> note.pinTime }
         .thenByDescending { chip -> chip.dateCreationRaw })
-      //  .thenByDescending { chip -> chip.dateCreationRaw })
+
 */
-
-fun List<NoteUi>.sortByPinnedThenByDescendingId() =
-    this.sortedWith(comparator = compareByDescending<NoteUi> { note -> note.dateCreationRaw }
-        .thenByDescending { chip -> chip.isPinned }
-        .thenByDescending { chip -> chip.dateCreationRaw })
-
 

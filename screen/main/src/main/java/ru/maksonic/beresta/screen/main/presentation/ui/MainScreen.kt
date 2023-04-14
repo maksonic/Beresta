@@ -5,11 +5,15 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
@@ -64,7 +68,7 @@ private fun Content(
         effects = sandbox.effects,
         router = router,
         updateCurrentSelectedFolder = { id ->
-            filters.sharedUiState.updateState { old -> old.copy(currentFolderId = id) }
+            filters.sharedUiState.updateState { state -> state.copy(currentFolderId = id) }
         }
     )
 

@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.folders_list.api.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import java.time.Instant
 
 /**
  * @Author maksonic on 02.03.2023
@@ -11,12 +12,30 @@ data class FilterChipUi(
     val title: String = "",
     val isSelected: Boolean = false,
     val isCurrent: Boolean = false,
+    val isMovedToTrash: Boolean = false,
     val isPinned: Boolean = false,
-    val isMovedToTrash: Boolean = false
+    val pinTime: Instant = Instant.now(),
+    val isSticky: Boolean = false
 ) {
     companion object {
-        val InitialSelected = FilterChipUi(0, "All", isSelected = true, isCurrent = true, true)
-        val Empty = FilterChipUi(0, "", isSelected = false, isCurrent = false, false)
+        val InitialSelected = FilterChipUi(
+            id = 0,
+            title = "All",
+            isSelected = true,
+            isCurrent = true,
+            isPinned = true,
+            isMovedToTrash = true,
+            isSticky = true
+        )
+        val Empty = FilterChipUi(
+            id = 0,
+            title = "",
+            isSelected = false,
+            isCurrent = false,
+            isMovedToTrash = false,
+            isPinned = false,
+            isSticky = false
+        )
     }
 
     @Stable
@@ -33,8 +52,3 @@ data class FilterChipUi(
         }
     }
 }
-
-fun List<FilterChipUi>.sortByPinnedThenByDescendingId() =
-    this.sortedWith(comparator = compareByDescending<FilterChipUi> { chip -> chip.isPinned }
-        .thenByDescending { chip -> chip.id })
-

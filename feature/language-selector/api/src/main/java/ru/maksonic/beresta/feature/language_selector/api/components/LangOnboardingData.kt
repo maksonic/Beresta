@@ -10,7 +10,8 @@ import kotlinx.serialization.Serializable
 data class OnboardingDataItem(
     @SerializedName("id") val id: Int = 0,
     @SerializedName("title") val title: String = "",
-    @SerializedName("description") val description: String = ""
+    @SerializedName("description") val description: String = "",
+    @SerializedName("image") val image: String = ""
 )
 
 @Serializable

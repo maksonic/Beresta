@@ -11,7 +11,7 @@ object Config {
     const val appId = "ru.maksonic.beresta"
     const val compileSdk = 33
     const val targetSdk = 33
-    const val minSdk = 23
+    const val minSdk = 26
     const val versionName = "1.0"
     const val versionCode = 1
     const val testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

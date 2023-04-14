@@ -9,8 +9,22 @@ import ru.maksonic.beresta.feature.folders_list.api.domain.NoteFolderDomain
  */
 class NoteFolderCacheMapper : DataMapper<NoteFolderCache, NoteFolderDomain> {
     override fun dataToDomain(i: NoteFolderCache) =
-        NoteFolderDomain(i.id, i.title, i.isMovedToTrash)
+        NoteFolderDomain(
+            id = i.id,
+            title = i.title,
+            isMovedToTrash = i.isMovedToTrash,
+            isPinned = i.isPinned,
+            pinTime = i.pinTime,
+            isSticky = i.isSticky
+        )
 
     override fun domainToData(o: NoteFolderDomain) =
-        NoteFolderCache(o.id, o.title, o.isMovedToTrash)
+        NoteFolderCache(
+            id = o.id,
+            title = o.title,
+            isMovedToTrash = o.isMovedToTrash,
+            isPinned = o.isPinned,
+            pinTime = o.pinTime,
+            isSticky = o.isSticky
+        )
 }

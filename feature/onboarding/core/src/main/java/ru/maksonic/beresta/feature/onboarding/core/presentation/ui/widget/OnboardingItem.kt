@@ -22,8 +22,9 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 @Composable
 internal fun OnboardingItem(
     item: OnboardingUi,
-    pageOffset: () -> Float,
-    pagerProgress: () -> Boolean,
+    image: Int,
+    pageOffset: Float,
+    pagerProgress: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -34,7 +35,7 @@ internal fun OnboardingItem(
         AnimatedOnboardingImage(
             pageOffset = pageOffset,
             pagerProgress = pagerProgress,
-            item.imageId,
+            imageId = image,
             modifier
                 .padding(top = Theme.widgetSize.topBarNormalHeight)
                 .weight(0.5f)
@@ -70,8 +71,9 @@ fun OnboardingItemPreview() {
     BerestaTheme {
         OnboardingItem(
             item = OnboardingUi.preview,
-            pagerProgress = { false },
-            pageOffset = { 0f }
+            pagerProgress =  false ,
+            pageOffset = 0f,
+            image = 0,
         )
     }
 }

@@ -35,7 +35,6 @@ import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.widget.bar.TopAppBarCollapsingLarge
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
 
 /**
  * @Author maksonic on 16.01.2023
@@ -117,30 +116,6 @@ private fun Content(
                 }
             }
         }
-
-        /*Column(modifier.fillMaxWidth().background(background)) {
-                val themeHint = when (model.currentTheme) {
-                    AppTheme.SYSTEM -> text.settings.titleThemeSystem
-                    AppTheme.LIGHT -> text.settings.titleThemeLight
-                    AppTheme.DARK -> text.settings.themeTitleNight
-                    AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
-                }
-                SystemStatusBar(backgroundColor = { topBarColor.value })
-
-                TopAppBarNormal(
-                    title = text.settings.topBarTitle,
-                    backgroundColor = { topBarColor.value },
-                    backAction = { send(Msg.Ui.OnTopBarBackPressed) }
-                )
-
-                LazyColumn(state = scrollState, modifier = modifier.weight(1f)) {
-                    item {
-                        GeneralSettingsItem(send, themeHint)
-                        AccountSettingsItem(send)
-                        SupportSettingsItem(send)
-                    }
-                }
-            }*/
     }
 }
 

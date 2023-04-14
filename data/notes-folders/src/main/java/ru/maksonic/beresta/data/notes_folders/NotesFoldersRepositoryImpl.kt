@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.data.notes_folders
 
-import android.util.Log
 import kotlinx.coroutines.flow.transform
 import ru.maksonic.beresta.data.notes_folders.cache.FoldersCacheDataSource
 import ru.maksonic.beresta.data.notes_folders.cache.NoteFolderCacheMapper
@@ -25,8 +24,9 @@ class NotesFoldersRepositoryImpl(
 
     override fun fetchItem(itemId: Long): NoteFolderDomainItem = cache.fetchCacheOneItemById(itemId)
         .transform { cacheFolder ->
-            Log.e("AAA", "$cacheFolder")
-            emit(mapper.dataToDomain(cacheFolder)) }
+            val folder = mapper.dataToDomain(cacheFolder)
+            emit(folder)
+        }
 
     override suspend fun addNewItem(item: NoteFolderDomain) {
         val folder = mapper.domainToData(item)

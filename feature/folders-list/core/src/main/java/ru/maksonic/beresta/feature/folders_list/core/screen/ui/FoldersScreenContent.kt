@@ -20,7 +20,7 @@ import ru.maksonic.beresta.feature.folders_list.core.applyInitialChipTitleForLan
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Eff
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.folders_list.core.screen.core.Msg
-import ru.maksonic.beresta.feature.folders_list.core.screen.ui.widget.BottomBarSelectionContainer
+import ru.maksonic.beresta.feature.folders_list.core.screen.ui.widget.BottomBarContainer
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.selected_items_counter_panel.api.SelectedItemsPanelUiApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
@@ -101,11 +101,11 @@ internal fun FoldersScreenContent(
             }
         }
 
-        BottomBarSelectionContainer(
+        BottomBarContainer(
             send = sandbox::send,
             panelCounterApi = panelCounter,
             selectedCount = { model.selectedFoldersCount },
-            isShowUnpin = model.isSelectionState,
+            isShowUnpin = model.isShowBottomBarUnpinBtn,
             isSelectionState = model.isSelectionState,
             isScrolledToBottom = { !scrollState.canScrollForward },
         )

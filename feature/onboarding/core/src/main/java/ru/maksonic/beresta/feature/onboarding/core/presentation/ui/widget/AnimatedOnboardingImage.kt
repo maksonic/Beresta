@@ -18,14 +18,14 @@ import ru.maksonic.beresta.ui.widget.functional.lerp
  */
 @Composable
 internal fun AnimatedOnboardingImage(
-    pageOffset: () -> Float,
-    pagerProgress: () -> Boolean,
-    image: Int,
+    pageOffset: Float,
+    pagerProgress: Boolean,
+    imageId: Int,
     modifier: Modifier = Modifier
 ) {
 
-    val transitionY = if (pagerProgress()) -pageOffset() * 500 else pageOffset() * -500
-    val rotation = if (pagerProgress()) pageOffset() * 20 else pageOffset() * -20
+    val transitionY = if (pagerProgress) -pageOffset * 500 else pageOffset * -500
+    val rotation = if (pagerProgress) pageOffset * 20 else pageOffset * -20
     val animateTransition = animateFloatAsState(targetValue = transitionY)
     val animateRotation = animateFloatAsState(
         targetValue = rotation,
@@ -33,7 +33,7 @@ internal fun AnimatedOnboardingImage(
     )
 
     Image(
-        painter = painterResource(image),
+        painterResource(id = imageId),
         contentDescription = "",
         modifier = modifier
             .fillMaxWidth()
@@ -41,14 +41,13 @@ internal fun AnimatedOnboardingImage(
                 lerp(
                     start = 0.4f,
                     stop = 1f,
-                    fraction = 1f - pageOffset().coerceIn(0f, 1f)
+                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
                 ).also { scale ->
                     scaleX = scale
                     scaleY = scale
                     rotationY = animateRotation.value
                     translationY = animateTransition.value
                 }
-            }
-            .pulsating(pulseFraction = 1.05f, duration = 3000)
+            }.pulsating(pulseFraction = 1.05f, duration = 3000)
     )
 }

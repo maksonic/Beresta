@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.folders_list.core.screen.core
 
+import android.util.Log
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
@@ -42,8 +43,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
 
     private fun onAddFolderClicked(model: Model): UpdateResult =
         UpdatedModel(
-            model.copy(currentSelectedFolderId = 0),
-            effects = setOf(Eff.ShowFolderDialog, Eff.UpdatePassedEditableFolderId(0))
+            model, effects = setOf(Eff.ShowFolderDialog, Eff.UpdatePassedEditableFolderId(0))
         )
 
     private fun onFolderClicked(model: Model, msg: Msg.Ui.OnFolderClicked): UpdateResult =
@@ -97,11 +97,13 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             }
         }.toSet()
         val isSelected = selectedList.isNotEmpty()
+        val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
 
         return UpdatedModel(
             model.copy(
                 selectedFolders = selectedList,
                 isSelectionState = isSelected,
+                isShowBottomBarUnpinBtn = isShowUnpinButton,
                 isVisibleSelectionPanel = isSelected,
                 selectedFoldersCount = selectedList.count()
             )
@@ -147,24 +149,26 @@ private fun onRemoveSelectedFoldersClicked(model: Model): UpdateResult {
 
     val folders = model.folders.copy(
         data = model.folders.data.map { folder ->
-            if (selectedFolders.contains(folder)) {
-                folder.copy(isMovedToTrash = true)
-            } else
-                folder.copy(isMovedToTrash = false)
+            return@map folder.copy(isMovedToTrash = selectedFolders.contains(folder))
         }.filter { !it.isMovedToTrash }
     )
+
+    val currentSelectedFolderId = if (folders.data.size == 1) FilterChipUi.InitialSelected.id
+    else model.currentSelectedFolderId
 
     return UpdatedModel(
         model.copy(
             folders = folders,
             selectedFolders = emptySet(),
             removedFolders = removedFolders,
+            currentSelectedFolderId = currentSelectedFolderId,
             isSelectionState = false,
             isVisibleSelectionPanel = false,
             selectedFoldersCount = 0,
             isVisibleUndoRemoveNotesSnack = true
         ),
         commands = setOf(Cmd.RemoveSelectedFolders(selectedFolders.toList())),
+        effects = setOf(Eff.UpdateFolderSelection(currentSelectedFolderId))
     )
 }
 
@@ -187,11 +191,10 @@ private fun onRemoveSelectedFoldersUndoClicked(model: Model): UpdateResult {
 
 private fun onPinSelectedFoldersClicked(model: Model): UpdateResult {
     val selectedFolders = model.selectedFolders
-    val isSelectedContainsUnpinnedNotes =
-        selectedFolders.map { note -> note.isPinned }.contains(false)
-    val folders = model.folders.copy(data = model.folders.data.map { note ->
-        val isPinned = if (isSelectedContainsUnpinnedNotes) true else !note.isPinned
-        return@map if (selectedFolders.contains(note)) note.copy(isPinned = isPinned) else note
+    val isSelectedContainsUnpinnedNotes = selectedFolders.map { it.isPinned }.contains(false)
+    val folders = model.folders.copy(data = model.folders.data.map { folder ->
+        val isPinned = if (isSelectedContainsUnpinnedNotes) true else !folder.isPinned
+        return@map if (selectedFolders.contains(folder)) folder.copy(isPinned = isPinned) else folder
     })
 
     return UpdatedModel(

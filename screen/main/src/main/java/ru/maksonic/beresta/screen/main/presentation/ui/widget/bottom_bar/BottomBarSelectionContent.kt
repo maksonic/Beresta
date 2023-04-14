@@ -31,7 +31,7 @@ internal fun BottomBarSelectionContent(
     panelCounterApi: SelectedItemsPanelUiApi,
     modifier: Modifier = Modifier
 ) {
-    val actions = arrayOf(
+    val panelItems = arrayOf(
         SelectionBottomPanelItem(
             label = text.shared.btnTitleHide,
             icon = AppIcon.Lock,
@@ -75,7 +75,7 @@ internal fun BottomBarSelectionContent(
             backgroundColor = transparent,
             elevation = Theme.elevation.Level0,
         ) {
-            actions.forEach { item ->
+            panelItems.forEach { item ->
                 BottomRippleBar(
                     selected = true,
                     onClick = item.action,

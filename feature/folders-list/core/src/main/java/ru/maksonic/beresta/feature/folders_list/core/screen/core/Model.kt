@@ -15,6 +15,7 @@ data class Model(
     val removedFolders: Set<FilterChipUi>,
     val isVisibleNewFolderDialog: Boolean,
     val currentSelectedFolderId: Long,
+    val currentPassedFolderId: Long,
     val isSelectionState: Boolean,
     val isVisibleSelectionPanel: Boolean,
     val selectedFoldersCount: Int,
@@ -30,6 +31,7 @@ data class Model(
             removedFolders = emptySet(),
             isVisibleNewFolderDialog = false,
             currentSelectedFolderId = FilterChipUi.InitialSelected.id,
+            currentPassedFolderId = FilterChipUi.InitialSelected.id,
             isSelectionState = false,
             isVisibleSelectionPanel = false,
             selectedFoldersCount = 0,
@@ -57,6 +59,7 @@ sealed class Msg : ElmMessage {
         data class FetchedFoldersResult(val folders: List<FilterChipUi>) : Inner()
         data class UpdatedNewFolderDialogVisibility(val isVisible: Boolean): Inner()
         data class UpdateCurrentSelectedFolder(val id: Long): Inner()
+     //   data class UpdateCurrentPassedForEditFolder(val id: Long): Inner()
         object HideRemovedFoldersSnack : Inner()
     }
 }

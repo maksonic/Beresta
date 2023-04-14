@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.feature.onboarding.api.OnboardingApi
+import ru.maksonic.beresta.feature.onboarding.core.R
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Eff
 import ru.maksonic.beresta.feature.onboarding.core.presentation.Msg
 import ru.maksonic.beresta.feature.onboarding.core.presentation.OnboardingSandbox
@@ -80,7 +81,7 @@ private fun Content(
             MultipleModalBottomSheetContent(
                 send = send,
                 currentSheetContent = model.currentSheetContent,
-                modalSheetState = { model.modalBottomSheetState },
+                modalSheetState = model.modalBottomSheetState,
                 modifier = modifier
             )
         }
@@ -91,9 +92,6 @@ private fun Content(
                 .systemBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //Fetch text from local provider for build onboardings.
-            send(Msg.Inner.FetchOnboardingTextData(text.onboarding.data))
-
             OnboardingTopBar(
                 showLanguageSelector = { send(Msg.Ui.OnShowSelectLanguageSheetClicked) },
                 showThemeSelector = { send(Msg.Ui.OnShowSelectThemeSheetClicked) },
@@ -101,7 +99,7 @@ private fun Content(
 
             OverscrollBehavior {
                 HorizontalPager(
-                    count = model.onboardings.count(),
+                    count = onboardings.count(),
                     state = pagerState,
                     modifier = modifier.weight(1f)
                 ) { page ->
@@ -109,9 +107,10 @@ private fun Content(
                     val pagerProgress = this.currentPageOffset > 0
 
                     OnboardingItem(
-                        item = model.onboardings[page],
-                        pageOffset = { pageOffset },
-                        pagerProgress = { pagerProgress }
+                        item = onboardings[page],
+                        image = images[page],
+                        pageOffset = pageOffset,
+                        pagerProgress = pagerProgress
                     )
                 }
             }
@@ -119,6 +118,26 @@ private fun Content(
         }
     }
 }
+
+private val onboardings: Array<OnboardingUi>
+    @Composable get() = with(text.onboarding.data) {
+        buildList {
+            repeat(4) { index ->
+                add(
+                    OnboardingUi(
+                        title = this@with[index].title, description = this@with[index].description
+                    )
+                )
+            }
+        }.toTypedArray()
+    }
+
+private val images = listOf(
+    R.drawable.onboarding_image_first,
+    R.drawable.onboarding_image_second,
+    R.drawable.onboarding_image_third,
+    R.drawable.onboarding_image_fourth
+)
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
 @Composable

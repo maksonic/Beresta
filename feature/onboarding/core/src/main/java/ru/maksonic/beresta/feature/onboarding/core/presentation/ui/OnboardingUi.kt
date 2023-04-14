@@ -1,13 +1,14 @@
 package ru.maksonic.beresta.feature.onboarding.core.presentation.ui
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+
 /**
  * @Author maksonic on 20.02.2023
  */
-data class OnboardingUi(
-    val title: String,
-    val description: String,
-    val imageId: Int
-) {
+@Stable
+@Immutable
+data class OnboardingUi(val title: String, val description: String) {
     companion object {
         private const val description =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
@@ -16,11 +17,6 @@ data class OnboardingUi(
                     " Vivamus pretium gravida erat sit amet tempus. " +
                     "Donec vel augue ac arcu porttitor facilisis sit amet quis orci."
 
-        val preview = OnboardingUi(
-            "Onboarding preview title.",
-            description = description,
-            imageId = ru.maksonic.beresta.ui.theme.R.drawable.logo_bottom_maksonic_day
-
-        )
+        val preview = OnboardingUi("Onboarding preview title.", description = description)
     }
 }
