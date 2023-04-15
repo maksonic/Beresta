@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.get
@@ -23,25 +24,25 @@ enum class ModalSheetContent {
 @Composable
 internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
-    currentSheetContent: ModalSheetContent,
-    modalSheetState:  ModalBottomSheetState,
+    currentSheetContent: State<ModalSheetContent>,
+    modalSheetState:  State<ModalBottomSheetState>,
     languageSheet: LanguageSelectorApi.Ui = get(),
     themeSheet: ThemeSelectorUiApi = get(),
     modifier: Modifier
 ) {
 
     Box {
-        when (currentSheetContent) {
+        when (currentSheetContent.value) {
             ModalSheetContent.LANGUAGE_SELECTOR -> {
                 languageSheet.BottomSheet(
-                    isVisibleSheet = modalSheetState.isVisible,
+                    isVisibleSheet = modalSheetState.value.isVisible,
                     hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
                 )
             }
 
             ModalSheetContent.THEME_SELECTOR -> {
                 themeSheet.BottomSheet(
-                    isVisibleSheet = modalSheetState.isVisible,
+                    isVisibleSheet = modalSheetState.value.isVisible,
                     hideSheet = { send(Msg.Ui.OnHideLanguageBtnClicked) }
                 )
             }

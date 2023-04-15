@@ -136,9 +136,10 @@ private fun SearchListResult(
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->
             notesApi.NoteItem(
+                note = note,
+                selectedNotes = emptySet(),
                 onNoteClicked = {},
                 onNoteLongClicked = { },
-                note = note,
                 modifier = Modifier.animateItemPlacement()
             )
         }

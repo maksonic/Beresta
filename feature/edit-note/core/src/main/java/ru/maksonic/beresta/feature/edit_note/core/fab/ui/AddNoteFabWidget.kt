@@ -8,9 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -58,12 +57,12 @@ class AddNoteFabWidget : EditNoteApi.Ui {
 
     @Composable
     override fun NewNoteFabWidget(
-        isVisible: () -> Boolean,
-        isNotesScrollUp: () -> Boolean,
+        isVisible: Boolean,
+        isNotesScrollUp: State<Boolean>,
         modifier: Modifier
     ) {
         AnimatedVisibility(
-            visible = isVisible(),
+            visible = isVisible,
             enter = slideIn(
                 animationSpec = tween(FAB_VISIBILITY_DURATION),
                 initialOffset = { IntOffset(0, 300) }) + fadeIn(tween(FAB_VISIBILITY_DURATION)),
@@ -77,27 +76,27 @@ class AddNoteFabWidget : EditNoteApi.Ui {
 
     @Composable
     private fun Content(
-        isScrollUp: () -> Boolean,
+        isScrollUp: State<Boolean>,
         sandbox: AddNoteSandbox = koinViewModel()
     ) {
-        val model = sandbox.model.collectAsState().value
         val sharedFabState = sharedUiState.state.collectAsState().value
+        val isExpandedFab = rememberSaveable { mutableStateOf(false) }
 
         LaunchedEffect(sharedFabState.isExpandedFab) {
-            sandbox.send(Msg.Inner.UpdatedFabState(sharedFabState.isExpandedFab))
+            isExpandedFab.value = sharedFabState.isExpandedFab
         }
 
-        HandleUiEffects(sandbox.effects, sharedUiState)
+        HandleUiEffects(sandbox.effects, sharedUiState, isExpandedFab)
 
-        BackHandler(model.isExpandedFab) {
-            if (model.isExpandedFab) {
+        BackHandler(isExpandedFab.value) {
+            if (isExpandedFab.value) {
                 sandbox.send(Msg.Ui.OnCollapseFabClicked)
             }
         }
 
         FabContainer(
             send = sandbox::send,
-            isExpanded = model.isExpandedFab,
+            isExpanded = isExpandedFab,
             isScrollUp = isScrollUp,
         )
     }
@@ -105,8 +104,8 @@ class AddNoteFabWidget : EditNoteApi.Ui {
     @Composable
     private fun FabContainer(
         send: FabSendMessage,
-        isExpanded: Boolean,
-        isScrollUp: () -> Boolean,
+        isExpanded: State<Boolean>,
+        isScrollUp: State<Boolean>,
         modifier: Modifier = Modifier,
     ) {
         val sharedFabUiState = sharedUiState.state.collectAsState().value
@@ -121,26 +120,27 @@ class AddNoteFabWidget : EditNoteApi.Ui {
             val navBarHeight =
                 WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             val fabColor = animateColorAsState(
-                if (isExpanded) surface else tertiaryContainer, animationSpec = tween(DURATION)
+                if (isExpanded.value) surface else tertiaryContainer,
+                animationSpec = tween(DURATION)
             )
             val containerElevation = animateDpAsState(
-                if (!isScrollUp()) Theme.elevation.Level3 else Theme.elevation.Level0
+                if (!isScrollUp.value) Theme.elevation.Level3 else Theme.elevation.Level0
             )
             val containerHeight = animateDpAsState(
-                if (isExpanded) fullHeight else fabSize, animationSpec = tween(DURATION)
+                if (isExpanded.value) fullHeight else fabSize, animationSpec = tween(DURATION)
             )
             val containerWidth = animateDpAsState(
-                if (isExpanded) fullWidth else fabSize, animationSpec = tween(DURATION)
+                if (isExpanded.value) fullWidth else fabSize, animationSpec = tween(DURATION)
             )
             val containerBottomPadding = animateDpAsState(
-                if (isExpanded) dp0 else navBarHeight.plus(dp12), tween(DURATION)
+                if (isExpanded.value) dp0 else navBarHeight.plus(dp12), tween(DURATION)
             )
             val containerEndPadding =
-                animateDpAsState(if (isExpanded) dp0 else dp16, tween(DURATION))
+                animateDpAsState(if (isExpanded.value) dp0 else dp16, tween(DURATION))
             val expandedContentAlpha =
-                animateFloatAsState(if (isExpanded) 1f else 0f, tween(DURATION))
+                animateFloatAsState(if (isExpanded.value) 1f else 0f, tween(DURATION))
             val collapsedContentAlpha =
-                animateFloatAsState(if (isExpanded) 0f else 1f, tween(DURATION))
+                animateFloatAsState(if (isExpanded.value) 0f else 1f, tween(DURATION))
             val isFullExpanded = containerHeight.value == fullHeight
             val containerShape = if (isFullExpanded) 0.dp else dp16
 
@@ -163,7 +163,7 @@ class AddNoteFabWidget : EditNoteApi.Ui {
                     .width(containerWidth.value),
             ) {
                 Box {
-                    if (!isExpanded) {
+                    if (!isExpanded.value) {
                         Box(
                             modifier
                                 .fillMaxSize()
@@ -201,13 +201,19 @@ class AddNoteFabWidget : EditNoteApi.Ui {
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
-    sharedUiState: SharedUiState<EditNoteFabUiSharedState>
+    sharedUiState: SharedUiState<EditNoteFabUiSharedState>,
+    isExpandedFab: MutableState<Boolean>
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
 
         when (eff) {
-            Eff.SetExpandFabSharedState -> sharedUiState.expandFab()
-            Eff.SetCollapseFabSharedState -> sharedUiState.collapseFab()
+            Eff.SetExpandFabSharedState -> {
+                sharedUiState.expandFab().let { isExpandedFab.value = true }
+            }
+
+            Eff.SetCollapseFabSharedState -> {
+                sharedUiState.collapseFab().let { isExpandedFab.value = false }
+            }
         }
     }
 }

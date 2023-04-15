@@ -80,7 +80,7 @@ val baseDarkPalette = AppColor(
     surfaceTint = Palette.white,
     outlineVariant = Palette.doveGray,
     scrim = Palette.black.copy(alpha = 0.32f),
-    snack = Palette.nero,
+    snack = Palette.tundora,
     onSnack = Palette.snow,
     onSnackContainer = Palette.snow,
     transparent = Palette.transparent,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,14 +29,15 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  */
 @Composable
 internal fun SearchBarCollapsedBackground(
-    isSelectionState: () -> Boolean,
-    isVisibleFirstNoteOffset: () -> Boolean,
+    isSelectionState: State<Boolean>,
+    isVisibleFirstNoteOffset: State<Boolean>,
     modifier: Modifier = Modifier
 ) {
     val shareIconTransition =
-        animateDpAsState(if (isSelectionState()) 0.dp else 68.dp, tween())
-    val tonal =
-        animateDpAsState(if (isVisibleFirstNoteOffset()) Theme.tonal.Level0 else Theme.tonal.Level4)
+        animateDpAsState(if (isSelectionState.value) 0.dp else 68.dp, tween())
+    val tonal = animateDpAsState(
+        if (isVisibleFirstNoteOffset.value) Theme.tonal.Level0 else Theme.tonal.Level4
+    )
 
     SurfacePro(tonalElevation = tonal.value, modifier = modifier) {
 

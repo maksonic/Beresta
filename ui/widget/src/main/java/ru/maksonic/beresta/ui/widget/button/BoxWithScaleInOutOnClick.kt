@@ -31,7 +31,7 @@ fun BoxWithScaleInOutOnClick(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
-    backgroundColor: () -> Color = { Color.Transparent },
+    backgroundColor: State<Color> = remember { mutableStateOf(Color.Transparent) },
     shape: Shape = RoundedCornerShape(0.dp),
     content: @Composable () -> Unit
 ) {
@@ -47,7 +47,7 @@ fun BoxWithScaleInOutOnClick(
                 scaleY = sizeScale
             )
             .clip(shape)
-            .drawBehind { drawRect(backgroundColor()) }
+            .drawBehind { drawRect(backgroundColor.value) }
             .combinedClickable(
                 onClick = {
                     scope.launch {

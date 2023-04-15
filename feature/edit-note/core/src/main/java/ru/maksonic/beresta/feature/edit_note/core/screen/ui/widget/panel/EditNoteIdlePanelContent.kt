@@ -8,8 +8,10 @@ import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.PanelItem
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.icons.*
+import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.button.IconAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
@@ -24,17 +26,12 @@ private val idlePanelItems = arrayOf(
 )
 
 @Composable
-internal fun EditNoteIdlePanelContent(
-    send: SendMessage,
-    panelHeight: Dp,
-    navBarHeight: Dp,
-    modifier: Modifier
-) {
+internal fun EditNoteIdlePanelContent(send: SendMessage, modifier: Modifier = Modifier) {
     Row(
         modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .height(panelHeight)
+            .height(Theme.widgetSize.bottomMainPanelHeight)
             .noRippleClickable { },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -46,5 +43,4 @@ internal fun EditNoteIdlePanelContent(
             )
         }
     }
-    Spacer(modifier.height(navBarHeight))
 }

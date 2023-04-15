@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,7 @@ import ru.maksonic.beresta.ui.widget.functional.ANIMATION_DURATION_NORMAL
 fun MainBottomBar(
     state: MainBottomBarState,
     send: SendMessage,
-    isScrollUp: () -> Boolean,
+    isScrollUp: State<Boolean>,
     isSelectionState: () -> Boolean,
     selectedCount: () -> Int,
     removedCount: () -> Int,
@@ -44,7 +45,7 @@ fun MainBottomBar(
     val panelHeight = Theme.widgetSize.bottomMainPanelHeight.plus(navBarHeight)
     val panelOffset = animateDpAsState(
         targetValue = if (isSelectionState()) 0.dp else {
-            if (isScrollUp()) 0.dp else panelHeight
+            if (isScrollUp.value) 0.dp else panelHeight
         },
         animationSpec = tween(ANIMATION_DURATION_NORMAL)
     )

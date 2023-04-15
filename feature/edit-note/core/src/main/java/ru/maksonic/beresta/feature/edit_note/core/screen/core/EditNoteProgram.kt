@@ -32,10 +32,10 @@ class EditNoteProgram(
         runCatching {
             fetchNoteByIdUseCase(id).collect { noteDomain ->
                 val note = mapper.mapTo(noteDomain)
-                consumer(Msg.Inner.FetchedNoteResult(note))
+                consumer(Msg.Inner.FetchedPassedNoteResult(note))
             }
         }.onFailure {
-            consumer(Msg.Inner.FetchedNoteResult(NoteUi.Default))
+            consumer(Msg.Inner.FetchedPassedNoteResult(NoteUi.Default))
         }
     }
 

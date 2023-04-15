@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -23,8 +26,8 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 internal fun OnboardingItem(
     item: OnboardingUi,
     image: Int,
-    pageOffset: Float,
-    pagerProgress: Boolean,
+    pageOffset: State<Float>,
+    pagerProgress: State<Boolean>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -71,8 +74,8 @@ fun OnboardingItemPreview() {
     BerestaTheme {
         OnboardingItem(
             item = OnboardingUi.preview,
-            pagerProgress =  false ,
-            pageOffset = 0f,
+            pagerProgress =  remember { mutableStateOf(false) } ,
+            pageOffset = remember { mutableStateOf(0F) },
             image = 0,
         )
     }

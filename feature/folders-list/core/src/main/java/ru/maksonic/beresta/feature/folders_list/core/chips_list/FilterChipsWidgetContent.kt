@@ -10,6 +10,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
@@ -30,13 +31,13 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleLastItemOffset
 internal fun FilterChipsWidgetContent(
     chipsCollection: FilterChipUi.Collection,
     currentSelectedChipId: Long,
-    isVisibleFirstNote: () -> Boolean,
+    isVisibleFirstNote: State<Boolean>,
     onChipFilterClicked: (id: Long) -> Unit,
     onAddNewFilterFolderClicked: () -> Unit,
     modifier: Modifier
 ) {
     val tonal =
-        animateDpAsState(if (isVisibleFirstNote()) Theme.tonal.Level0 else Theme.tonal.Level4)
+        animateDpAsState(if (isVisibleFirstNote.value) Theme.tonal.Level0 else Theme.tonal.Level4)
 
     SurfacePro(tonalElevation = tonal.value, modifier = modifier) { resultColor ->
 
@@ -46,6 +47,7 @@ internal fun FilterChipsWidgetContent(
             val isVisibleLastChipOffset = lazyRowState.isVisibleLastItemOffset()
 
             SystemStatusBar()
+
             Box(modifier.height(Theme.widgetSize.topBarNormalHeight))
 
             Row(
@@ -62,8 +64,8 @@ internal fun FilterChipsWidgetContent(
                             .weight(1f, false)
                             .rowFadingEdge(
                                 startEdgeInitialColor = resultColor,
-                                isVisibleStartEdge = !isVisibleFirstChipOffset,
-                                isVisibleEndEdge = !isVisibleLastChipOffset,
+                                isVisibleStartEdge = !isVisibleFirstChipOffset.value,
+                                isVisibleEndEdge = !isVisibleLastChipOffset.value,
                             ),
                         horizontalArrangement = Arrangement.spacedBy(dp8),
                         verticalAlignment = Alignment.CenterVertically

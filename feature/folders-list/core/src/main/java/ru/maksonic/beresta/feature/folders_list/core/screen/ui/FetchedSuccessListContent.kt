@@ -82,7 +82,7 @@ private fun FolderItem(
     BoxWithScaleInOutOnClick(
         onClick = { onFolderClicked(folder.id) },
         onLongClick = { onFolderLongPressed(folder.id) },
-        backgroundColor = { backgroundColor.value },
+        backgroundColor = backgroundColor,
         shape = Shape.cornerNormal,
         modifier = modifier
             .padding(start = dp16, end = dp16, bottom = dp10)

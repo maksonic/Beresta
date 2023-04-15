@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.folders_list.core
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.folders_list.api.ui.FilterChipUi
 import ru.maksonic.beresta.feature.folders_list.api.ui.FoldersListApi
@@ -32,7 +33,7 @@ class FoldersListUiCore : FoldersListApi.Ui {
     override fun FolderChipsWidget(
         chipsCollection: FilterChipUi.Collection,
         currentSelectedChipId: Long,
-        isVisibleFirstNote: () -> Boolean,
+        isVisibleFirstNote: State<Boolean>,
         onChipFilterClicked: (id: Long) -> Unit,
         modifier: Modifier
     ) {

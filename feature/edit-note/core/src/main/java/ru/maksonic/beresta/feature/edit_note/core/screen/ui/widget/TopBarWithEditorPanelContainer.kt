@@ -1,12 +1,14 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditNoteBottomPanel
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel.EditorPanelState
-import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 
@@ -16,10 +18,11 @@ import ru.maksonic.beresta.ui.widget.SystemStatusBar
 @Composable
 internal fun TopBarWithEditorPanelContainer(
     send: SendMessage,
-    currentNote: NoteUi,
-    editorPanelState: EditorPanelState,
+    isEmptyNote: Boolean,
+    editorPanelState: State<EditorPanelState>,
     onTopBarBackPressed: () -> Unit,
-    isVisibleEditorPanel: Boolean,
+    isVisibleEditorPanel: State<Boolean>,
+    isVisibleUpdatedNoteSnack: State<Boolean>,
     modifier: Modifier
 ) {
     Column(
@@ -35,9 +38,10 @@ internal fun TopBarWithEditorPanelContainer(
 
         EditNoteBottomPanel(
             send = send,
-            currentNote = currentNote,
+            isEmptyNote = isEmptyNote,
             state = editorPanelState,
-            isScrollUp = { isVisibleEditorPanel }
+            isScrollUp = isVisibleEditorPanel,
+            isVisibleUpdatedNoteSnack = isVisibleUpdatedNoteSnack
         )
     }
 }

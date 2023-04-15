@@ -51,13 +51,15 @@ class NotesListUiCore : NotesListApi.Ui {
 
     @Composable
     override fun NoteItem(
+        note: NoteUi,
+        selectedNotes: Set<NoteUi>,
         onNoteClicked: (id: Long) -> Unit,
         onNoteLongClicked: (id: Long) -> Unit,
-        note: NoteUi,
         modifier: Modifier
     ) {
         NoteListItemContent(
             note = note,
+            selectedNotes = selectedNotes,
             onNoteClicked = onNoteClicked,
             onNoteLongClicked = onNoteLongClicked,
             maxTitleLength = MAX_TITLE_LENGTH,

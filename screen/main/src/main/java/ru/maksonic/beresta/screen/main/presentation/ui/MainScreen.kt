@@ -54,13 +54,13 @@ private fun Content(
     sandbox: MainSandbox = koinViewModel(),
     router: MainScreenRouter
 ) {
-    val model = sandbox.model.collectAsStateWithLifecycle().value
+    val model = sandbox.model.collectAsStateWithLifecycle()
     val scrollState = rememberLazyStaggeredGridState()
     val isScrollUp = scrollState.isScrollUp()
     val isVisibleFirstNote = scrollState.isVisibleFirstItem()
     val isVisibleFirstNoteOffset = scrollState.isVisibleFirstItemOffset()
     val isExpandedSearchBar = searchBar.sharedExpandSearchState.collectAsState()
-    val isVisibleNewNoteFab = !(model.isSelectionState || isExpandedSearchBar.value)
+    val isVisibleNewNoteFab = !(model.value.isSelectionState || isExpandedSearchBar.value)
     val filtersUiSharedState = filters.sharedUiState.state.collectAsState().value
     val isVisibleNewFolderDialog = filtersUiSharedState.isVisibleDialog
 
@@ -80,7 +80,7 @@ private fun Content(
         sandbox.send(Msg.Inner.UpdateCurrentSelectedFolder(filtersUiSharedState.currentFolderId))
     }
 
-    BackHandler(model.isSelectionState) {
+    BackHandler(model.value.isSelectionState) {
         sandbox.send(Msg.Ui.OnCancelSelectionClicked)
     }
 
@@ -91,43 +91,43 @@ private fun Content(
 
         val sharedScrollState = NotesListSharedScrollState(
             state = { scrollState },
-            isVisibleFirstNote = { isVisibleFirstNote.value },
-            isVisibleFirstNoteOffset = { isVisibleFirstNoteOffset.value },
-            isScrollUp = { isScrollUp },
-            isSelectionState = { model.isSelectionState },
-            gridCellsCount = { model.notesGridCount }
+            isVisibleFirstNote = isVisibleFirstNote,
+            isVisibleFirstNoteOffset = isVisibleFirstNoteOffset,
+            isScrollUp = isScrollUp,
+            isSelectionState = remember { derivedStateOf { model.value.isSelectionState } },
+            gridCellsCount = remember { derivedStateOf { model.value.notesGridCount } }
         )
 
         when {
-            model.base.isLoading -> LoadingViewState()
-            model.base.isSuccessLoading -> {
+            model.value.base.isLoading -> LoadingViewState()
+            model.value.base.isSuccessLoading -> {
                 NotesList(
                     feature = notesList,
-                    model = model,
+                    model = model.value,
                     send = sandbox::send,
                     sharedScrollState = sharedScrollState
                 )
             }
         }
         MainBottomBar(
-            state = model.bottomBarState,
+            state = model.value.bottomBarState,
             send = sandbox::send,
-            isScrollUp = { isScrollUp },
-            isSelectionState = { model.isSelectionState },
-            selectedCount = { model.selectedNotesCount },
-            removedCount = { model.removedNotes.count() },
-            isShowUnpinItem = model.isShowBottomBarUnpinBtn,
-            isVisibleUndoRemoveNotesSnack = model.isVisibleUndoRemoveNotesSnack,
+            isScrollUp = isScrollUp,
+            isSelectionState = { model.value.isSelectionState },
+            selectedCount = { model.value.selectedNotesCount },
+            removedCount = { model.value.removedNotes.count() },
+            isShowUnpinItem = model.value.isShowBottomBarUnpinBtn,
+            isVisibleUndoRemoveNotesSnack = model.value.isVisibleUndoRemoveNotesSnack,
             panelCounterApi = panelCounter
         )
         searchBar.Widget(
-            notesCollection = model.notes,
+            notesCollection = model.value.notes,
             sharedScroll = sharedScrollState
         )
 
         editNote.NewNoteFabWidget(
-            isVisible = { isVisibleNewNoteFab },
-            isNotesScrollUp = { isScrollUp },
+            isVisible = isVisibleNewNoteFab,
+            isNotesScrollUp = isScrollUp,
             modifier
         )
 

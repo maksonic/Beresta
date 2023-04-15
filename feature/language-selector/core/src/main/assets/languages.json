@@ -70,6 +70,7 @@
     "editor": {
       "hint_input_title": "Заголовок",
       "hint_input_message": "Написать:",
+      "snack_message_note_updated": "Заметка была обновлена",
       "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан.",
       "message_note_wallpaper_is_not_selected": "Вы не выбрали фон для заметки.",
       "top_bar_select_note_wallpaper": "Установить фон",
@@ -159,6 +160,7 @@
     "editor": {
       "hint_input_title": "Title",
       "hint_input_message": "Write:",
+      "snack_message_note_updated": "Note has been updated",
       "message_max_note_length_warning": "The note is too long. The text at the end was cut off.",
       "message_note_wallpaper_is_not_selected": "You have not selected a background for your note.",
       "top_bar_select_note_wallpaper": "Set note background",
@@ -248,6 +250,7 @@
     "editor": {
       "hint_input_title": "标题",
       "hint_input_message": "写:",
+      "snack_message_note_updated": "注释已更新",
       "message_max_note_length_warning": "注释太长。 最后的文字被截断了。",
       "message_note_wallpaper_is_not_selected": "您尚未为笔记选择背景。",
       "top_bar_select_note_wallpaper": "设置备注背景",
@@ -337,6 +340,7 @@
     "editor": {
       "hint_input_title": "標題",
       "hint_input_message": "寫:",
+      "snack_message_note_updated": "註釋已更新",
       "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。",
       "message_note_wallpaper_is_not_selected": "您尚未為筆記選擇背景。",
       "top_bar_select_note_wallpaper": "設置備註背景",

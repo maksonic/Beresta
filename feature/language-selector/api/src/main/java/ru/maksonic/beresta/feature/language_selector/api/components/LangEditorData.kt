@@ -12,6 +12,8 @@ data class LangEditorData(
     val hintInputTitle: String = "",
     @SerializedName("hint_input_message")
     val hintInputMessage: String = "",
+    @SerializedName("snack_message_note_updated")
+    val hintSnackNoteUpdated: String = "",
     @SerializedName("message_max_note_length_warning")
     val noteMaxLengthWarning: String = "",
     @SerializedName("message_note_wallpaper_is_not_selected")

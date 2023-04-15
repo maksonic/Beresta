@@ -44,13 +44,13 @@ internal fun FetchedNotesWidgetContent(
 ) {
     val topBarNormalHeight = Theme.widgetSize.topBarNormalHeight
     val chipsTransition = animateDpAsState(
-        if (sharedScroll.isVisibleFirstNote()) 0.dp
-        else if (sharedScroll.isScrollUp()) 0.dp else -topBarNormalHeight,
+        if (sharedScroll.isVisibleFirstNote.value) 0.dp
+        else if (sharedScroll.isScrollUp.value) 0.dp else -topBarNormalHeight,
         animationSpec = tween(ANIMATION_DURATION_NORMAL)
     )
 
     val listBottomPadding = animateDpAsState(
-        if (sharedScroll.isSelectionState())
+        if (sharedScroll.isSelectionState.value)
             Theme.widgetSize.bottomPanelHeightSelected.plus(SystemNavigationBarHeight)
         else
             Theme.widgetSize.bottomMainPanelHeight.plus(SystemNavigationBarHeight)
@@ -60,7 +60,7 @@ internal fun FetchedNotesWidgetContent(
 
         LazyVerticalStaggeredGrid(
             state = sharedScroll.state(),
-            columns = StaggeredGridCells.Fixed(sharedScroll.gridCellsCount()),
+            columns = StaggeredGridCells.Fixed(sharedScroll.gridCellsCount.value),
             contentPadding = PaddingValues(
                 top = Theme.widgetSize.noteChipsContainerHeight.plus(dp4),
                 start = dp10,
@@ -75,9 +75,10 @@ internal fun FetchedNotesWidgetContent(
 
             items(items = notes.data, key = { note -> note.id }) { note ->
                 NoteListItemContent(
+                    selectedNotes = selectedNotes,
+                    note = note,
                     onNoteClicked = { id -> onNoteClicked(id) },
                     onNoteLongClicked = { id -> onNoteLongPressed(id) },
-                    note = note.copy(isSelected = selectedNotes.contains(note)),
                     maxTitleLength = maxTitleLength,
                     maxMessageLength = maxMessageLength,
                     modifier = modifier.animateContentSize()

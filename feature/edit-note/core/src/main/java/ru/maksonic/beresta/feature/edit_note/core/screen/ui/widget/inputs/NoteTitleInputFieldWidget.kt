@@ -10,9 +10,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
@@ -28,10 +28,11 @@ internal fun NoteTitleInputFieldWidget(
     title: String,
     updateTitle: (String) -> Unit,
     focusRequester: FocusRequester,
-    focusManager: FocusManager,
     maxLines: Int,
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
+
     TextField(
         value = title,
         onValueChange = { inputText -> updateTitle(inputText) },

@@ -1,11 +1,13 @@
 package ru.maksonic.beresta.feature.edit_note.core.screen.ui.widget.panel
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
@@ -13,8 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.edit_note.core.screen.core.Msg
 import ru.maksonic.beresta.feature.edit_note.core.screen.ui.SendMessage
-import ru.maksonic.beresta.feature.notes_list.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes_list.api.ui.isEmpty
+import ru.maksonic.beresta.feature.language_selector.api.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
@@ -25,6 +26,7 @@ import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Save
 import ru.maksonic.beresta.ui.widget.SurfacePro
+import ru.maksonic.beresta.ui.widget.bar.SnackBarInfo
 import ru.maksonic.beresta.ui.widget.button.FloatingFabButton
 
 /**
@@ -33,73 +35,74 @@ import ru.maksonic.beresta.ui.widget.button.FloatingFabButton
 @Composable
 internal fun EditNoteBottomPanel(
     send: SendMessage,
-    currentNote: NoteUi,
-    isScrollUp: () -> Boolean,
-    state: EditorPanelState,
+    isEmptyNote: Boolean,
+    isScrollUp: State<Boolean>,
+    state: State<EditorPanelState>,
+    isVisibleUpdatedNoteSnack: State<Boolean>,
     modifier: Modifier = Modifier
 ) {
-    val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    val panelHeight = Theme.widgetSize.bottomMainPanelHeight
-    val panelOffset = animateDpAsState(
-        targetValue = if (isScrollUp()) 0.dp else panelHeight.plus(navBarHeight),
-        animationSpec = tween()
-    )
+    Column() {
+        val navBarHeight = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val panelHeight = Theme.widgetSize.bottomMainPanelHeight
+        val keyboardHeight = WindowInsets.Companion.ime.asPaddingValues().calculateBottomPadding()
+        val calculatedPanelPadding = if (keyboardHeight != 0.dp && keyboardHeight > 100.dp)
+            keyboardHeight - navBarHeight
+        else
+            keyboardHeight
 
-    val keyboardHeight = WindowInsets.Companion.ime.asPaddingValues().calculateBottomPadding()
-    val calculatedPanelPadding = if (keyboardHeight != 0.dp && keyboardHeight > 100.dp)
-        keyboardHeight - navBarHeight
-    else
-        keyboardHeight
+        AnimatedVisibility(isVisibleUpdatedNoteSnack.value) {
+            SnackBarInfo(message = text.editNote.hintSnackNoteUpdated)
+        }
 
-    Box(
-        modifier
-            .padding(PaddingValues(bottom = calculatedPanelPadding))
-            .fillMaxWidth()
-            .height(panelHeight.plus(navBarHeight)),
-        contentAlignment = Alignment.TopEnd
-    ) {
-        val panelModifier = Modifier
-        val fabElevation =
-            animateDpAsState(if (isScrollUp()) Theme.tonal.Level0 else Theme.tonal.Level3)
-        val fabUnselectedColor = tertiaryContainer.copy(alpha = 0.35f).compositeOver(background)
-        val saveNoteFabColor =
-            animateColorAsState(
-                if (currentNote.isEmpty()) fabUnselectedColor else tertiaryContainer)
-        val fabIconColor =
-            animateColorAsState(if (currentNote.isEmpty()) Theme.color.black.copy(alpha = 0.4f)
-            else onTertiaryContainer)
-
-        SurfacePro(
-            tonalElevation = Theme.tonal.Level4,
-            modifier = panelModifier
+        Box(
+            modifier
+                .padding(PaddingValues(bottom = calculatedPanelPadding))
                 .fillMaxWidth()
-                .graphicsLayer {
-                    translationY = panelOffset.value.toPx()
-                }
+                .height(panelHeight.plus(navBarHeight)),
+            contentAlignment = Alignment.TopEnd
         ) {
-            Column(panelModifier.padding(start = dp4)) {
-                when (state) {
-                    EditorPanelState.IDLE -> {
-                        EditNoteIdlePanelContent(send, panelHeight, navBarHeight, panelModifier)
+            val fabElevation =
+                animateDpAsState(if (isScrollUp.value) Theme.tonal.Level0 else Theme.tonal.Level3)
+            val fabUnselectedColor = tertiaryContainer.copy(alpha = 0.35f).compositeOver(background)
+            val saveNoteFabColor = animateColorAsState(
+                if (isEmptyNote) fabUnselectedColor else tertiaryContainer
+            )
+            val fabIconColor = animateColorAsState(
+                if (isEmptyNote) Theme.color.black.copy(alpha = 0.4f)
+                else onTertiaryContainer
+            )
+            val panelOffset = animateDpAsState(
+                if (isScrollUp.value) 0.dp else panelHeight.plus(navBarHeight), tween()
+            )
+
+            SurfacePro(
+                tonalElevation = Theme.tonal.Level4,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        translationY = panelOffset.value.toPx()
                     }
-                    EditorPanelState.SELECT_WALLPAPER -> {}
+            ) {
+                Column(Modifier.padding(start = dp4)) {
+                    when (state.value) {
+                        EditorPanelState.IDLE -> EditNoteIdlePanelContent(send)
+                    }
                 }
             }
-        }
 
-        FloatingFabButton(
-            onClick = { send(Msg.Inner.OnSaveNoteClicked(currentNote)) },
-            enabled = !currentNote.isEmpty(),
-            fabColor = saveNoteFabColor.value,
-            shadowElevation = fabElevation.value,
-            modifier = modifier.padding(top = dp12, end = dp16)
-        ) {
-            Icon(
-                imageVector = AppIcon.Save,
-                contentDescription = "",
-                tint = fabIconColor.value
-            )
+            FloatingFabButton(
+                onClick = { send(Msg.Ui.OnSaveNoteClicked) },
+                enabled = !isEmptyNote,
+                fabColor = saveNoteFabColor.value,
+                shadowElevation = fabElevation.value,
+                modifier = modifier.padding(top = dp12, end = dp16)
+            ) {
+                Icon(
+                    imageVector = AppIcon.Save,
+                    contentDescription = "",
+                    tint = fabIconColor.value
+                )
+            }
         }
-
     }
 }

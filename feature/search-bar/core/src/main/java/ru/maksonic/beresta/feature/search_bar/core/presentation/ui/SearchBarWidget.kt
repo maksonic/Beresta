@@ -101,13 +101,13 @@ private fun SearchBar(
         val initialTopPadding = SystemStatusBarHeight.plus(dp4)
         val paddingTop = animateDpAsState(if (model.isExpandedBar) 0.dp else initialTopPadding)
         val paddingStart = animateDpAsState(if (model.isExpandedBar) 0.dp else collapsedEdgePadding)
-        val selectionPadding = if (sharedScroll.isSelectionState()) collapsedEdgePadding else dp16
+        val selectionPadding = if (sharedScroll.isSelectionState.value) collapsedEdgePadding else dp16
         val paddingEnd = animateDpAsState(if (model.isExpandedBar) 0.dp else selectionPadding)
         val barCornerRadius = animateIntAsState(if (model.isExpandedBar) 0 else 50, tween())
         val barHeight =
             animateDpAsState(if (model.isExpandedBar) maxHeight else Theme.widgetSize.searchBarCollapsedHeight)
         val searchBarColor = animateColorAsState(
-            if (sharedScroll.isVisibleFirstNoteOffset()) surfaceVariant else onSurfaceVariant
+            if (sharedScroll.isVisibleFirstNoteOffset.value) surfaceVariant else onSurfaceVariant
         )
 
         SearchBarCollapsedBackground(

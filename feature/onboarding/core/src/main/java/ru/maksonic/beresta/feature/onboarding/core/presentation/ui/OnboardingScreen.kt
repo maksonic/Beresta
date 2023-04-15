@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -58,21 +58,25 @@ private fun Content(
     sandbox: OnboardingSandbox = koinViewModel(),
     router: OnboardingRouter
 ) {
-    val model = sandbox.model.collectAsStateWithLifecycle().value
+    val model = sandbox.model.collectAsStateWithLifecycle()
     val send = sandbox::send
     val pagerState = rememberPagerState()
-    val isLastCurrentPage = pagerState.currentPage == LAST_ONBOARDING_PAGE
+    val currentSheetContent = rememberUpdatedState(model.value.currentSheetContent)
+    val modalBottomSheetState = rememberUpdatedState(model.value.modalBottomSheetState)
+    val isLastCurrentPage = remember {
+        derivedStateOf { pagerState.currentPage == LAST_ONBOARDING_PAGE }
+    }
 
     HandleUiEffects(
         effects = sandbox.effects,
         pagerState = pagerState,
         onGoogleAuthClicked = {},
-        bottomSheetState = model.modalBottomSheetState,
+        bottomSheetState = modalBottomSheetState,
         router = router
     )
 
     ModalBottomSheetLayout(
-        sheetState = model.modalBottomSheetState,
+        sheetState = modalBottomSheetState.value,
         sheetBackgroundColor = transparent,
         sheetContentColor = transparent,
         sheetElevation = Theme.elevation.Level0,
@@ -80,8 +84,8 @@ private fun Content(
         sheetContent = {
             MultipleModalBottomSheetContent(
                 send = send,
-                currentSheetContent = model.currentSheetContent,
-                modalSheetState = model.modalBottomSheetState,
+                currentSheetContent = currentSheetContent,
+                modalSheetState = modalBottomSheetState,
                 modifier = modifier
             )
         }
@@ -103,8 +107,10 @@ private fun Content(
                     state = pagerState,
                     modifier = modifier.weight(1f)
                 ) { page ->
-                    val pageOffset = this.calculateCurrentOffsetForPage(page).absoluteValue
-                    val pagerProgress = this.currentPageOffset > 0
+                    val pageOffset = remember {
+                        derivedStateOf { this.calculateCurrentOffsetForPage(page).absoluteValue }
+                    }
+                    val pagerProgress = remember { derivedStateOf { this.currentPageOffset > 0 } }
 
                     OnboardingItem(
                         item = onboardings[page],
@@ -144,7 +150,7 @@ private val images = listOf(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     pagerState: PagerState,
-    bottomSheetState: ModalBottomSheetState,
+    bottomSheetState: State<ModalBottomSheetState>,
     onGoogleAuthClicked: () -> Unit,
     router: OnboardingRouter
 ) {
@@ -174,12 +180,12 @@ private fun HandleUiEffects(
             is Eff.NavigateToMain -> router.toMain()
             is Eff.HideModalSheet -> {
                 scope.launch {
-                    bottomSheetState.hide()
+                    bottomSheetState.value.hide()
                 }
             }
             is Eff.ShowModalSheet -> {
                 scope.launch {
-                    bottomSheetState.show()
+                    bottomSheetState.value.show()
                 }
             }
         }

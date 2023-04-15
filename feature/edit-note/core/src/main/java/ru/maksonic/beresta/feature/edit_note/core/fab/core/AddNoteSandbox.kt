@@ -13,15 +13,12 @@ class AddNoteSandbox : Sandbox<WidgetModel, Msg, Cmd, Eff>(initialModel = Widget
     override fun update(msg: Msg, model: WidgetModel): UpdatedResult = when (msg) {
         is Msg.Ui.OnCreateNewNoteClicked -> onCreateNoteClicked(model)
         is Msg.Ui.OnCollapseFabClicked -> onTopBarBackPressed(model)
-        is Msg.Inner.UpdatedFabState -> updatedFabState(model, msg)
     }
 
-    private fun updatedFabState(model: WidgetModel, msg: Msg.Inner.UpdatedFabState): UpdatedResult =
-        UpdatedModel(model.copy(isExpandedFab = msg.value))
 
     private fun onCreateNoteClicked(model: WidgetModel): UpdatedResult =
-        UpdatedModel(model.copy(isExpandedFab = true), effects = setOf(Eff.SetExpandFabSharedState))
+        UpdatedModel(model, effects = setOf(Eff.SetExpandFabSharedState))
 
     private fun onTopBarBackPressed(model: WidgetModel): UpdatedResult =
-        UpdatedModel(model.copy(isExpandedFab = false), effects = setOf(Eff.SetCollapseFabSharedState))
+        UpdatedModel(model, effects = setOf(Eff.SetCollapseFabSharedState))
 }

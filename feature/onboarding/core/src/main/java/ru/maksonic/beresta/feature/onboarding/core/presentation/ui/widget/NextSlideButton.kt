@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +27,16 @@ import ru.maksonic.beresta.ui.widget.button.TertiaryButton
  * @Author maksonic on 19.02.2023
  */
 @Composable
-internal fun NextSlideButton(send: SendMessage, isLastCurrentPage: Boolean, modifier: Modifier) {
-    val titlePrimaryBtn = if (isLastCurrentPage) text.onboarding.btnTitleSync
+internal fun NextSlideButton(
+    send: SendMessage,
+    isLastCurrentPage: State<Boolean>,
+    modifier: Modifier
+) {
+    val titlePrimaryBtn = if (isLastCurrentPage.value) text.onboarding.btnTitleSync
     else text.onboarding.btnTitleNext
 
     val alphaDoNotSyncBtn: Float by animateFloatAsState(
-        targetValue = if (isLastCurrentPage) 1f else 0f,
+        targetValue = if (isLastCurrentPage.value) 1f else 0f,
         animationSpec = tween(durationMillis = dimenAnimFast, easing = LinearEasing)
     )
 

@@ -21,7 +21,7 @@ fun LazyStaggeredGridState.isVisibleFirstItemOffset(): State<Boolean> {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LazyStaggeredGridState.isScrollUp(): Boolean {
+fun LazyStaggeredGridState.isScrollUp(): State<Boolean> {
     var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
     var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
     return remember(this) {
@@ -35,5 +35,5 @@ fun LazyStaggeredGridState.isScrollUp(): Boolean {
                 previousScrollOffset = firstVisibleItemScrollOffset
             }
         }
-    }.value
+    }
 }
