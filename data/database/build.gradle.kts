@@ -5,19 +5,19 @@ plugins {
 }
 
 android {
-    namespace = BaseModule.Data.Database.namespace
-    compileSdk = Config.compileSdk
+    namespace = module.primary.data.database.namespace
+    compileSdk = androidConfig.compileSdk
 
     defaultConfig {
-        minSdk = Config.minSdk
-        targetSdk = Config.targetSdk
+        minSdk = androidConfig.minSdk
+        targetSdk = androidConfig.targetSdk
 
-        testInstrumentationRunner = Config.testInstrumentationRunner
+        testInstrumentationRunner = androidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(Build.Type.CURRENT) {
-            isMinifyEnabled = Config.isMinifyEnabled
+        getByName(buildConfig.type.current) {
+            isMinifyEnabled = androidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -26,15 +26,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = Config.javaVersion
-        targetCompatibility = Config.javaVersion
+        sourceCompatibility = androidConfig.javaVersion
+        targetCompatibility = androidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = Config.jvmTarget
+        jvmTarget = androidConfig.jvmTarget
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -42,16 +42,8 @@ android {
 }
 
 dependencies {
-    implementation(project(BaseModule.Data.Common.path))
-    implementation(Lib.Room.ktx)
-    ksp(Lib.Room.compiler)
-    implementation(Lib.Koin.compose)
-
-    //Test
-    implementation(Lib.Test.core)
-    testImplementation(Lib.Test.junit)
-    androidTestImplementation(Lib.Test.junitExt)
-    androidTestImplementation("androidx.test:runner:1.5.2")
-    androidTestImplementation ("com.google.truth:truth:1.1.3")
-    androidTestImplementation ("com.google.truth.extensions:truth-java8-extension:1.1.3")
+    implementation(project(module.primary.data.common.path))
+    implementation(lib.room.ktx)
+    ksp(lib.room.compiler)
+    implementation(lib.koin.android)
 }

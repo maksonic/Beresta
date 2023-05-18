@@ -9,6 +9,8 @@ import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
+import ru.maksonic.beresta.data.database.folders.NoteFolderCache
+import ru.maksonic.beresta.data.database.folders.NoteFolderDao
 
 
 /**

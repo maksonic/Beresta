@@ -4,19 +4,19 @@ plugins {
 }
 
 android {
-    namespace = BaseModule.Elm.namespace
-    compileSdk = Config.compileSdk
+    namespace = module.primary.elm.namespace
+    compileSdk = androidConfig.compileSdk
 
     defaultConfig {
-        minSdk = Config.minSdk
-        targetSdk = Config.targetSdk
+        minSdk = androidConfig.minSdk
+        targetSdk = androidConfig.targetSdk
 
-        testInstrumentationRunner = Config.testInstrumentationRunner
+        testInstrumentationRunner = androidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(Build.Type.CURRENT) {
-            isMinifyEnabled = Config.isMinifyEnabled
+        getByName(buildConfig.type.current) {
+            isMinifyEnabled = androidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = Config.javaVersion
-        targetCompatibility = Config.javaVersion
+        sourceCompatibility = androidConfig.javaVersion
+        targetCompatibility = androidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = Config.jvmTarget
+        jvmTarget = androidConfig.jvmTarget
     }
 
     buildFeatures {
@@ -38,10 +38,10 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Config.kcExtVersion
+        kotlinCompilerExtensionVersion = androidConfig.kotlinCompilerExtensionVersion
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -49,5 +49,5 @@ android {
 }
 
 dependencies {
-    implementation(Lib.Koin.compose)
+    implementation(lib.koin.android)
 }

@@ -4,19 +4,19 @@ plugins {
 }
 
 android {
-    namespace = BaseModule.Data.Common.namespace
-    compileSdk = Config.compileSdk
+    namespace = module.primary.data.common.namespace
+    compileSdk = androidConfig.compileSdk
 
     defaultConfig {
-        minSdk = Config.minSdk
-        targetSdk = Config.targetSdk
+        minSdk = androidConfig.minSdk
+        targetSdk = androidConfig.targetSdk
 
-        testInstrumentationRunner = Config.testInstrumentationRunner
+        testInstrumentationRunner = androidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(Build.Type.CURRENT) {
-            isMinifyEnabled = Config.isMinifyEnabled
+        getByName(buildConfig.type.current) {
+            isMinifyEnabled = androidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,24 +25,25 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = Config.javaVersion
-        targetCompatibility = Config.javaVersion
+        sourceCompatibility = androidConfig.javaVersion
+        targetCompatibility = androidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = Config.jvmTarget
+        jvmTarget = androidConfig.jvmTarget
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
 
+
 dependencies {
-    implementation(platform((Lib.Compose.bom)))
-    implementation(Lib.Android.datastore)
-    implementation(Lib.Room.runtime)
-    implementation(Lib.JetBrains.coroutines)
+    implementation(lib.android.datastore)
+    implementation(lib.room.runtime)
+    implementation(lib.jetBrains.coroutines)
+    implementation(lib.koin.android)
 }
