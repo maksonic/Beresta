@@ -1,0 +1,30 @@
+package ru.maksonic.beresta.feature.notes.list.core.di
+
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDateFormatter
+import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
+import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
+import ru.maksonic.beresta.feature.notes.list.core.NotesListProgram
+import ru.maksonic.beresta.feature.notes.list.core.NotesListSandbox
+import ru.maksonic.beresta.feature.notes.list.core.ui.NotesListWidget
+
+/**
+ * @Author maksonic on 24.04.2023
+ */
+val notesListFeatureModel = module {
+    single<RefactorNoteInteractor> { RefactorNoteInteractor.Impl(repository = get()) }
+    single<NoteDateFormatter> { NoteDateFormatter.Core() }
+    single { NoteUiMapper() }
+    single {
+        NotesListProgram(
+            notesInteractor = get(),
+            fetchNotesUseCase = get(),
+            mapper = get(),
+            appLanguageEngineApi = get()
+        )
+    }
+    viewModel { NotesListSandbox(program = get()) }
+    single<NotesListApi.Ui> { NotesListWidget() }
+}

@@ -1,0 +1,5 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:drawable="@drawable/bottom_brand_logo_night_raw"
+      android:gravity="center" />
+</layer-list>

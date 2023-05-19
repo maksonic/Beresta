@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Beresta" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/nero</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo_night</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/bottom_brand_logo_night
+        </item>
+        <item name="postSplashScreenTheme">@style/Theme.BerestaDefault</item>
+    </style>
+</resources>
