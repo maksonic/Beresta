@@ -28,7 +28,7 @@ data class Model(
             base = BaseModel.InitialWithLoading,
             folders = NoteFolderUi.Collection.Empty,
             selectedFolders = emptySet(),
-            currentSelectedFolderId = NoteFolderUi.InitialSelected.id,
+            currentSelectedFolderId = NoteFolderUi.StartListFolder.id,
             isSelectionState = false,
             isShowUnpinBottomBarIcon = false,
             isVisibleRemovedSnackBar = false

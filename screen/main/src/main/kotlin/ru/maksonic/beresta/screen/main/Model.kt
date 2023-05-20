@@ -22,7 +22,7 @@ data class Model(
     val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
     val isShowBottomBarUnpinBtn: Boolean = false,
     val filters: NoteFolderUi.Collection = NoteFolderUi.Collection.Empty,
-    val currentSelectedFolderId: Long = NoteFolderUi.InitialSelected.id,
+    val currentSelectedFolderId: Long = NoteFolderUi.StartListFolder.id,
     ) : ElmModel
 
 sealed class Msg : ElmMessage {

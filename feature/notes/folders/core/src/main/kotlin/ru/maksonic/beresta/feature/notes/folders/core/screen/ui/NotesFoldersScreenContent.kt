@@ -74,6 +74,7 @@ internal fun NotesFoldersScreenContent(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
             FoldersListContent(
+                folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
                 model = model,
                 send = send,
                 scrollState = scrollState,

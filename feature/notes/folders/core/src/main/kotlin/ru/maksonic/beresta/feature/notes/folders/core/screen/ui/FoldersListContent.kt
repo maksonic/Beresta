@@ -39,7 +39,6 @@ import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.theme.component.dp6
@@ -56,6 +55,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FoldersListContent(
+    folders: NoteFolderUi.Collection,
     model: Model,
     send: SendMessage,
     scrollState: LazyListState,
@@ -76,10 +76,10 @@ fun FoldersListContent(
         ),
         modifier = modifier.fillMaxSize()
     ) {
-        items(model.folders.data, key = { it.id }) { folder ->
+        items(folders.data, key = { it.id }) { folder ->
             val update = folder.copy(
                 isCurrent = folder.id == model.currentSelectedFolderId,
-                isSelected = model.selectedFolders.contains(folder),
+                isSelected = model.selectedFolders.contains(folder) && folder.isSelectable,
             )
             FolderItem(
                 folder = update,

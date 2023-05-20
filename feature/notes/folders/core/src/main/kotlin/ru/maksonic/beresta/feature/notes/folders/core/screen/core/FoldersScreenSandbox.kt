@@ -3,7 +3,6 @@ package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
-import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 
 /**
  * @Author maksonic on 03.04.2023
@@ -31,7 +30,6 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Inner.ShowRemovedNotesSnackBar -> showRemoveNotesSnackBar(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
-
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult =
@@ -50,8 +48,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             baseOnFolderAction(model, msg.id)
         else
             UpdatedModel(
-                model = model.copy(),
-                effects = setOf(
+                model, effects = setOf(
                     Eff.NavigateBack,
                     Eff.UpdateCurrentSelectedFolderInSharedState(msg.id)
                 )
@@ -64,18 +61,19 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun baseOnFolderAction(model: Model, folderId: Long): UpdateResult {
         val selectedList = model.selectedFolders.toMutableSet().also { list ->
             model.folders.data.forEach { folder ->
-                if (folderId == folder.id && folderId != NoteFolderUi.InitialSelected.id) {
+                val isCanSelected = folderId == folder.id && folder.isSelectable
+                if (isCanSelected) {
                     if (list.contains(folder)) list.remove(folder) else list.add(folder)
                 }
             }
         }.toSet()
-        val isSelected = selectedList.isNotEmpty()
+        val isSelectionState = selectedList.isNotEmpty()
         val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
 
         return UpdatedModel(
             model.copy(
                 selectedFolders = selectedList,
-                isSelectionState = isSelected,
+                isSelectionState = isSelectionState,
                 isShowUnpinBottomBarIcon = isShowUnpinButton
             )
         )
@@ -87,8 +85,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun onSelectAllFoldersClicked(model: Model): UpdateResult {
         val selected = model.selectedFolders.toMutableSet().also { list ->
             if (list.containsAll(model.folders.data)) list.clear()
-            else
-                list.addAll(model.folders.data.filter { !it.isSticky })
+            else list.addAll(model.folders.data.filter { it.isSelectable })
         }.toSet()
         val isShowUnpinButton = !selected.map { it.isPinned }.contains(false)
 
@@ -117,24 +114,21 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     }
 
     private fun onBarMoveSelectedToTrashClicked(model: Model): UpdateResult {
-        val removed = model.removedFolders.toMutableSet().also { list ->
-            val isTrashItems =
-                model.selectedFolders.map { folder -> folder.copy(isMovedToTrash = true) }
-            list.addAll(isTrashItems)
-        }.toSet()
-        val notes = model.folders.copy(data = model.folders.data.filterNot { note ->
-            removed.any { it.id == note.id }
-        })
+        val removed = model.selectedFolders.map { folder -> folder.copy(isMovedToTrash = true) }
+        val folders =
+            model.folders.copy(data = model.folders.data.filter { item -> removed.any { item.id == it.id } })
+
+        // Set initial sticky folder to current if previous current folder was moved to trash.
         val isRemoveCurrentFolder =
             removed.map { folder -> folder.id == model.currentSelectedFolderId }.contains(true)
         val currentSelectedId = if (isRemoveCurrentFolder) 0L else model.currentSelectedFolderId
 
         return UpdatedModel(
             model = model.copy(
-                folders = notes,
+                folders = folders,
                 currentSelectedFolderId = currentSelectedId,
                 selectedFolders = emptySet(),
-                removedFolders = removed,
+                removedFolders = removed.toSet(),
                 isSelectionState = false,
             ),
             commands = setOf(Cmd.RemoveSelected(removed.toList())),
@@ -156,16 +150,12 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         UpdatedModel(model.copy(isVisibleRemovedSnackBar = false, removedFolders = emptySet()))
 
     private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
-        val removed = model.folders.copy(data = model.folders.data.toMutableList().also { folders ->
-            folders.addAll(model.removedFolders.map { it.copy(isMovedToTrash = false) })
-        }.toList())
+        val restoredRemovedFolders = model.removedFolders.map { it.copy(isMovedToTrash = false) }
+        val restored = model.folders.data.toMutableList().also { it.addAll(restoredRemovedFolders) }
 
         return UpdatedModel(
-            model = model.copy(
-                folders = removed,
-                removedFolders = emptySet(),
-            ),
-            commands = setOf(Cmd.UndoRemoveNotes(removed.data)),
+            model = model.copy(folders = model.folders.copy(restored), removedFolders = emptySet()),
+            commands = setOf(Cmd.UndoRemoveNotes(restored)),
         )
     }
 }

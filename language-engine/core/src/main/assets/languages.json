@@ -86,7 +86,8 @@
       "top_bar_title": "Управление папками",
       "dialog_title_create_new_folder": "Новая папка",
       "dialog_title_edit_folder": "Изменить папку",
-      "title_pinned_notes_folder": "Все заметки",
+      "title_pinned_start_notes_folder": "Все заметки",
+      "title_pinned_end_notes_folder": "Без категории",
       "hint_error_empty_folder_name": "Название не может быть пустым.",
       "hint_removed_folders_count": "Удалено папок:",
       "btn_title_crete_folder": "Создать папку"
@@ -179,7 +180,8 @@
       "top_bar_title": "Folder Management",
       "dialog_title_create_new_folder": "New folder",
       "dialog_title_edit_folder": "Edit folder",
-      "title_pinned_notes_folder": "All",
+      "title_pinned_start_notes_folder": "All",
+      "title_pinned_end_notes_folder": "Uncategorized",
       "hint_error_empty_folder_name": "Folder name cannot be empty.",
       "hint_removed_folders_count": "Removed folders:",
       "btn_title_crete_folder": "Create new folder"
@@ -272,7 +274,8 @@
       "top_bar_title": "文件夹管理",
       "dialog_title_create_new_folder": "新建文件夹",
       "dialog_title_edit_folder": "编辑文件夹",
-      "title_pinned_notes_folder": "所有笔记",
+      "title_pinned_start_notes_folder": "所有笔记",
+      "title_pinned_end_notes_folder": "未分类",
       "hint_error_empty_folder_name": "文件夹名称不能为空。",
       "hint_removed_folders_count": "删除的文件夹:",
       "btn_title_crete_folder": "创建新文件夹"
@@ -365,7 +368,8 @@
       "top_bar_title": "文件夾管理",
       "dialog_title_create_new_folder": "新建文件夾",
       "dialog_title_edit_folder": "編輯文件夾",
-      "title_pinned_notes_folder": "所有筆記",
+      "title_pinned_start_notes_folder": "所有筆記",
+      "title_pinned_end_notes_folder": "未分類",
       "hint_error_empty_folder_name": "文件夾名稱不能為空。",
       "hint_removed_folders_count": "刪除的文件夾:",
       "btn_title_crete_folder": "創建新文件夾"

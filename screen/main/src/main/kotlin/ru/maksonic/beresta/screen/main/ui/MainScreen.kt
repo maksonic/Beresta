@@ -31,7 +31,6 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
-import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.Eff
 import ru.maksonic.beresta.screen.main.MainSandbox
@@ -108,9 +107,7 @@ private fun MainContent(
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         NotesListLayer(
             send = send,
-            chips = model.filters.copy(data = model.filters.data.map { chip ->
-                applyInitialChipTitleForLanguage(chip)
-            }),
+            chips = notesFoldersFeatureApi.applyStickyItemsTitle(model.filters),
             notesList = notesListFeatureApi,
             notesFolders = notesFoldersFeatureApi,
             router = router,
@@ -228,10 +225,4 @@ private fun HandleUiEffects(
             }
         }
     }
-}
-
-@Composable
-internal fun applyInitialChipTitleForLanguage(chip: NoteFolderUi): NoteFolderUi {
-    val title = if (chip.id == 0L) text.folders.titlePinnedChipFilter else chip.title
-    return chip.copy(title = title)
 }

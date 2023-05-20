@@ -26,5 +26,8 @@ interface FoldersListApi {
 
         @Composable
         fun FolderCreationDialog()
+
+        @Composable
+        fun applyStickyItemsTitle(folders: NoteFolderUi.Collection): NoteFolderUi.Collection
     }
 }

@@ -14,6 +14,7 @@ import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenS
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 
 /**
@@ -47,6 +48,17 @@ class FoldersListCore : FoldersListApi.Ui {
     override fun FolderCreationDialog() {
         FolderDialogContent(sharedUiState = sharedUiState)
     }
+
+    @Composable
+    override fun applyStickyItemsTitle(folders: NoteFolderUi.Collection): NoteFolderUi.Collection =
+        folders.copy(folders.data.map { folder ->
+            val title = when {
+                folder.isStickyToStart -> text.folders.titlePinnedStartFolder
+                folder.isStickyToEnd -> text.folders.titlePinnedEndFolder
+                else -> folder.title
+            }
+            folder.copy(title = title)
+        })
 
     @Composable
     private fun ScreenContainer(

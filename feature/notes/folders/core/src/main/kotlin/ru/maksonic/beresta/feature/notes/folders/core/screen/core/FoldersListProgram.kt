@@ -20,6 +20,7 @@ class FoldersListProgram(
 
     private companion object {
         private const val SNACK_BAR_VISIBILITY_TIME = 5000L
+        private const val PINNED_END_FOLDER_DEFAULT_ID = 1L
     }
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
@@ -32,37 +33,28 @@ class FoldersListProgram(
     }
 
     private suspend fun fetchFolders(consumer: (Msg) -> Unit) {
-        runCatching {
-            fetchFoldersUseCase().collect { foldersDomain ->
-                val folders = mapper.mapListTo(foldersDomain)
-                val pinnedFolder = NoteFolderUi.InitialSelected
-                val sortedFolders = mutableListOf(pinnedFolder).also {
-                    it.addAll(folders)
-                }.sortStickyThenDescendingByPinTimeThenByDate()
+        val stickyStartFolder = NoteFolderUi.StartListFolder
+        val stickyEndFolder = NoteFolderUi.EndListFolder
 
-                consumer(Msg.Inner.FetchedFoldersResult(sortedFolders))
+        runCatching {
+            fetchFoldersUseCase().collect { data ->
+                val folders = mapper.mapListTo(data).sortStickyThenDescendingByPinTimeThenByDate()
+                // Adding sticky folders to start and end position in data list.
+                val lastItemId = if (folders.isNotEmpty()) folders.maxBy { it.id }.id + 2
+                else PINNED_END_FOLDER_DEFAULT_ID
+
+                val result = mutableListOf(stickyStartFolder, stickyEndFolder.copy(lastItemId))
+                    .also { it.addAll(1, folders) }
+
+                consumer(Msg.Inner.FetchedFoldersResult(result))
             }
         }.onFailure {
-            consumer(Msg.Inner.FetchedFoldersResult(emptyList()))
+            val pinnedEndFolder = stickyEndFolder.copy(id = PINNED_END_FOLDER_DEFAULT_ID)
+            val folders = mutableListOf(stickyStartFolder, pinnedEndFolder).toList()
+
+            consumer(Msg.Inner.FetchedFoldersResult(folders))
         }
     }
-
-    /*
-    private suspend fun fetchFolders(consumer: (Msg) -> Unit) {
-        runCatching {
-            fetchFoldersUseCase().collect { foldersDomain ->
-                val folders = mapper.mapListTo(foldersDomain)
-                val pinnedFolder = NoteFolderUi.InitialSelected
-                val sortedFolders = mutableListOf(pinnedFolder).also {
-                    it.addAll(folders)
-                }.toList().sortStickyThenDescendingByPinTimeThenByDate()
-
-                consumer(Msg.Inner.FetchedFoldersResult(sortedFolders))
-            }
-        }.onFailure {
-            consumer(Msg.Inner.FetchedFoldersResult(emptyList()))
-        }
-    }*/
 
     private suspend fun moveSelectedNotesToTrash(
         folders: List<NoteFolderUi>,

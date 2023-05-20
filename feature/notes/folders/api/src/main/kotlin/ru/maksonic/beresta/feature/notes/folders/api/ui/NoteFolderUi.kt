@@ -8,28 +8,44 @@ import java.time.LocalDateTime
  * @Author maksonic on 02.03.2023
  */
 data class NoteFolderUi(
-    val id: Long = 0,
-    val title: String = "",
+    val id: Long,
+    val title: String,
     val isSelected: Boolean = false,
     val isCurrent: Boolean = false,
-    val isMovedToTrash: Boolean = false,
-    val isPinned: Boolean = false,
-    val isSticky: Boolean = false,
+    val isMovedToTrash: Boolean,
+    val isPinned: Boolean,
+    val isSelectable: Boolean = true,
+    val isStickyToStart: Boolean = false,
+    val isStickyToEnd: Boolean = false,
     val pinTime: LocalDateTime?,
     val dateCreationRaw: LocalDateTime,
 ) {
     companion object {
-        val InitialSelected = NoteFolderUi(
+        val StartListFolder = NoteFolderUi(
             id = 0,
             title = "All",
             isSelected = true,
             isCurrent = true,
-            isPinned = true,
-            isMovedToTrash = true,
-            isSticky = true,
+            isPinned = false,
+            isMovedToTrash = false,
+            isSelectable = false,
+            isStickyToStart = true,
+            isStickyToEnd = false,
             pinTime = null,
             dateCreationRaw = LocalDateTime.now()
-
+        )
+        val EndListFolder = NoteFolderUi(
+            id = 1,
+            title = "Without category",
+            isSelected = false,
+            isCurrent = false,
+            isPinned = false,
+            isMovedToTrash = false,
+            isSelectable = false,
+            isStickyToStart = false,
+            isStickyToEnd = true,
+            pinTime = null,
+            dateCreationRaw = LocalDateTime.now()
         )
         val Empty = NoteFolderUi(
             id = 0,
@@ -38,7 +54,8 @@ data class NoteFolderUi(
             isCurrent = false,
             isMovedToTrash = false,
             isPinned = false,
-            isSticky = false,
+            isStickyToStart = false,
+            isStickyToEnd = false,
             pinTime = null,
             dateCreationRaw = LocalDateTime.now()
         )
@@ -56,7 +73,6 @@ data class NoteFolderUi(
 fun NoteFolderUi.isDefaultId() = this.id == 0L
 
 fun List<NoteFolderUi>.sortStickyThenDescendingByPinTimeThenByDate() =
-    this.sortedWith(comparator = compareByDescending<NoteFolderUi> { it.isSticky }
-        .thenByDescending { it.pinTime }
+    this.sortedWith(comparator = compareByDescending<NoteFolderUi> { it.pinTime }
         .thenByDescending { it.dateCreationRaw }
     )
