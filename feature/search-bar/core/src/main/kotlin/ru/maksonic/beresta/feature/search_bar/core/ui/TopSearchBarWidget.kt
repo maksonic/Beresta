@@ -20,12 +20,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.feature.search_bar.api.TopSearchBarSharedUiState
+import ru.maksonic.beresta.feature.search_bar.api.setBarState
+import ru.maksonic.beresta.feature.search_bar.core.Eff
 import ru.maksonic.beresta.feature.search_bar.core.Model
 import ru.maksonic.beresta.feature.search_bar.core.Msg
 import ru.maksonic.beresta.feature.search_bar.core.SearchBarSandbox
@@ -41,6 +45,7 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemStatusBarHeight
+import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 
 /**
@@ -63,16 +68,16 @@ class TopSearchBarWidget : SearchBarApi.Ui {
         topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
         modifier: Modifier = Modifier
     ) {
+
+        HandleUiEffects(effects = sandbox.effects, sharedUiState = searchBarSharedUiState)
+
         val model = sandbox.model.collectAsStateWithLifecycle()
         val notesListSharedUiState = notesListFeatureApi.sharedUiState.state.collectAsState()
-        val searchSharedUiState = searchBarSharedUiState.state.collectAsStateWithLifecycle()
 
-        LaunchedEffect(searchSharedUiState.value.state) {
-            sandbox.send(Msg.Inner.UpdatedSearchBarState(searchSharedUiState.value.state))
-        }
-
-        LaunchedEffect(model.value.barState) {
-            searchBarSharedUiState.update { it.copy(state = model.value.barState) }
+        LaunchedEffect(notesListSharedUiState.value.isSelectionState) {
+            sandbox.send(
+                Msg.Inner.UpdatedSelectedBarState(notesListSharedUiState.value.isSelectionState)
+            )
         }
 
         Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -195,3 +200,14 @@ private fun ExpandableSearchBarLayer(
     }
 }
 
+@Composable
+private fun HandleUiEffects(
+    effects: Flow<Eff>,
+    sharedUiState: SharedUiState<TopSearchBarSharedUiState>,
+) {
+    HandleEffectsWithLifecycle(effects) { eff ->
+        when (eff) {
+            is Eff.UpdateSharedBarState -> sharedUiState.setBarState(eff.state)
+        }
+    }
+}

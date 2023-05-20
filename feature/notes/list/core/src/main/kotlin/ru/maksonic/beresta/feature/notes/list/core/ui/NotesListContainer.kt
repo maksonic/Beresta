@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.core.Eff
@@ -63,13 +64,15 @@ internal fun NotesListContainer(
     modifier: Modifier = Modifier,
     sandbox: NotesListSandbox = koinViewModel(),
     searchBarFeatureApi: SearchBarApi.Ui = get(),
+    notesFoldersFeatureApi: FoldersListApi.Ui = get(),
     topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
     sharedUiState: SharedUiState<NotesListSharedUiState>,
     router: MainScreenRouter
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
+    val foldersState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
 
-    HandleUiEffects(effects = sandbox.effects, router = router)
+    HandleUiEffects(effects = sandbox.effects, router = router, sharedUiState = sharedUiState)
 
     LaunchedEffect(Unit) {
         topBarCounterFeatureApi.topBarCounterSharedUiState.intiClickActions(
@@ -78,10 +81,8 @@ internal fun NotesListContainer(
         )
     }
 
-    LaunchedEffect(model.value.isSelectionState) {
-        val state =
-            if (model.value.isSelectionState) SearchBarState.Selected else SearchBarState.Collapsed
-        searchBarFeatureApi.searchBarSharedUiState.update { it.copy(state) }
+    LaunchedEffect(foldersState.value.currentFolderId) {
+        sandbox.send(Msg.Inner.FilteredNotesByFolder(foldersState.value.currentFolderId))
     }
 
     LaunchedEffect(model.value.selectedNotes) {
@@ -132,7 +133,10 @@ private fun NotesResultDataContent(
         BaseBottomBarItem(
             label = text.shared.btnTitleReplace,
             icon = AppIcon.MoveFolder,
-            action = { send(Msg.Ui.OnBarReplaceToFolderClicked) }),
+            action = {
+                send(Msg.Ui.OnBarReplaceToFolderClicked)
+                send(Msg.Ui.CancelSelectionState)
+            }),
         BaseBottomBarItem(
             label = text.shared.btnTitleRemove,
             icon = AppIcon.MoveTrash,
@@ -143,10 +147,9 @@ private fun NotesResultDataContent(
         send(Msg.Ui.CancelSelectionState)
     }
 
-    LaunchedEffect(model.isSelectionState) {
+    LaunchedEffect(Unit) {
         sharedUiState.update { state ->
             state.copy(
-                isSelectionState = model.isSelectionState,
                 selectBarActions = sharedBottomBarMessages,
                 onChangeGridCount = { send(Msg.Ui.OnChangeGridCountClicked) }
             )
@@ -223,10 +226,15 @@ private fun NotesResultDataContent(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: MainScreenRouter,
+    sharedUiState: SharedUiState<NotesListSharedUiState>
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.NavigateToEditNote -> router.toNoteEditor(eff.id)
+            is Eff.NavigateToFoldersWithMovingState -> router.toFoldersList(true)
+            is Eff.UpdateSharedUiIsSelectedState -> {
+                sharedUiState.update { it.copy(isSelectionState = eff.isSelectionState) }
+            }
         }
     }
 }

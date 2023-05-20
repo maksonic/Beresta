@@ -9,7 +9,7 @@ import ru.maksonic.beresta.navigation.router.Destination
 /**
  * @Author maksonic on 24.01.2023
  */
-abstract class AbstractNavigator {
+abstract class AbstractNavigator : ArgumentReceiver {
     lateinit var navController: NavHostController
 
     fun navigate(
@@ -39,9 +39,12 @@ abstract class AbstractNavigator {
     private fun NavBackStackEntry.lifecycleIsResumed() =
         this.getLifecycle().currentState == Lifecycle.State.RESUMED
 
-    fun getStringArgument(key: String): String =
-        navController.currentBackStackEntry?.arguments?.getString(key) ?: ""
+    override fun getBoolean(key: String): Boolean =
+        navController.currentBackStackEntry?.arguments?.getBoolean(key) ?: false
 
-    fun getLongArgument(key: String): Long =
+    override fun getLong(key: String): Long =
         navController.currentBackStackEntry?.arguments?.getLong(key) ?: 0
+
+    override fun getString(key: String): String =
+        navController.currentBackStackEntry?.arguments?.getString(key) ?: ""
 }

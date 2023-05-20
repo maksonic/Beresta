@@ -61,11 +61,15 @@ internal fun NotesFoldersScreenContent(
     Box(modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
+                val title = with(text.folders) {
+                    if (model.isMoveNotesToFolder) btnTitleSelectFolder else topBarTitle
+                }
+
                 topBarCounterApi.LargeWidget(
                     scrollBehavior = scrollBehavior,
                     isSelectionState = model.isSelectionState,
                     count = model.selectedFolders.count(),
-                    idleTitle = text.folders.topBarTitle,
+                    idleTitle = title,
                     onBackClicked = { send(Msg.Ui.OnTopBarBackPressed) },
                     onCancelSelectStateClicked = { send(Msg.Ui.CancelSelectionState) },
                     onSelectAllItemsClicked = { send(Msg.Ui.OnSelectAllFoldersClicked) })

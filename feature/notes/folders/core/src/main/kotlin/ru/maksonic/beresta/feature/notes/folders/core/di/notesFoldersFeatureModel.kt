@@ -29,7 +29,8 @@ val notesFoldersFeatureModel = module {
         FoldersListProgram(
             fetchFoldersUseCase = get(),
             mapper = get(),
-            foldersInteractor = get()
+            foldersInteractor = get(),
+            navigator = get()
         )
     }
     viewModel { FoldersScreenSandbox(program = get()) }

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(module.primary.ui.theme.path))
     implementation(project(module.primary.ui.widget.path))
     implementation(project(module.feature.notes.list.api.path))
+    implementation(project(module.feature.notes.folders.api.path))
     implementation(project(module.feature.searchBar.api.path))
     implementation(project(module.feature.topBarCounter.api.path))
     implementation(platform(lib.compose.bom))

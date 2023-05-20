@@ -14,12 +14,23 @@ import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
  */
 @Stable
 data class Model(
-    val base: BaseModel = BaseModel(isLoading = true),
-    val notes: NoteUi.Collection = NoteUi.Collection.Empty,
-    val searchList: NoteUi.Collection = NoteUi.Collection.Empty,
-    val searchQuery: String = "",
-    val barState: SearchBarState = SearchBarState.Collapsed,
-) : ElmModel
+    val base: BaseModel,
+    val notes: NoteUi.Collection,
+    val searchList: NoteUi.Collection,
+    val searchQuery: String,
+    val barState: SearchBarState,
+) : ElmModel {
+
+    companion object {
+        val Initial = Model(
+            base = BaseModel.InitialWithLoading,
+            notes = NoteUi.Collection.Empty,
+            searchList = NoteUi.Collection.Empty,
+            searchQuery = "",
+            barState = SearchBarState.Collapsed,
+        )
+    }
+}
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
@@ -29,15 +40,14 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class UpdatedSearchBarState(val state: SearchBarState): Inner()
+        data class UpdatedSelectedBarState(val isSelected: Boolean) : Inner()
         data class UpdatedUserInputQueryChanged(val updatedQuery: String) : Inner()
-        //    data class FetchedNotesCollection(val collection: NoteUi.Collection): Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchLang : Cmd()
 }
 
 sealed class Eff : ElmEffect {
+    data class UpdateSharedBarState(val state: SearchBarState) : Eff()
 }

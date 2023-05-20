@@ -15,5 +15,6 @@ data class LangFoldersListData(
     @SerializedName("hint_error_empty_folder_name") val hintErrorEmptyFolderName: String = "",
     @SerializedName("hint_removed_folders_count") val hintRemovedFoldersCount: String = "",
     @SerializedName("btn_title_crete_folder") val btnTitleCreateNewFolder: String = "",
+    @SerializedName("btn_title_select_folder") val btnTitleSelectFolder: String = "",
     @SerializedName("top_bar_title") val topBarTitle: String = ""
 )

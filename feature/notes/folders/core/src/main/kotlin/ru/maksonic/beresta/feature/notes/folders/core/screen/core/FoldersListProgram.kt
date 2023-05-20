@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 
+import android.util.Log
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
@@ -7,6 +8,8 @@ import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteract
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescendingByPinTimeThenByDate
+import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import java.time.LocalDateTime
 
 /**
@@ -16,6 +19,7 @@ class FoldersListProgram(
     private val fetchFoldersUseCase: FetchFoldersListUseCase,
     private val mapper: NoteFolderToUiMapper,
     private val foldersInteractor: NotesFoldersInteractor,
+    private val navigator: AppNavigator
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
@@ -25,11 +29,18 @@ class FoldersListProgram(
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
+            is Cmd.ListenMoveNotesToFolderPassedState -> fetchedPassedNotesMoveState(consumer)
             is Cmd.FetchFolders -> fetchFolders(consumer)
             is Cmd.RemoveSelected -> moveSelectedNotesToTrash(cmd.folders, consumer)
             is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.folders, consumer)
             is Cmd.UpdatePinnedFoldersInCache -> updatePinnedFolders(cmd.pinned)
         }
+    }
+
+    private fun fetchedPassedNotesMoveState(consumer: (Msg) -> Unit) {
+        val isMoveState = navigator.getBoolean(Destination.NotesFoldersList.passedKey)
+        Log.e("AAA", "$isMoveState")
+        consumer(Msg.Inner.FetchedPassedNotesMoveState(isMoveState))
     }
 
     private suspend fun fetchFolders(consumer: (Msg) -> Unit) {

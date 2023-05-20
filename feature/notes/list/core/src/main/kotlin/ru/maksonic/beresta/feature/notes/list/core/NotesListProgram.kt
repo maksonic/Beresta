@@ -1,8 +1,11 @@
 package ru.maksonic.beresta.feature.notes.list.core
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import ru.maksonic.beresta.elm.ElmProgram
+import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi

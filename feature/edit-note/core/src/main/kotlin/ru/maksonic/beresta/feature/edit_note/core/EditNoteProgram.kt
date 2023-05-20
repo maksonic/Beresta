@@ -28,7 +28,7 @@ class EditNoteProgram(
     }
 
     private suspend fun fetchNote(consumer: (Msg) -> Unit) {
-        val id = navigator.getLongArgument(Destination.EditNote.passedKey)
+        val id = navigator.getLong(Destination.EditNote.passedKey)
 
         runCatching {
             fetchNoteByIdUseCase(id).collect { noteDomain ->

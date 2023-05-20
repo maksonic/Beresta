@@ -10,5 +10,5 @@ object Destination : AbstractDestination("root") {
     object EditNote : AbstractDestination("edit_note", argKey = "noteId")
     object Settings : AbstractDestination("settings")
     object TrashList : AbstractDestination("trash_list")
-    object NotesFoldersList : AbstractDestination("notes_folders_list")
+    object NotesFoldersList : AbstractDestination("notes_folders_list", argKey = "isMoveNotes")
 }

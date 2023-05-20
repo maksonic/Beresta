@@ -14,7 +14,6 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         message = i.message,
         dateCreationRaw = i.dateCreation,
         dateCreation = "",
-        currentFolder = i.currentFolder,
         isPinned = i.isPinned,
         pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash
@@ -25,7 +24,6 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         title = o.title,
         message = o.message,
         dateCreation = o.dateCreationRaw,
-        currentFolder = o.currentFolder,
         isPinned = o.isPinned,
         pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash

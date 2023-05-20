@@ -14,7 +14,6 @@ data class NoteDomain(
     val title: String = "",
     val message: String = "",
     val dateCreation: LocalDateTime = LocalDateTime.now(),
-    val currentFolder: String = "",
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
     val pinTime: LocalDateTime? = null,

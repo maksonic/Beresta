@@ -11,11 +11,12 @@ private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchFolders),
+    initialCmd = setOf(Cmd.FetchFolders, Cmd.ListenMoveNotesToFolderPassedState),
     subscriptions = listOf(program)
 ) {
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchedPassedNotesMoveState -> fetchedPassedNotesMoveState(model, msg)
         is Msg.Inner.FetchedFoldersResult -> fetchedData(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnFolderClicked -> onFolderClicked(model, msg)
@@ -31,6 +32,13 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
     }
+
+    private fun fetchedPassedNotesMoveState(
+        model: Model,
+        msg: Msg.Inner.FetchedPassedNotesMoveState
+    ): UpdateResult =
+        UpdatedModel(model.copy(isMoveNotesToFolder = msg.isMove))
+
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult =
         UpdatedModel(

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -31,6 +30,7 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
+import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.Eff
 import ru.maksonic.beresta.screen.main.MainSandbox
@@ -92,16 +92,16 @@ private fun MainContent(
     router: MainScreenRouter,
     modifier: Modifier = Modifier
 ) {
-    val notesListSharedState = notesListFeatureApi.sharedUiState.state.collectAsState()
-    val notesFoldersSharedState = notesFoldersFeatureApi.sharedUiState.state.collectAsState()
-    val searchBarSharedUiState = searchBarApi.searchBarSharedUiState.state.collectAsState()
+    val notesListState = notesListFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val notesFoldersState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val searchBarState = searchBarApi.searchBarSharedUiState.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(notesListSharedState.value.isSelectionState) {
-        send(Msg.Inner.UpdateBottomPanelState(notesListSharedState.value.isSelectionState))
+    LaunchedEffect(notesListState.value.isSelectionState) {
+        send(Msg.Inner.UpdateBottomPanelState(notesListState.value.isSelectionState))
     }
 
-    LaunchedEffect(notesFoldersSharedState.value.currentFolderId) {
-        send(Msg.Inner.UpdateCurrentSelectedFolder(notesFoldersSharedState.value.currentFolderId))
+    LaunchedEffect(notesFoldersState.value.currentFolderId) {
+        send(Msg.Inner.UpdateCurrentSelectedFolder(notesFoldersState.value.currentFolderId))
     }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
@@ -111,27 +111,27 @@ private fun MainContent(
             notesList = notesListFeatureApi,
             notesFolders = notesFoldersFeatureApi,
             router = router,
-            isVisibleFirstNote = notesListSharedState.value.isVisibleFirstNote,
-            isScrollUp = notesListSharedState.value.isScrollUp,
+            isVisibleFirstNote = notesListState.value.isVisibleFirstNote,
+            isScrollUp = notesListState.value.isScrollUp,
             currentSelectedFolderId = model.currentSelectedFolderId
         )
 
         BottomBarLayer(
             state = model.bottomBarState,
             send = send,
-            notesListSharedUiState = notesListSharedState,
+            notesListSharedUiState = notesListState,
         )
 
         searchBarApi.Widget()
 
         EditNoteFabLayer(
             editNoteFeatureApi = editNoteFeatureApi,
-            isExpandedSearchBar = searchBarSharedUiState.value.state == SearchBarState.Expanded,
-            isSelectionState = notesListSharedState.value.isSelectionState
+            isExpandedSearchBar = searchBarState.value.state.isExpanded,
+            isSelectionState = notesListState.value.isSelectionState
         )
 
         AnimateFadeInOut(
-            notesFoldersSharedState.value.isVisibleDialog,
+            notesFoldersState.value.isVisibleDialog,
             fadeInDuration = Theme.animSpeed.dialogVisibility,
             fadeOutDuration = Theme.animSpeed.dialogVisibility
         ) {
@@ -215,14 +215,14 @@ private fun HandleUiEffects(
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
+            is Eff.UpdateFolderSelection -> {
+                foldersSharedUiState.updateCurrentSelectedFolder(eff.currentSelectedId)
+            }
             is Eff.NavigateToAddNewNote -> router.toNoteEditor(0)
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
-            is Eff.NavigateToFoldersList -> router.toFoldersList()
-            is Eff.UpdateFolderSelection -> {
-                foldersSharedUiState.updateCurrentSelectedFolder(eff.currentSelectedId)
-            }
+            is Eff.NavigateToFoldersList -> router.toFoldersList(false)
         }
     }
 }

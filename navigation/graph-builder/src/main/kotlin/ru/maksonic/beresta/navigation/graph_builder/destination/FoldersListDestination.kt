@@ -4,6 +4,8 @@ import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.composable
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.navigation.router.Destination
@@ -19,7 +21,10 @@ internal fun NavGraphBuilder.foldersListScreen(
     defAnimSpeed: Int
 ) {
     composable(
-        route = Destination.NotesFoldersList.route,
+        route = Destination.NotesFoldersList.routeWithArg,
+        arguments = listOf(navArgument(Destination.NotesFoldersList.passedKey) {
+            type = NavType.BoolType
+        }),
         enterTransition = {
             when (initialState.destination.route) {
                 Destination.Main.route ->
@@ -27,6 +32,7 @@ internal fun NavGraphBuilder.foldersListScreen(
                         AnimatedContentScope.SlideDirection.Up,
                         animationSpec = tween(defAnimSpeed)
                     )
+
                 else -> null
             }
         },
@@ -37,6 +43,7 @@ internal fun NavGraphBuilder.foldersListScreen(
                         AnimatedContentScope.SlideDirection.Down,
                         animationSpec = tween(defAnimSpeed)
                     )
+
                 else -> null
             }
         }

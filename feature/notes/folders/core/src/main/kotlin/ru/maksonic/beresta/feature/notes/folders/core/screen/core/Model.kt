@@ -21,6 +21,7 @@ data class Model(
     val isSelectionState: Boolean,
     val isShowUnpinBottomBarIcon: Boolean,
     val isVisibleRemovedSnackBar: Boolean,
+    val isMoveNotesToFolder: Boolean,
     ) : ElmModel {
 
     companion object {
@@ -31,7 +32,8 @@ data class Model(
             currentSelectedFolderId = NoteFolderUi.StartListFolder.id,
             isSelectionState = false,
             isShowUnpinBottomBarIcon = false,
-            isVisibleRemovedSnackBar = false
+            isVisibleRemovedSnackBar = false,
+            isMoveNotesToFolder = false,
         )
     }
 }
@@ -55,10 +57,12 @@ sealed class Msg : ElmMessage {
         data class UpdateCurrentSelectedFolder(val id: Long): Inner()
         object ShowRemovedNotesSnackBar : Inner()
         object HideRemovedNotesSnackBar : Inner()
+        data class FetchedPassedNotesMoveState(val isMove: Boolean) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
+    object ListenMoveNotesToFolderPassedState : Cmd()
     object FetchFolders : Cmd()
     data class RemoveSelected(val folders: List<NoteFolderUi>) : Cmd()
     data class UndoRemoveNotes(val folders: List<NoteFolderUi>) : Cmd()

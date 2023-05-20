@@ -9,6 +9,13 @@ enum class SearchBarState {
     Collapsed, Expanded, Selected
 }
 
+val SearchBarState.isCollapsed: Boolean
+    get() = this == SearchBarState.Collapsed
+
+val SearchBarState.isExpanded: Boolean
+    get() = this == SearchBarState.Expanded
+
+
 data class TopSearchBarSharedUiState(val state: SearchBarState) {
     companion object {
         private val DefaultState = TopSearchBarSharedUiState(SearchBarState.Collapsed)
@@ -16,3 +23,6 @@ data class TopSearchBarSharedUiState(val state: SearchBarState) {
         val Initial = object : SharedUiState<TopSearchBarSharedUiState>(DefaultState) {}
     }
 }
+
+fun SharedUiState<TopSearchBarSharedUiState>.setBarState(state: SearchBarState) =
+    this.update { it.copy(state = state) }

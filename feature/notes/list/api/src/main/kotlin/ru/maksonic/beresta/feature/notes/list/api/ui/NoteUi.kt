@@ -14,11 +14,11 @@ data class NoteUi(
     val dateCreationRaw: LocalDateTime,
     val dateCreation: String,
     val backgroundId: Int = 0,
-    val currentFolder: String,
     val isSelected: Boolean = false,
     val isPinned: Boolean,
     val pinTime: LocalDateTime?,
-    val isMovedToTrash: Boolean
+    val isMovedToTrash: Boolean,
+    val folderId: Long = 0
 ) {
     companion object {
         val Default = NoteUi(
@@ -28,7 +28,6 @@ data class NoteUi(
             dateCreationRaw = LocalDateTime.now(),
             dateCreation = "",
             backgroundId = 0,
-            currentFolder = "",
             isSelected = false,
             isPinned = false,
             pinTime = null,

@@ -7,9 +7,9 @@ import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
+import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
-import java.util.LinkedList
 
 /**
  * @Author maksonic on 24.04.2023
@@ -27,6 +27,7 @@ data class Model(
     val gridCount: Int,
     val isVisibleRemovedSnackBar: Boolean,
     val currentAppLanguage: AppLanguage,
+    val currentSelectedFolderId: Long = NoteFolderUi.StartListFolder.id,
 
     ): ElmModel {
 
@@ -66,6 +67,7 @@ sealed class Msg : ElmMessage {
         object ShowRemovedNotesSnackBar : Inner()
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedCurrentAppLang(val language: AppLanguage): Inner()
+        data class FilteredNotesByFolder(val id: Long): Inner()
     }
 }
 
@@ -79,4 +81,6 @@ sealed class Cmd : ElmCommand {
 
 sealed class Eff : ElmEffect {
     data class NavigateToEditNote(val id: Long) : Eff()
+    object NavigateToFoldersWithMovingState : Eff()
+    data class UpdateSharedUiIsSelectedState(val isSelectionState: Boolean) : Eff()
 }

@@ -10,14 +10,14 @@ import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model()) {
+class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Initial) {
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnCollapseSearchBarClicked -> onCollapseSearchBarClicked(model)
         is Msg.Ui.OnExpandSearchBarClicked -> onExpandSearchBarClicked(model)
+        is Msg.Inner.UpdatedSelectedBarState -> updatedSelectedBarState(model, msg)
         is Msg.Inner.UpdatedUserInputQueryChanged -> updatedInputField(model, msg)
         is Msg.Ui.OnClearInputQueryClicked -> onClearQueryClicked(model)
-        is Msg.Inner.UpdatedSearchBarState -> updatedSearchBarState(model, msg)
     }
 
     private fun onCollapseSearchBarClicked(model: Model): UpdateResult =
@@ -26,11 +26,38 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model()) {
                 barState = SearchBarState.Collapsed,
                 searchQuery = "",
                 searchList = model.searchList.copy(emptyList())
-            )
+            ),
+            effects = setOf(Eff.UpdateSharedBarState(SearchBarState.Collapsed))
         )
 
     private fun onExpandSearchBarClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(barState = SearchBarState.Expanded))
+        UpdatedModel(
+            model.copy(barState = SearchBarState.Expanded),
+            effects = setOf(Eff.UpdateSharedBarState(SearchBarState.Expanded))
+        )
+
+    private fun updatedSelectedBarState(
+        model: Model,
+        msg: Msg.Inner.UpdatedSelectedBarState
+    ): UpdateResult {
+        val barState = when (model.barState) {
+            SearchBarState.Collapsed -> {
+                if (msg.isSelected) SearchBarState.Selected else SearchBarState.Collapsed
+            }
+
+            SearchBarState.Selected -> {
+                if (msg.isSelected) SearchBarState.Selected else SearchBarState.Collapsed
+            }
+
+            else -> SearchBarState.Expanded
+        }
+
+
+        return UpdatedModel(
+            model.copy(barState = barState),
+            effects = setOf(Eff.UpdateSharedBarState(barState))
+        )
+    }
 
     private fun updatedInputField(
         model: Model,
@@ -60,10 +87,4 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model()) {
             else -> false
         }
     }
-
-    private fun updatedSearchBarState(
-        model: Model,
-        msg: Msg.Inner.UpdatedSearchBarState
-    ): UpdateResult =
-        UpdatedModel(model.copy(barState = msg.state))
 }

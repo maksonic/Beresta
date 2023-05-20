@@ -18,7 +18,6 @@ data class NoteCache(
     val title: String = "",
     val message: String = "",
     val dateCreation: LocalDateTime = LocalDateTime.now(),
-    val currentFolder: String = "",
     val isPinned: Boolean = false,
     val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false

@@ -30,6 +30,7 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         is Msg.Inner.ShowRemovedNotesSnackBar -> showRemoveNotesSnackBar(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Inner.FetchedCurrentAppLang -> applyLangToNotesDatestamp(model, msg)
+        is Msg.Inner.FilteredNotesByFolder -> filteredNotesByCurrentSelectedFolder(model, msg)
     }
 
     private fun fetchedResultData(model: Model, msg: Msg.Inner.FetchedResultData): UpdateResult =
@@ -77,7 +78,8 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
                 selectedNotes = selected,
                 isSelectionState = selected.isNotEmpty(),
                 isShowUnpinMainBarIcon = isShowUnpinButton
-            )
+            ),
+            effects = setOf(Eff.UpdateSharedUiIsSelectedState(selected.isNotEmpty()))
         )
     }
 
@@ -97,7 +99,8 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
                 removedNotes = removed,
                 isSelectionState = false,
             ),
-            commands = setOf(Cmd.RemoveSelected(removed.toList()))
+            commands = setOf(Cmd.RemoveSelected(removed.toList())),
+            effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
         )
     }
 
@@ -112,7 +115,7 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     }
 
     private fun onBarReplaceToFolderClicked(model: Model): UpdateResult =
-        UpdatedModel(model)
+        UpdatedModel(model, effects = setOf(Eff.NavigateToFoldersWithMovingState))
 
     private fun onSelectAllNotesClicked(model: Model): UpdateResult {
         val selected = model.selectedNotes.toMutableSet().also { list ->
@@ -126,7 +129,8 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
                 selectedNotes = selected,
                 isSelectionState = selected.isNotEmpty(),
                 isShowUnpinMainBarIcon = isShowUnpinButton
-            )
+            ),
+            effects = setOf(Eff.UpdateSharedUiIsSelectedState(selected.isNotEmpty()))
         )
     }
 
@@ -134,7 +138,10 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         UpdatedModel(model)
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(selectedNotes = emptySet(), isSelectionState = false))
+        UpdatedModel(
+            model.copy(selectedNotes = emptySet(), isSelectionState = false),
+            effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
+        )
 
     private fun onChangeGridCountClicked(model: Model): UpdateResult {
         return UpdatedModel(model.copy(gridCount = if (model.gridCount == 1) 2 else 1))
@@ -164,4 +171,14 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         model: Model,
         msg: Msg.Inner.FetchedCurrentAppLang
     ): UpdateResult = UpdatedModel(model.copy(currentAppLanguage = msg.language))
+
+    private fun filteredNotesByCurrentSelectedFolder(
+        model: Model,
+        msg: Msg.Inner.FilteredNotesByFolder
+    ): UpdateResult = UpdatedModel(
+        model.copy(
+            currentSelectedFolderId = msg.id,
+            notes = model.notes.copy(model.notes.data.filter { it.folderId == msg.id })
+        )
+    )
 }

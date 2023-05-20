@@ -56,6 +56,6 @@ sealed class Eff : ElmEffect {
     object NavigateToSettings : Eff()
     object NavigateToTrash : Eff()
     data class ShowNoteForEdit(val id: Long) : Eff()
-    object NavigateToFoldersList : Eff()
     data class UpdateFolderSelection(val currentSelectedId: Long) : Eff()
+    object NavigateToFoldersList : Eff()
 }
