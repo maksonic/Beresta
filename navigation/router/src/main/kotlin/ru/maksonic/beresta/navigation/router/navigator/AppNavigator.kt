@@ -27,8 +27,12 @@ class AppNavigator : AbstractNavigator(), Router {
             val noteId = passedId ?: 0L
             navigate(entry, Destination.EditNote.passedArgs(noteId))
         },
-        toFoldersList = { navigate(entry, Destination.NotesFoldersList.passedArgs(it)) }
+        toFoldersList = { isMoveNotesToFolderState, currentSelectedFolderId ->
+            val args = listOf(isMoveNotesToFolderState, currentSelectedFolderId)
+            navigate(entry, Destination.NotesFoldersList.passedListArgs(args))
+        }
     )
+
     override fun editNoteRouter(entry: NavBackStackEntry) = EditNoteRouter(onBack = ::backPressed)
 
     override fun settingsRouter(entry: NavBackStackEntry) = SettingsScreenRouter(

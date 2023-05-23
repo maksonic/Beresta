@@ -15,7 +15,10 @@ class NoteFolderCacheMapper : DataMapper<NoteFolderCache, NoteFolderDomain> {
         isPinned = i.isPinned,
         isSticky = i.isSticky,
         pinTime = i.pinTime,
-        dateCreation = i.dateCreation
+        dateCreation = i.dateCreation,
+        isSelectable = i.isSelectable,
+        isStickyToStart = i.isStickyToStart,
+        isStickyToEnd = i.isStickyToEnd
     )
 
     override fun domainToData(o: NoteFolderDomain) = NoteFolderCache(
@@ -26,5 +29,8 @@ class NoteFolderCacheMapper : DataMapper<NoteFolderCache, NoteFolderDomain> {
         isSticky = o.isSticky,
         pinTime = o.pinTime,
         dateCreation = o.dateCreation,
+        isSelectable = o.isSelectable,
+        isStickyToStart = o.isStickyToStart,
+        isStickyToEnd = o.isStickyToEnd
     )
 }

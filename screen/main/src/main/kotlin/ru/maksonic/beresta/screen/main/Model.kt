@@ -22,7 +22,7 @@ data class Model(
     val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
     val isShowBottomBarUnpinBtn: Boolean = false,
     val filters: NoteFolderUi.Collection = NoteFolderUi.Collection.Empty,
-    val currentSelectedFolderId: Long = NoteFolderUi.StartListFolder.id,
+    val currentSelectedFolderId: Long = 1L,
     ) : ElmModel
 
 sealed class Msg : ElmMessage {
@@ -56,6 +56,6 @@ sealed class Eff : ElmEffect {
     object NavigateToSettings : Eff()
     object NavigateToTrash : Eff()
     data class ShowNoteForEdit(val id: Long) : Eff()
-    data class UpdateFolderSelection(val currentSelectedId: Long) : Eff()
-    object NavigateToFoldersList : Eff()
+    data class UpdateCurrentSelectedFolderInSharedState(val id: Long) : Eff()
+    data class NavigateToFoldersList(val currentSelectedFolderId: Long) : Eff()
 }

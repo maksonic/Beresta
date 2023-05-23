@@ -14,39 +14,14 @@ data class NoteFolderUi(
     val isCurrent: Boolean = false,
     val isMovedToTrash: Boolean,
     val isPinned: Boolean,
+    val pinTime: LocalDateTime?,
+    val dateCreationRaw: LocalDateTime,
     val isSelectable: Boolean = true,
     val isStickyToStart: Boolean = false,
     val isStickyToEnd: Boolean = false,
-    val pinTime: LocalDateTime?,
-    val dateCreationRaw: LocalDateTime,
+    val notesCount: Int = 0,
 ) {
     companion object {
-        val StartListFolder = NoteFolderUi(
-            id = 0,
-            title = "All",
-            isSelected = true,
-            isCurrent = true,
-            isPinned = false,
-            isMovedToTrash = false,
-            isSelectable = false,
-            isStickyToStart = true,
-            isStickyToEnd = false,
-            pinTime = null,
-            dateCreationRaw = LocalDateTime.now()
-        )
-        val EndListFolder = NoteFolderUi(
-            id = 1,
-            title = "Without category",
-            isSelected = false,
-            isCurrent = false,
-            isPinned = false,
-            isMovedToTrash = false,
-            isSelectable = false,
-            isStickyToStart = false,
-            isStickyToEnd = true,
-            pinTime = null,
-            dateCreationRaw = LocalDateTime.now()
-        )
         val Empty = NoteFolderUi(
             id = 0,
             title = "",
@@ -57,7 +32,8 @@ data class NoteFolderUi(
             isStickyToStart = false,
             isStickyToEnd = false,
             pinTime = null,
-            dateCreationRaw = LocalDateTime.now()
+            dateCreationRaw = LocalDateTime.now(),
+            notesCount = 0
         )
     }
 
@@ -73,6 +49,8 @@ data class NoteFolderUi(
 fun NoteFolderUi.isDefaultId() = this.id == 0L
 
 fun List<NoteFolderUi>.sortStickyThenDescendingByPinTimeThenByDate() =
-    this.sortedWith(comparator = compareByDescending<NoteFolderUi> { it.pinTime }
+    this.sortedWith(comparator = compareByDescending<NoteFolderUi> { it.isStickyToStart }
+        .thenByDescending { it.pinTime }
         .thenByDescending { it.dateCreationRaw }
+        .thenByDescending { it.isStickyToEnd }
     )

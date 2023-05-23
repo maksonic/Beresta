@@ -45,6 +45,9 @@ abstract class AbstractNavigator : ArgumentReceiver {
     override fun getLong(key: String): Long =
         navController.currentBackStackEntry?.arguments?.getLong(key) ?: 0
 
+    override fun getLongArray(key: String): LongArray? =
+        navController.currentBackStackEntry?.arguments?.getLongArray(key)
+
     override fun getString(key: String): String =
         navController.currentBackStackEntry?.arguments?.getString(key) ?: ""
 }

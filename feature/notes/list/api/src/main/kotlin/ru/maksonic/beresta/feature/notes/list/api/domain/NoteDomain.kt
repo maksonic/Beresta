@@ -17,5 +17,6 @@ data class NoteDomain(
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
     val pinTime: LocalDateTime? = null,
-    val isMovedToTrash: Boolean = false
+    val isMovedToTrash: Boolean = false,
+    val folderId: Long = 2L
 )

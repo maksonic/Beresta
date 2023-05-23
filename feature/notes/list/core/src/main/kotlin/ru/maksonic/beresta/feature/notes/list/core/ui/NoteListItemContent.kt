@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,8 +110,16 @@ private fun CardContent(
     maxTitleLength: Int,
     maxMessageLength: Int,
     currentAppLanguage: AppLanguage,
+    isPlaceholder: Boolean = false,
     formatter: NoteDateFormatter = get(),
-    ) {
+) {
+    val date = rememberUpdatedState(
+        formatter.fetchFormattedUiDate(
+            note.dateCreationRaw,
+            currentAppLanguage
+        )
+    )
+
     Text(
         text = note.title.take(maxTitleLength),
         style = TextDesign.title.copy(color = onPrimaryContainer),
@@ -127,7 +136,7 @@ private fun CardContent(
         modifier = modifier.padding(top = dp8, end = dp8)
     )
     Text(
-        text = formatter.fetchFormattedUiDate(note.dateCreationRaw, currentAppLanguage),
+        text = if (isPlaceholder) "" else date.value,
         style = TextDesign.captionSmall.copy(color = inverseSurface),
         modifier = modifier.padding(top = dp16, bottom = dp24)
     )
@@ -197,7 +206,8 @@ internal fun NoteItemPlaceholder(enterDelay: Int, exitDelay: Int, modifier: Modi
             note = NoteUi.Preview,
             maxTitleLength = 0,
             maxMessageLength = 0,
-            currentAppLanguage = AppLanguage.ENGLISH
+            currentAppLanguage = AppLanguage.ENGLISH,
+            isPlaceholder = true
         )
     }
 }

@@ -7,7 +7,6 @@ import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
-import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 
@@ -27,9 +26,9 @@ data class Model(
     val gridCount: Int,
     val isVisibleRemovedSnackBar: Boolean,
     val currentAppLanguage: AppLanguage,
-    val currentSelectedFolderId: Long = NoteFolderUi.StartListFolder.id,
+    val currentSelectedFolderId: Long = 1L,
 
-    ): ElmModel {
+    ) : ElmModel {
 
     companion object {
         val Initial = Model(
@@ -61,13 +60,14 @@ sealed class Msg : ElmMessage {
         object OnSnackUndoRemoveNotesClicked : Ui()
 
     }
+
     sealed class Inner : Msg() {
-        data class FetchedResultData(val notes: NoteUi.Collection): Inner()
-        data class FetchedResultError(val errorMsg: String = ""): Inner()
+        data class FetchedResultData(val notes: NoteUi.Collection) : Inner()
+        data class FetchedResultError(val errorMsg: String = "") : Inner()
         object ShowRemovedNotesSnackBar : Inner()
         object HideRemovedNotesSnackBar : Inner()
-        data class FetchedCurrentAppLang(val language: AppLanguage): Inner()
-        data class FilteredNotesByFolder(val id: Long): Inner()
+        data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
+        data class FetchedCurrentFolderIdByPassedState(val id: Long) : Inner()
     }
 }
 
@@ -81,6 +81,8 @@ sealed class Cmd : ElmCommand {
 
 sealed class Eff : ElmEffect {
     data class NavigateToEditNote(val id: Long) : Eff()
-    object NavigateToFoldersWithMovingState : Eff()
+    data class NavigateToFoldersWithMovingState(val currentSelectedFolderId: Long) : Eff()
     data class UpdateSharedUiIsSelectedState(val isSelectionState: Boolean) : Eff()
+    data class UpdateSharedUiIsEnabledBottomBarState(val isEnabled: Boolean) : Eff()
+    data class UpdatePassedNotesSharedState(val notes: List<NoteUi>) : Eff()
 }

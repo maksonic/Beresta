@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes.folders.core.screen.ui
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +12,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
@@ -23,6 +24,9 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.updateCurrentSelectedFol
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Eff
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
+import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
+import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
+import ru.maksonic.beresta.feature.notes.list.api.ui.updatePassedList
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
@@ -42,10 +46,12 @@ internal fun NotesFoldersScreenContent(
     model: Model,
     send: SendMessage,
     notesFoldersFeatureApi: FoldersListApi.Ui,
+    notesListApi: NotesListApi.Ui,
     topBarCounterApi: TopBarCounterApi.Ui,
     modifier: Modifier = Modifier
 ) {
-    val sharedUiState = notesFoldersFeatureApi.sharedUiState.state.collectAsState()
+    val sharedUiState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val notesListSharedUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val scrollState = rememberLazyListState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -54,8 +60,13 @@ internal fun NotesFoldersScreenContent(
         send(Msg.Ui.CancelSelectionState)
     }
 
-    LaunchedEffect(sharedUiState.value.currentFolderId) {
-        send(Msg.Inner.UpdateCurrentSelectedFolder(sharedUiState.value.currentFolderId))
+    LaunchedEffect(Unit) {
+        if (model.isMoveNotesToFolder)
+            send(
+                Msg.Inner.FetchedPassedReplaceNotesState(
+                    notesListSharedUiState.value.passedToFolderNotes
+                )
+            )
     }
 
     Box(modifier.fillMaxSize()) {
@@ -103,6 +114,7 @@ internal fun HandleUiEffects(
     effects: Flow<Eff>,
     router: NotesFoldersScreenRouter,
     sharedUiState: SharedUiState<FoldersSharedUiState>,
+    notesListSharedState: SharedUiState<NotesListSharedUiState>,
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
@@ -111,6 +123,8 @@ internal fun HandleUiEffects(
             is Eff.UpdateCurrentSelectedFolderInSharedState -> {
                 sharedUiState.updateCurrentSelectedFolder(eff.id)
             }
+
+            is Eff.ClearPassedForReplaceNotes -> notesListSharedState.updatePassedList(emptyList())
         }
     }
 }

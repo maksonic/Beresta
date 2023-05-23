@@ -17,7 +17,6 @@ class MainSandbox(
     initialCmd = setOf(Cmd.FetchFoldersChips),
     subscriptions = listOf(mainProgram)
 ) {
-
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnCreateNewNoteClicked -> onAddNoteClicked(model)
         is Msg.Ui.OnShareSelectedNotes -> onShareSelectedNotesClicked(model)
@@ -44,7 +43,10 @@ class MainSandbox(
         UpdatedModel(model, effects = setOf(Eff.NavigateToTrash))
 
     private fun onFoldersListClicked(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.NavigateToFoldersList))
+        UpdatedModel(
+            model,
+            effects = setOf(Eff.NavigateToFoldersList(model.currentSelectedFolderId))
+        )
 
     private fun onSwitchGridCountClicked(model: Model): UpdateResult {
         return UpdatedModel(model)
@@ -60,13 +62,21 @@ class MainSandbox(
         return UpdatedModel(model.copy(bottomBarState = state))
     }
 
-    private fun fetchedChipsResult(model: Model, msg: Msg.Inner.FetchedChipsResult): UpdateResult =
-        UpdatedModel(model.copy(filters = NoteFolderUi.Collection(msg.chips)))
+    private fun fetchedChipsResult(model: Model, msg: Msg.Inner.FetchedChipsResult): UpdateResult {
+        val initialSelectedChipId = msg.chips.find { it.isStickyToStart }?.id ?: 0
+
+        return UpdatedModel(
+            model.copy(
+                filters = NoteFolderUi.Collection(msg.chips),
+                currentSelectedFolderId = initialSelectedChipId
+            ),
+        )
+    }
 
     private fun onFilterChipClicked(model: Model, msg: Msg.Ui.OnChipFilterClicked): UpdateResult =
         UpdatedModel(
             model = model.copy(currentSelectedFolderId = msg.id),
-            effects = setOf(Eff.UpdateFolderSelection(msg.id))
+            effects = setOf(Eff.UpdateCurrentSelectedFolderInSharedState(msg.id))
         )
 
     private fun updatedCurrentSelectedFolder(

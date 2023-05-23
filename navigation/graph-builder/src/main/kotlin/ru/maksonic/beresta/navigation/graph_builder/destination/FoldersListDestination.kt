@@ -21,10 +21,16 @@ internal fun NavGraphBuilder.foldersListScreen(
     defAnimSpeed: Int
 ) {
     composable(
-        route = Destination.NotesFoldersList.routeWithArg,
-        arguments = listOf(navArgument(Destination.NotesFoldersList.passedKey) {
-            type = NavType.BoolType
-        }),
+        route = Destination.NotesFoldersList.routeWithListArgs,
+        arguments = listOf(
+            navArgument(Destination.NotesFoldersList.passedListKey.first()) {
+                type = NavType.BoolType
+            },
+            navArgument(Destination.NotesFoldersList.passedListKey.last()) {
+                type = NavType.LongType
+                defaultValue = -1
+            },
+        ),
         enterTransition = {
             when (initialState.destination.route) {
                 Destination.Main.route ->

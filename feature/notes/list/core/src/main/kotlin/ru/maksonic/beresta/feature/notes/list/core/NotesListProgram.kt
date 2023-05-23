@@ -39,6 +39,7 @@ class NotesListProgram(
     }
 
     private suspend fun fetchNotesList(consumer: (Msg) -> Unit) {
+        delay(3000)
         runCatching {
             fetchNotesUseCase().collect { notesDomain ->
                 val notes = mapper.mapListTo(notesDomain).sortDescendingByPinTimeThenByDate()

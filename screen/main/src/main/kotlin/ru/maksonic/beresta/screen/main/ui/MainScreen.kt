@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -29,7 +30,6 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.Eff
@@ -93,7 +93,7 @@ private fun MainContent(
     modifier: Modifier = Modifier
 ) {
     val notesListState = notesListFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
-    val notesFoldersState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val notesFoldersState = notesFoldersFeatureApi.sharedUiState.state.collectAsState()
     val searchBarState = searchBarApi.searchBarSharedUiState.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(notesListState.value.isSelectionState) {
@@ -215,14 +215,16 @@ private fun HandleUiEffects(
 ) {
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Eff.UpdateFolderSelection -> {
-                foldersSharedUiState.updateCurrentSelectedFolder(eff.currentSelectedId)
+            is Eff.UpdateCurrentSelectedFolderInSharedState -> {
+                foldersSharedUiState.updateCurrentSelectedFolder(eff.id)
             }
             is Eff.NavigateToAddNewNote -> router.toNoteEditor(0)
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
-            is Eff.NavigateToFoldersList -> router.toFoldersList(false)
+            is Eff.NavigateToFoldersList -> {
+                router.toFoldersList(false, eff.currentSelectedFolderId)
+            }
         }
     }
 }

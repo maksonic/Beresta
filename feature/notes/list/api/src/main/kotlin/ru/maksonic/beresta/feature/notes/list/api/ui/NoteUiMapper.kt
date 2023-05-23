@@ -13,10 +13,10 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         title = i.title,
         message = i.message,
         dateCreationRaw = i.dateCreation,
-        dateCreation = "",
         isPinned = i.isPinned,
         pinTime = i.pinTime,
-        isMovedToTrash = i.isMovedToTrash
+        isMovedToTrash = i.isMovedToTrash,
+        folderId = i.folderId
     )
 
     override fun mapFrom(o: NoteUi) = NoteDomain(
@@ -26,6 +26,7 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         dateCreation = o.dateCreationRaw,
         isPinned = o.isPinned,
         pinTime = o.pinTime,
-        isMovedToTrash = o.isMovedToTrash
+        isMovedToTrash = o.isMovedToTrash,
+        folderId = o.folderId
     )
 }

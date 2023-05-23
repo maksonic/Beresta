@@ -19,13 +19,15 @@ data class Model(
     val isEntryPoint: Boolean,
     val isExpandedFab: Boolean,
     val currentNote: NoteUi,
-) : ElmModel {
+    val currentSelectedFolderId: Long,
+    ) : ElmModel {
     companion object {
         val Initial = Model(
             base = BaseModel.InitialWithLoading,
             isEntryPoint = false,
             isExpandedFab = false,
             currentNote = NoteUi.Default,
+            currentSelectedFolderId = 0L
         )
     }
 }
@@ -49,6 +51,7 @@ sealed class Msg : ElmMessage {
         data class FetchedPassedNoteResult(val note: NoteUi) : Inner()
         data class UpdatedCurrentNoteTitle(val text: String) : Inner()
         data class UpdatedCurrentNoteMessage(val text: String) : Inner()
+        data class FetchedPassedCurrentFolderId(val id: Long) : Inner()
     }
 }
 

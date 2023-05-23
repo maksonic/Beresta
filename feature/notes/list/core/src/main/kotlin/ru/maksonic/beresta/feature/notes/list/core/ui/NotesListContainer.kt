@@ -25,14 +25,13 @@ import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
+import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.core.Eff
 import ru.maksonic.beresta.feature.notes.list.core.Model
 import ru.maksonic.beresta.feature.notes.list.core.Msg
 import ru.maksonic.beresta.feature.notes.list.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes.list.core.ui.widget.NotesLoaderWidget
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.intiClickActions
 import ru.maksonic.beresta.feature.top_bar_counter.api.updateCounterValue
@@ -49,6 +48,7 @@ import ru.maksonic.beresta.ui.theme.icons.Unpin
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
@@ -59,11 +59,14 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
  */
 private typealias SendMessage = (Msg) -> Unit
 
+private const val STICKY_START_FOLDER_ID = 1L
+private const val STICKY_END_FOLDER_ID = 2L
+private const val DEFAULT_NOTE_FOLDER_ID = 2L
+
 @Composable
 internal fun NotesListContainer(
     modifier: Modifier = Modifier,
     sandbox: NotesListSandbox = koinViewModel(),
-    searchBarFeatureApi: SearchBarApi.Ui = get(),
     notesFoldersFeatureApi: FoldersListApi.Ui = get(),
     topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
     sharedUiState: SharedUiState<NotesListSharedUiState>,
@@ -82,7 +85,9 @@ internal fun NotesListContainer(
     }
 
     LaunchedEffect(foldersState.value.currentFolderId) {
-        sandbox.send(Msg.Inner.FilteredNotesByFolder(foldersState.value.currentFolderId))
+        sandbox.send(
+            Msg.Inner.FetchedCurrentFolderIdByPassedState(foldersState.value.currentFolderId)
+        )
     }
 
     LaunchedEffect(model.value.selectedNotes) {
@@ -185,8 +190,11 @@ private fun NotesResultDataContent(
                 ),
                 modifier = modifier.fillMaxSize()
             ) {
-
-                items(items = model.notes.data, key = { note -> note.id }) { note ->
+                items(
+                    items = filterNotesByCurrentFolder(
+                        folderId = model.currentSelectedFolderId, notes = model.notes.data
+                    ),
+                    key = { note -> note.id }) { note ->
                     NoteListItemContent(
                         isSelected = model.selectedNotes.contains(note),
                         note = note,
@@ -199,13 +207,18 @@ private fun NotesResultDataContent(
             }
         }
 
-        if (model.notes.data.isEmpty()) {
+        AnimateFadeInOut(
+            filterNotesByCurrentFolder(
+                model.currentSelectedFolderId,
+                model.notes.data
+            ).isEmpty()
+        ) {
             EmptyListContent()
         }
 
         AnimatedVisibility(model.isVisibleRemovedSnackBar) {
             val paddingBottom = animateDpAsState(
-                if (model.isSelectionState) Theme.widgetSize.bottomBarHeightDefault
+                if (model.isSelectionState) Theme.widgetSize.bottomBarNormalHeight
                 else Theme.widgetSize.bottomMainBarHeight, label = ""
             )
             SnackBarAction(
@@ -222,6 +235,18 @@ private fun NotesResultDataContent(
     }
 }
 
+private fun filterNotesByCurrentFolder(folderId: Long, notes: List<NoteUi>): List<NoteUi> {
+    return notes.filter { note ->
+        when (folderId) {
+            // When ID == 1L - Showed all notes.
+            STICKY_START_FOLDER_ID -> note.id == note.id
+            // When ID == 2L - Showed notes without folder (category).
+            STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
+            else -> note.folderId == folderId
+        }
+    }
+}
+
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
@@ -231,10 +256,22 @@ private fun HandleUiEffects(
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.NavigateToEditNote -> router.toNoteEditor(eff.id)
-            is Eff.NavigateToFoldersWithMovingState -> router.toFoldersList(true)
+            is Eff.NavigateToFoldersWithMovingState -> {
+                router.toFoldersList(true, eff.currentSelectedFolderId)
+            }
+
             is Eff.UpdateSharedUiIsSelectedState -> {
                 sharedUiState.update { it.copy(isSelectionState = eff.isSelectionState) }
             }
+
+            is Eff.UpdateSharedUiIsEnabledBottomBarState -> {
+                sharedUiState.update { it.copy(isEnabledBottomBar = eff.isEnabled) }
+            }
+
+            is Eff.UpdatePassedNotesSharedState -> {
+                sharedUiState.update { it.copy(passedToFolderNotes = eff.notes) }
+            }
+
         }
     }
 }

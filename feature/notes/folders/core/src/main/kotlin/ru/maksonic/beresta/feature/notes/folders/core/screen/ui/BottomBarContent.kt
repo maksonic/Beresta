@@ -65,7 +65,7 @@ fun BottomBarContent(
 
     val selectionHeight = Theme.widgetSize.btnPrimaryHeight.plus(SystemNavigationBarHeight)
     val containerHeight = animateDpAsState(
-        if (model.isSelectionState) selectionHeight else Theme.widgetSize.bottomBarHeightDefault,
+        if (model.isSelectionState) selectionHeight else Theme.widgetSize.bottomBarNormalHeight,
         animationSpec = tween(Theme.animSpeed.common),
         label = ""
     )

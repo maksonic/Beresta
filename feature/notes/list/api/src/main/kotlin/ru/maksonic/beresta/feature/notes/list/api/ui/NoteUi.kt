@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes.list.api.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.text.Placeholder
 import java.time.LocalDateTime
 
 /**
@@ -12,21 +13,20 @@ data class NoteUi(
     val title: String,
     val message: String,
     val dateCreationRaw: LocalDateTime,
-    val dateCreation: String,
     val backgroundId: Int = 0,
     val isSelected: Boolean = false,
     val isPinned: Boolean,
     val pinTime: LocalDateTime?,
     val isMovedToTrash: Boolean,
-    val folderId: Long = 0
+    val folderId: Long = 2L
 ) {
+
     companion object {
         val Default = NoteUi(
             id = 0L,
             title = "",
             message = "",
             dateCreationRaw = LocalDateTime.now(),
-            dateCreation = "",
             backgroundId = 0,
             isSelected = false,
             isPinned = false,

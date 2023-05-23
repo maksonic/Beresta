@@ -13,6 +13,12 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     initialCmd = setOf(Cmd.FetchNotesList, Cmd.FetchCurrentLangForNotesDatestamp),
     subscriptions = listOf(program)
 ) {
+    companion object {
+        private const val STICKY_START_FOLDER_ID = 1L
+        private const val STICKY_END_FOLDER_ID = 2L
+        private const val DEFAULT_NOTE_FOLDER_ID = 2L
+    }
+
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedResultData -> fetchedResultData(model, msg)
         is Msg.Inner.FetchedResultError -> fetchedResultError(model, msg)
@@ -30,16 +36,19 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         is Msg.Inner.ShowRemovedNotesSnackBar -> showRemoveNotesSnackBar(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Inner.FetchedCurrentAppLang -> applyLangToNotesDatestamp(model, msg)
-        is Msg.Inner.FilteredNotesByFolder -> filteredNotesByCurrentSelectedFolder(model, msg)
+        is Msg.Inner.FetchedCurrentFolderIdByPassedState -> {
+            fetchedCurrentFolderIdByPassedState(model, msg)
+        }
     }
 
-    private fun fetchedResultData(model: Model, msg: Msg.Inner.FetchedResultData): UpdateResult =
-        UpdatedModel(
+    private fun fetchedResultData(model: Model, msg: Msg.Inner.FetchedResultData): UpdateResult {
+        return UpdatedModel(
             model.copy(
                 base = model.base.copy(isLoading = false, isSuccessLoading = true),
-                notes = msg.notes,
+                notes = msg.notes
             )
         )
+    }
 
     private fun fetchedResultError(model: Model, msg: Msg.Inner.FetchedResultError): UpdateResult =
         UpdatedModel(
@@ -76,10 +85,13 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         return UpdatedModel(
             model.copy(
                 selectedNotes = selected,
-                isSelectionState = selected.isNotEmpty(),
+                isSelectionState = true,
                 isShowUnpinMainBarIcon = isShowUnpinButton
             ),
-            effects = setOf(Eff.UpdateSharedUiIsSelectedState(selected.isNotEmpty()))
+            effects = setOf(
+                Eff.UpdateSharedUiIsSelectedState(true),
+                Eff.UpdateSharedUiIsEnabledBottomBarState(selected.isNotEmpty())
+            )
         )
     }
 
@@ -115,37 +127,55 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     }
 
     private fun onBarReplaceToFolderClicked(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.NavigateToFoldersWithMovingState))
+        UpdatedModel(
+            model,
+            effects = setOf(
+                Eff.UpdatePassedNotesSharedState(model.selectedNotes.toList()),
+                Eff.NavigateToFoldersWithMovingState(model.currentSelectedFolderId)
+            )
+        )
 
     private fun onSelectAllNotesClicked(model: Model): UpdateResult {
-        val selected = model.selectedNotes.toMutableSet().also { list ->
-            if (list.containsAll(model.notes.data)) list.clear()
-            else list.addAll(model.notes.data)
+        val filteredNotes = model.notes.data.filter { note ->
+            when (model.currentSelectedFolderId) {
+                STICKY_START_FOLDER_ID -> note.id == note.id
+                STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
+                else -> note.folderId == model.currentSelectedFolderId
+            }
+        }
+
+        val selectedNotes = model.selectedNotes.toMutableSet().also { list ->
+            if (model.currentSelectedFolderId == STICKY_START_FOLDER_ID) {
+                if (list.containsAll(model.notes.data)) list.clear()
+                else list.addAll(model.notes.data)
+            } else {
+                if (list.containsAll(filteredNotes)) list.removeAll(filteredNotes.toSet())
+                else list.addAll(filteredNotes)
+            }
         }.toSet()
-        val isShowUnpinButton = !selected.map { it.isPinned }.contains(false)
+
+        val isShowUnpinButton = !selectedNotes.map { it.isPinned }.contains(false)
 
         return UpdatedModel(
             model.copy(
-                selectedNotes = selected,
-                isSelectionState = selected.isNotEmpty(),
+                selectedNotes = selectedNotes,
                 isShowUnpinMainBarIcon = isShowUnpinButton
             ),
-            effects = setOf(Eff.UpdateSharedUiIsSelectedState(selected.isNotEmpty()))
+            effects = setOf(Eff.UpdateSharedUiIsEnabledBottomBarState(selectedNotes.isNotEmpty()))
         )
     }
 
-    private fun onShareNotesClicked(model: Model): UpdateResult =
-        UpdatedModel(model)
+    private fun onShareNotesClicked(model: Model): UpdateResult = UpdatedModel(model)
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult =
         UpdatedModel(
-            model.copy(selectedNotes = emptySet(), isSelectionState = false),
+            model = model.copy(selectedNotes = emptySet(), isSelectionState = false),
             effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
         )
 
-    private fun onChangeGridCountClicked(model: Model): UpdateResult {
-        return UpdatedModel(model.copy(gridCount = if (model.gridCount == 1) 2 else 1))
-    }
+    private fun onChangeGridCountClicked(model: Model): UpdateResult =
+        UpdatedModel(model.copy(gridCount = if (model.gridCount == 1) 2 else 1))
+
 
     private fun showRemoveNotesSnackBar(model: Model): UpdateResult =
         UpdatedModel(model.copy(isVisibleRemovedSnackBar = true))
@@ -159,10 +189,7 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         }.toList())
 
         return UpdatedModel(
-            model = model.copy(
-                notes = removed,
-                removedNotes = emptySet(),
-            ),
+            model = model.copy(notes = removed, removedNotes = emptySet()),
             commands = setOf(Cmd.UndoRemoveNotes(removed.data)),
         )
     }
@@ -172,13 +199,9 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         msg: Msg.Inner.FetchedCurrentAppLang
     ): UpdateResult = UpdatedModel(model.copy(currentAppLanguage = msg.language))
 
-    private fun filteredNotesByCurrentSelectedFolder(
+    private fun fetchedCurrentFolderIdByPassedState(
         model: Model,
-        msg: Msg.Inner.FilteredNotesByFolder
-    ): UpdateResult = UpdatedModel(
-        model.copy(
-            currentSelectedFolderId = msg.id,
-            notes = model.notes.copy(model.notes.data.filter { it.folderId == msg.id })
-        )
-    )
+        msg: Msg.Inner.FetchedCurrentFolderIdByPassedState
+    ): UpdateResult =
+        UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
 }

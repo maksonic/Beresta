@@ -20,5 +20,6 @@ data class NoteCache(
     val dateCreation: LocalDateTime = LocalDateTime.now(),
     val isPinned: Boolean = false,
     val pinTime: LocalDateTime? = null,
-    val isMovedToTrash: Boolean = false
+    val isMovedToTrash: Boolean = false,
+    val folderId: Long = 2L
 )

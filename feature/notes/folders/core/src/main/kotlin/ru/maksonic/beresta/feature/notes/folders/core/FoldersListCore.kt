@@ -13,6 +13,7 @@ import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidg
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
+import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
@@ -63,6 +64,7 @@ class FoldersListCore : FoldersListApi.Ui {
     @Composable
     private fun ScreenContainer(
         api: FoldersListApi.Ui = get(),
+        notesListApi: NotesListApi.Ui = get(),
         topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
         sandbox: FoldersScreenSandbox = koinViewModel(),
         router: NotesFoldersScreenRouter
@@ -72,13 +74,15 @@ class FoldersListCore : FoldersListApi.Ui {
         HandleUiEffects(
             effects = sandbox.effects,
             router = router,
-            sharedUiState = api.sharedUiState
+            sharedUiState = api.sharedUiState,
+            notesListSharedState = notesListApi.sharedUiState,
         )
 
         NotesFoldersScreenContent(
             model = model.value,
             send = sandbox::send,
             notesFoldersFeatureApi = api,
+            notesListApi = notesListApi,
             topBarCounterApi = topBarCounterFeatureApi,
         )
     }

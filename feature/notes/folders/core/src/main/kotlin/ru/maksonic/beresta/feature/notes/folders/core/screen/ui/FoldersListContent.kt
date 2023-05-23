@@ -61,7 +61,7 @@ fun FoldersListContent(
     scrollState: LazyListState,
     modifier: Modifier
 ) {
-    val defaultPadding = Theme.widgetSize.bottomBarHeightDefault.plus(dp6)
+    val defaultPadding = Theme.widgetSize.bottomBarNormalHeight.plus(dp6)
     val bottomContentPadding = animateDpAsState(
         if (model.isSelectionState) defaultPadding else defaultPadding.plus(dp16), label = "",
         animationSpec = tween(Theme.animSpeed.common)
@@ -146,7 +146,7 @@ private fun FolderItem(
             )
 
             Text(
-                text = "0",
+                text = folder.notesCount.toString(),
                 style = TextDesign.bodyPrimaryMedium.copy(color = outline),
                 maxLines = 1,
                 modifier = modifier.padding(end = dp8)

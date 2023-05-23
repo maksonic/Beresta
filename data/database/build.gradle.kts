@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation(project(module.primary.data.common.path))
+    implementation(project(module.common.coroutineDispatchers.path))
     implementation(lib.room.ktx)
     ksp(lib.room.compiler)
     implementation(lib.koin.android)

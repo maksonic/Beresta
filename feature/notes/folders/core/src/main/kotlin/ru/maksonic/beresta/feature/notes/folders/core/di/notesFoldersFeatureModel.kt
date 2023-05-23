@@ -28,8 +28,11 @@ val notesFoldersFeatureModel = module {
     single {
         FoldersListProgram(
             fetchFoldersUseCase = get(),
-            mapper = get(),
+            fetchNotesUseCase = get(),
+            foldersMapper = get(),
             foldersInteractor = get(),
+            notesInteractor = get(),
+            notesMapper = get(),
             navigator = get()
         )
     }

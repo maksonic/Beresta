@@ -4,7 +4,18 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,7 +32,11 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.screen.main.Msg
 import ru.maksonic.beresta.screen.main.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.*
+import ru.maksonic.beresta.ui.theme.color.onBackground
+import ru.maksonic.beresta.ui.theme.color.onSurface
+import ru.maksonic.beresta.ui.theme.color.outline
+import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.FolderOpen
@@ -33,6 +48,7 @@ import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.bar.BottomRippleBar
 import ru.maksonic.beresta.ui.widget.button.IconAction
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 24.03.2023
@@ -82,7 +98,11 @@ internal fun MainBottomBar(
                         }
 
                         MainBottomBarState.SELECTION -> {
-                            SelectedStateContent(notesListSharedUiState.value.selectBarActions)
+                            Box {
+                                SelectedStateContent(notesListSharedUiState.value.selectBarActions)
+                                if (!notesListSharedUiState.value.isEnabledBottomBar)
+                                    DisabledBottomBarPlaceholder()
+                            }
                         }
                     }
                 }
@@ -137,22 +157,35 @@ private fun IdleStateContent(
 
 @Composable
 private fun SelectedStateContent(actions: Array<BaseBottomBarItem>, modifier: Modifier = Modifier) {
-    BottomAppBar(
-        modifier
-            .fillMaxWidth()
-            .navigationBarsPadding(),
-        backgroundColor = transparent,
-        elevation = Theme.elevation.Level0,
-    ) {
-        actions.forEach { item ->
-            BottomRippleBar(
-                selected = true,
-                onClick = item.action,
-                label = { Text(item.label) },
-                icon = { Icon(item.icon, contentDescription = "") },
-                unselectedContentColor = outline,
-                selectedContentColor = onBackground,
-            )
+    Box(modifier.navigationBarsPadding()) {
+        BottomAppBar(
+            modifier.fillMaxWidth(),
+            backgroundColor = transparent,
+            elevation = Theme.elevation.Level0,
+        ) {
+            actions.forEach { item ->
+                BottomRippleBar(
+                    selected = true,
+                    onClick = item.action,
+                    label = { Text(item.label) },
+                    icon = { Icon(item.icon, contentDescription = "") },
+                    unselectedContentColor = outline,
+                    selectedContentColor = onBackground,
+                )
+            }
         }
     }
 }
+
+@Composable
+fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .height(Theme.widgetSize.bottomBarNormalHeight)
+            .background(surface.copy(alpha = 0.5f))
+            .noRippleClickable {  }
+    )
+}
+

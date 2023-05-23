@@ -33,6 +33,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Ui.OnAddImagesClicked -> UpdatedModel(model)
         is Msg.Ui.OnSetNoteWallpaperClicked -> UpdatedModel(model)
         is Msg.Ui.OnStartRecordVoiceClicked -> UpdatedModel(model)
+        is Msg.Inner.FetchedPassedCurrentFolderId -> fetchedPassedCurrentFolderId(model, msg)
     }
 
     private fun checkedEntryPoint(model: Model, msg: Msg.Inner.CheckedEntryPoint): UpdateResult =
@@ -56,15 +57,20 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         )
 
     private fun onSaveNoteClicked(model: Model): UpdateResult {
+        //Set default id when passed id equals sticky end folder id.
+        val folderId =
+            if (model.currentSelectedFolderId == 1L) 2L else model.currentSelectedFolderId
+
+        val note = model.currentNote.copy(folderId = folderId)
         val showSnackIfIsNotNewNote = if (model.currentNote.isDefaultId()) emptySet()
         else setOf(Eff.ShowNoteUpdateSnackBar)
 
         return UpdatedModel(
             model.copy(
                 isExpandedFab = model.isEntryPoint,
-                currentNote = if (model.isEntryPoint) model.currentNote else NoteUi.Default
+                currentNote = if (model.isEntryPoint) note else NoteUi.Default
             ),
-            commands = setOf(Cmd.SaveNote(model.currentNote)),
+            commands = setOf(Cmd.SaveNote(note)),
             effects = showSnackIfIsNotNewNote
         )
     }
@@ -108,4 +114,10 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
     private fun onExpandFabClicked(model: Model): UpdateResult =
         UpdatedModel(model = model.copy(isEntryPoint = false, isExpandedFab = true))
+
+    private fun fetchedPassedCurrentFolderId(
+        model: Model,
+        msg: Msg.Inner.FetchedPassedCurrentFolderId
+    ): UpdateResult =
+        UpdatedModel(model = model.copy(currentSelectedFolderId = msg.id))
 }

@@ -15,7 +15,7 @@ data class FoldersSharedUiState(
         private val DefaultState = FoldersSharedUiState(
             isNewFolderStatus = true,
             isVisibleDialog = false,
-            currentFolderId = 0L,
+            currentFolderId = 1L,
             passedForEditFolderId = 0L
         )
         val Initial = object : SharedUiState<FoldersSharedUiState>(DefaultState) {}

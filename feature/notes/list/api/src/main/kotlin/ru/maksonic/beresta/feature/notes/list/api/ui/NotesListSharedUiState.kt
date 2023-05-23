@@ -16,6 +16,8 @@ data class NotesListSharedUiState(
     val isVisibleRemovedNotesSnackBar: Boolean,
     val removedCurrentNotesCount: Int,
     val onSnackBarClicked: () -> Unit,
+    val passedToFolderNotes: List<NoteUi>,
+    val isEnabledBottomBar: Boolean,
 ) {
     companion object {
         private val DefaultState = NotesListSharedUiState(
@@ -27,11 +29,12 @@ data class NotesListSharedUiState(
             onChangeGridCount = {},
             isVisibleRemovedNotesSnackBar = false,
             removedCurrentNotesCount = 0,
-            onSnackBarClicked = {}
+            onSnackBarClicked = {},
+            passedToFolderNotes = emptyList(),
+            isEnabledBottomBar = true
         )
         val Initial = object : SharedUiState<NotesListSharedUiState>(DefaultState) {}
     }
-
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -44,8 +47,12 @@ data class NotesListSharedUiState(
         if (isScrollUp != other.isScrollUp) return false
         if (isSelectionState != other.isSelectionState) return false
         if (!selectBarActions.contentEquals(other.selectBarActions)) return false
-
-        return true
+        if (onChangeGridCount != other.onChangeGridCount) return false
+        if (isVisibleRemovedNotesSnackBar != other.isVisibleRemovedNotesSnackBar) return false
+        if (removedCurrentNotesCount != other.removedCurrentNotesCount) return false
+        if (onSnackBarClicked != other.onSnackBarClicked) return false
+        if (passedToFolderNotes != other.passedToFolderNotes) return false
+        return isEnabledBottomBar == other.isEnabledBottomBar
     }
 
     override fun hashCode(): Int {
@@ -54,6 +61,16 @@ data class NotesListSharedUiState(
         result = 31 * result + isScrollUp.hashCode()
         result = 31 * result + isSelectionState.hashCode()
         result = 31 * result + selectBarActions.contentHashCode()
+        result = 31 * result + onChangeGridCount.hashCode()
+        result = 31 * result + isVisibleRemovedNotesSnackBar.hashCode()
+        result = 31 * result + removedCurrentNotesCount
+        result = 31 * result + onSnackBarClicked.hashCode()
+        result = 31 * result + passedToFolderNotes.hashCode()
+        result = 31 * result + isEnabledBottomBar.hashCode()
         return result
     }
+
 }
+
+fun SharedUiState<NotesListSharedUiState>.updatePassedList(list: List<NoteUi>) =
+    this.update { it.copy(passedToFolderNotes = list) }

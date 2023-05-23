@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,6 +34,7 @@ import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.Eff
 import ru.maksonic.beresta.feature.edit_note.core.Msg
+import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.isBlank
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -76,23 +76,32 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
 private fun ExpandableScreenContainer(
     sandbox: EditNoteSandbox = koinViewModel(),
     editNoteApi: NotesListApi.Ui = get(),
+    notesFoldersApi: FoldersListApi.Ui = get(),
     isEntryPoint: Boolean,
     router: EditNoteRouter?,
     modifier: Modifier
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val sharedNoteListUiState = editNoteApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val foldersSharedUiState = notesFoldersApi.sharedUiState.state.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(isEntryPoint) {
-        sandbox.send(Msg.Inner.CheckedEntryPoint(isEntryPoint))
-    }
+    HandleUiEffects(sandbox.effects, router, focusRequester)
 
     BackHandler(model.value.isExpandedFab) {
         sandbox.send(Msg.Ui.OnTopBarBackPressed)
     }
 
-    HandleUiEffects(sandbox.effects, router, focusRequester)
+    LaunchedEffect(isEntryPoint) {
+        sandbox.send(Msg.Inner.CheckedEntryPoint(isEntryPoint))
+    }
+
+    LaunchedEffect(foldersSharedUiState.value.currentFolderId) {
+        sandbox.send(
+            Msg.Inner.FetchedPassedCurrentFolderId(foldersSharedUiState.value.currentFolderId)
+        )
+    }
+
 
     BoxWithConstraints(
         Modifier.fillMaxWidth(),

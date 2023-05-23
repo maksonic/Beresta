@@ -11,20 +11,20 @@ private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchFolders, Cmd.ListenMoveNotesToFolderPassedState),
+    initialCmd = setOf(Cmd.FetchFolders, Cmd.FetchPassedFromMainScreenArgs),
     subscriptions = listOf(program)
 ) {
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.FetchedPassedNotesMoveState -> fetchedPassedNotesMoveState(model, msg)
         is Msg.Inner.FetchedFoldersResult -> fetchedData(model, msg)
+        is Msg.Inner.FetchedPassedArgsFromMain -> fetchedPassedArgsFromMain(model, msg)
+        is Msg.Inner.FetchedPassedReplaceNotesState -> fetchedPassedNotesMoveState(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnFolderClicked -> onFolderClicked(model, msg)
         is Msg.Ui.OnFolderLongPressed -> onFolderLongClicked(model, msg)
         is Msg.Ui.CancelSelectionState -> onCancelSelectionClicked(model)
         is Msg.Ui.OnSelectAllFoldersClicked -> onSelectAllFoldersClicked(model)
         is Msg.Ui.OnAddNewFolderClicked -> onAddNewFolderClicked(model)
-        is Msg.Inner.UpdateCurrentSelectedFolder -> updatedCurrentSelectedFolder(model, msg)
         is Msg.Ui.OnBarPinClicked -> onBarPinSelectedClicked(model)
         is Msg.Ui.OnBarRemoveClicked -> onBarMoveSelectedToTrashClicked(model)
         is Msg.Ui.OnBarEditClicked -> onBarEditClicked(model)
@@ -33,20 +33,33 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
     }
 
-    private fun fetchedPassedNotesMoveState(
-        model: Model,
-        msg: Msg.Inner.FetchedPassedNotesMoveState
-    ): UpdateResult =
-        UpdatedModel(model.copy(isMoveNotesToFolder = msg.isMove))
+    private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult {
+        val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
+        else msg.folders
 
-
-    private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult =
-        UpdatedModel(
+        return UpdatedModel(
             model = model.copy(
-                base = model.base.copy(isLoading = false, isSuccessLoading = true, isError = false),
-                folders = NoteFolderUi.Collection(msg.folders)
+                base = model.base.copy(
+                    isLoading = false,
+                    isSuccessLoading = true,
+                    isError = false
+                ),
+                folders = NoteFolderUi.Collection(folders),
             )
         )
+    }
+
+    private fun fetchedPassedArgsFromMain(
+        model: Model,
+        msg: Msg.Inner.FetchedPassedArgsFromMain
+    ): UpdateResult = UpdatedModel(
+        model = model.copy(isMoveNotesToFolder = msg.isMove, currentSelectedFolderId = msg.id)
+    )
+
+    private fun fetchedPassedNotesMoveState(
+        model: Model,
+        msg: Msg.Inner.FetchedPassedReplaceNotesState
+    ): UpdateResult = UpdatedModel(model.copy(moveNotesList = msg.notes))
 
     private fun onTopBarBackPressed(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.NavigateBack))
@@ -54,17 +67,25 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun onFolderClicked(model: Model, msg: Msg.Ui.OnFolderClicked): UpdateResult =
         if (model.isSelectionState)
             baseOnFolderAction(model, msg.id)
-        else
-            UpdatedModel(
-                model, effects = setOf(
-                    Eff.NavigateBack,
-                    Eff.UpdateCurrentSelectedFolderInSharedState(msg.id)
+        else {
+            if (model.isMoveNotesToFolder) {
+                UpdatedModel(
+                    model = model,
+                    commands = setOf(Cmd.ChangeNoteFolderId(msg.id, model.moveNotesList)),
+                    effects = setOf(Eff.NavigateBack)
                 )
-            )
+            } else {
+                UpdatedModel(
+                    model = model,
+                    effects = setOf(
+                        Eff.UpdateCurrentSelectedFolderInSharedState(msg.id), Eff.NavigateBack
+                    )
+                )
+            }
+        }
 
     private fun onFolderLongClicked(model: Model, msg: Msg.Ui.OnFolderLongPressed): UpdateResult =
         baseOnFolderAction(model, msg.id)
-
 
     private fun baseOnFolderAction(model: Model, folderId: Long): UpdateResult {
         val selectedList = model.selectedFolders.toMutableSet().also { list ->
@@ -109,11 +130,6 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun onAddNewFolderClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.ShowFolderDialog(isNewFolder = true)))
 
-    private fun updatedCurrentSelectedFolder(
-        model: Model,
-        msg: Msg.Inner.UpdateCurrentSelectedFolder
-    ): UpdateResult = UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
-
     private fun onBarPinSelectedClicked(model: Model): UpdateResult {
         return UpdatedModel(
             model = model.copy(selectedFolders = emptySet()),
@@ -124,12 +140,15 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun onBarMoveSelectedToTrashClicked(model: Model): UpdateResult {
         val removed = model.selectedFolders.map { folder -> folder.copy(isMovedToTrash = true) }
         val folders =
-            model.folders.copy(data = model.folders.data.filter { item -> removed.any { item.id == it.id } })
+            model.folders.copy(model.folders.data.filter { item ->
+                removed.any { item.id == it.id }
+            })
 
         // Set initial sticky folder to current if previous current folder was moved to trash.
         val isRemoveCurrentFolder =
             removed.map { folder -> folder.id == model.currentSelectedFolderId }.contains(true)
-        val currentSelectedId = if (isRemoveCurrentFolder) 0L else model.currentSelectedFolderId
+        val currentSelectedId =
+            if (isRemoveCurrentFolder) 1L else model.currentSelectedFolderId
 
         return UpdatedModel(
             model = model.copy(
