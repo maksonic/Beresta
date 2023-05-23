@@ -4,7 +4,6 @@ import androidx.room.Room
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import ru.maksonic.beresta.data.database.AppDatabase
-import ru.maksonic.beresta.data.database.folders.NoteFolderCache
 
 /**
  * @Author maksonic on 19.12.2022

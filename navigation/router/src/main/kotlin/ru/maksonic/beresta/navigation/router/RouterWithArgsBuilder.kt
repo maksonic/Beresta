@@ -6,8 +6,8 @@ package ru.maksonic.beresta.navigation.router
 interface RouterWithArgsBuilder {
     fun buildRouteWithArg(route: String, key: Any): String
     fun buildRouteWithListArgs(route: String, listKeys: List<Any>): String
-    fun passArg(route: String, key: Any): String
-    fun passListArgs(route: String, listKeys: List<Any>): String
+    fun buildRouteWithPassArg(route: String, key: Any): String
+    fun buildRouteWithPassListArgs(route: String, listKeys: List<Any>): String
 
     class Builder : RouterWithArgsBuilder {
         override fun buildRouteWithArg(route: String, key: Any): String =
@@ -19,9 +19,9 @@ interface RouterWithArgsBuilder {
                 .replace(",", "")
             ).filterNot { it.isWhitespace() }
 
-        override fun passArg(route: String, key: Any) = route.plus("/${key}")
+        override fun buildRouteWithPassArg(route: String, key: Any) = route.plus("/${key}")
 
-        override fun passListArgs(route: String, listKeys: List<Any>) =
+        override fun buildRouteWithPassListArgs(route: String, listKeys: List<Any>) =
             route.plus(listKeys.joinToString { "/${it}" }
                 .trim()
                 .replace(",", "")

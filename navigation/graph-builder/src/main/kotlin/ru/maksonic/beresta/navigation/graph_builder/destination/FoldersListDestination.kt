@@ -23,10 +23,10 @@ internal fun NavGraphBuilder.foldersListScreen(
     composable(
         route = Destination.NotesFoldersList.routeWithListArgs,
         arguments = listOf(
-            navArgument(Destination.NotesFoldersList.passedListKey.first()) {
+            navArgument(Destination.NotesFoldersList.passedKeysList.first()) {
                 type = NavType.BoolType
             },
-            navArgument(Destination.NotesFoldersList.passedListKey.last()) {
+            navArgument(Destination.NotesFoldersList.passedKeysList.last()) {
                 type = NavType.LongType
                 defaultValue = -1
             },

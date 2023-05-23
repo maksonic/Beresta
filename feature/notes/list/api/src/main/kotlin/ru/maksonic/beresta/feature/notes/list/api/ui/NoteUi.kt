@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.notes.list.api.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.text.Placeholder
 import java.time.LocalDateTime
 
 /**

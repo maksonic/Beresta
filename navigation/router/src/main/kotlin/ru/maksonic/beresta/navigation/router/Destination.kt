@@ -12,6 +12,6 @@ object Destination : AbstractDestination(route = "root") {
     object TrashList : AbstractDestination(route = "trash_list")
     object NotesFoldersList : AbstractDestination(
         route = "notes_folders_list",
-        listArgs = listOf("isMoveNotes", "currentSelectedFolderId")
+        listArgKeys = listOf("isMoveNotes", "currentSelectedFolderId")
     )
 }

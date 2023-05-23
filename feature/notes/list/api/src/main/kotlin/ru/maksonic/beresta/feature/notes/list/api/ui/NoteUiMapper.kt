@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.notes.list.api.ui
 
 import ru.maksonic.beresta.core.Mapper
 import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDomain
-import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 
 /**
  * @Author maksonic on 21.02.2023

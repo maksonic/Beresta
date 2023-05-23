@@ -78,7 +78,7 @@ class FoldersListProgram(
     }*/
 
     private fun fetchedPassedNotesMoveState(consumer: (Msg) -> Unit) {
-        val keyList = Destination.NotesFoldersList.passedListKey
+        val keyList = Destination.NotesFoldersList.passedKeysList
         val isMoveNotesState = navigator.getBoolean(keyList.first())
         val currentSelectedFolderId = navigator.getLong(keyList.last())
         consumer(Msg.Inner.FetchedPassedArgsFromMain(isMoveNotesState, currentSelectedFolderId))
