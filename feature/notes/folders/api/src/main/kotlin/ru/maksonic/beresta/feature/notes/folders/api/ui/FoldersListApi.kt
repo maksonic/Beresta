@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.notes.folders.api.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 

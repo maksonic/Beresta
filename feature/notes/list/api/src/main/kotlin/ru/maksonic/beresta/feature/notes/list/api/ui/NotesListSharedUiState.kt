@@ -79,6 +79,3 @@ fun SharedUiState<NotesListSharedUiState>.updateColoredTopBar(isColored: Boolean
 
 fun SharedUiState<NotesListSharedUiState>.updateChipsRowVisibility(isVisible: Boolean) =
     this.update { it.copy(isVisibleChipsRow = isVisible) }
-
-fun SharedUiState<NotesListSharedUiState>.updateBottomBarVisibility(isVisible: Boolean) =
-    this.update { it.copy(isVisibleBottomBar = isVisible) }
