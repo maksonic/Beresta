@@ -1,8 +1,6 @@
 package ru.maksonic.beresta.feature.notes.list.api.domain
 
 import ru.maksonic.beresta.core.domain.BaseRepository
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDomain
-import ru.maksonic.beresta.feature.notes.list.api.domain.NotesDomainList
 
 /**
  * @Author maksonic on 21.02.2023

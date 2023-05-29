@@ -1,13 +1,10 @@
 package ru.maksonic.beresta.screen.main.ui
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -15,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.get
@@ -111,9 +107,8 @@ private fun MainContent(
             notesList = notesListFeatureApi,
             notesFolders = notesFoldersFeatureApi,
             router = router,
-            isVisibleFirstNote = notesListState.value.isVisibleFirstNote,
-            isScrollUp = notesListState.value.isScrollUp,
-            currentSelectedFolderId = model.currentSelectedFolderId
+            currentSelectedFolderId = model.currentSelectedFolderId,
+            isShowChipsPlaceholder = model.base.isLoading
         )
 
         BottomBarLayer(
@@ -146,18 +141,12 @@ private fun NotesListLayer(
     chips: NoteFolderUi.Collection,
     notesList: NotesListApi.Ui,
     notesFolders: FoldersListApi.Ui,
-    router: MainScreenRouter,
-    isVisibleFirstNote: Boolean,
-    isScrollUp: Boolean,
     currentSelectedFolderId: Long,
+    router: MainScreenRouter,
+    isShowChipsPlaceholder: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(modifier.fillMaxSize()) {
-        val chipsOffset = animateDpAsState(
-            if (isVisibleFirstNote) 0.dp
-            else if (isScrollUp) 0.dp else -Theme.widgetSize.topBarNormalHeight, label = ""
-        )
-
         Column {
             SystemStatusBar()
             notesList.ListWidget(router)
@@ -168,12 +157,7 @@ private fun NotesListLayer(
             chips = chips,
             onChipClicked = { send(Msg.Ui.OnChipFilterClicked(it)) },
             currentSelectedChipId = currentSelectedFolderId,
-            modifier = modifier
-                .statusBarsPadding()
-                .padding(top = Theme.widgetSize.topBarNormalHeight)
-                .graphicsLayer {
-                    translationY = chipsOffset.value.toPx()
-                }
+            isShowPlaceholder = isShowChipsPlaceholder
         )
     }
 }
@@ -218,6 +202,7 @@ private fun HandleUiEffects(
             is Eff.UpdateCurrentSelectedFolderInSharedState -> {
                 foldersSharedUiState.updateCurrentSelectedFolder(eff.id)
             }
+
             is Eff.NavigateToAddNewNote -> router.toNoteEditor(0)
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToTrash -> router.toTrash()

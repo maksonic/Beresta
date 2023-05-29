@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.core.R
+import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -30,16 +32,17 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  */
 @Composable
 internal fun UserAvatarLayer(
-    isSelectedState: Boolean,
-    isVisibleFirstNoteOffset: Boolean,
+    notesListSharedUiState: State<NotesListSharedUiState>,
     modifier: Modifier = Modifier
 ) {
     val tonal = animateDpAsState(
-        if (isVisibleFirstNoteOffset) Theme.tonal.Level0 else Theme.tonal.Level4, label = "",
-        animationSpec = tween(Theme.animSpeed.common)
+        if (notesListSharedUiState.value.isNotColoredTopBar) Theme.tonal.Level0
+        else Theme.tonal.Level3, label = "", animationSpec = tween(Theme.animSpeed.common)
     )
+
     val iconScale = animateFloatAsState(
-        if (isSelectedState) 0f else 1f, tween(Theme.animSpeed.common), label = ""
+        if (notesListSharedUiState.value.isSelectionState) 0f
+        else 1f, tween(Theme.animSpeed.common), label = ""
     )
 
     SurfacePro(
@@ -49,6 +52,7 @@ internal fun UserAvatarLayer(
         Row(
             modifier
                 .statusBarsPadding()
+                .fillMaxWidth()
                 .height(Theme.widgetSize.topBarNormalHeight)
                 .padding(start = dp16),
             verticalAlignment = Alignment.CenterVertically

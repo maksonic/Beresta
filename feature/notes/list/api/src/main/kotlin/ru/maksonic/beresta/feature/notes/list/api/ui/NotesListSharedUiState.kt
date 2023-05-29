@@ -7,9 +7,9 @@ import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
  * @Author maksonic on 29.03.2023
  */
 data class NotesListSharedUiState(
-    val isVisibleFirstNote: Boolean,
-    val isVisibleFirstNoteOffset: Boolean,
-    val isScrollUp: Boolean,
+    val isNotColoredTopBar: Boolean,
+    val isVisibleBottomBar: Boolean,
+    val isVisibleChipsRow: Boolean,
     val isSelectionState: Boolean,
     val selectBarActions: Array<BaseBottomBarItem>,
     val onChangeGridCount: () -> Unit,
@@ -17,13 +17,13 @@ data class NotesListSharedUiState(
     val removedCurrentNotesCount: Int,
     val onSnackBarClicked: () -> Unit,
     val passedToFolderNotes: List<NoteUi>,
-    val isEnabledBottomBar: Boolean,
+    val isEnabledBottomBar: Boolean
 ) {
     companion object {
         private val DefaultState = NotesListSharedUiState(
-            isVisibleFirstNote = true,
-            isVisibleFirstNoteOffset = true,
-            isScrollUp = true,
+            isNotColoredTopBar = true,
+            isVisibleBottomBar = true,
+            isVisibleChipsRow = true,
             isSelectionState = false,
             selectBarActions = emptyArray(),
             onChangeGridCount = {},
@@ -42,9 +42,9 @@ data class NotesListSharedUiState(
 
         other as NotesListSharedUiState
 
-        if (isVisibleFirstNote != other.isVisibleFirstNote) return false
-        if (isVisibleFirstNoteOffset != other.isVisibleFirstNoteOffset) return false
-        if (isScrollUp != other.isScrollUp) return false
+        if (isNotColoredTopBar != other.isNotColoredTopBar) return false
+        if (isVisibleBottomBar != other.isVisibleBottomBar) return false
+        if (isVisibleChipsRow != other.isVisibleChipsRow) return false
         if (isSelectionState != other.isSelectionState) return false
         if (!selectBarActions.contentEquals(other.selectBarActions)) return false
         if (onChangeGridCount != other.onChangeGridCount) return false
@@ -56,9 +56,9 @@ data class NotesListSharedUiState(
     }
 
     override fun hashCode(): Int {
-        var result = isVisibleFirstNote.hashCode()
-        result = 31 * result + isVisibleFirstNoteOffset.hashCode()
-        result = 31 * result + isScrollUp.hashCode()
+        var result = isNotColoredTopBar.hashCode()
+        result = 31 * result + isVisibleBottomBar.hashCode()
+        result = 31 * result + isVisibleChipsRow.hashCode()
         result = 31 * result + isSelectionState.hashCode()
         result = 31 * result + selectBarActions.contentHashCode()
         result = 31 * result + onChangeGridCount.hashCode()
@@ -69,8 +69,16 @@ data class NotesListSharedUiState(
         result = 31 * result + isEnabledBottomBar.hashCode()
         return result
     }
-
 }
 
 fun SharedUiState<NotesListSharedUiState>.updatePassedList(list: List<NoteUi>) =
     this.update { it.copy(passedToFolderNotes = list) }
+
+fun SharedUiState<NotesListSharedUiState>.updateColoredTopBar(isColored: Boolean) =
+    this.update { it.copy(isNotColoredTopBar = isColored) }
+
+fun SharedUiState<NotesListSharedUiState>.updateChipsRowVisibility(isVisible: Boolean) =
+    this.update { it.copy(isVisibleChipsRow = isVisible) }
+
+fun SharedUiState<NotesListSharedUiState>.updateBottomBarVisibility(isVisible: Boolean) =
+    this.update { it.copy(isVisibleBottomBar = isVisible) }

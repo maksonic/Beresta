@@ -16,14 +16,26 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
 @Stable
 @Immutable
 data class Model(
-    val base: BaseModel = BaseModel.InitialWithLoading,
-    val errorMsg: String = "",
-    val isVisibleBottomBar: Boolean = true,
-    val bottomBarState: MainBottomBarState = MainBottomBarState.IDLE,
-    val isShowBottomBarUnpinBtn: Boolean = false,
-    val filters: NoteFolderUi.Collection = NoteFolderUi.Collection.Empty,
-    val currentSelectedFolderId: Long = 1L,
-    ) : ElmModel
+    val base: BaseModel,
+    val errorMsg: String,
+    val isVisibleBottomBar: Boolean,
+    val bottomBarState: MainBottomBarState,
+    val isShowBottomBarUnpinBtn: Boolean,
+    val filters: NoteFolderUi.Collection,
+    val currentSelectedFolderId: Long
+) : ElmModel {
+    companion object {
+        val Initial = Model(
+            base = BaseModel.InitialWithLoading,
+            errorMsg = "",
+            isVisibleBottomBar = true,
+            bottomBarState = MainBottomBarState.IDLE,
+            isShowBottomBarUnpinBtn = false,
+            filters = NoteFolderUi.Collection.Empty,
+            currentSelectedFolderId = 1L,
+        )
+    }
+}
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
@@ -40,9 +52,9 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class UpdateBottomPanelState(val isSelectionState: Boolean): Inner()
+        data class UpdateBottomPanelState(val isSelectionState: Boolean) : Inner()
         data class FetchedChipsResult(val chips: List<NoteFolderUi>) : Inner()
-        data class UpdateCurrentSelectedFolder(val id: Long): Inner()
+        data class UpdateCurrentSelectedFolder(val id: Long) : Inner()
 
     }
 }

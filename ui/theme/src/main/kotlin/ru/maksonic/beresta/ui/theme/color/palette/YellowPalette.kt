@@ -1,6 +1,8 @@
 package ru.maksonic.beresta.ui.theme.color.palette
 
 import ru.maksonic.beresta.ui.theme.color.Palette
+import ru.maksonic.beresta.ui.theme.color.PlaceholderColors
+import ru.maksonic.beresta.ui.theme.color.PlaceholderPalette
 
 /**
  * @Author maksonic on 25.02.2023
@@ -25,7 +27,18 @@ val filledLightYellowPalette = baseLightPalette.copy(
     inversePrimary = Palette.Purple.paleViolet,
     surfaceTint = Palette.Yellow.bananaYellow,
     outlineVariant = Palette.Yellow.cosmicLatte,
-    onSnackContainer = Palette.Yellow.blond
+    onSnackContainer = Palette.Yellow.blond,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Yellow.Light.c0,
+        c1 = PlaceholderPalette.Yellow.Light.c1,
+        c2 = PlaceholderPalette.Yellow.Light.c2,
+        c3 = PlaceholderPalette.Yellow.Light.c3,
+        c4 = PlaceholderPalette.Yellow.Light.c4,
+        f0 = PlaceholderPalette.Folder.Light.f0,
+        f1 = PlaceholderPalette.Folder.Light.f1,
+        f2 = PlaceholderPalette.Folder.Light.f2,
+        f3 = PlaceholderPalette.Folder.Light.f3,
+    )
 )
 val filledDarkYellowPalette = baseDarkPalette.copy(
     primary = Palette.Yellow.x0,
@@ -48,7 +61,18 @@ val filledDarkYellowPalette = baseDarkPalette.copy(
     inverseOnSurface = Palette.Yellow.x5,
     inversePrimary = Palette.Yellow.x5,
     outlineVariant = Palette.Yellow.x3,
-    onSnackContainer = Palette.Yellow.blond
+    onSnackContainer = Palette.Yellow.blond,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Yellow.Dark.Fill.c0,
+        c1 = PlaceholderPalette.Yellow.Dark.Fill.c1,
+        c2 = PlaceholderPalette.Yellow.Dark.Fill.c2,
+        c3 = PlaceholderPalette.Yellow.Dark.Fill.c3,
+        c4 = PlaceholderPalette.Yellow.Dark.Fill.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
+    )
 )
 val outlinedLightYellowPalette = baseLightPalette.copy(
     onPrimary = Palette.Yellow.buddhaGold,
@@ -57,17 +81,50 @@ val outlinedLightYellowPalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.nero,
     inversePrimary = Palette.Purple.paleViolet,
     primary = Palette.Yellow.bananaYellow,
-    onSnackContainer = Palette.Yellow.blond
+    onSnackContainer = Palette.Yellow.blond,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Yellow.Light.c0,
+        c1 = PlaceholderPalette.Yellow.Light.c1,
+        c2 = PlaceholderPalette.Yellow.Light.c2,
+        c3 = PlaceholderPalette.Yellow.Light.c3,
+        c4 = PlaceholderPalette.Yellow.Light.c4,
+        f0 = PlaceholderPalette.Folder.Light.f0,
+        f1 = PlaceholderPalette.Folder.Light.f1,
+        f2 = PlaceholderPalette.Folder.Light.f2,
+        f3 = PlaceholderPalette.Folder.Light.f3,
+    )
 )
 val outlinedDarkYellowPalette = baseDarkPalette.copy(
     primary = Palette.Yellow.pastelYellow,
     tertiaryContainer = Palette.Yellow.pastelYellow,
     onPrimary = Palette.Yellow.pastelYellow,
-    onSnackContainer = Palette.Yellow.blond
+    onSnackContainer = Palette.Yellow.blond,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Yellow.Dark.c0,
+        c1 = PlaceholderPalette.Yellow.Dark.c1,
+        c2 = PlaceholderPalette.Yellow.Dark.c2,
+        c3 = PlaceholderPalette.Yellow.Dark.c3,
+        c4 = PlaceholderPalette.Yellow.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
+    )
 )
 val highContrastYellowPalette = highContrastPalette.copy(
     primary = Palette.Yellow.bananaYellow,
     tertiaryContainer = Palette.Yellow.bananaYellow,
     onPrimary = Palette.Yellow.bananaYellow,
-    onSnackContainer = Palette.Yellow.bananaYellow
+    onSnackContainer = Palette.Yellow.bananaYellow,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Yellow.Dark.c0,
+        c1 = PlaceholderPalette.Yellow.Dark.c1,
+        c2 = PlaceholderPalette.Yellow.Dark.c2,
+        c3 = PlaceholderPalette.Yellow.Dark.c3,
+        c4 = PlaceholderPalette.Yellow.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
+    )
 )

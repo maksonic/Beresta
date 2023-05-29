@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.feature.notes.list.core
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
@@ -18,7 +20,8 @@ class NotesListProgram(
     private val notesInteractor: RefactorNoteInteractor,
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val mapper: NoteUiMapper,
-    private val appLanguageEngineApi: LanguageEngineApi
+    private val appLanguageEngineApi: LanguageEngineApi,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
@@ -35,7 +38,7 @@ class NotesListProgram(
         }
     }
 
-    private suspend fun fetchNotesList(consumer: (Msg) -> Unit) {
+    private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
             fetchNotesUseCase().collect { notesDomain ->
                 val notes = mapper.mapListTo(notesDomain).sortDescendingByPinTimeThenByDate()
@@ -46,15 +49,21 @@ class NotesListProgram(
         }
     }
 
-    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
-        consumer(Msg.Inner.ShowRemovedNotesSnackBar)
-        val notesDomain = mapper.mapListFrom(notes)
+    private suspend fun moveSelectedNotesToTrash(
+        notes: List<NoteUi>,
+        consumer: (Msg) -> Unit
+    ) {
+        val notesUi = notes.map { it.copy(isMovedToTrash = true) }
+        val notesDomain = mapper.mapListFrom(notesUi)
         notesInteractor.updateAll(notesDomain)
         delay(SNACK_BAR_VISIBILITY_TIME)
         consumer(Msg.Inner.HideRemovedNotesSnackBar)
     }
 
-    private suspend fun undoRemovedFromTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
+    private suspend fun undoRemovedFromTrash(
+        notes: List<NoteUi>,
+        consumer: (Msg) -> Unit
+    ) {
         val notesDomain = mapper.mapListFrom(notes)
         notesInteractor.updateAll(notesDomain)
         consumer(Msg.Inner.HideRemovedNotesSnackBar)
@@ -64,13 +73,12 @@ class NotesListProgram(
         val currentDate = LocalDateTime.now()
         val isSelectedContainsUnpinned = notes.map { !it.isPinned }.contains(true)
         val selected = notes.map { note ->
-            return@map note.copy(
+            note.copy(
                 isPinned = isSelectedContainsUnpinned,
                 pinTime = if (isSelectedContainsUnpinned) currentDate else null,
                 dateCreationRaw = note.dateCreationRaw
             )
         }
-
         val notesDomain = mapper.mapListFrom(selected)
         notesInteractor.updateAll(notesDomain)
     }

@@ -67,7 +67,7 @@ internal fun MainBottomBar(
     val isSelectionState = state == MainBottomBarState.SELECTION
     val panelOffset = animateDpAsState(
         targetValue = if (isSelectionState) 0.dp
-        else if (notesListSharedUiState.value.isScrollUp) 0.dp else panelHeight,
+        else if (notesListSharedUiState.value.isVisibleBottomBar) 0.dp else panelHeight,
         animationSpec = tween(Theme.animSpeed.common), label = ""
     )
 
@@ -178,7 +178,7 @@ private fun SelectedStateContent(actions: Array<BaseBottomBarItem>, modifier: Mo
 }
 
 @Composable
-fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
+private fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
     Box(
         modifier
             .fillMaxWidth()

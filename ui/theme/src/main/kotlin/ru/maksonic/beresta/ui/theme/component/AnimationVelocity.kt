@@ -39,7 +39,7 @@ data class AppAnimationVelocity(
         )
         val Slow = AppAnimationVelocity(
             searchBarTransform = SLOW,
-            createNoteFabExpand = SLOW,
+            createNoteFabExpand = 650,
             fadeIn = SLOW,
             fadeOut = SLOW,
             common = SLOW,
@@ -48,7 +48,7 @@ data class AppAnimationVelocity(
         )
         val Normal = AppAnimationVelocity(
             searchBarTransform = NORMAL,
-            createNoteFabExpand = NORMAL,
+            createNoteFabExpand = 500,
             fadeIn = NORMAL,
             fadeOut = NORMAL,
             common = NORMAL,
@@ -57,7 +57,7 @@ data class AppAnimationVelocity(
         )
         val Fast = AppAnimationVelocity(
             searchBarTransform = FAST,
-            createNoteFabExpand = FAST,
+            createNoteFabExpand = 350,
             fadeIn = FAST,
             fadeOut = FAST,
             common = FAST,

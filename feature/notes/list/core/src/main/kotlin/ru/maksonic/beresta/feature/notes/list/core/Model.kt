@@ -64,7 +64,6 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class FetchedResultData(val notes: NoteUi.Collection) : Inner()
         data class FetchedResultError(val errorMsg: String = "") : Inner()
-        object ShowRemovedNotesSnackBar : Inner()
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
         data class FetchedCurrentFolderIdByPassedState(val id: Long) : Inner()
@@ -74,8 +73,8 @@ sealed class Msg : ElmMessage {
 sealed class Cmd : ElmCommand {
     object FetchNotesList : Cmd()
     data class RemoveSelected(val notes: List<NoteUi>) : Cmd()
-    data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
+    data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
     object FetchCurrentLangForNotesDatestamp : Cmd()
 }
 

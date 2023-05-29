@@ -85,7 +85,7 @@ fun BottomBarContent(
         targetValue = if (model.isSelectionState) background else tertiaryContainer, label = ""
     )
     val shape = animateDpAsState(
-        if (model.isSelectionState) 0.dp else dp16, animationSpec = tween(), label = ""
+        if (model.isSelectionState) 0.dp else 50.dp, tween(Theme.animSpeed.common), label = ""
     )
 
 
@@ -127,7 +127,9 @@ fun BottomBarContent(
                             modifier
                                 .fillMaxWidth()
                                 .height(Theme.widgetSize.btnPrimaryHeight)
-                                .clickAction(onTertiaryContainer) { send(Msg.Ui.OnAddNewFolderClicked) },
+                                .clickAction(onTertiaryContainer) {
+                                    send(Msg.Ui.OnAddNewFolderClicked)
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Text(

@@ -15,6 +15,9 @@ val SearchBarState.isCollapsed: Boolean
 val SearchBarState.isExpanded: Boolean
     get() = this == SearchBarState.Expanded
 
+val SearchBarState.isSelection: Boolean
+    get() = this == SearchBarState.Selected
+
 
 data class TopSearchBarSharedUiState(val state: SearchBarState) {
     companion object {

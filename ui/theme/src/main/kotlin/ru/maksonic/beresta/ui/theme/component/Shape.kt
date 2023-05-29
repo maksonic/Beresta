@@ -31,7 +31,7 @@ data class AppShape(
 )
 
 val shapes = AppShape(
-    primaryBtn = RoundedCornerShape(16.dp),
+    primaryBtn = RoundedCornerShape(50.dp),
     cornerNone = RoundedCornerShape(0.dp),
     cornerSmall = RoundedCornerShape(4.dp),
     cornerNormal = RoundedCornerShape(8.dp),

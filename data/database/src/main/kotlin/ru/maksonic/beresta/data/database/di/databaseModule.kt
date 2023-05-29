@@ -15,8 +15,7 @@ val databaseModule = module {
             androidApplication(),
             AppDatabase.AppDatabase::class.java,
             databaseName
-        ).createFromAsset(databaseName)
-            .build()
+        ).createFromAsset(databaseName).build()
     }
     single { get<AppDatabase.AppDatabase>().noteDao() }
     single { get<AppDatabase.AppDatabase>().noteFolderDao() }

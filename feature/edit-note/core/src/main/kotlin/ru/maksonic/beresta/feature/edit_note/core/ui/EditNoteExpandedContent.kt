@@ -51,7 +51,7 @@ internal fun EditNoteExpandedContent(
         ) {
             item {
                 Box(
-                    modifier
+                    Modifier
                         .fillMaxWidth()
                         .height(Theme.widgetSize.topBarNormalHeight)
                 )
@@ -65,7 +65,11 @@ internal fun EditNoteExpandedContent(
                 NoteMessageInputFieldWidget(model.currentNote.message, send)
             }
         }
-        OverContentLayer(send, isScrollUp = isScrollUp.value, isBlankNote = model.currentNote.isBlank())
+        OverContentLayer(
+            send,
+            isScrollUp = isScrollUp.value,
+            isBlankNote = model.currentNote.isBlank()
+        )
     }
 }
 

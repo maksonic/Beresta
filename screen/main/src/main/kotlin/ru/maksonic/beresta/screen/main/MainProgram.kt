@@ -1,5 +1,7 @@
 package ru.maksonic.beresta.screen.main
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
@@ -10,7 +12,8 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescending
  */
 class MainProgram(
     private val foldersListUseCase: FetchFoldersListUseCase,
-    private val foldersMapper: NoteFolderToUiMapper
+    private val foldersMapper: NoteFolderToUiMapper,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
@@ -19,8 +22,7 @@ class MainProgram(
         }
     }
 
-    private suspend fun fetchNotesFolders(consumer: (Msg) -> Unit) {
-
+    private suspend fun fetchNotesFolders(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
             foldersListUseCase().collect { data ->
                 val folders =

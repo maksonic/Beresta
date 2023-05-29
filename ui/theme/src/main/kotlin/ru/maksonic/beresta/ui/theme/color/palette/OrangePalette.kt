@@ -1,6 +1,8 @@
 package ru.maksonic.beresta.ui.theme.color.palette
 
 import ru.maksonic.beresta.ui.theme.color.Palette
+import ru.maksonic.beresta.ui.theme.color.PlaceholderColors
+import ru.maksonic.beresta.ui.theme.color.PlaceholderPalette
 
 /**
  * @Author maksonic on 25.02.2023
@@ -26,8 +28,19 @@ val filledLightOrangePalette = baseLightPalette.copy(
     inversePrimary = Palette.Yellow.pastelYellow,
     surfaceTint = Palette.Orange.vividGamboge,
     outlineVariant = Palette.Orange.serenade,
-    onSnackContainer = Palette.Orange.frangipane
+    onSnackContainer = Palette.Orange.frangipane,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Orange.Light.c0,
+        c1 = PlaceholderPalette.Orange.Light.c1,
+        c2 = PlaceholderPalette.Orange.Light.c2,
+        c3 = PlaceholderPalette.Orange.Light.c3,
+        c4 = PlaceholderPalette.Orange.Light.c4,
+        f0 = PlaceholderPalette.Folder.Light.f0,
+        f1 = PlaceholderPalette.Folder.Light.f1,
+        f2 = PlaceholderPalette.Folder.Light.f2,
+        f3 = PlaceholderPalette.Folder.Light.f3,
     )
+)
 val filledDarkOrangePalette = baseDarkPalette.copy(
     primary = Palette.Orange.x0,
     onPrimary = Palette.Orange.x0,
@@ -49,8 +62,19 @@ val filledDarkOrangePalette = baseDarkPalette.copy(
     inverseOnSurface = Palette.Orange.x4,
     inversePrimary = Palette.Orange.x5,
     outlineVariant = Palette.Orange.x3,
-    onSnackContainer = Palette.Orange.frangipane
+    onSnackContainer = Palette.Orange.frangipane,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Orange.Dark.Fill.c0,
+        c1 = PlaceholderPalette.Orange.Dark.Fill.c1,
+        c2 = PlaceholderPalette.Orange.Dark.Fill.c2,
+        c3 = PlaceholderPalette.Orange.Dark.Fill.c3,
+        c4 = PlaceholderPalette.Orange.Dark.Fill.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
     )
+)
 val outlinedLightOrangePalette = baseLightPalette.copy(
     onPrimary = Palette.Orange.mustardBrown,
     onTertiary = Palette.Orange.mustardBrown,
@@ -58,17 +82,50 @@ val outlinedLightOrangePalette = baseLightPalette.copy(
     onTertiaryContainer = Palette.white,
     inversePrimary = Palette.Yellow.pastelYellow,
     primary = Palette.Orange.vividGamboge,
-    onSnackContainer = Palette.Orange.frangipane
+    onSnackContainer = Palette.Orange.frangipane,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Orange.Light.c0,
+        c1 = PlaceholderPalette.Orange.Light.c1,
+        c2 = PlaceholderPalette.Orange.Light.c2,
+        c3 = PlaceholderPalette.Orange.Light.c3,
+        c4 = PlaceholderPalette.Orange.Light.c4,
+        f0 = PlaceholderPalette.Folder.Light.f0,
+        f1 = PlaceholderPalette.Folder.Light.f1,
+        f2 = PlaceholderPalette.Folder.Light.f2,
+        f3 = PlaceholderPalette.Folder.Light.f3,
     )
+)
 val outlinedDarkOrangePalette = baseDarkPalette.copy(
     primary = Palette.Orange.peachOrange,
     tertiaryContainer = Palette.Orange.peachOrange,
     onPrimary = Palette.Orange.peachOrange,
-    onSnackContainer = Palette.Orange.frangipane
+    onSnackContainer = Palette.Orange.frangipane,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Orange.Dark.c0,
+        c1 = PlaceholderPalette.Orange.Dark.c1,
+        c2 = PlaceholderPalette.Orange.Dark.c2,
+        c3 = PlaceholderPalette.Orange.Dark.c3,
+        c4 = PlaceholderPalette.Orange.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
     )
+)
 val highContrastOrangePalette = highContrastPalette.copy(
     primary = Palette.Orange.vividGamboge,
     tertiaryContainer = Palette.Orange.vividGamboge,
     onPrimary = Palette.Orange.vividGamboge,
-    onSnackContainer = Palette.Orange.vividGamboge
+    onSnackContainer = Palette.Orange.vividGamboge,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Orange.Dark.c0,
+        c1 = PlaceholderPalette.Orange.Dark.c1,
+        c2 = PlaceholderPalette.Orange.Dark.c2,
+        c3 = PlaceholderPalette.Orange.Dark.c3,
+        c4 = PlaceholderPalette.Orange.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
     )
+)

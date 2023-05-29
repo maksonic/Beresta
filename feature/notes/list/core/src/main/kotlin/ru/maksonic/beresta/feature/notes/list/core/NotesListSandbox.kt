@@ -33,7 +33,6 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         is Msg.Ui.CancelSelectionState -> onCancelSelectionClicked(model)
         is Msg.Ui.OnChangeGridCountClicked -> onChangeGridCountClicked(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
-        is Msg.Inner.ShowRemovedNotesSnackBar -> showRemoveNotesSnackBar(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Inner.FetchedCurrentAppLang -> applyLangToNotesDatestamp(model, msg)
         is Msg.Inner.FetchedCurrentFolderIdByPassedState -> {
@@ -96,22 +95,18 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     }
 
     private fun onBarMoveSelectedToTrashClicked(model: Model): UpdateResult {
-        val removed = model.removedNotes.toMutableSet().also { list ->
-            val isTrashItems = model.selectedNotes.map { note -> note.copy(isMovedToTrash = true) }
-            list.addAll(isTrashItems)
-        }.toSet()
-        val notes = model.notes.copy(data = model.notes.data.filterNot { note ->
-            removed.any { it.id == note.id }
-        })
+        val notes = model.notes.copy(model.notes.data.filter { !model.selectedNotes.contains(it) })
 
         return UpdatedModel(
             model = model.copy(
+                base = model.base.copy(isLoading = true),
                 notes = notes,
                 selectedNotes = emptySet(),
-                removedNotes = removed,
+                removedNotes = model.selectedNotes,
                 isSelectionState = false,
+                isVisibleRemovedSnackBar = true
             ),
-            commands = setOf(Cmd.RemoveSelected(removed.toList())),
+            commands = setOf(Cmd.RemoveSelected(model.selectedNotes.toList())),
             effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
         )
     }
@@ -119,21 +114,18 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     private fun onBarMoveNotesToSecureFolderClicked(model: Model): UpdateResult =
         UpdatedModel(model)
 
-    private fun onBarPinSelectedClicked(model: Model): UpdateResult {
-        return UpdatedModel(
-            model = model.copy(selectedNotes = emptySet()),
-            commands = setOf(Cmd.UpdatePinnedNotesInCache(model.selectedNotes))
-        )
-    }
+    private fun onBarPinSelectedClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(selectedNotes = emptySet()),
+        commands = setOf(Cmd.UpdatePinnedNotesInCache(model.selectedNotes))
+    )
 
-    private fun onBarReplaceToFolderClicked(model: Model): UpdateResult =
-        UpdatedModel(
-            model,
-            effects = setOf(
-                Eff.UpdatePassedNotesSharedState(model.selectedNotes.toList()),
-                Eff.NavigateToFoldersWithMovingState(model.currentSelectedFolderId)
-            )
+    private fun onBarReplaceToFolderClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model,
+        effects = setOf(
+            Eff.UpdatePassedNotesSharedState(model.selectedNotes.toList()),
+            Eff.NavigateToFoldersWithMovingState(model.currentSelectedFolderId)
         )
+    )
 
     private fun onSelectAllNotesClicked(model: Model): UpdateResult {
         val filteredNotes = model.notes.data.filter { note ->
@@ -157,40 +149,35 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         val isShowUnpinButton = !selectedNotes.map { it.isPinned }.contains(false)
 
         return UpdatedModel(
-            model.copy(
-                selectedNotes = selectedNotes,
-                isShowUnpinMainBarIcon = isShowUnpinButton
-            ),
+            model.copy(selectedNotes = selectedNotes, isShowUnpinMainBarIcon = isShowUnpinButton),
             effects = setOf(Eff.UpdateSharedUiIsEnabledBottomBarState(selectedNotes.isNotEmpty()))
         )
     }
 
     private fun onShareNotesClicked(model: Model): UpdateResult = UpdatedModel(model)
 
-    private fun onCancelSelectionClicked(model: Model): UpdateResult =
-        UpdatedModel(
-            model = model.copy(selectedNotes = emptySet(), isSelectionState = false),
-            effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
-        )
+    private fun onCancelSelectionClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(selectedNotes = emptySet(), isSelectionState = false),
+        effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
+    )
 
     private fun onChangeGridCountClicked(model: Model): UpdateResult =
         UpdatedModel(model.copy(gridCount = if (model.gridCount == 1) 2 else 1))
 
-
-    private fun showRemoveNotesSnackBar(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleRemovedSnackBar = true))
-
-    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleRemovedSnackBar = false, removedNotes = emptySet()))
+    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(
+            base = model.base.copy(isLoading = false),
+            isVisibleRemovedSnackBar = false,
+            removedNotes = emptySet()
+        )
+    )
 
     private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
-        val removed = model.notes.copy(data = model.notes.data.toMutableList().also { notes ->
-            notes.addAll(model.removedNotes.map { it.copy(isMovedToTrash = false) })
-        }.toList())
-
+        val restored = model.removedNotes.map { note -> note.copy(isMovedToTrash = false) }
+        val notes = model.notes.copy(model.notes.data.toMutableList().also { it.addAll(restored) })
         return UpdatedModel(
-            model = model.copy(notes = removed, removedNotes = emptySet()),
-            commands = setOf(Cmd.UndoRemoveNotes(removed.data)),
+            model = model.copy(notes = notes),
+            commands = setOf(Cmd.UndoRemoveNotes(restored))
         )
     }
 
@@ -202,6 +189,5 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     private fun fetchedCurrentFolderIdByPassedState(
         model: Model,
         msg: Msg.Inner.FetchedCurrentFolderIdByPassedState
-    ): UpdateResult =
-        UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
+    ): UpdateResult = UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
 }

@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.notes.folders.core
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
@@ -9,7 +8,7 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.ui.FolderDialogContent
-import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidgetContent
+import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidgetContainer
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
@@ -22,7 +21,6 @@ import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
  * @Author maksonic on 01.05.2023
  */
 class FoldersListCore : FoldersListApi.Ui {
-
     override val sharedUiState = FoldersSharedUiState.Initial
 
     @Composable
@@ -35,13 +33,13 @@ class FoldersListCore : FoldersListApi.Ui {
         chips: NoteFolderUi.Collection,
         onChipClicked: (id: Long) -> Unit,
         currentSelectedChipId: Long,
-        modifier: Modifier
+        isShowPlaceholder: Boolean
     ) {
-        ChipsWidgetContent(
+        ChipsWidgetContainer(
             chips = chips,
             onChipClicked = onChipClicked,
             currentSelectedChipId = currentSelectedChipId,
-            modifier = modifier
+            isShowPlaceholder = isShowPlaceholder
         )
     }
 
@@ -53,12 +51,11 @@ class FoldersListCore : FoldersListApi.Ui {
     @Composable
     override fun applyStickyItemsTitle(folders: NoteFolderUi.Collection): NoteFolderUi.Collection =
         folders.copy(folders.data.map { folder ->
-            val title = when {
-                folder.isStickyToStart -> text.folders.titlePinnedStartFolder
-                folder.isStickyToEnd -> text.folders.titlePinnedEndFolder
-                else -> folder.title
+            when {
+                folder.isStickyToStart -> folder.copy(title = text.folders.titlePinnedStartFolder)
+                folder.isStickyToEnd -> folder.copy(title = text.folders.titlePinnedEndFolder)
+                else -> folder
             }
-            folder.copy(title = title)
         })
 
     @Composable

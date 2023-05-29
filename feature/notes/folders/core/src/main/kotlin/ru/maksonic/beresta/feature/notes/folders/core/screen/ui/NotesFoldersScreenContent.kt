@@ -11,6 +11,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +24,7 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.updateCurrentSelectedFol
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Eff
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidget
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.updatePassedList
@@ -32,6 +34,7 @@ import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
@@ -51,7 +54,6 @@ internal fun NotesFoldersScreenContent(
 ) {
     val sharedUiState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
     val notesListSharedUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
-    val scrollState = rememberLazyListState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -87,16 +89,15 @@ internal fun NotesFoldersScreenContent(
             containerColor = background,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
-            FoldersListContent(
-                folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
+
+            FetchedDataWidget(
                 model = model,
                 send = send,
-                scrollState = scrollState,
-                modifier = Modifier.padding(paddingValues = paddings)
+                notesFoldersFeatureApi = notesFoldersFeatureApi,
+                modifier = modifier.padding(paddings)
             )
-
-            BottomBarContent(model, send, scrollState)
         }
+
 
         AnimateFadeInOut(
             sharedUiState.value.isVisibleDialog,
@@ -104,6 +105,33 @@ internal fun NotesFoldersScreenContent(
             fadeOutDuration = Theme.animSpeed.dialogVisibility
         ) {
             notesFoldersFeatureApi.FolderCreationDialog()
+        }
+    }
+}
+
+@Composable
+private fun FetchedDataWidget(
+    model: Model,
+    send: SendMessage,
+    notesFoldersFeatureApi: FoldersListApi.Ui,
+    modifier: Modifier
+) {
+    val scrollState = rememberLazyListState()
+
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        AnimateContent(model.base.isLoading) { isLoading ->
+            if (isLoading) {
+                FoldersLoaderWidget(modifier)
+            } else {
+                FoldersListContent(
+                    folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
+                    model = model,
+                    send = send,
+                    scrollState = scrollState,
+                    modifier = modifier
+                )
+                BottomBarContent(model, send, scrollState)
+            }
         }
     }
 }
@@ -119,11 +147,10 @@ internal fun HandleUiEffects(
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
             is Eff.ShowFolderDialog -> sharedUiState.showDialog(eff.isNewFolder, eff.id)
+            is Eff.ClearPassedForReplaceNotes -> notesListSharedState.updatePassedList(emptyList())
             is Eff.UpdateCurrentSelectedFolderInSharedState -> {
                 sharedUiState.updateCurrentSelectedFolder(eff.id)
             }
-
-            is Eff.ClearPassedForReplaceNotes -> notesListSharedState.updatePassedList(emptyList())
         }
     }
 }

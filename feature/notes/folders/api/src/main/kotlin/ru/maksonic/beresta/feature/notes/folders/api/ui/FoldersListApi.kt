@@ -21,7 +21,7 @@ interface FoldersListApi {
             chips: NoteFolderUi.Collection,
             onChipClicked: (id: Long) -> Unit,
             currentSelectedChipId: Long,
-            modifier: Modifier
+            isShowPlaceholder: Boolean
         )
 
         @Composable

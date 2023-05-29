@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
  */
 object Palette {
     val black = Color(0xFF000000)
-    val netural10 = Color(0xFF1C1B1F)
+    val netural = Color(0xFF1C1B1F)
     val nero = Color(0xFF212121)
     val mineShaft = Color(0xFF313131)
     val tundora = Color(0xFF414141)
@@ -131,5 +131,4 @@ object Palette {
         val cosmicLatte = Color(0xFFFFFCE5)
         val milk = Color(0xFFF8F7F2)
     }
-
 }

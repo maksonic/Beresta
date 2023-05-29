@@ -28,6 +28,7 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidget
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -47,6 +48,7 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Done
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
@@ -59,34 +61,40 @@ fun FoldersListContent(
     model: Model,
     send: SendMessage,
     scrollState: LazyListState,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     val defaultPadding = Theme.widgetSize.bottomBarNormalHeight.plus(dp6)
     val bottomContentPadding = animateDpAsState(
         if (model.isSelectionState) defaultPadding else defaultPadding.plus(dp16), label = "",
         animationSpec = tween(Theme.animSpeed.common)
     )
-    LazyColumn(
-        state = scrollState,
-        contentPadding = PaddingValues(
-            top = dp6,
-            start = dp16,
-            end = dp16,
-            bottom = bottomContentPadding.value
-        ),
-        modifier = modifier.fillMaxSize()
-    ) {
-        items(folders.data, key = { it.id }) { folder ->
-            val update = folder.copy(
-                isCurrent = folder.id == model.currentSelectedFolderId,
-                isSelected = model.selectedFolders.contains(folder) && folder.isSelectable,
-            )
-            FolderItem(
-                folder = update,
-                onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
-                onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
-                animPlacementModifier = Modifier.animateItemPlacement()
-            )
+    AnimateContent(model.base.isLoading) { isPlaceholder ->
+        if (isPlaceholder) {
+            FoldersLoaderWidget(modifier)
+        } else {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = PaddingValues(
+                    top = dp6,
+                    start = dp16,
+                    end = dp16,
+                    bottom = bottomContentPadding.value
+                ),
+                modifier = modifier.fillMaxSize()
+            ) {
+                items(folders.data, key = { it.id }) { folder ->
+                    val update = folder.copy(
+                        isCurrent = folder.id == model.currentSelectedFolderId,
+                        isSelected = model.selectedFolders.contains(folder) && folder.isSelectable,
+                    )
+                    FolderItem(
+                        folder = update,
+                        onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
+                        onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
+                        animPlacementModifier = Modifier.animateItemPlacement()
+                    )
+                }
+            }
         }
     }
 }

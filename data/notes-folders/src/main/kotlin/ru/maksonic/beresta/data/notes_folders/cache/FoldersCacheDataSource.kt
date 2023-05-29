@@ -22,7 +22,6 @@ class FoldersCacheDataSource(
     fun fetchCacheFoldersTrashList(): NotesFoldersCacheList =
         folderDao.fetchFoldersTrashList().flowOn(dispatcher)
 
-
     fun fetchCacheOneItemById(id: Long): NoteFolderCacheItem =
         folderDao.fetchCacheOneItemById(id).flowOn(dispatcher)
 }

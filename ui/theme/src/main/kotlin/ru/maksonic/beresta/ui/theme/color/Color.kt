@@ -56,6 +56,21 @@ data class AppColor(
     val red: Color,
     val orange: Color,
     val yellow: Color,
+    val placeholderColors: PlaceholderColors
+)
+
+
+
+data class PlaceholderColors(
+    val c0: Color,
+    val c1: Color,
+    val c2: Color,
+    val c3: Color,
+    val c4: Color,
+    val f0 : Color,
+    val f1 : Color,
+    val f2 : Color,
+    val f3 : Color,
 )
 
 val primary: Color @Composable get() = Theme.color.primary

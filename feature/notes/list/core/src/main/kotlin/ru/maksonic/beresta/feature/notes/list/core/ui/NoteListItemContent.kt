@@ -1,9 +1,8 @@
 package ru.maksonic.beresta.feature.notes.list.core.ui
 
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector4D
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,9 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -24,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.androidx.compose.get
@@ -37,7 +35,6 @@ import ru.maksonic.beresta.ui.theme.color.outlineVariant
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.primaryContainer
 import ru.maksonic.beresta.ui.theme.color.secondary
-import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
@@ -179,21 +176,10 @@ private fun BottomPanelIndication(modifier: Modifier = Modifier) {
 }
 
 @Composable
-internal fun NoteItemPlaceholder(enterDelay: Int, exitDelay: Int, modifier: Modifier = Modifier) {
-    val startColor = primaryContainer
-    val endColor = secondaryContainer
-    val animateColor = remember { Animatable(startColor) }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            animateColor.animateTo(
-                endColor, animationSpec = tween(enterDelay, easing = LinearEasing)
-            )
-            animateColor.animateTo(
-                startColor, animationSpec = tween(exitDelay, easing = LinearEasing)
-            )
-        }
-    }
+internal fun NoteItemPlaceholder(
+    animateColor: Animatable<Color, AnimationVector4D>,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier
             .fillMaxWidth()

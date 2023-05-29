@@ -13,7 +13,7 @@ private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 class MainSandbox(
     mainProgram: MainProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
-    initialModel = Model(),
+    initialModel = Model.Initial,
     initialCmd = setOf(Cmd.FetchFoldersChips),
     subscriptions = listOf(mainProgram)
 ) {
@@ -67,6 +67,7 @@ class MainSandbox(
 
         return UpdatedModel(
             model.copy(
+                base = model.base.copy(isLoading = false),
                 filters = NoteFolderUi.Collection(msg.chips),
                 currentSelectedFolderId = initialSelectedChipId
             ),

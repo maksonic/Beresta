@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.ui.widget
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -19,13 +18,10 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
  */
 @Composable
 fun LoadingViewState(modifier: Modifier = Modifier) {
-    Box(
-        modifier
-            .background(background)
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(color = tertiaryContainer, modifier = Modifier.size(60.dp))
+    SurfacePro(color = background) {
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = tertiaryContainer, modifier = Modifier.size(60.dp))
+        }
     }
 }
 

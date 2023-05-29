@@ -2,6 +2,8 @@ package ru.maksonic.beresta.ui.theme.color.palette
 
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.Palette
+import ru.maksonic.beresta.ui.theme.color.PlaceholderColors
+import ru.maksonic.beresta.ui.theme.color.PlaceholderPalette
 
 /**
  * @Author maksonic on 25.02.2023
@@ -26,7 +28,7 @@ val baseLightPalette = AppColor(
     background = Palette.snow,
     onBackground = Palette.nero,
     surface = Palette.snow,
-    onSurface = Palette.netural10,
+    onSurface = Palette.netural,
     surfaceVariant = Palette.lightSilver,
     onSurfaceVariant = Palette.chineseSilver,
     outline = Palette.doveGray,
@@ -48,6 +50,17 @@ val baseLightPalette = AppColor(
     red = Palette.Red.coralRed,
     orange = Palette.Orange.vividGamboge,
     yellow = Palette.Yellow.bananaYellow,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Blue.Light.c0,
+        c1 = PlaceholderPalette.Blue.Light.c1,
+        c2 = PlaceholderPalette.Blue.Light.c2,
+        c3 = PlaceholderPalette.Blue.Light.c3,
+        c4 = PlaceholderPalette.Blue.Light.c4,
+        f0 = PlaceholderPalette.Folder.Light.f0,
+        f1 = PlaceholderPalette.Folder.Light.f1,
+        f2 = PlaceholderPalette.Folder.Light.f2,
+        f3 = PlaceholderPalette.Folder.Light.f3,
+    )
 )
 
 val baseDarkPalette = AppColor(
@@ -92,6 +105,17 @@ val baseDarkPalette = AppColor(
     red = Palette.Red.roseBud,
     orange = Palette.Orange.peachOrange,
     yellow = Palette.Yellow.pastelYellow,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Blue.Dark.c0,
+        c1 = PlaceholderPalette.Blue.Dark.c1,
+        c2 = PlaceholderPalette.Blue.Dark.c2,
+        c3 = PlaceholderPalette.Blue.Dark.c3,
+        c4 = PlaceholderPalette.Blue.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
+    )
 )
 
 val highContrastPalette = AppColor(
@@ -136,4 +160,15 @@ val highContrastPalette = AppColor(
     red = Palette.Red.coralRed,
     orange = Palette.Orange.vividGamboge,
     yellow = Palette.Yellow.bananaYellow,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Blue.Dark.c0,
+        c1 = PlaceholderPalette.Blue.Dark.c1,
+        c2 = PlaceholderPalette.Blue.Dark.c2,
+        c3 = PlaceholderPalette.Blue.Dark.c3,
+        c4 = PlaceholderPalette.Blue.Dark.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
+    )
 )

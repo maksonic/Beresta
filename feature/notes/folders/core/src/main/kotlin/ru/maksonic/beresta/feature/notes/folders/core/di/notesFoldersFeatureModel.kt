@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.feature.notes.folders.core.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
@@ -33,7 +35,9 @@ val notesFoldersFeatureModel = module {
             foldersInteractor = get(),
             notesInteractor = get(),
             notesMapper = get(),
-            navigator = get()
+            navigator = get(),
+            ioDispatcher = get(named(CoroutineDispatchers.IO))
+
         )
     }
     viewModel { FoldersScreenSandbox(program = get()) }

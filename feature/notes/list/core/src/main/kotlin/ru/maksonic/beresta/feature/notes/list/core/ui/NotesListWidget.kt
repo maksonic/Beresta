@@ -6,7 +6,11 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
+import ru.maksonic.beresta.ui.theme.images.AddNotePlaceholder
+import ru.maksonic.beresta.ui.theme.images.AppImage
+import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 
 /**
  * @Author maksonic on 24.04.2023
@@ -40,6 +44,9 @@ class NotesListWidget : NotesListApi.Ui {
 
     @Composable
     override fun EmptyListWidget() {
-        EmptyListContent()
+        ScreenPlaceholder(
+            imageVector = AppImage.AddNotePlaceholder,
+            message = text.shared.hintNoNotes
+        )
     }
 }

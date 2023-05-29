@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
-import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 
 /**
  * @Author maksonic on 03.04.2023
@@ -14,7 +13,6 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     initialCmd = setOf(Cmd.FetchFolders, Cmd.FetchPassedFromMainScreenArgs),
     subscriptions = listOf(program)
 ) {
-
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedFoldersResult -> fetchedData(model, msg)
         is Msg.Inner.FetchedPassedArgsFromMain -> fetchedPassedArgsFromMain(model, msg)
@@ -28,14 +26,14 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Ui.OnBarPinClicked -> onBarPinSelectedClicked(model)
         is Msg.Ui.OnBarRemoveClicked -> onBarMoveSelectedToTrashClicked(model)
         is Msg.Ui.OnBarEditClicked -> onBarEditClicked(model)
-        is Msg.Inner.ShowRemovedNotesSnackBar -> showRemoveNotesSnackBar(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
+        is Msg.Inner.UpdatedRemovedNotes -> updatedRemovedNotes(model, msg)
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult {
-        val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
-        else msg.folders
+          val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
+          else msg.folders
 
         return UpdatedModel(
             model = model.copy(
@@ -44,7 +42,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
                     isSuccessLoading = true,
                     isError = false
                 ),
-                folders = NoteFolderUi.Collection(folders),
+                folders = model.folders.copy(folders), notes = msg.notes
             )
         )
     }
@@ -99,7 +97,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         val isSelectionState = selectedList.isNotEmpty()
         val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
 
-        return UpdatedModel(
+        return if (model.isMoveNotesToFolder) UpdatedModel(model) else UpdatedModel(
             model.copy(
                 selectedFolders = selectedList,
                 isSelectionState = isSelectionState,
@@ -138,27 +136,26 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     }
 
     private fun onBarMoveSelectedToTrashClicked(model: Model): UpdateResult {
-        val removed = model.selectedFolders.map { folder -> folder.copy(isMovedToTrash = true) }
         val folders =
-            model.folders.copy(model.folders.data.filter { item ->
-                removed.any { item.id == it.id }
-            })
+            model.folders.copy(model.folders.data.filter { !model.selectedFolders.contains(it) })
 
         // Set initial sticky folder to current if previous current folder was moved to trash.
         val isRemoveCurrentFolder =
-            removed.map { folder -> folder.id == model.currentSelectedFolderId }.contains(true)
-        val currentSelectedId =
-            if (isRemoveCurrentFolder) 1L else model.currentSelectedFolderId
+            model.selectedFolders.map { folder -> folder.id == model.currentSelectedFolderId }
+                .contains(true)
+        val currentSelectedId = if (isRemoveCurrentFolder) 1L else model.currentSelectedFolderId
 
         return UpdatedModel(
             model = model.copy(
+                base = model.base.copy(isLoading = true),
                 folders = folders,
                 currentSelectedFolderId = currentSelectedId,
                 selectedFolders = emptySet(),
-                removedFolders = removed.toSet(),
+                removedFolders = model.selectedFolders,
                 isSelectionState = false,
+                isVisibleRemovedSnackBar = true
             ),
-            commands = setOf(Cmd.RemoveSelected(removed.toList())),
+            commands = setOf(Cmd.RemoveSelected(model.selectedFolders.toList(), model.notes)),
             effects = setOf(Eff.UpdateCurrentSelectedFolderInSharedState(currentSelectedId))
         )
     }
@@ -170,19 +167,33 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         return UpdatedModel(model, effects = effect)
     }
 
-    private fun showRemoveNotesSnackBar(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleRemovedSnackBar = true))
-
-    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleRemovedSnackBar = false, removedFolders = emptySet()))
-
-    private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
-        val restoredRemovedFolders = model.removedFolders.map { it.copy(isMovedToTrash = false) }
-        val restored = model.folders.data.toMutableList().also { it.addAll(restoredRemovedFolders) }
-
-        return UpdatedModel(
-            model = model.copy(folders = model.folders.copy(restored), removedFolders = emptySet()),
-            commands = setOf(Cmd.UndoRemoveNotes(restored)),
+    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(
+            base = model.base.copy(isLoading = false),
+            isVisibleRemovedSnackBar = false,
+            removedFolders = emptySet()
         )
-    }
+    )
+
+    private fun updatedRemovedNotes(
+        model: Model,
+        msg: Msg.Inner.UpdatedRemovedNotes
+    ): UpdateResult = UpdatedModel(model = model.copy(removedNotes = msg.removedNotes.toSet()))
+
+
+    private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(
+            base = model.base.copy(isLoading = true),
+            removedFolders = emptySet(),
+            removedNotes = emptySet(),
+        ),
+        commands = setOf(
+            Cmd.UndoRemovedFolders(
+                folders = model.folders.data,
+                removedFolders = model.removedFolders.toList(),
+                notes = model.notes,
+                removedNotes = model.removedNotes.toList()
+            )
+        )
+    )
 }

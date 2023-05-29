@@ -20,7 +20,6 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
 @Composable
 internal fun EditNoteCollapsedContent(
     isBlankNote: Boolean,
-    contentAlpha: State<Float>,
     onExpandFabClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -36,7 +35,6 @@ internal fun EditNoteCollapsedContent(
             imageVector = icon,
             tint = onTertiaryContainer,
             contentDescription = "",
-            modifier = modifier.alpha(contentAlpha.value)
         )
     }
 }

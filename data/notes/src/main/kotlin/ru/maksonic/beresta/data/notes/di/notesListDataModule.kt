@@ -14,14 +14,13 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCa
  * @Author maksonic on 24.04.2023
  */
 val notesListDataModule = module {
-        single { NoteCacheMapper() }
-        single {
-            NotesCacheDataSource(
-                noteDao = get(),
-                dispatcher = get(named(CoroutineDispatchers.IO))
-            )
-        }
-        single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
-        single { FetchNotesUseCase(repository = get()) }
-        single { FetchNoteByIdUseCase(repository = get()) }
+    single { NoteCacheMapper() }
+    single {
+        NotesCacheDataSource(
+            noteDao = get(), dispatcher = get(named(CoroutineDispatchers.IO))
+        )
+    }
+    single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
+    single { FetchNotesUseCase(repository = get()) }
+    single { FetchNoteByIdUseCase(repository = get()) }
 }

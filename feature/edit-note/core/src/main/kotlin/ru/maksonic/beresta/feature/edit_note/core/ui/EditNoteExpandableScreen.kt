@@ -3,12 +3,12 @@ package ru.maksonic.beresta.feature.edit_note.core.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -45,9 +44,11 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp0
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
-import ru.maksonic.beresta.ui.widget.button.FloatingFabButton
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
+import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.toastLongTime
 
 /**
@@ -102,77 +103,62 @@ private fun ExpandableScreenContainer(
         )
     }
 
-
     BoxWithConstraints(
         Modifier.fillMaxWidth(),
         contentAlignment = Alignment.BottomEnd
     ) {
-        val fabAnimSpeed = Theme.animSpeed.createNoteFabExpand
+        val animSpeed = Theme.animSpeed.createNoteFabExpand
         val fullHeight = this.maxHeight
         val fullWidth = this.maxWidth
         val fabSize = Theme.widgetSize.btnFabSize
-        val fabHeight = animateDpAsState(
-            if (model.value.isExpandedFab) fullHeight else fabSize, tween(fabAnimSpeed), label = ""
-        )
-        val fabWidth = animateDpAsState(
-            if (model.value.isExpandedFab) fullWidth else fabSize, tween(fabAnimSpeed), label = ""
-        )
-        val fabEndPadding =
-            animateDpAsState(
-                if (model.value.isExpandedFab) dp0 else dp16,
-                tween(fabAnimSpeed),
-                label = ""
-            )
-        val fabBottomPadding = animateDpAsState(
-            if (model.value.isExpandedFab) dp0 else SystemNavigationBarHeight.plus(dp12),
-            tween(fabAnimSpeed), label = ""
-        )
+        val initBottomPadding = SystemNavigationBarHeight.plus(dp12)
+        val height = animateDp(if (model.value.isExpandedFab) fullHeight else fabSize, animSpeed)
+        val width = animateDp(if (model.value.isExpandedFab) fullWidth else fabSize, animSpeed)
+        val endPadding = animateDp(if (model.value.isExpandedFab) dp0 else dp16, animSpeed)
+        val bottomPadding =
+            animateDp(if (model.value.isExpandedFab) dp0 else initBottomPadding, animSpeed)
         val fabColor = animateColorAsState(
             if (model.value.isExpandedFab) surface else tertiaryContainer,
-            animationSpec = tween(fabAnimSpeed), label = ""
+            tween(animSpeed), label = ""
         )
-        val isFullExpanded = fabHeight.value == fullHeight
+        val isFullExpanded = height.value == fullHeight
         val fabShape = if (isFullExpanded) 0.dp else dp16
-        val isScrollUpElevation = if (sharedNoteListUiState.value.isScrollUp) Theme.elevation.Level0
-        else Theme.elevation.Level3
+        val isScrollUpElevation =
+            if (sharedNoteListUiState.value.isVisibleBottomBar) Theme.elevation.Level0
+            else Theme.elevation.Level3
 
         val fabElevation = animateDpAsState(
             if (sharedNoteListUiState.value.isSelectionState) Theme.elevation.Level0
             else isScrollUpElevation, label = ""
         )
-        val collapsedContentAlpha = animateFloatAsState(
-            if (model.value.isExpandedFab) 0f else 1f, tween(fabAnimSpeed), label = ""
-        )
-        val expandedContentAlpha = animateFloatAsState(
-            if (model.value.isExpandedFab) 1f else 0f, tween(fabAnimSpeed), label = ""
-        )
 
         if (isEntryPoint) {
             EditNoteExpandedContent(model.value, sandbox::send, focusRequester)
         } else {
-            FloatingFabButton(
-                fabColor = fabColor.value,
-                enabled = false,
+            SurfacePro(
+                color = fabColor.value,
                 shape = RoundedCornerShape(fabShape),
                 shadowElevation = fabElevation.value,
                 modifier = modifier
-                    .padding(bottom = fabBottomPadding.value, end = fabEndPadding.value)
-                    .height(fabHeight.value)
-                    .width(fabWidth.value),
+                    .padding(bottom = bottomPadding.value, end = endPadding.value)
+                    .height(height.value)
+                    .width(width.value),
             ) {
-                if (model.value.isExpandedFab) {
-                    EditNoteExpandedContent(
-                        model = model.value,
-                        send = sandbox::send,
-                        focusRequester = focusRequester,
-                        modifier = Modifier.alpha(expandedContentAlpha.value)
-                    )
-                } else {
-                    EditNoteCollapsedContent(
-                        isBlankNote = model.value.currentNote.isBlank(),
-                        contentAlpha = collapsedContentAlpha,
-                        onExpandFabClicked = { sandbox.send(Msg.Ui.OnExpandFabClicked) }
-                    )
+                AnimateContent(model.value.isExpandedFab) { isExpanded ->
+                    if (isExpanded) {
+                        EditNoteExpandedContent(
+                            model = model.value,
+                            send = sandbox::send,
+                            focusRequester = focusRequester,
+                            modifier = Modifier
+                                .size(width = width.value, height = height.value)
+                        )
+                    } else {
+                        EditNoteCollapsedContent(
+                            isBlankNote = model.value.currentNote.isBlank(),
+                            onExpandFabClicked = { sandbox.send(Msg.Ui.OnExpandFabClicked) }
+                        )
+                    }
                 }
             }
         }

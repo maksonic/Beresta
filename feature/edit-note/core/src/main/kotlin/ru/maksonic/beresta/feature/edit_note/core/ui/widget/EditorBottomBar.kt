@@ -44,7 +44,6 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 /**
  * @Author maksonic on 24.03.2023
  */
-
 @Composable
 internal fun EditorBottomBar(
     send: SendMessage,
@@ -72,7 +71,8 @@ internal fun EditorBottomBar(
             animationSpec = tween(Theme.animSpeed.common), label = ""
         )
         val fabIconColor = animateColorAsState(
-            if (isBlankNote) Theme.color.black.copy(alpha = 0.4f)
+            if (isBlankNote) onTertiaryContainer.copy(alpha = 0.5f)
+                .compositeOver(fabUnselectedColor)
             else onTertiaryContainer, label = ""
         )
 

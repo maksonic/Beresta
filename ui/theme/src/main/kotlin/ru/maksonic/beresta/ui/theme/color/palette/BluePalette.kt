@@ -1,6 +1,8 @@
 package ru.maksonic.beresta.ui.theme.color.palette
 
 import ru.maksonic.beresta.ui.theme.color.Palette
+import ru.maksonic.beresta.ui.theme.color.PlaceholderColors
+import ru.maksonic.beresta.ui.theme.color.PlaceholderPalette
 
 /**
  * @Author maksonic on 26.02.2023
@@ -27,7 +29,7 @@ val filledLightBluePalette = baseLightPalette.copy(
     surfaceTint = Palette.Blue.azureRadiance,
     outlineVariant = Palette.Blue.solitude,
     onSnackContainer = Palette.Blue.anakiwa,
-    )
+)
 val filledDarkBluePalette = baseDarkPalette.copy(
     primary = Palette.Blue.x0,
     onPrimary = Palette.Blue.x0,
@@ -50,17 +52,28 @@ val filledDarkBluePalette = baseDarkPalette.copy(
     inversePrimary = Palette.Blue.x5,
     outlineVariant = Palette.Blue.x3,
     onSnackContainer = Palette.Blue.anakiwa,
+    placeholderColors = PlaceholderColors(
+        c0 = PlaceholderPalette.Blue.Dark.Fill.c0,
+        c1 = PlaceholderPalette.Blue.Dark.Fill.c1,
+        c2 = PlaceholderPalette.Blue.Dark.Fill.c2,
+        c3 = PlaceholderPalette.Blue.Dark.Fill.c3,
+        c4 = PlaceholderPalette.Blue.Dark.Fill.c4,
+        f0 = PlaceholderPalette.Folder.Dark.f0,
+        f1 = PlaceholderPalette.Folder.Dark.f1,
+        f2 = PlaceholderPalette.Folder.Dark.f2,
+        f3 = PlaceholderPalette.Folder.Dark.f3,
     )
+)
 val outlinedDarkBluePalette = baseDarkPalette.copy(
     primary = Palette.Blue.anakiwa,
     tertiaryContainer = Palette.Blue.anakiwa,
     onPrimary = Palette.Blue.anakiwa,
     onSnackContainer = Palette.Blue.anakiwa,
-    )
+)
 val highContrastBluePalette = highContrastPalette.copy(
     primary = Palette.Blue.azureRadiance,
     tertiaryContainer = Palette.Blue.azureRadiance,
     onTertiaryContainer = Palette.white,
     onPrimary = Palette.Blue.azureRadiance,
     onSnackContainer = Palette.Blue.azureRadiance,
-    )
+)

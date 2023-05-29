@@ -25,11 +25,13 @@ import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
-import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
+import ru.maksonic.beresta.feature.notes.list.api.ui.updateChipsRowVisibility
+import ru.maksonic.beresta.feature.notes.list.api.ui.updateColoredTopBar
 import ru.maksonic.beresta.feature.notes.list.core.Eff
 import ru.maksonic.beresta.feature.notes.list.core.Model
 import ru.maksonic.beresta.feature.notes.list.core.Msg
+import ru.maksonic.beresta.feature.notes.list.core.NotesFilterUpdater
 import ru.maksonic.beresta.feature.notes.list.core.NotesListSandbox
 import ru.maksonic.beresta.feature.notes.list.core.ui.widget.NotesLoaderWidget
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
@@ -45,6 +47,9 @@ import ru.maksonic.beresta.ui.theme.icons.MoveFolder
 import ru.maksonic.beresta.ui.theme.icons.MoveTrash
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.theme.icons.Unpin
+import ru.maksonic.beresta.ui.theme.images.AddNotePlaceholder
+import ru.maksonic.beresta.ui.theme.images.AppImage
+import ru.maksonic.beresta.ui.theme.images.ErrorFolderPlaceholder
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
@@ -52,16 +57,12 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.isScrollUp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItem
-import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
+import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 
 /**
  * @Author maksonic on 24.04.2023
  */
 private typealias SendMessage = (Msg) -> Unit
-
-private const val STICKY_START_FOLDER_ID = 1L
-private const val STICKY_END_FOLDER_ID = 2L
-private const val DEFAULT_NOTE_FOLDER_ID = 2L
 
 @Composable
 internal fun NotesListContainer(
@@ -105,6 +106,13 @@ internal fun NotesListContainer(
                     sharedUiState = sharedUiState
                 )
             }
+
+            model.value.base.isErrorLoading -> {
+                ScreenPlaceholder(
+                    imageVector = AppImage.ErrorFolderPlaceholder,
+                    message = model.value.errorMsg
+                )
+            }
         }
     }
 }
@@ -119,8 +127,9 @@ private fun NotesResultDataContent(
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     val isScrollUp = scrollState.isScrollUp()
-    val isVisibleFirstNoteOffset = scrollState.isVisibleFirstItemOffset()
+    val isCantScrollBackward = !scrollState.canScrollBackward
     val isVisibleFirstNote = scrollState.isVisibleFirstItem()
+    val notesFilterUpdater = NotesFilterUpdater(model.notes.data, model.currentSelectedFolderId)
 
     val sharedBottomBarMessages = arrayOf(
         BaseBottomBarItem(
@@ -152,9 +161,10 @@ private fun NotesResultDataContent(
         send(Msg.Ui.CancelSelectionState)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(model.isSelectionState) {
         sharedUiState.update { state ->
             state.copy(
+                isVisibleBottomBar = true,
                 selectBarActions = sharedBottomBarMessages,
                 onChangeGridCount = { send(Msg.Ui.OnChangeGridCountClicked) }
             )
@@ -166,15 +176,30 @@ private fun NotesResultDataContent(
     }
 
     LaunchedEffect(isScrollUp.value) {
-        sharedUiState.update { it.copy(isScrollUp = isScrollUp.value) }
+        sharedUiState.update { state ->
+            state.copy(
+                isVisibleBottomBar = isScrollUp.value,
+                isVisibleChipsRow = if (!isVisibleFirstNote.value) isScrollUp.value else true
+            )
+        }
     }
 
-    LaunchedEffect(isVisibleFirstNoteOffset.value) {
-        sharedUiState.update { it.copy(isVisibleFirstNoteOffset = isVisibleFirstNoteOffset.value) }
+    LaunchedEffect(isCantScrollBackward) {
+        sharedUiState.updateColoredTopBar(isCantScrollBackward)
     }
-
     LaunchedEffect(isVisibleFirstNote.value) {
-        sharedUiState.update { it.copy(isVisibleFirstNote = isVisibleFirstNote.value) }
+        sharedUiState.updateChipsRowVisibility(isVisibleFirstNote.value)
+    }
+
+    LaunchedEffect(notesFilterUpdater.filteredNotes) {
+        if (!isCantScrollBackward)
+            sharedUiState.update { state ->
+                state.copy(
+                    isNotColoredTopBar = notesFilterUpdater.isEmptyFilterList,
+                    isVisibleBottomBar = true,
+                    isVisibleChipsRow = true
+                )
+            }
     }
 
     Box(contentAlignment = Alignment.BottomCenter) {
@@ -191,9 +216,7 @@ private fun NotesResultDataContent(
                 modifier = modifier.fillMaxSize()
             ) {
                 items(
-                    items = filterNotesByCurrentFolder(
-                        folderId = model.currentSelectedFolderId, notes = model.notes.data
-                    ),
+                    items = notesFilterUpdater.filteredNotes,
                     key = { note -> note.id }) { note ->
                     NoteListItemContent(
                         isSelected = model.selectedNotes.contains(note),
@@ -207,13 +230,11 @@ private fun NotesResultDataContent(
             }
         }
 
-        AnimateFadeInOut(
-            filterNotesByCurrentFolder(
-                model.currentSelectedFolderId,
-                model.notes.data
-            ).isEmpty()
-        ) {
-            EmptyListContent()
+        AnimateFadeInOut(notesFilterUpdater.isEmptyFilterList) {
+            ScreenPlaceholder(
+                imageVector = AppImage.AddNotePlaceholder,
+                message = text.shared.hintNoNotes
+            )
         }
 
         AnimatedVisibility(model.isVisibleRemovedSnackBar) {
@@ -231,18 +252,6 @@ private fun NotesResultDataContent(
                     .navigationBarsPadding()
                     .padding(bottom = paddingBottom.value)
             )
-        }
-    }
-}
-
-private fun filterNotesByCurrentFolder(folderId: Long, notes: List<NoteUi>): List<NoteUi> {
-    return notes.filter { note ->
-        when (folderId) {
-            // When ID == 1L - Showed all notes.
-            STICKY_START_FOLDER_ID -> note.id == note.id
-            // When ID == 2L - Showed notes without folder (category).
-            STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
-            else -> note.folderId == folderId
         }
     }
 }

@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.search_bar.core.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -28,6 +27,9 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.feature.search_bar.api.TopSearchBarSharedUiState
+import ru.maksonic.beresta.feature.search_bar.api.isCollapsed
+import ru.maksonic.beresta.feature.search_bar.api.isExpanded
+import ru.maksonic.beresta.feature.search_bar.api.isSelection
 import ru.maksonic.beresta.feature.search_bar.api.setBarState
 import ru.maksonic.beresta.feature.search_bar.core.Eff
 import ru.maksonic.beresta.feature.search_bar.core.Model
@@ -47,6 +49,7 @@ import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemStatusBarHeight
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
+import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 
 /**
  * @Author maksonic on 26.04.2023
@@ -68,11 +71,10 @@ class TopSearchBarWidget : SearchBarApi.Ui {
         topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
         modifier: Modifier = Modifier
     ) {
-
-        HandleUiEffects(effects = sandbox.effects, sharedUiState = searchBarSharedUiState)
-
         val model = sandbox.model.collectAsStateWithLifecycle()
         val notesListSharedUiState = notesListFeatureApi.sharedUiState.state.collectAsState()
+
+        HandleUiEffects(effects = sandbox.effects, sharedUiState = searchBarSharedUiState)
 
         LaunchedEffect(notesListSharedUiState.value.isSelectionState) {
             sandbox.send(
@@ -81,14 +83,12 @@ class TopSearchBarWidget : SearchBarApi.Ui {
         }
 
         Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-            UserAvatarLayer(
-                isSelectedState = notesListSharedUiState.value.isSelectionState,
-                notesListSharedUiState.value.isVisibleFirstNoteOffset
-            )
-            ExpandableSearchBarLayer(
+            UserAvatarLayer(notesListSharedUiState)
+
+            SearchBarContent(
                 model = model.value,
                 send = sandbox::send,
-                isVisibleFirstNoteOffset = notesListSharedUiState.value.isVisibleFirstNoteOffset,
+                isColoredBar = notesListSharedUiState.value.isNotColoredTopBar,
                 notesListFeatureApi = notesListFeatureApi,
                 counterApi = topBarCounterFeatureApi,
             )
@@ -97,59 +97,35 @@ class TopSearchBarWidget : SearchBarApi.Ui {
 }
 
 @Composable
-private fun ExpandableSearchBarLayer(
+private fun SearchBarContent(
     model: Model,
     send: SendMessage,
-    isVisibleFirstNoteOffset: Boolean,
+    isColoredBar: Boolean,
     notesListFeatureApi: NotesListApi.Ui,
     counterApi: TopBarCounterApi.Ui,
     modifier: Modifier = Modifier
 ) {
-    val barTransformAnimSpeed = Theme.animSpeed.searchBarTransform
-    val initialTopPadding = SystemStatusBarHeight.plus(dp4)
-    val paddingTop = animateDpAsState(
-        when (model.barState) {
-            SearchBarState.Collapsed -> initialTopPadding
-            SearchBarState.Expanded -> 0.dp
-            SearchBarState.Selected -> 0.dp
-        }, tween(barTransformAnimSpeed), label = ""
-    )
-    val paddingStart = animateDpAsState(
-        when (model.barState) {
-            SearchBarState.Collapsed -> 68.dp
-            SearchBarState.Expanded -> 0.dp
-            SearchBarState.Selected -> 0.dp
-        }, tween(barTransformAnimSpeed), label = ""
-    )
-    val paddingEnd = animateDpAsState(
-        when (model.barState) {
-            SearchBarState.Collapsed -> dp16
-            SearchBarState.Expanded -> 0.dp
-            SearchBarState.Selected -> 0.dp
-        }, tween(barTransformAnimSpeed), label = ""
-    )
+    val animSpeed = Theme.animSpeed.searchBarTransform
+    val initTopPadding = SystemStatusBarHeight.plus(dp4)
+    val paddingTop = animateDp(if (model.barState.isCollapsed) initTopPadding else 0.dp, animSpeed)
+    val paddingStart = animateDp(if (model.barState.isCollapsed) 68.dp else 0.dp, animSpeed)
+    val paddingEnd = animateDp(if (model.barState.isCollapsed) dp16 else 0.dp, animSpeed)
     val cornerRadius = animateIntAsState(
-        when (model.barState) {
-            SearchBarState.Collapsed -> 50
-            SearchBarState.Expanded -> 0
-            SearchBarState.Selected -> 0
-        }, tween(barTransformAnimSpeed), label = ""
+        if (model.barState.isCollapsed) 50 else 0, tween(animSpeed), label = ""
     )
-    val selectedContainerHeight = Theme.widgetSize.topBarNormalHeight.plus(SystemStatusBarHeight)
 
-    val tonal = animateDpAsState(
-        if (isVisibleFirstNoteOffset) Theme.tonal.Level0 else Theme.tonal.Level4,
-        label = "",
-        animationSpec = tween(Theme.animSpeed.common)
+    val tonal = animateDp(
+        if (isColoredBar) Theme.tonal.Level0 else Theme.tonal.Level3, Theme.animSpeed.common
     )
 
     BoxWithConstraints(modifier.fillMaxWidth()) {
-        val barHeight = animateDpAsState(
+        val selectedContainerHeight = Theme.widgetSize.topBarNormalHeight + SystemStatusBarHeight
+        val barHeight = animateDp(
             when (model.barState) {
                 SearchBarState.Collapsed -> Theme.widgetSize.searchBarCollapsedHeight
                 SearchBarState.Expanded -> maxHeight
                 SearchBarState.Selected -> selectedContainerHeight
-            }, tween(barTransformAnimSpeed), label = ""
+            }, animSpeed
         )
 
         SurfacePro(
@@ -163,37 +139,37 @@ private fun ExpandableSearchBarLayer(
                 )
                 .height(barHeight.value)
                 .clip(RoundedCornerShape(cornerRadius.value))
-        ) { color ->
+        ) { resultColor ->
+
             val tween = when (model.barState) {
                 SearchBarState.Selected -> Theme.animSpeed.disabled
                 else -> Theme.animSpeed.common
             }
+
             val color = animateColorAsState(
                 when (model.barState) {
-                    SearchBarState.Collapsed -> {
-                        if (isVisibleFirstNoteOffset) surfaceVariant else onSurfaceVariant
-                    }
-
                     SearchBarState.Expanded -> background
-                    SearchBarState.Selected -> color
+                    SearchBarState.Selected -> resultColor
+                    SearchBarState.Collapsed -> {
+                        if (isColoredBar) surfaceVariant else onSurfaceVariant
+                    }
                 }, label = "", animationSpec = tween(tween)
             )
+            Box(
+                modifier
+                    .fillMaxWidth()
+                    .height(Theme.widgetSize.searchBarCollapsedHeight)
+                    .drawBehind { drawRect(color.value) })
+        }
 
-            Box(modifier.drawBehind { drawRect(color.value) }) {
-                AnimateContent(state = model.barState) { state ->
-                    when (state) {
-                        SearchBarState.Collapsed -> {
-                            SearchBarCollapsedContent(
-                                onExpandClicked = { send(Msg.Ui.OnExpandSearchBarClicked) }
-                            )
-                        }
-
-                        SearchBarState.Expanded -> {
-                            SearchBarExpandedContent(model, send, notesListFeatureApi)
-                        }
-
-                        SearchBarState.Selected -> SearchBarSelectedContent(counterApi)
-                    }
+        AnimateContent(model.barState) { state ->
+            when {
+                state.isExpanded -> SearchBarExpandedContent(model, send, notesListFeatureApi)
+                state.isSelection -> SearchBarSelectedContent(counterApi)
+                state.isCollapsed -> {
+                    SearchBarCollapsedContent(
+                        onExpandClicked = { send(Msg.Ui.OnExpandSearchBarClicked) }
+                    )
                 }
             }
         }

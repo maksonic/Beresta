@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.feature.notes.list.core.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
@@ -22,7 +24,8 @@ val notesListFeatureModel = module {
             notesInteractor = get(),
             fetchNotesUseCase = get(),
             mapper = get(),
-            appLanguageEngineApi = get()
+            appLanguageEngineApi = get(),
+            ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }
     viewModel { NotesListSandbox(program = get()) }

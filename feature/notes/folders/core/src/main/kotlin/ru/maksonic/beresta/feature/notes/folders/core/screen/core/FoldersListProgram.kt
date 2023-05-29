@@ -1,8 +1,10 @@
 package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteractor
@@ -27,7 +29,8 @@ class FoldersListProgram(
     private val foldersInteractor: NotesFoldersInteractor,
     private val notesInteractor: RefactorNoteInteractor,
     private val notesMapper: NoteUiMapper,
-    private val navigator: AppNavigator
+    private val navigator: AppNavigator,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
@@ -38,44 +41,47 @@ class FoldersListProgram(
         when (cmd) {
             is Cmd.FetchFolders -> fetchFolders(consumer)
             is Cmd.FetchPassedFromMainScreenArgs -> fetchedPassedNotesMoveState(consumer)
-            is Cmd.RemoveSelected -> moveSelectedNotesToTrash(cmd.folders, consumer)
-            is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.folders, consumer)
             is Cmd.UpdatePinnedFoldersInCache -> updatePinnedFolders(cmd.pinned)
+            is Cmd.UndoRemovedFolders -> {
+                undoRemovedFoldersFromTrash(
+                    folders = cmd.folders,
+                    removedFolders = cmd.removedFolders,
+                    removedNotes = cmd.removedNotes,
+                    notes = cmd.notes,
+                    consumer = consumer
+                )
+            }
+
             is Cmd.ChangeNoteFolderId -> changeNotesFolderId(cmd.folderId, cmd.notes)
+            is Cmd.RemoveSelected -> {
+                moveSelectedFoldersToTrash(
+                    folders = cmd.folders,
+                    notes = cmd.notes,
+                    consumer = consumer
+                )
+            }
         }
     }
 
-    private suspend fun fetchFolders(consumer: (Msg) -> Unit) {
-
+    private suspend fun fetchFolders(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
             combine(fetchFoldersUseCase(), fetchNotesUseCase()) { folders, notes ->
-                val result =
-                    foldersMapper.mapListTo(folders).sortStickyThenDescendingByPinTimeThenByDate()
-                val foldersUi = result.map { folder ->
-                    val count = notes.count { it.folderId == folder.id }
-                    val notesCount = if (folder.isStickyToStart) notes.count() else count
-                    folder.copy(notesCount = notesCount)
-                }
-                consumer(Msg.Inner.FetchedFoldersResult(foldersUi))
+                val foldersUi = foldersMapper.mapListTo(folders)
+                    .map { folder ->
+                        val count = notes.count { it.folderId == folder.id }
+                        folder.copy(
+                            notesCount = if (folder.isStickyToStart) notes.count() else count
+                        )
+                    }.sortStickyThenDescendingByPinTimeThenByDate()
+
+                val notesUi = notesMapper.mapListTo(notes)
+                consumer(Msg.Inner.FetchedFoldersResult(foldersUi, notesUi))
             }.collect()
 
         }.onFailure {
-            consumer(Msg.Inner.FetchedFoldersResult(emptyList()))
+            consumer(Msg.Inner.FetchedFoldersResult(emptyList(), emptyList()))
         }
     }
-
-    /* private suspend fun fetchFolders(consumer: (Msg) -> Unit) {
-
-        runCatching {
-            fetchFoldersUseCase().collect { data ->
-                val folders =
-                    foldersMapper.mapListTo(data).sortStickyThenDescendingByPinTimeThenByDate()
-                consumer(Msg.Inner.FetchedFoldersResult(folders))
-            }
-        }.onFailure {
-            consumer(Msg.Inner.FetchedFoldersResult(emptyList()))
-        }
-    }*/
 
     private fun fetchedPassedNotesMoveState(consumer: (Msg) -> Unit) {
         val keyList = Destination.NotesFoldersList.passedKeysList
@@ -84,42 +90,65 @@ class FoldersListProgram(
         consumer(Msg.Inner.FetchedPassedArgsFromMain(isMoveNotesState, currentSelectedFolderId))
     }
 
-    private suspend fun moveSelectedNotesToTrash(
+    private suspend fun moveSelectedFoldersToTrash(
         folders: List<NoteFolderUi>,
+        notes: List<NoteUi>,
         consumer: (Msg) -> Unit
-    ) {
-        consumer(Msg.Inner.ShowRemovedNotesSnackBar)
-        val notesDomain = foldersMapper.mapListFrom(folders)
-        foldersInteractor.updateAll(notesDomain)
+    ) = withContext(ioDispatcher) {
+        val removedFolders = folders.map { it.copy(isMovedToTrash = true) }
+        val removedNotes = notes.filter { note ->
+            removedFolders.find { it.id == note.folderId }?.id == note.folderId
+        }.map { it.copy(isMovedToTrash = true) }
+
+        foldersInteractor.updateAll(foldersMapper.mapListFrom(removedFolders))
+        updateNotes(removedNotes)
+        consumer(Msg.Inner.UpdatedRemovedNotes(removedNotes))
         delay(SNACK_BAR_VISIBILITY_TIME)
         consumer(Msg.Inner.HideRemovedNotesSnackBar)
     }
 
-    private suspend fun undoRemovedFromTrash(folders: List<NoteFolderUi>, consumer: (Msg) -> Unit) {
-        val notesDomain = foldersMapper.mapListFrom(folders)
-        foldersInteractor.updateAll(notesDomain)
+    private suspend fun undoRemovedFoldersFromTrash(
+        folders: List<NoteFolderUi>,
+        removedFolders: List<NoteFolderUi>,
+        removedNotes: List<NoteUi>,
+        notes: List<NoteUi>,
+        consumer: (Msg) -> Unit
+    ) = withContext(ioDispatcher) {
+        val restoredRemovedFolders = removedFolders.map { it.copy(isMovedToTrash = false) }
+        val foldersUi = folders.toMutableList().also { it.addAll(restoredRemovedFolders) }
+        val restoredRemovedNotes = removedNotes.map { it.copy(isMovedToTrash = false) }
+        val restoredNotes = notes.toMutableList().also { it.addAll(restoredRemovedNotes) }
+
+        foldersInteractor.updateAll(foldersMapper.mapListFrom(foldersUi))
+        updateNotes(restoredNotes)
+
         consumer(Msg.Inner.HideRemovedNotesSnackBar)
     }
 
-    private suspend fun updatePinnedFolders(folders: Set<NoteFolderUi>) {
-        val currentDate = LocalDateTime.now()
-        val isSelectedContainsUnpinned = folders.map { !it.isPinned }.contains(true)
-        val selected = folders.map { note ->
-            return@map note.copy(
-                isPinned = isSelectedContainsUnpinned,
-                pinTime = if (isSelectedContainsUnpinned) currentDate else null,
-                dateCreationRaw = note.dateCreationRaw
-            )
+    private suspend fun updatePinnedFolders(folders: Set<NoteFolderUi>) =
+        withContext(ioDispatcher) {
+            val currentDate = LocalDateTime.now()
+            val isSelectedContainsUnpinned = folders.map { !it.isPinned }.contains(true)
+            val selected = folders.map { note ->
+                return@map note.copy(
+                    isPinned = isSelectedContainsUnpinned,
+                    pinTime = if (isSelectedContainsUnpinned) currentDate else null,
+                    dateCreationRaw = note.dateCreationRaw
+                )
+            }
+
+            val foldersDomain = foldersMapper.mapListFrom(selected)
+            foldersInteractor.updateAll(foldersDomain)
         }
 
-        val foldersDomain = foldersMapper.mapListFrom(selected)
-        foldersInteractor.updateAll(foldersDomain)
-    }
-
     private suspend fun changeNotesFolderId(folderId: Long, notes: List<NoteUi>) {
-       // val folderId = if (folderId == 2L) 0L else folderId
         val updated = notes.map { it.copy(folderId = folderId) }
         val notesDomain = notesMapper.mapListFrom(updated)
+        notesInteractor.updateAll(notesDomain)
+    }
+
+    private suspend fun updateNotes(notes: List<NoteUi>) {
+        val notesDomain = notesMapper.mapListFrom(notes)
         notesInteractor.updateAll(notesDomain)
     }
 }
