@@ -2,8 +2,6 @@ package ru.maksonic.beresta.feature.onboarding.core.widget
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
@@ -21,12 +19,10 @@ enum class ModalSheetContent {
     NOTHING, LANGUAGE_SELECTOR, THEME_SELECTOR
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: State<ModalSheetContent>,
-    modalSheetState:  ModalBottomSheetState,
     languageBottomSheet: LanguagePickerApi.Ui = get(),
     themeBottomSheet: ThemePickerApi.Ui = get(),
     modifier: Modifier = Modifier
@@ -35,15 +31,13 @@ internal fun MultipleModalBottomSheetContent(
     Box {
         when (currentSheetContent.value) {
             ModalSheetContent.LANGUAGE_SELECTOR -> {
-                languageBottomSheet.BottomSheet(
-                    isVisibleSheet = modalSheetState.isVisible,
+                languageBottomSheet.BottomSheetContent(
                     hideSheet = { send(Msg.Ui.OnHideModalBottomSheet) }
                 )
             }
 
             ModalSheetContent.THEME_SELECTOR -> {
-                themeBottomSheet.BottomSheet(
-                    isVisibleSheet = modalSheetState.isVisible,
+                themeBottomSheet.BottomSheetContent(
                     hideSheet = { send(Msg.Ui.OnHideModalBottomSheet) }
                 )
             }

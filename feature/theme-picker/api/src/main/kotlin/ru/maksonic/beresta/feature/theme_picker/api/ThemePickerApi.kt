@@ -28,6 +28,6 @@ interface ThemePickerApi {
     }
     interface Ui {
         @Composable
-        fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit)
+        fun BottomSheetContent(hideSheet: () -> Unit)
     }
 }

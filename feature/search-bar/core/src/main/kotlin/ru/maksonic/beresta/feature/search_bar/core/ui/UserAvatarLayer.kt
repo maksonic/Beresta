@@ -37,7 +37,7 @@ internal fun UserAvatarLayer(
 ) {
     val tonal = animateDpAsState(
         if (notesListSharedUiState.value.isNotColoredTopBar) Theme.tonal.Level0
-        else Theme.tonal.Level3, label = "", animationSpec = tween(Theme.animSpeed.common)
+        else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animSpeed.common)
     )
 
     val iconScale = animateFloatAsState(

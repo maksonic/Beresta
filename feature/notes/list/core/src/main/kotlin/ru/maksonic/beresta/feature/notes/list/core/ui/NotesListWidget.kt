@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
+import ru.maksonic.beresta.feature.notes.list.core.ui.widget.NotesLoaderWidgetContent
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
@@ -48,5 +49,10 @@ class NotesListWidget : NotesListApi.Ui {
             imageVector = AppImage.AddNotePlaceholder,
             message = text.shared.hintNoNotes
         )
+    }
+
+    @Composable
+    override fun NotesLoaderWidget(modifier: Modifier) {
+        NotesLoaderWidgetContent(modifier)
     }
 }

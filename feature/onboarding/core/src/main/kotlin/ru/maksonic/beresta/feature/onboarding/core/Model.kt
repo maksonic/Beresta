@@ -1,8 +1,8 @@
 package ru.maksonic.beresta.feature.onboarding.core
 
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.ElmCommand
@@ -14,20 +14,23 @@ import ru.maksonic.beresta.feature.onboarding.core.widget.ModalSheetContent
 /**
  * @Author maksonic on 24.12.2022
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Stable
 @Immutable
-data class Model @OptIn(ExperimentalMaterialApi::class) constructor(
+data class Model (
     val currentSheetContent: ModalSheetContent,
-    val modalBottomSheetState: ModalBottomSheetState
+    val modalBottomSheetState: SheetState,
+    val isVisibleModalSheet: Boolean
 ) : ElmModel {
     companion object {
-        @OptIn(ExperimentalMaterialApi::class)
+        @ExperimentalMaterial3Api
         val Initial = Model(
             currentSheetContent = ModalSheetContent.NOTHING,
-            modalBottomSheetState = ModalBottomSheetState(
-                initialValue = ModalBottomSheetValue.Hidden,
-                isSkipHalfExpanded = true
+            modalBottomSheetState = SheetState(
+                initialValue = SheetValue.Hidden,
+                skipPartiallyExpanded = true
             ),
+            isVisibleModalSheet = false
         )
     }
 }
@@ -41,6 +44,10 @@ sealed class Msg : ElmMessage {
         object OnShowThemePickerClicked : Ui()
         object OnHideModalBottomSheet : Ui()
     }
+
+    sealed class Inner : Msg() {
+        data class UpdatedModalSheetState(val isVisible: Boolean): Inner()
+    }
 }
 
 sealed class Cmd : ElmCommand {
@@ -49,7 +56,6 @@ sealed class Cmd : ElmCommand {
 
 sealed class Eff : ElmEffect {
     object SlideNextPage : Eff()
-    object ShowModalSheet : Eff()
     object HideModalSheet : Eff()
     object NavigateToMain : Eff()
 }

@@ -60,6 +60,7 @@ dependencies {
     implementation(project(module.feature.themePicker.api.path))
     implementation(project(module.primary.ui.widget.path))
     implementation(platform(lib.compose.bom))
+    implementation(lib.compose.activity)
     implementation(lib.compose.lifecycle)
     implementation(lib.compose.material)
     implementation(lib.compose.material3)

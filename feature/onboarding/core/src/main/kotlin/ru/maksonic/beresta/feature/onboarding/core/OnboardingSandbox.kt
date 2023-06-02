@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.feature.onboarding.core
 
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.feature.onboarding.core.widget.ModalSheetContent
@@ -10,6 +10,7 @@ import ru.maksonic.beresta.feature.onboarding.core.widget.ModalSheetContent
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
+@OptIn(ExperimentalMaterial3Api::class)
 class OnboardingSandbox(
     program: OnboardingProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
@@ -24,6 +25,7 @@ class OnboardingSandbox(
         is Msg.Ui.OnShowLangPickerClicked -> onShowLangPickerClicked(model)
         is Msg.Ui.OnShowThemePickerClicked -> onShowThemePickerClicked(model)
         is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
+        is Msg.Inner.UpdatedModalSheetState -> updatedModalSheetState(model, msg)
     }
 
     private fun onNextPageClicked(model: Model): UpdateResult =
@@ -35,18 +37,26 @@ class OnboardingSandbox(
         effects = setOf(Eff.NavigateToMain)
     )
 
-    @OptIn(ExperimentalMaterialApi::class)
     private fun onShowLangPickerClicked(model: Model): UpdateResult = UpdatedModel(
-        model = model.copy(currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR),
-        effects = setOf(Eff.ShowModalSheet)
+        model = model.copy(
+            isVisibleModalSheet = true,
+            currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR
+        )
     )
 
-    @OptIn(ExperimentalMaterialApi::class)
     private fun onShowThemePickerClicked(model: Model): UpdateResult = UpdatedModel(
-        model = model.copy(currentSheetContent = ModalSheetContent.THEME_SELECTOR),
-        effects = setOf(Eff.ShowModalSheet)
+        model = model.copy(
+            isVisibleModalSheet = true,
+            currentSheetContent = ModalSheetContent.THEME_SELECTOR
+        )
     )
 
     private fun onHideModalBottomSheet(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
+
+    private fun updatedModalSheetState(
+        model: Model,
+        msg: Msg.Inner.UpdatedModalSheetState
+    ): UpdateResult =
+        UpdatedModel(model.copy(isVisibleModalSheet = msg.isVisible))
 }

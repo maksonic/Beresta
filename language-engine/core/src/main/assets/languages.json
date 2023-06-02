@@ -43,8 +43,10 @@
       "btn_title_unpin": "Открепить",
       "btn_title_replace": "Переместить",
       "btn_title_remove": "Удалить",
+      "btn_title_delete": "Удалить",
       "btn_title_create": "Создать",
       "btn_title_change": "Изменить",
+      "btn_title_restore": "Восстановить",
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_items_count": "Выбрано:",
       "hint_removed_notes_count": "Удалено заметок:",
@@ -92,6 +94,12 @@
       "hint_removed_folders_count": "Удалено папок:",
       "btn_title_crete_folder": "Создать папку",
       "btn_title_select_folder": "Выбрать папку"
+    },
+    "trash": {
+      "top_bar_title": "Корзина",
+      "title_trashed_folders": "Удалённые папки",
+      "dialog_title_delete_note": "Удалить заметку навсегда?",
+      "dialog_body_delete_note": "После удаления заметки из корзины её невозможно восстановить."
     }
   },
   "english": {
@@ -138,8 +146,10 @@
       "btn_title_unpin": "Unpin",
       "btn_title_replace": "Move",
       "btn_title_remove": "Remove",
+      "btn_title_delete": "Delete",
       "btn_title_create": "Create",
       "btn_title_change": "Edit",
+      "btn_title_restore": "Restore",
       "hint_find_note_search_bar": "Find note",
       "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
@@ -187,6 +197,12 @@
       "hint_removed_folders_count": "Removed folders:",
       "btn_title_crete_folder": "Create new folder",
       "btn_title_select_folder": "Select folder"
+    },
+    "trash": {
+      "top_bar_title": "Trash",
+      "title_trashed_folders": "Removed folders",
+      "dialog_title_delete_note": "Delete a note permanently?",
+      "dialog_body_delete_note": "Once a note is deleted from the trash, it cannot be restored."
     }
   },
   "chinese": {
@@ -232,9 +248,11 @@
       "btn_title_pin": "修理",
       "btn_title_unpin": "取消固定",
       "btn_title_replace": "移动",
-      "btn_title_remove": "删除",
+      "btn_title_remove": "消除",
+      "btn_title_delete": "删除",
       "btn_title_create": "创造",
       "btn_title_change": "编辑",
+      "btn_title_restore": "恢复",
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
@@ -282,6 +300,12 @@
       "hint_removed_folders_count": "删除的文件夹:",
       "btn_title_crete_folder": "创建新文件夹",
       "btn_title_select_folder": "选择文件夹"
+    },
+    "trash": {
+      "top_bar_title": "垃圾",
+      "title_trashed_folders": "删除的文件夹",
+      "dialog_title_delete_note": "永久删除笔记？",
+      "dialog_body_delete_note": "笔记一旦从回收站中删除，便无法恢复。"
     }
   },
   "chinese_tr": {
@@ -327,9 +351,11 @@
       "btn_title_pin": "修理",
       "btn_title_unpin": "取消固定",
       "btn_title_replace": "移動",
-      "btn_title_remove": "刪除",
+      "btn_title_remove": "消除",
+      "btn_title_delete": "刪除",
       "btn_title_create": "創造",
       "btn_title_change": "編輯",
+      "btn_title_restore": "恢復",
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
@@ -377,6 +403,12 @@
       "hint_removed_folders_count": "刪除的文件夾:",
       "btn_title_crete_folder": "創建新文件夾",
       "btn_title_select_folder": "選擇文件夾"
+    },
+    "trash": {
+      "top_bar_title": "垃圾",
+      "title_trashed_folders": "刪除的文件夾",
+      "dialog_title_delete_note": "永久刪除筆記？",
+      "dialog_body_delete_note": "筆記一旦從回收站中刪除，便無法恢復。"
     }
   }
 }

@@ -33,7 +33,7 @@ import ru.maksonic.beresta.feature.notes.list.core.Model
 import ru.maksonic.beresta.feature.notes.list.core.Msg
 import ru.maksonic.beresta.feature.notes.list.core.NotesFilterUpdater
 import ru.maksonic.beresta.feature.notes.list.core.NotesListSandbox
-import ru.maksonic.beresta.feature.notes.list.core.ui.widget.NotesLoaderWidget
+import ru.maksonic.beresta.feature.notes.list.core.ui.widget.NotesLoaderWidgetContent
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.intiClickActions
 import ru.maksonic.beresta.feature.top_bar_counter.api.updateCounterValue
@@ -98,7 +98,16 @@ internal fun NotesListContainer(
 
     Box(modifier.padding(top = Theme.widgetSize.topBarNormalHeight)) {
         when {
-            model.value.base.isLoading -> NotesLoaderWidget()
+            model.value.base.isLoading -> {
+                NotesLoaderWidgetContent(
+                    Modifier.padding(
+                        top = Theme.widgetSize.topBarNormalHeight.plus(dp10),
+                        start = dp10,
+                        end = dp10
+                    )
+                )
+            }
+
             model.value.base.isSuccessLoading -> {
                 NotesResultDataContent(
                     model = model.value,
@@ -137,9 +146,9 @@ private fun NotesResultDataContent(
             icon = AppIcon.Lock,
             action = { send(Msg.Ui.OnBarMoveToSecureFolderClicked) }),
         BaseBottomBarItem(
-            label = if (model.isShowUnpinMainBarIcon) text.shared.btnTitleUnpin
+            label = if (model.isVisibleUnpinMainBarIcon) text.shared.btnTitleUnpin
             else text.shared.btnTitlePin,
-            icon = if (model.isShowUnpinMainBarIcon) AppIcon.Unpin else AppIcon.Pin,
+            icon = if (model.isVisibleUnpinMainBarIcon) AppIcon.Unpin else AppIcon.Pin,
             action = {
                 send(Msg.Ui.OnBarPinToTopOfListClicked)
                 send(Msg.Ui.CancelSelectionState)
@@ -171,7 +180,7 @@ private fun NotesResultDataContent(
         }
     }
 
-    LaunchedEffect(model.isShowUnpinMainBarIcon) {
+    LaunchedEffect(model.isVisibleUnpinMainBarIcon) {
         sharedUiState.update { it.copy(selectBarActions = sharedBottomBarMessages) }
     }
 

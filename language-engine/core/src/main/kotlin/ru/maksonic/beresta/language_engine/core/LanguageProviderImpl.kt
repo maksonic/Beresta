@@ -23,7 +23,8 @@ class LanguageProviderImpl(
                     shared = shared(currentLanguage, data),
                     settings = settingsText(currentLanguage, data),
                     editNote = editNotesText(currentLanguage, data),
-                    folders =  folders(currentLanguage, data)
+                    folders = folders(currentLanguage, data),
+                    trash = trash(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }
@@ -80,5 +81,12 @@ class LanguageProviderImpl(
         AppLanguage.ENGLISH -> data.english.folders
         AppLanguage.CHINESE -> data.chinese.folders
         AppLanguage.CHINESE_TR -> data.chineseTr.folders
+    }
+
+    private fun trash(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.trash
+        AppLanguage.ENGLISH -> data.english.trash
+        AppLanguage.CHINESE -> data.chinese.trash
+        AppLanguage.CHINESE_TR -> data.chineseTr.trash
     }
 }

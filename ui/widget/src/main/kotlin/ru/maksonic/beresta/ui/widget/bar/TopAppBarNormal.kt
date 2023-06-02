@@ -20,17 +20,17 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
 fun TopAppBarNormal(
     scrollBehavior: TopAppBarScrollBehavior? = null,
     title: String,
-    tonal: Dp? = Theme.tonal.Level2,
+    tonal: Dp? = null,
     onBackAction: () -> Unit,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
 
     val defaultTonal =
         animateDpAsState(
-            if (scrollBehavior?.state?.collapsedFraction == 0f) Theme.tonal.Level0
-            else Theme.tonal.Level2
+            if (scrollBehavior?.state?.overlappedFraction == 0f) Theme.tonal.Level0
+            else Theme.tonal.Level2, label = ""
         )
-
+    
     val tonalElevation = tonal ?: defaultTonal.value
 
     SurfacePro(tonalElevation = tonalElevation) { color ->

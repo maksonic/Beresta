@@ -5,6 +5,8 @@ import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.navigation
 import ru.maksonic.beresta.navigation.graph_builder.destination.*
+import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashFoldersScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashNotesScreen
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 
@@ -36,7 +38,8 @@ interface GraphBuilder {
                     mainScreen(this)
                     editNoteScreen(apiStore.editNote, this)
                     settingsScreen(this, DEF_ANIM_SPEED)
-                    trashListScreen(this, DEF_ANIM_SPEED)
+                    trashNotesScreen(this, DEF_ANIM_SPEED)
+                    trashFoldersScreen(this, DEF_ANIM_SPEED)
                     foldersListScreen(apiStore.foldersList, this, DEF_ANIM_SPEED)
                 }
             }

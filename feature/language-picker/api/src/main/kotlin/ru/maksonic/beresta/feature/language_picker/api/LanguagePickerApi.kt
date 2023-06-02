@@ -8,6 +8,6 @@ import androidx.compose.runtime.Composable
 interface LanguagePickerApi {
     interface Ui {
         @Composable
-        fun BottomSheet(isVisibleSheet: Boolean, hideSheet: () -> Unit)
+        fun BottomSheetContent(hideSheet: () -> Unit)
     }
 }

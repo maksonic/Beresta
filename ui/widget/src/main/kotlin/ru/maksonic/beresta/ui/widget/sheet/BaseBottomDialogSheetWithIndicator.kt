@@ -16,6 +16,7 @@ import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.*
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 19.02.2023
@@ -39,7 +40,8 @@ fun BaseBottomDialogSheetWithIndicator(
             .shadow(Theme.elevation.Level5, shape = Theme.shape.cornerExtra)
             .clip(Theme.shape.cornerExtra)
             .background(secondaryContainer)
-            .padding(start = dp16, end = dp16),
+            .padding(start = dp16, end = dp16)
+            .noRippleClickable {  },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         SheetIndicator()

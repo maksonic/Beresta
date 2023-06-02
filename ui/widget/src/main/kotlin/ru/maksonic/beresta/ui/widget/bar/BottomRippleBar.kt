@@ -3,12 +3,16 @@ package ru.maksonic.beresta.ui.widget.bar
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -22,14 +26,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.layout.LastBaseline
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.MeasureResult
+import androidx.compose.ui.layout.MeasureScope
+import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.ui.theme.color.onPrimary
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
+import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -42,6 +53,18 @@ private val BottomNavigationAnimationSpec = TweenSpec<Float>(
     durationMillis = 300,
     easing = FastOutSlowInEasing
 )
+
+@Composable
+fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .height(Theme.widgetSize.bottomBarNormalHeight.plus(SystemNavigationBarHeight))
+            .background(surface.copy(alpha = 0.5f))
+            .noRippleClickable { }
+    )
+}
+
 
 @Composable
 fun RowScope.BottomRippleBar(

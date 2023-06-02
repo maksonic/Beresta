@@ -14,15 +14,11 @@ import ru.maksonic.beresta.ui.widget.functional.animation.PlaceholderListWidget
 private const val PLACEHOLDERS_COUNT = 10
 
 @Composable
-internal fun NotesLoaderWidget() {
+internal fun NotesLoaderWidgetContent(modifier: Modifier) {
 
     PlaceholderListWidget(
         placeholdersCount = PLACEHOLDERS_COUNT,
-        modifier = Modifier.padding(
-            top = Theme.widgetSize.topBarNormalHeight.plus(dp10),
-            start = dp10,
-            end = dp10
-        )
+        modifier = modifier
     ) { animateColor ->
         NoteItemPlaceholder(animateColor)
     }

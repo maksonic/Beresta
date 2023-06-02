@@ -62,13 +62,13 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
     override fun ExpandableScreen(
         router: EditNoteRouter?,
         isEntryPoint: Boolean,
-        fabModifier: Modifier
+        modifier: Modifier
     ) {
 
         ExpandableScreenContainer(
             isEntryPoint = isEntryPoint,
             router = router,
-            modifier = fabModifier
+            modifier = modifier
         )
     }
 }
@@ -176,20 +176,17 @@ private fun HandleUiEffects(
     val scope = rememberCoroutineScope()
     val keyboard = LocalSoftwareKeyboardController.current
     val noteMaxLengthWarning = rememberUpdatedState(newValue = text.editNote.noteMaxLengthWarning)
-
+    val keyboardDelay = Theme.animSpeed.common
     HandleEffectsWithLifecycle(effects) { eff ->
-
         when (eff) {
             is Eff.NavigateBack -> router?.let { it.onBack() }
             is Eff.ShowToastMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning.value)
             is Eff.ShowNoteUpdateSnackBar -> context.toastLongTime("Bye")
             is Eff.ShowKeyboardForExpandedFab -> {
                 scope.launch {
-                    focusRequester.requestFocus().let {
-                        keyboard?.hide()
-                        delay(300L)
-                        keyboard?.show()
-                    }
+                    delay(keyboardDelay.toLong())
+                    focusRequester.requestFocus()
+                    keyboard?.show()
                 }
             }
         }

@@ -21,27 +21,23 @@ enum class ModalSheetContent {
     NOTHING, LANGUAGE_SELECTOR, THEME_SELECTOR
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: State<ModalSheetContent>,
-    modalSheetState: ModalBottomSheetState,
     modifier: Modifier = Modifier,
     languageSheet: LanguagePickerApi.Ui = get(),
     themeSheet: ThemePickerApi.Ui = get(),
 ) {
     when (currentSheetContent.value) {
         ModalSheetContent.LANGUAGE_SELECTOR -> {
-            languageSheet.BottomSheet(
-                isVisibleSheet = modalSheetState.isVisible,
+            languageSheet.BottomSheetContent(
                 hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) }
             )
         }
 
         ModalSheetContent.THEME_SELECTOR -> {
-            themeSheet.BottomSheet(
-                isVisibleSheet = modalSheetState.isVisible,
+            themeSheet.BottomSheetContent(
                 hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) },
             )
         }

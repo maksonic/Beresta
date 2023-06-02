@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,20 +21,22 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
@@ -46,6 +47,7 @@ import ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.core.Fol
 import ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.core.Msg
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.color.error
+import ru.maksonic.beresta.ui.theme.color.errorContainer
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.onSurfaceVariant
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -64,6 +66,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 29.03.2023
  */
+private const val WAITING_CLEAR_INPUT_FIELD = 50L
 
 @Composable
 internal fun FolderDialogContent(
@@ -75,19 +78,19 @@ internal fun FolderDialogContent(
     val sharedState = sharedUiState.state.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
     val passedFolderId = rememberSaveable {
-        mutableStateOf(sharedState.value.passedForEditFolderId)
+        mutableLongStateOf(sharedState.value.passedForEditFolderId)
     }
+
 
     HandleUiEffects(effects = sandbox.effects, sharedUiState = sharedUiState)
 
-    BackHandler(true) {
+    BackHandler {
         sandbox.send(Msg.Ui.OnDismissClicked)
     }
 
-    LaunchedEffect(Unit) {
-        this.coroutineContext.job.invokeOnCompletion {
-            focusRequester.requestFocus()
-        }
+    LaunchedEffect(focusRequester) {
+        awaitFrame()
+        focusRequester.requestFocus()
     }
 
     LaunchedEffect(passedFolderId) {
@@ -97,7 +100,7 @@ internal fun FolderDialogContent(
         }
     }
 
-    Surface(color = scrim, modifier = modifier.focusRequester(focusRequester)) {
+    Surface(color = scrim) {
         Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
             Box(
                 modifier
@@ -152,7 +155,6 @@ internal fun FolderDialogContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputFolderName(
     model: State<DialogModel>,
@@ -160,7 +162,6 @@ private fun InputFolderName(
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
-
     OutlinedTextField(
         value = model.value.inputFiled,
         onValueChange = { send(Msg.Inner.UpdateNewFolderNameInput(it)) },
@@ -174,13 +175,17 @@ private fun InputFolderName(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = { send(Msg.Ui.OnAcceptClicked) }),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = onBackground,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = onBackground,
             disabledTextColor = outline,
-            focusedBorderColor = tertiaryContainer,
-            unfocusedBorderColor = outline,
+            focusedContainerColor = secondaryContainer,
+            unfocusedContainerColor = secondaryContainer,
+            focusedIndicatorColor = tertiaryContainer,
+            errorIndicatorColor = error,
+            unfocusedIndicatorColor = tertiaryContainer,
+            disabledIndicatorColor = tertiaryContainer,
             cursorColor = primary,
-            errorBorderColor = error,
+            errorContainerColor = errorContainer,
             errorLabelColor = error,
             errorSupportingTextColor = error,
             selectionColors = TextSelectionColors(
@@ -204,17 +209,24 @@ private fun InputCounterHint(counterValue: String, isError: Boolean) {
     Text(text = caption, style = TextDesign.captionSmall.copy(color = color))
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     sharedUiState: SharedUiState<FoldersSharedUiState>
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
+    val focusManager = LocalFocusManager.current
+    val scope = rememberCoroutineScope()
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
-            is Eff.HideDialog -> keyboardController?.hide().let { sharedUiState.hideDialog() }
+            is Eff.HideDialog -> {
+                scope.launch {
+                    // Without delay, the input field does not have time
+                    // to be cleared after closing the dialog box
+                    delay(WAITING_CLEAR_INPUT_FIELD)
+                    focusManager.clearFocus()
+                    sharedUiState.hideDialog()
+                }
+            }
         }
     }
 }

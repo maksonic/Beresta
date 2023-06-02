@@ -53,6 +53,7 @@ dependencies {
     implementation(project(module.primary.languageEngine.shell.path))
     implementation(lib.accompanist.pager)
     implementation(platform(lib.compose.bom))
+    implementation(lib.compose.activity)
     implementation(lib.compose.material)
     implementation(lib.compose.material3)
     implementation(lib.compose.ui)

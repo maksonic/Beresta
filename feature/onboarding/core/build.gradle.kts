@@ -62,6 +62,7 @@ dependencies {
     implementation(lib.accompanist.pager)
     implementation(lib.accompanist.pagerIndicators)
     implementation(lib.android.datastore)
+    implementation(lib.compose.activity)
     implementation(lib.compose.material3)
     implementation(lib.compose.lifecycle)
     implementation(lib.compose.ui)

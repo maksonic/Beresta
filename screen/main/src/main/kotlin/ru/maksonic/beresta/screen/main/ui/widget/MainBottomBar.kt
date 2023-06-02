@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +34,6 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.color.outline
-import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
@@ -47,8 +45,8 @@ import ru.maksonic.beresta.ui.theme.icons.Trash
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.bar.BottomRippleBar
+import ru.maksonic.beresta.ui.widget.bar.DisabledBottomBarPlaceholder
 import ru.maksonic.beresta.ui.widget.button.IconAction
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 24.03.2023
@@ -176,16 +174,3 @@ private fun SelectedStateContent(actions: Array<BaseBottomBarItem>, modifier: Mo
         }
     }
 }
-
-@Composable
-private fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
-    Box(
-        modifier
-            .fillMaxWidth()
-            .navigationBarsPadding()
-            .height(Theme.widgetSize.bottomBarNormalHeight)
-            .background(surface.copy(alpha = 0.5f))
-            .noRippleClickable {  }
-    )
-}
-

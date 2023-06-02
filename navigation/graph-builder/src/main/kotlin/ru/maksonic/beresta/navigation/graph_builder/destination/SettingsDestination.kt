@@ -1,12 +1,12 @@
 package ru.maksonic.beresta.navigation.graph_builder.destination
 
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
-import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.screen.settings.ui.SettingsScreen
 
 /**
@@ -20,7 +20,7 @@ internal fun NavGraphBuilder.settingsScreen(navigator: AppNavigator, defAnimSpee
             when (initialState.destination.route) {
                 Destination.Main.route ->
                     slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Left,
+                        AnimatedContentTransitionScope.SlideDirection.Left,
                         animationSpec = tween(defAnimSpeed)
                     )
                 else -> null
@@ -30,7 +30,7 @@ internal fun NavGraphBuilder.settingsScreen(navigator: AppNavigator, defAnimSpee
             when (targetState.destination.route) {
                 Destination.Main.route ->
                     slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Right,
+                        AnimatedContentTransitionScope.SlideDirection.Right,
                         animationSpec = tween(defAnimSpeed)
                     )
                 else -> null

@@ -115,7 +115,7 @@ private fun SearchBarContent(
     )
 
     val tonal = animateDp(
-        if (isColoredBar) Theme.tonal.Level0 else Theme.tonal.Level3, Theme.animSpeed.common
+        if (isColoredBar) Theme.tonal.Level0 else Theme.tonal.Level2, Theme.animSpeed.common
     )
 
     BoxWithConstraints(modifier.fillMaxWidth()) {

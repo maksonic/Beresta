@@ -130,7 +130,12 @@ private fun FetchedDataWidget(
                     scrollState = scrollState,
                     modifier = modifier
                 )
-                BottomBarContent(model, send, scrollState)
+                BottomBarContent(
+                    model = model,
+                    send = send,
+                    scrollState = scrollState,
+                    isDisabledBottomBar = model.selectedFolders.isEmpty() && model.isSelectionState,
+                )
             }
         }
     }

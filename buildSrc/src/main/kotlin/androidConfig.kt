@@ -4,9 +4,9 @@ import org.gradle.api.JavaVersion
  * @Author maksonic on 20.04.2023
  */
 object androidConfig {
-    val kotlinVersion = "1.8.20"
-    val kotlinCompilerExtensionVersion = "1.4.6"
-    val kspVersion = "1.8.20-1.0.11"
+    val kotlinVersion = "1.8.21"
+    val kotlinCompilerExtensionVersion = "1.4.7"
+    val kspVersion = "1.8.21-1.0.11"
     val applicationId = "ru.maksonic.beresta"
     val compileSdk = 33
     val targetSdk = 33

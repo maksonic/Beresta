@@ -9,7 +9,8 @@ object Destination : AbstractDestination(route = "root") {
     object Main : AbstractDestination(route = "main")
     object EditNote : AbstractDestination(route = "edit_note", argKey = "noteId")
     object Settings : AbstractDestination(route = "settings")
-    object TrashList : AbstractDestination(route = "trash_list")
+    object TrashNotesList : AbstractDestination(route = "trash_notes_list")
+    object TrashFoldersList : AbstractDestination(route = "trash_folders_list")
     object NotesFoldersList : AbstractDestination(
         route = "notes_folders_list",
         listArgKeys = listOf("isMoveNotes", "currentSelectedFolderId")

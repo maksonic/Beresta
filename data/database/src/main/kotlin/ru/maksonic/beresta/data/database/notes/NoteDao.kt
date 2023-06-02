@@ -14,8 +14,8 @@ abstract class NoteDao : BaseDao<NoteCache>() {
     @Query("SELECT * FROM notes WHERE isMovedToTrash == 0")
     abstract fun fetchNotesList(): Flow<List<NoteCache>>
 
-    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1")
-    abstract fun fetchNotesTrashList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId == 2")
+    abstract fun fetchNotesWithoutFolderTrashList(): Flow<List<NoteCache>>
 
     @Query("SELECT * FROM notes WHERE id = :itemId")
     abstract fun fetchCacheOneItemById(itemId: Long): Flow<NoteCache>

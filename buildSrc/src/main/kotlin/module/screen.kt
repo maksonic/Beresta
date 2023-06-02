@@ -19,8 +19,14 @@ object screen {
         namespace = "ru.maksonic.beresta.screen.edit_note"
     )
 
-    object trashList: base(
-        path = ":screen:trash-list",
-        namespace = "ru.maksonic.beresta.screen.trash_list"
-    )
+    object trashList {
+        object notes : base(
+            path = ":screen:trash-list:notes",
+            namespace = "ru.maksonic.beresta.screen.trash_list.notes"
+        )
+        object folders : base(
+            path = ":screen:trash-list:folders",
+            namespace = "ru.maksonic.beresta.screen.trash_list.folders"
+        )
+    }
 }

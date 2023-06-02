@@ -77,7 +77,7 @@ internal fun ChipsWidgetContainer(
     val tonal =
         animateDpAsState(
             if (notesSharedUiState.value.isNotColoredTopBar) Theme.tonal.Level0
-            else Theme.tonal.Level3, label = "", animationSpec = tween(Theme.animSpeed.common)
+            else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animSpeed.common)
         )
     val chipsOffset = animateDpAsState(
         if (notesSharedUiState.value.isVisibleChipsRow) 0.dp

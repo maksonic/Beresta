@@ -7,6 +7,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangFoldersListData
 import ru.maksonic.beresta.language_engine.shell.components.LangOnboardingData
 import ru.maksonic.beresta.language_engine.shell.components.LangSettingsScreenData
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
+import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.OnboardingDataItem
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 
@@ -35,7 +36,8 @@ data class BerestaLanguage(
     val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData(),
     val editNote: LangEditorData = LangEditorData(),
-    val folders : LangFoldersListData = LangFoldersListData()
+    val folders : LangFoldersListData = LangFoldersListData(),
+    val trash: LangTrashData = LangTrashData()
 )
 
 val text: BerestaLanguage @Composable get() = LocalBerestaLanguage.current

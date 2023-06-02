@@ -62,6 +62,7 @@ dependencies {
     implementation(project(module.feature.editNote.api.path))
     implementation(project(module.feature.searchBar.api.path))
     implementation(platform(lib.compose.bom))
+    implementation(lib.compose.activity)
     implementation(lib.compose.lifecycle)
     implementation(lib.compose.material)
     implementation(lib.compose.material3)

@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.screen.settings
 
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
 import ru.maksonic.beresta.screen.settings.ui.widget.ModalSheetContent
@@ -10,7 +10,7 @@ import ru.maksonic.beresta.screen.settings.ui.widget.ModalSheetContent
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 class SettingsSandbox(
     program: SettingsProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
@@ -31,25 +31,31 @@ class SettingsSandbox(
         is Msg.Ui.OnUserAccountClicked -> onUserAccountClicked(model)
         is Msg.Ui.OnUserAgreementClicked -> onUserAgreementClicked(model)
         is Msg.Ui.OnWriteEmailClicked -> onWriteEmailClicked(model)
+        is Msg.Inner.UpdatedModalSheetState -> updatedModalSheetState(model, msg)
+
     }
 
     private fun fetchedTheme(model: Model, msg: Msg.Inner.FetchedTheme): UpdateResult =
         UpdatedModel(model.copy(currentTheme = msg.theme, isDarkTheme = msg.isDark))
 
     private fun onTopBarBackPressed(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.NavigateBack))
+        UpdatedModel(model.copy(isVisibleModalSheet = false), effects = setOf(Eff.NavigateBack))
 
     private fun onHideLanguageSheetClicked(model: Model): UpdateResult =
         UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
 
     private fun onShowLanguageSheetClicked(model: Model): UpdateResult = UpdatedModel(
-        model = model.copy(currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR),
-        effects = setOf(Eff.ShowModalSheet)
+        model = model.copy(
+            isVisibleModalSheet = true,
+            currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR
+        ),
     )
 
     private fun onShowThemeSheetClicked(model: Model): UpdateResult = UpdatedModel(
-        model = model.copy(currentSheetContent = ModalSheetContent.THEME_SELECTOR),
-        effects = setOf(Eff.ShowModalSheet)
+        model = model.copy(
+            isVisibleModalSheet = true,
+            currentSheetContent = ModalSheetContent.THEME_SELECTOR
+        ),
     )
 
     private fun onAppearanceClicked(model: Model): UpdateResult = UpdatedModel(model)
@@ -64,4 +70,9 @@ class SettingsSandbox(
 
     private fun onWriteEmailClicked(model: Model): UpdateResult = UpdatedModel(model)
 
+    private fun updatedModalSheetState(
+        model: Model,
+        msg: Msg.Inner.UpdatedModalSheetState
+    ): UpdateResult =
+        UpdatedModel(model.copy(isVisibleModalSheet = msg.isVisible))
 }

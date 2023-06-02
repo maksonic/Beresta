@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import ru.maksonic.beresta.ui.theme.component.dp8
 /**
  * @Author maksonic on 07.03.2023
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NoteMessageInputFieldWidget(
     message: String,

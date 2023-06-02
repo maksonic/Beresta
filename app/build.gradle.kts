@@ -100,7 +100,8 @@ dependencies {
     //screens
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.path))
-    implementation(project(module.screen.trashList.path))
+    implementation(project(module.screen.trashList.notes.path))
+    implementation(project(module.screen.trashList.folders.path))
     //libs
     implementation(lib.accompanist.navigation)
     implementation(platform(lib.compose.bom))

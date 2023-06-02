@@ -72,24 +72,26 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         baseOnNoteAction(model, msg.id)
 
     private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {
-        val selected = model.selectedNotes.toMutableSet().also { list ->
+        val selectedList = model.selectedNotes.toMutableSet().also { list ->
             model.notes.data.forEach { note ->
                 if (noteId == note.id) {
                     if (list.contains(note)) list.remove(note) else list.add(note)
                 }
             }
         }.toSet()
-        val isShowUnpinButton = !selected.map { it.isPinned }.contains(false)
+        val isVisibleUnpinButton = selectedList.isNotEmpty().run {
+            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+        }
 
         return UpdatedModel(
             model.copy(
-                selectedNotes = selected,
+                selectedNotes = selectedList,
                 isSelectionState = true,
-                isShowUnpinMainBarIcon = isShowUnpinButton
+                isVisibleUnpinMainBarIcon = isVisibleUnpinButton
             ),
             effects = setOf(
                 Eff.UpdateSharedUiIsSelectedState(true),
-                Eff.UpdateSharedUiIsEnabledBottomBarState(selected.isNotEmpty())
+                Eff.UpdateSharedUiIsEnabledBottomBarState(selectedList.isNotEmpty())
             )
         )
     }
@@ -136,7 +138,7 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
             }
         }
 
-        val selectedNotes = model.selectedNotes.toMutableSet().also { list ->
+        val selectedList = model.selectedNotes.toMutableSet().also { list ->
             if (model.currentSelectedFolderId == STICKY_START_FOLDER_ID) {
                 if (list.containsAll(model.notes.data)) list.clear()
                 else list.addAll(model.notes.data)
@@ -146,11 +148,16 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
             }
         }.toSet()
 
-        val isShowUnpinButton = !selectedNotes.map { it.isPinned }.contains(false)
+        val isVisibleUnpinButton = selectedList.isNotEmpty().run {
+            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+        }
 
         return UpdatedModel(
-            model.copy(selectedNotes = selectedNotes, isShowUnpinMainBarIcon = isShowUnpinButton),
-            effects = setOf(Eff.UpdateSharedUiIsEnabledBottomBarState(selectedNotes.isNotEmpty()))
+            model.copy(
+                selectedNotes = selectedList,
+                isVisibleUnpinMainBarIcon = isVisibleUnpinButton
+            ),
+            effects = setOf(Eff.UpdateSharedUiIsEnabledBottomBarState(selectedList.isNotEmpty()))
         )
     }
 

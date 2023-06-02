@@ -184,7 +184,7 @@ private fun EditNoteFabLayer(
     editNoteFeatureApi.ExpandableScreen(
         router = null,
         isEntryPoint = false,
-        fabModifier = Modifier.graphicsLayer {
+        modifier = Modifier.graphicsLayer {
             scaleX = fabTransition.value
             scaleY = fabTransition.value
             alpha = fabTransition.value

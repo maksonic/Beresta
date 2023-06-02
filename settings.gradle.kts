@@ -33,7 +33,8 @@ include(":common:coroutine-dispatchers")
 //screens
 include(":screen:main")
 include(":screen:settings")
-include(":screen:trash-list")
+include(":screen:trash-list:notes")
+include(":screen:trash-list:folders")
 //features
 include(":feature:splash-screen:api")
 include(":feature:splash-screen:core")
@@ -55,3 +56,4 @@ include(":feature:search-bar:core")
 include(":feature:top-bar-counter")
 include(":feature:top-bar-counter:api")
 include(":feature:top-bar-counter:core")
+

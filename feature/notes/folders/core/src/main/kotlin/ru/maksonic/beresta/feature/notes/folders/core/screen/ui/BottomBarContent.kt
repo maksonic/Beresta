@@ -41,8 +41,10 @@ import ru.maksonic.beresta.ui.theme.icons.Unpin
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.bar.BottomRippleBar
+import ru.maksonic.beresta.ui.widget.bar.DisabledBottomBarPlaceholder
 import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 
@@ -54,6 +56,7 @@ fun BottomBarContent(
     model: Model,
     send: SendMessage,
     scrollState: LazyListState,
+    isDisabledBottomBar: Boolean,
     modifier: Modifier = Modifier
 ) {
     val isVisibleFirstFolderOffset = scrollState.isVisibleFirstItemOffset()
@@ -120,7 +123,8 @@ fun BottomBarContent(
                         SelectedStateBarContent(
                             send = send,
                             selectedFoldersCount = model.selectedFolders.count(),
-                            isShowUnpinBtn = model.isShowUnpinBottomBarIcon
+                            isVisibleUnpinBtn = model.isVisibleUnpinBottomBarIcon,
+                            isDisabledBottomBar = isDisabledBottomBar
                         )
                     } else {
                         Box(
@@ -148,7 +152,8 @@ fun BottomBarContent(
 fun SelectedStateBarContent(
     send: SendMessage,
     selectedFoldersCount: Int,
-    isShowUnpinBtn: Boolean,
+    isVisibleUnpinBtn: Boolean,
+    isDisabledBottomBar: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -162,8 +167,8 @@ fun SelectedStateBarContent(
     )
     val actions = arrayOf(
         BaseBottomBarItem(
-            label = if (isShowUnpinBtn) text.shared.btnTitleUnpin else text.shared.btnTitlePin,
-            icon = if (isShowUnpinBtn) AppIcon.Unpin else AppIcon.Pin,
+            label = if (isVisibleUnpinBtn) text.shared.btnTitleUnpin else text.shared.btnTitlePin,
+            icon = if (isVisibleUnpinBtn) AppIcon.Unpin else AppIcon.Pin,
             action = {
                 send(Msg.Ui.OnBarPinClicked)
                 send(Msg.Ui.CancelSelectionState)
@@ -195,5 +200,9 @@ fun SelectedStateBarContent(
                 )
             }
         }
+    }
+
+    AnimateFadeInOut(isDisabledBottomBar) {
+        DisabledBottomBarPlaceholder()
     }
 }

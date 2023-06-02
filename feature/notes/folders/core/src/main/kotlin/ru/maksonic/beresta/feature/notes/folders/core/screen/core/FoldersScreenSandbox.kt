@@ -32,8 +32,8 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult {
-          val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
-          else msg.folders
+        val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
+        else msg.folders
 
         return UpdatedModel(
             model = model.copy(
@@ -94,14 +94,16 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
                 }
             }
         }.toSet()
-        val isSelectionState = selectedList.isNotEmpty()
-        val isShowUnpinButton = !selectedList.map { it.isPinned }.contains(false)
+
+        val isVisibleUnpinButton = selectedList.isNotEmpty().run {
+            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+        }
 
         return if (model.isMoveNotesToFolder) UpdatedModel(model) else UpdatedModel(
             model.copy(
                 selectedFolders = selectedList,
-                isSelectionState = isSelectionState,
-                isShowUnpinBottomBarIcon = isShowUnpinButton
+                isSelectionState = true,
+                isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
             )
         )
     }
@@ -110,17 +112,20 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         UpdatedModel(model.copy(selectedFolders = emptySet(), isSelectionState = false))
 
     private fun onSelectAllFoldersClicked(model: Model): UpdateResult {
-        val selected = model.selectedFolders.toMutableSet().also { list ->
-            if (list.containsAll(model.folders.data)) list.clear()
-            else list.addAll(model.folders.data.filter { it.isSelectable })
+        val withoutStickyItemsList = model.folders.data.filter { it.isSelectable }
+        val selectedList = model.selectedFolders.toMutableSet().also { list ->
+            if (list.containsAll(withoutStickyItemsList)) list.clear()
+            else list.addAll(withoutStickyItemsList)
         }.toSet()
-        val isShowUnpinButton = !selected.map { it.isPinned }.contains(false)
+
+        val isVisibleUnpinButton = selectedList.isNotEmpty().run {
+            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+        }
 
         return UpdatedModel(
             model.copy(
-                selectedFolders = selected,
-                isSelectionState = selected.isNotEmpty(),
-                isShowUnpinBottomBarIcon = isShowUnpinButton
+                selectedFolders = selectedList,
+                isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
             )
         )
     }

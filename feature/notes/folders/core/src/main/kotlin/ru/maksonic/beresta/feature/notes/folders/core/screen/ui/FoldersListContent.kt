@@ -117,8 +117,8 @@ private fun FolderItem(
     )
 
     BoxWithScaleInOutOnClick(
-        onClick = { onFolderClicked(folder.id) },
-        onLongClick = { onFolderLongPressed(folder.id) },
+        onClick = { if (folder.isSelectable) onFolderClicked(folder.id) },
+        onLongClick = { if (folder.isSelectable) onFolderLongPressed(folder.id) },
         backgroundColor = backgroundColor,
         shape = Shape.cornerNormal,
         modifier = animPlacementModifier

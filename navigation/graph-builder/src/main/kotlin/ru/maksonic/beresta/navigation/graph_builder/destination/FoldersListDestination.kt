@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.navigation.graph_builder.destination
 
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.navigation.NavGraphBuilder
@@ -35,7 +35,7 @@ internal fun NavGraphBuilder.foldersListScreen(
             when (initialState.destination.route) {
                 Destination.Main.route ->
                     slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Up,
+                        AnimatedContentTransitionScope.SlideDirection.Up,
                         animationSpec = tween(defAnimSpeed)
                     )
 
@@ -46,7 +46,7 @@ internal fun NavGraphBuilder.foldersListScreen(
             when (targetState.destination.route) {
                 Destination.Main.route ->
                     slideOutOfContainer(
-                        AnimatedContentScope.SlideDirection.Down,
+                        AnimatedContentTransitionScope.SlideDirection.Down,
                         animationSpec = tween(defAnimSpeed)
                     )
 

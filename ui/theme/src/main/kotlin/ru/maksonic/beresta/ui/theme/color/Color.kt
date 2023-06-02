@@ -15,34 +15,34 @@ val LocalAppColors = staticCompositionLocalOf<AppColor> {
 
 @Stable
 data class AppColor(
-    val primary : Color,
-    val onPrimary : Color,
-    val primaryContainer : Color,
-    val onPrimaryContainer : Color,
-    val secondary : Color,
-    val onSecondary : Color,
-    val secondaryContainer : Color,
-    val onSecondaryContainer : Color,
-    val tertiary : Color,
-    val onTertiary : Color,
-    val tertiaryContainer : Color,
-    val onTertiaryContainer : Color,
-    val error : Color,
-    val errorContainer : Color,
-    val onError : Color,
-    val onErrorContainer : Color,
-    val background : Color,
-    val onBackground : Color,
-    val surface : Color,
-    val onSurface : Color,
-    val surfaceVariant : Color,
-    val onSurfaceVariant : Color,
-    val outline : Color,
-    val inverseOnSurface : Color,
-    val inverseSurface : Color,
-    val inversePrimary : Color,
-    val surfaceTint : Color,
-    val outlineVariant : Color,
+    val primary: Color,
+    val onPrimary: Color,
+    val primaryContainer: Color,
+    val onPrimaryContainer: Color,
+    val secondary: Color,
+    val onSecondary: Color,
+    val secondaryContainer: Color,
+    val onSecondaryContainer: Color,
+    val tertiary: Color,
+    val onTertiary: Color,
+    val tertiaryContainer: Color,
+    val onTertiaryContainer: Color,
+    val error: Color,
+    val errorContainer: Color,
+    val onError: Color,
+    val onErrorContainer: Color,
+    val background: Color,
+    val onBackground: Color,
+    val surface: Color,
+    val onSurface: Color,
+    val surfaceVariant: Color,
+    val onSurfaceVariant: Color,
+    val outline: Color,
+    val inverseOnSurface: Color,
+    val inverseSurface: Color,
+    val inversePrimary: Color,
+    val surfaceTint: Color,
+    val outlineVariant: Color,
     val scrim: Color,
     val snack: Color,
     val onSnack: Color,
@@ -60,17 +60,20 @@ data class AppColor(
 )
 
 
-
 data class PlaceholderColors(
     val c0: Color,
     val c1: Color,
     val c2: Color,
     val c3: Color,
     val c4: Color,
-    val f0 : Color,
-    val f1 : Color,
-    val f2 : Color,
-    val f3 : Color,
+    val f0: Color,
+    val f1: Color,
+    val f2: Color,
+    val f3: Color,
+    val t0: Color,
+    val t1: Color,
+    val t2: Color,
+    val t3: Color,
 )
 
 val primary: Color @Composable get() = Theme.color.primary
@@ -96,11 +99,11 @@ val onSurface: Color @Composable get() = Theme.color.onSurface
 val surfaceVariant: Color @Composable get() = Theme.color.surfaceVariant
 val onSurfaceVariant: Color @Composable get() = Theme.color.onSurfaceVariant
 val outline: Color @Composable get() = Theme.color.outline
-val inverseOnSurface : Color @Composable get() = Theme.color.inverseOnSurface
-val inverseSurface : Color @Composable get() = Theme.color.inverseSurface
-val inversePrimary : Color @Composable get() = Theme.color.inversePrimary
-val surfaceTint : Color @Composable get() = Theme.color.surfaceTint
-val outlineVariant : Color @Composable get() = Theme.color.outlineVariant
+val inverseOnSurface: Color @Composable get() = Theme.color.inverseOnSurface
+val inverseSurface: Color @Composable get() = Theme.color.inverseSurface
+val inversePrimary: Color @Composable get() = Theme.color.inversePrimary
+val surfaceTint: Color @Composable get() = Theme.color.surfaceTint
+val outlineVariant: Color @Composable get() = Theme.color.outlineVariant
 val scrim: Color @Composable get() = Theme.color.scrim
 val transparent: Color @Composable get() = Theme.color.transparent
 val snack: Color @Composable get() = Theme.color.snack

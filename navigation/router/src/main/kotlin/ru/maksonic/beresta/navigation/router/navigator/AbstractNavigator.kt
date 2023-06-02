@@ -37,7 +37,7 @@ abstract class AbstractNavigator : ArgumentReceiver {
     }
 
     private fun NavBackStackEntry.lifecycleIsResumed() =
-        this.getLifecycle().currentState == Lifecycle.State.RESUMED
+        this.lifecycle.currentState == Lifecycle.State.RESUMED
 
     override fun getBoolean(key: String): Boolean =
         navController.currentBackStackEntry?.arguments?.getBoolean(key) ?: false

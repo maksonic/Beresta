@@ -16,16 +16,16 @@ class NotesRepositoryImpl(
     private val mapper: NoteCacheMapper,
 ) : NotesRepository {
 
+    override fun fetchItem(itemId: Long): NoteDomainItem = cache.fetchCacheOneItemById(itemId)
+        .transform { cacheNoteItem -> emit(mapper.dataToDomain(cacheNoteItem)) }
+
     override fun fetchItemsList(): NotesDomainList = cache.fetchCacheNotesList()
         .transform { cacheNotesList ->
             val notes = mapper.listDataToDomain(cacheNotesList)
             emit(notes)
         }
 
-    override fun fetchItem(itemId: Long): NoteDomainItem = cache.fetchCacheOneItemById(itemId)
-        .transform { cacheNoteItem -> emit(mapper.dataToDomain(cacheNoteItem)) }
-
-    override suspend fun fetchTrashNotes(): NotesDomainList = cache.fetchCacheNotesList()
+    override suspend fun fetchTrashNotes(): NotesDomainList = cache.fetchCacheNotesTrashList()
         .transform { cacheNotesList ->
             val notes = mapper.listDataToDomain(cacheNotesList)
             emit(notes)

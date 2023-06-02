@@ -9,6 +9,7 @@ import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesRepository
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
+import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchRemovedNotesUseCase
 
 /**
  * @Author maksonic on 24.04.2023
@@ -23,4 +24,5 @@ val notesListDataModule = module {
     single<NotesRepository> { NotesRepositoryImpl(cache = get(), mapper = get()) }
     single { FetchNotesUseCase(repository = get()) }
     single { FetchNoteByIdUseCase(repository = get()) }
+    single { FetchRemovedNotesUseCase(repository = get()) }
 }

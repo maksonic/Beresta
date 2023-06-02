@@ -53,7 +53,7 @@ class NotesListProgram(
         notes: List<NoteUi>,
         consumer: (Msg) -> Unit
     ) {
-        val notesUi = notes.map { it.copy(isMovedToTrash = true) }
+        val notesUi = notes.map { it.copy(isMovedToTrash = true, folderId = 2L) }
         val notesDomain = mapper.mapListFrom(notesUi)
         notesInteractor.updateAll(notesDomain)
         delay(SNACK_BAR_VISIBILITY_TIME)

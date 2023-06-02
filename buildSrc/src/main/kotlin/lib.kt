@@ -4,30 +4,32 @@
 object lib {
 
     //Android
-    private val Accompanist = "0.30.1"
-    private val CoreKtx = "1.10.0"
+    private val Accompanist = "0.31.3-beta"
+    private val CoreKtx = "1.10.1"
     private val Datastore = "1.0.0"
     private val Gson = "2.10.1"
     private val LifecycleRuntimeKtx = "2.6.1"
     private val SplashScreen = "1.0.0"
 
     //Compose
-    private val ComposeActivity = "1.7.1"
-    private val ComposeBom = "2023.04.01"
+    private val ComposeActivity = "1.7.2"
+    private val ComposeBom = "2023.05.01"
+    private val ComposeMaterial3 = "1.2.0-alpha02"
+    private val ComposeVersion = "1.5.0-beta01"
 
     //Images
     private val Coil = "2.2.2"
     private val Glide = "1.0.0-alpha.1"
 
     //JetBrains
-    private val CoroutinesAndroid = "1.6.4"
+    private val CoroutinesAndroid = "1.7.1"
     private val Json = "1.5.0"
 
     //Sl
-    private val Koin = "3.4.2"
+    private val Koin = "3.4.5"
 
     //Db
-    private val Room = "2.4.3"
+    private val Room = "2.5.1"
 
     //Test
     private val Junit4 = "4.13.2"
@@ -52,10 +54,11 @@ object lib {
 
     object compose {
         val activity = "androidx.activity:activity-compose:$ComposeActivity"
+        val animation = "androidx.compose.animation:animation:$ComposeVersion"
         val bom = "androidx.compose:compose-bom:$ComposeBom"
         val lifecycle = "androidx.lifecycle:lifecycle-runtime-compose"
-        val material = "androidx.compose.material:material"
-        val material3 = "androidx.compose.material3:material3"
+        val material = "androidx.compose.material:material-android:$ComposeVersion"
+        val material3 = "androidx.compose.material3:material3:$ComposeMaterial3"
         val runtime = "androidx.compose.runtime:runtime"
         val ui = "androidx.compose.ui:ui"
         val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview"

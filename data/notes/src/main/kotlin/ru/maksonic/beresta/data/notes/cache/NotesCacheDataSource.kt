@@ -2,7 +2,6 @@ package ru.maksonic.beresta.data.notes.cache
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.data.common.BaseCacheSource
 import ru.maksonic.beresta.data.database.notes.NoteCache
@@ -20,11 +19,8 @@ class NotesCacheDataSource(
 
     fun fetchCacheNotesList(): NotesCacheList = noteDao.fetchNotesList().flowOn(dispatcher)
 
-    fun fetchCacheNotesTrashList(): NotesCacheList = noteDao.fetchNotesTrashList()
-        .transform { notes ->
-            val trashNotes = notes.filter { note -> note.isMovedToTrash }
-            emit(trashNotes)
-        }.flowOn(dispatcher)
+    fun fetchCacheNotesTrashList(): NotesCacheList =
+        noteDao.fetchNotesWithoutFolderTrashList().flowOn(dispatcher)
 
     fun fetchCacheOneItemById(itemId: Long): NoteCacheItem =
         noteDao.fetchCacheOneItemById(itemId).flowOn(dispatcher)

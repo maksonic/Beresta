@@ -58,6 +58,7 @@ dependencies {
     implementation(project(module.feature.notes.list.api.path))
     implementation(project(module.feature.topBarCounter.api.path))
     implementation(platform(lib.compose.bom))
+    implementation(lib.compose.activity)
     implementation(lib.compose.lifecycle)
     implementation(lib.compose.material3)
     implementation(lib.compose.ui)

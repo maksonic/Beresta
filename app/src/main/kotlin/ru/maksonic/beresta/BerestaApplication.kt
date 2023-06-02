@@ -25,6 +25,8 @@ import ru.maksonic.beresta.language_engine.core.di.languageEngineModule
 import ru.maksonic.beresta.navigation.graph_builder.di.navigationModule
 import ru.maksonic.beresta.screen.main.di.mainScreenModule
 import ru.maksonic.beresta.screen.settings.di.settingsModule
+import ru.maksonic.beresta.screen.trash_list.folders.di.trashFoldersModule
+import ru.maksonic.beresta.screen.trash_list.notes.di.trashNotesModule
 
 /**
  * @Author maksonic on 22.04.2023
@@ -59,7 +61,9 @@ class BerestaApplication : Application() {
         topSearchBarFeatureModule,
         topBarCounterFeatureModule,
         notesFoldersFeatureModel,
-        notesFoldersDataModule
+        notesFoldersDataModule,
+        trashNotesModule,
+        trashFoldersModule,
     )
 
     override fun onCreate() {

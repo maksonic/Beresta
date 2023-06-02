@@ -59,6 +59,7 @@ dependencies {
     implementation(project(module.feature.notes.folders.api.path))
     implementation(project(module.feature.editNote.api.path))
     implementation(platform(lib.compose.bom))
+    implementation(lib.compose.activity)
     implementation(lib.compose.lifecycle)
     implementation(lib.compose.material3)
     implementation(lib.compose.ui)

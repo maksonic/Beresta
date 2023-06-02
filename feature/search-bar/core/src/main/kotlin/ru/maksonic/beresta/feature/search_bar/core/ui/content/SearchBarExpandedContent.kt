@@ -111,10 +111,10 @@ private fun InputQueryTextFiled(
             onValueChange = { send(Msg.Inner.UpdatedUserInputQueryChanged(it)) },
             singleLine = true,
             textStyle = TextDesign.bodyPrimary,
-            colors = TextFieldDefaults.textFieldColors(
-                textColor = onBackground,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = onBackground,
                 disabledTextColor = onBackground,
-                containerColor = transparent,
+                focusedContainerColor = transparent,
                 cursorColor = primary,
                 focusedIndicatorColor = outline,
                 unfocusedIndicatorColor = outline,

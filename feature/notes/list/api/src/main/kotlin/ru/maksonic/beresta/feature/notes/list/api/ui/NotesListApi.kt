@@ -29,5 +29,8 @@ interface NotesListApi {
 
         @Composable
         fun EmptyListWidget()
+
+        @Composable
+        fun NotesLoaderWidget(modifier: Modifier)
     }
 }

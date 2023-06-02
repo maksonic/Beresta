@@ -22,7 +22,7 @@ data class Model(
     val removedNotes: Set<NoteUi> = emptySet(),
     val currentSelectedFolderId: Long,
     val isSelectionState: Boolean,
-    val isShowUnpinBottomBarIcon: Boolean,
+    val isVisibleUnpinBottomBarIcon: Boolean,
     val isVisibleRemovedSnackBar: Boolean,
     val isMoveNotesToFolder: Boolean,
     val moveNotesList: List<NoteUi>
@@ -36,7 +36,7 @@ data class Model(
             selectedFolders = emptySet(),
             currentSelectedFolderId = 1L,
             isSelectionState = false,
-            isShowUnpinBottomBarIcon = false,
+            isVisibleUnpinBottomBarIcon = false,
             isVisibleRemovedSnackBar = false,
             isMoveNotesToFolder = false,
             moveNotesList = emptyList()
