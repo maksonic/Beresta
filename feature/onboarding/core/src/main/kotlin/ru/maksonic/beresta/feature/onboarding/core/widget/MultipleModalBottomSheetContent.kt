@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.language_picker.api.LanguagePickerApi
 import ru.maksonic.beresta.feature.onboarding.core.Msg
 import ru.maksonic.beresta.feature.onboarding.core.SendMessage
@@ -23,8 +23,8 @@ enum class ModalSheetContent {
 internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: State<ModalSheetContent>,
-    languageBottomSheet: LanguagePickerApi.Ui = get(),
-    themeBottomSheet: ThemePickerApi.Ui = get(),
+    languageBottomSheet: LanguagePickerApi.Ui = koinInject(),
+    themeBottomSheet: ThemePickerApi.Ui = koinInject(),
     modifier: Modifier = Modifier
 ) {
 

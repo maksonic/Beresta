@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onSurface
 import ru.maksonic.beresta.ui.theme.color.surfaceVariant
 import ru.maksonic.beresta.ui.theme.component.dp16

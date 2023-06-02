@@ -20,8 +20,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
@@ -67,8 +67,8 @@ class TopSearchBarWidget : SearchBarApi.Ui {
     @Composable
     private fun SearchBarContainer(
         sandbox: SearchBarSandbox = koinViewModel(),
-        notesListFeatureApi: NotesListApi.Ui = get(),
-        topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
+        notesListFeatureApi: NotesListApi.Ui = koinInject(),
+        topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
         modifier: Modifier = Modifier
     ) {
         val model = sandbox.model.collectAsStateWithLifecycle()

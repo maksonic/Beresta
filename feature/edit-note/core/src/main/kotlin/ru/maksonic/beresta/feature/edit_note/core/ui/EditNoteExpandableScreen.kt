@@ -27,8 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.core.Eff
@@ -76,8 +76,8 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
 @Composable
 private fun ExpandableScreenContainer(
     sandbox: EditNoteSandbox = koinViewModel(),
-    editNoteApi: NotesListApi.Ui = get(),
-    notesFoldersApi: FoldersListApi.Ui = get(),
+    editNoteApi: NotesListApi.Ui = koinInject(),
+    notesFoldersApi: FoldersListApi.Ui = koinInject(),
     isEntryPoint: Boolean,
     router: EditNoteRouter?,
     modifier: Modifier

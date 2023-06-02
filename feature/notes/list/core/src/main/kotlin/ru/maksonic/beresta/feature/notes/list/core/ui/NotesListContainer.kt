@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
@@ -68,8 +68,8 @@ private typealias SendMessage = (Msg) -> Unit
 internal fun NotesListContainer(
     modifier: Modifier = Modifier,
     sandbox: NotesListSandbox = koinViewModel(),
-    notesFoldersFeatureApi: FoldersListApi.Ui = get(),
-    topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
+    notesFoldersFeatureApi: FoldersListApi.Ui = koinInject(),
+    topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
     sharedUiState: SharedUiState<NotesListSharedUiState>,
     router: MainScreenRouter
 ) {

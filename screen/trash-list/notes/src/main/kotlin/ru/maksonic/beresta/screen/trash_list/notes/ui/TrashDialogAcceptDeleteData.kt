@@ -9,22 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.screen.trash_list.notes.R
 import ru.maksonic.beresta.screen.trash_list.notes.core.Msg
 import ru.maksonic.beresta.ui.theme.color.scrim
 import ru.maksonic.beresta.ui.theme.color.secondaryContainer
@@ -32,12 +26,10 @@ import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp32
-import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.TrashedFolder
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.button.DialogButton
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 
 /**
  * @Author maksonic on 01.06.2023

@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
@@ -52,10 +52,10 @@ fun MainScreen(router: MainScreenRouter) {
 @Composable
 private fun MainContainer(
     sandbox: MainSandbox = koinViewModel(),
-    notesListFeatureApi: NotesListApi.Ui = get(),
-    notesFoldersFeatureApi: FoldersListApi.Ui = get(),
-    editNoteFeatureApi: EditNoteApi.Ui = get(),
-    searchBarFeatureApi: SearchBarApi.Ui = get(),
+    notesListFeatureApi: NotesListApi.Ui = koinInject(),
+    notesFoldersFeatureApi: FoldersListApi.Ui = koinInject(),
+    editNoteFeatureApi: EditNoteApi.Ui = koinInject(),
+    searchBarFeatureApi: SearchBarApi.Ui = koinInject(),
     router: MainScreenRouter
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()

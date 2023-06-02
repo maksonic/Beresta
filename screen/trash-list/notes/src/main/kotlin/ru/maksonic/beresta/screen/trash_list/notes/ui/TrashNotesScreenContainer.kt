@@ -8,8 +8,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.navigation.router.router.trash.TrashNotesScreenRouter
@@ -27,8 +27,8 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 internal fun TrashNotesScreenContainer(
     router: TrashNotesScreenRouter,
-    notesListApi: NotesListApi.Ui = get(),
-    topBarCounterApi: TopBarCounterApi.Ui = get(),
+    notesListApi: NotesListApi.Ui = koinInject(),
+    topBarCounterApi: TopBarCounterApi.Ui = koinInject(),
     sandbox: NotesTrashSandbox = koinViewModel(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()

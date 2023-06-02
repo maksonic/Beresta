@@ -34,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
@@ -65,8 +65,8 @@ import ru.maksonic.beresta.ui.widget.functional.animation.rowFadingEdge
 @Composable
 internal fun ChipsWidgetContainer(
     chips: NoteFolderUi.Collection,
-    notesListApi: NotesListApi.Ui = get(),
-    foldersListApi: FoldersListApi.Ui = get(),
+    notesListApi: NotesListApi.Ui = koinInject(),
+    foldersListApi: FoldersListApi.Ui = koinInject(),
     onChipClicked: (id: Long) -> Unit,
     currentSelectedChipId: Long,
     isShowPlaceholder: Boolean,
