@@ -25,8 +25,14 @@ class NotesRepositoryImpl(
             emit(notes)
         }
 
-    override suspend fun fetchTrashNotes(): NotesDomainList = cache.fetchCacheNotesTrashList()
-        .transform { cacheNotesList ->
+    override suspend fun fetchNotesWithoutFolderTrashList(): NotesDomainList =
+        cache.fetchCacheNotesWithoutFolderTrashList().transform { cacheNotesList ->
+            val notes = mapper.listDataToDomain(cacheNotesList)
+            emit(notes)
+        }
+
+    override suspend fun fetchNotesByFolderTrashList(): NotesDomainList =
+        cache.fetchCacheNotesByFolderTrashList().transform { cacheNotesList ->
             val notes = mapper.listDataToDomain(cacheNotesList)
             emit(notes)
         }
@@ -51,12 +57,12 @@ class NotesRepositoryImpl(
     override suspend fun removeEmptyItem(item: NoteDomain) {
         with(item) {
             if (title.isBlank() && message.isBlank()) {
-                removeItem(item)
+                deleteItem(item)
             }
         }
     }
 
-    override suspend fun removeItem(item: NoteDomain) {
+    override suspend fun deleteItem(item: NoteDomain) {
         val cacheNote = mapper.domainToData(item)
         cache.removeItem(cacheNote)
     }

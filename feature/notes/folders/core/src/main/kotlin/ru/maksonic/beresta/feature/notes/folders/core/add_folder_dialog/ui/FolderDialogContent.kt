@@ -26,11 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.android.awaitFrame
@@ -66,7 +68,7 @@ import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
 /**
  * @Author maksonic on 29.03.2023
  */
-private const val WAITING_CLEAR_INPUT_FIELD = 50L
+private const val WAITING_CLEAR_INPUT_FIELD = 100L
 
 @Composable
 internal fun FolderDialogContent(
@@ -88,10 +90,10 @@ internal fun FolderDialogContent(
         sandbox.send(Msg.Ui.OnDismissClicked)
     }
 
-    LaunchedEffect(focusRequester) {
-        awaitFrame()
-        focusRequester.requestFocus()
-    }
+      LaunchedEffect(focusRequester) {
+          awaitFrame()
+          focusRequester.requestFocus()
+      }
 
     LaunchedEffect(passedFolderId) {
         sharedState.value.let {
@@ -223,7 +225,7 @@ private fun HandleUiEffects(
                     // Without delay, the input field does not have time
                     // to be cleared after closing the dialog box
                     delay(WAITING_CLEAR_INPUT_FIELD)
-                    focusManager.clearFocus()
+                      focusManager.clearFocus()
                     sharedUiState.hideDialog()
                 }
             }

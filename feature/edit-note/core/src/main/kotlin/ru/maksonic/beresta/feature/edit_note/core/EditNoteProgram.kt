@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.edit_note.core
 
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
+import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
@@ -14,7 +14,7 @@ import java.time.LocalDateTime
  * @Author maksonic on 26.04.2023
  */
 class EditNoteProgram(
-    private val interactor: RefactorNoteInteractor,
+    private val interactor: NotesInteractor,
     private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
     private val mapper: NoteUiMapper,
     private val navigator: AppNavigator

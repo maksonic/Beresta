@@ -23,6 +23,7 @@ data class Model(
     val currentClickedNoteId: Long?,
     val isVisibleAcceptDeleteNotesDialog: Boolean,
     val isVisibleModalSheet: Boolean,
+    val isSingleItemAction: Boolean,
 ) : ElmModel {
 
     companion object {
@@ -37,7 +38,8 @@ data class Model(
             ),
             currentClickedNoteId = null,
             isVisibleAcceptDeleteNotesDialog = false,
-            isVisibleModalSheet = false
+            isVisibleModalSheet = false,
+            isSingleItemAction = true
         )
     }
 }
@@ -51,9 +53,12 @@ sealed class Msg : ElmMessage {
         object CancelSelectionState : Ui()
         object OnSelectAllNotesClicked : Ui()
         object HideModalBottomSheet : Ui()
-        object OnRestoreFromTrashNoteClicked : Ui()
-        object OnDeleteNoteClicked : Ui()
-        object OnCancelDeleteDialogClicked : Ui()
+        object OnModalSheetRestoreClicked : Ui()
+        object OnModalSheetDeleteClicked : Ui()
+        object OnBottomBarRestoreSelectedNotesClicked : Ui()
+        object OnBottomBarDeleteSelectedNotesClicked : Ui()
+        object OnAcceptDeleteWarningDialogClicked : Ui()
+        object OnCancelDeleteWarningDialogClicked : Ui()
     }
 
     sealed class Inner : Msg() {
@@ -65,6 +70,7 @@ sealed class Msg : ElmMessage {
 
 sealed class Cmd : ElmCommand {
     object FetchRemovedData : Cmd()
+    data class DeleteOrRestoreNotes(val isRestore: Boolean, val notes: List<NoteUi>) : Cmd()
 }
 
 sealed class Eff : ElmEffect {

@@ -24,11 +24,15 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
         is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Msg.Ui.OnSelectAllNotesClicked -> onSelectAllNotesClicked(model)
         is Msg.Ui.CancelSelectionState -> onCancelSelectionClicked(model)
-        is Msg.Ui.HideModalBottomSheet -> hideModalBottomSheet(model)
-        is Msg.Ui.OnRestoreFromTrashNoteClicked -> onRestoreNoteClicked(model)
-        is Msg.Ui.OnDeleteNoteClicked -> onDeleteNoteClicked(model)
-        is Msg.Ui.OnCancelDeleteDialogClicked -> onCancelDeleteDialogClicked(model)
         is Msg.Inner.UpdatedModalSheetState -> updatedModalSheetState(model, msg)
+        is Msg.Ui.HideModalBottomSheet -> hideModalBottomSheet(model)
+        is Msg.Ui.OnModalSheetRestoreClicked -> onModalSheetRestoreNoteClicked(model)
+        is Msg.Ui.OnModalSheetDeleteClicked -> showedAcceptDeleteWarningDialog(model)
+        is Msg.Ui.OnBottomBarDeleteSelectedNotesClicked -> showedAcceptDeleteWarningDialog(model)
+        is Msg.Ui.OnBottomBarRestoreSelectedNotesClicked -> onBottomBarRestoreSelectedClicked(model)
+        is Msg.Ui.OnCancelDeleteWarningDialogClicked -> onCancelDeleteWarningDialogClicked(model)
+        is Msg.Ui.OnAcceptDeleteWarningDialogClicked -> onAcceptDeleteWarningDialogClicked(model)
+
     }
 
     private fun fetchedDataResult(
@@ -51,7 +55,8 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
     }
 
     private fun onTrashedFoldersBtnClicked(model: Model): UpdateResult {
-        val eff = if (model.isVisibleModalSheet) emptySet() else setOf(Eff.NavigateToTrashedFoldersList)
+        val eff =
+            if (model.isVisibleModalSheet) emptySet() else setOf(Eff.NavigateToTrashedFoldersList)
         return UpdatedModel(
             model = model.copy(
                 isSelectionState = false,
@@ -67,8 +72,10 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
             baseOnNoteAction(model, msg.id)
         else
             UpdatedModel(
-                model = model.copy(isVisibleModalSheet = !model.isVisibleModalSheet, currentClickedNoteId = msg.id),
-              //  effects = setOf(Eff.ShowModalSheet)
+                model = model.copy(
+                    isVisibleModalSheet = !model.isVisibleModalSheet,
+                    currentClickedNoteId = msg.id
+                ),
             )
 
 
@@ -104,26 +111,59 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
     private fun onCancelSelectionClicked(model: Model): UpdateResult =
         UpdatedModel(model.copy(selectedNotes = emptySet(), isSelectionState = false))
 
-    private fun hideModalBottomSheet(model: Model): UpdateResult =
-        UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
-
-    private fun onRestoreNoteClicked(model: Model): UpdateResult =
-        UpdatedModel(
-            model.copy(isVisibleAcceptDeleteNotesDialog = true),
-            effects = setOf(Eff.HideModalSheet)
-        )
-
-    private fun onDeleteNoteClicked(model: Model): UpdateResult = UpdatedModel(
-        model = model.copy(isVisibleAcceptDeleteNotesDialog = true),
-        effects = setOf(Eff.HideModalSheet)
-    )
-
-    private fun onCancelDeleteDialogClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(isVisibleAcceptDeleteNotesDialog = false))
-
     private fun updatedModalSheetState(
         model: Model,
         msg: Msg.Inner.UpdatedModalSheetState
     ): UpdateResult =
         UpdatedModel(model.copy(isVisibleModalSheet = msg.isVisible))
+
+    private fun hideModalBottomSheet(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
+
+    private fun onModalSheetRestoreNoteClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(isVisibleAcceptDeleteNotesDialog = false),
+        commands = setOf(
+            Cmd.DeleteOrRestoreNotes(
+                isRestore = true,
+                notes = model.notes.data.filter { it.id == model.currentClickedNoteId }
+            )),
+        effects = setOf(Eff.HideModalSheet)
+    )
+
+    private fun showedAcceptDeleteWarningDialog(model: Model): UpdateResult =
+        UpdatedModel(
+            model = model.copy(
+                isVisibleAcceptDeleteNotesDialog = true,
+                isSingleItemAction = model.selectedNotes.count() <= 1
+            ),
+            effects = setOf(Eff.HideModalSheet)
+        )
+
+    private fun onBottomBarRestoreSelectedClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(selectedNotes = emptySet(), isSelectionState = false),
+        commands = setOf(Cmd.DeleteOrRestoreNotes(isRestore = true, model.selectedNotes.toList()))
+    )
+
+    private fun onCancelDeleteWarningDialogClicked(model: Model): UpdateResult = UpdatedModel(
+        model = model.copy(
+            isVisibleAcceptDeleteNotesDialog = false,
+            currentClickedNoteId = null,
+        )
+    )
+
+    private fun onAcceptDeleteWarningDialogClicked(model: Model): UpdateResult {
+        val currentClickedNote = model.notes.data.filter { it.id == model.currentClickedNoteId }
+        val delete = if (model.selectedNotes.isEmpty() && model.currentClickedNoteId != null)
+            currentClickedNote else model.selectedNotes.toList()
+
+        return UpdatedModel(
+            model = model.copy(
+                isVisibleAcceptDeleteNotesDialog = false,
+                currentClickedNoteId = null,
+                isSelectionState = false,
+                selectedNotes = emptySet()
+            ),
+            commands = setOf(Cmd.DeleteOrRestoreNotes(isRestore = false, delete))
+        )
+    }
 }

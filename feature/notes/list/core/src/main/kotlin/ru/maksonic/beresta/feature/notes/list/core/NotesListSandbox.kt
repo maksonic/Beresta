@@ -132,7 +132,7 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
     private fun onSelectAllNotesClicked(model: Model): UpdateResult {
         val filteredNotes = model.notes.data.filter { note ->
             when (model.currentSelectedFolderId) {
-                STICKY_START_FOLDER_ID -> note.id == note.id
+                STICKY_START_FOLDER_ID -> true
                 STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
                 else -> note.folderId == model.currentSelectedFolderId
             }

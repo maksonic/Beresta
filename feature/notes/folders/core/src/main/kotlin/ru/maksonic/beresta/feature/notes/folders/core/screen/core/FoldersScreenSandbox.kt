@@ -42,7 +42,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
                     isSuccessLoading = true,
                     isError = false
                 ),
-                folders = model.folders.copy(folders), notes = msg.notes
+                folders = model.folders.copy(folders), notes = msg.notes,
             )
         )
     }

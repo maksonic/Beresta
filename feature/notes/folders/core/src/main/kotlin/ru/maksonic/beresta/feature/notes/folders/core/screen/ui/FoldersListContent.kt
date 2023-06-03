@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,20 +23,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
-import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidget
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.inversePrimary
 import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
 import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.color.outlineVariant
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.primaryContainer
 import ru.maksonic.beresta.ui.theme.color.secondary
+import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiary
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
@@ -46,6 +52,7 @@ import ru.maksonic.beresta.ui.theme.component.dp6
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Done
+import ru.maksonic.beresta.ui.theme.icons.Folder
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
@@ -56,7 +63,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FoldersListContent(
+internal fun FoldersListContent(
     folders: NoteFolderUi.Collection,
     model: Model,
     send: SendMessage,
@@ -70,7 +77,7 @@ fun FoldersListContent(
     )
     AnimateContent(model.base.isLoading) { isPlaceholder ->
         if (isPlaceholder) {
-            FoldersLoaderWidget(modifier)
+            FoldersLoaderWidgetContent(modifier)
         } else {
             LazyColumn(
                 state = scrollState,
@@ -83,15 +90,13 @@ fun FoldersListContent(
                 modifier = modifier.fillMaxSize()
             ) {
                 items(folders.data, key = { it.id }) { folder ->
-                    val update = folder.copy(
-                        isCurrent = folder.id == model.currentSelectedFolderId,
+                    FolderItemContent(
+                        modifier = Modifier.animateItemPlacement(),
+                        folder = folder,
                         isSelected = model.selectedFolders.contains(folder) && folder.isSelectable,
-                    )
-                    FolderItem(
-                        folder = update,
+                        isCurrent = folder.id == model.currentSelectedFolderId,
                         onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
-                        onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
-                        animPlacementModifier = Modifier.animateItemPlacement()
+                        onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) }
                     )
                 }
             }
@@ -100,18 +105,20 @@ fun FoldersListContent(
 }
 
 @Composable
-private fun FolderItem(
+internal fun FolderItemContent(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    isCurrent: Boolean,
     folder: NoteFolderUi,
     onFolderClicked: (id: Long) -> Unit,
     onFolderLongPressed: (id: Long) -> Unit,
-    animPlacementModifier: Modifier,
-    modifier: Modifier = Modifier
+    isTrashPlacement: Boolean = false
 ) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
     val colors = if (isFocusedItem.value) outlineVariant else primaryContainer
     val backgroundColor = animateColorAsState(
-        if (folder.isSelected) isSelectedColors else colors,
+        if (isSelected) isSelectedColors else colors,
         label = "",
         animationSpec = tween(Theme.animSpeed.common)
     )
@@ -121,25 +128,46 @@ private fun FolderItem(
         onLongClick = { if (folder.isSelectable) onFolderLongPressed(folder.id) },
         backgroundColor = backgroundColor,
         shape = Shape.cornerNormal,
-        modifier = animPlacementModifier
+        modifier = modifier
             .padding(top = dp6, bottom = dp6)
             .onFocusChanged { isFocusedItem.value = it.isFocused }
     ) {
         Row(
-            modifier
+            Modifier
                 .fillMaxWidth()
                 .height(Theme.widgetSize.minimumTouchTargetSize)
                 .padding(start = dp8),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Box(modifier.size(dp32), contentAlignment = Alignment.Center) {
-                if (folder.isCurrent) {
+            Box(Modifier.size(dp32), contentAlignment = Alignment.Center) {
+                if (isCurrent) {
                     Icon(
                         imageVector = AppIcon.Done,
                         tint = tertiaryContainer,
                         contentDescription = ""
                     )
+                }
+                if (isTrashPlacement) {
+                    val iconBackgroundColor = animateColorAsState(
+                        if (isSelected) inversePrimary else secondaryContainer,
+                        label = ""
+                    )
+
+                    Box(
+                        modifier
+                            .size(dp32)
+                            .clip(CircleShape)
+                            .drawBehind { drawRect(iconBackgroundColor.value) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = AppIcon.Folder,
+                            tint = tertiaryContainer,
+                            contentDescription = "",
+                            modifier = modifier.size(22.dp)
+                        )
+                    }
                 }
             }
 
@@ -148,7 +176,7 @@ private fun FolderItem(
                 style = TextDesign.title.copy(color = onPrimaryContainer),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = modifier
+                modifier = Modifier
                     .weight(1f)
                     .padding(start = dp8, end = dp8)
             )
@@ -157,23 +185,25 @@ private fun FolderItem(
                 text = folder.notesCount.toString(),
                 style = TextDesign.bodyPrimaryMedium.copy(color = outline),
                 maxLines = 1,
-                modifier = modifier.padding(end = dp8)
+                modifier = Modifier.padding(end = dp16)
             )
 
-            Box(
-                modifier
-                    .padding(end = dp8)
-                    .size(dp16)
-            ) {
-                AnimateFadeInOut(
-                    visible = folder.isPinned && !folder.isDefaultId()
+            if (!isTrashPlacement) {
+                Box(
+                    Modifier
+                        .padding(end = dp8)
+                        .size(dp16)
                 ) {
-                    Icon(
-                        imageVector = AppIcon.Pin,
-                        modifier = modifier.size(dp16),
-                        tint = primary,
-                        contentDescription = null
-                    )
+                    AnimateFadeInOut(
+                        visible = folder.isPinned && !folder.isDefaultId()
+                    ) {
+                        Icon(
+                            imageVector = AppIcon.Pin,
+                            modifier = modifier.size(dp16),
+                            tint = primary,
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }

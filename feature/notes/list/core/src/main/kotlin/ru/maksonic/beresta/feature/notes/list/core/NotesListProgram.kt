@@ -5,7 +5,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
+import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
  * @Author maksonic on 24.04.2023
  */
 class NotesListProgram(
-    private val notesInteractor: RefactorNoteInteractor,
+    private val notesInteractor: NotesInteractor,
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val mapper: NoteUiMapper,
     private val appLanguageEngineApi: LanguageEngineApi,

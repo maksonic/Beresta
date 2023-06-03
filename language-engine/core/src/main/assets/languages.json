@@ -99,7 +99,15 @@
       "top_bar_title": "Корзина",
       "title_trashed_folders": "Удалённые папки",
       "dialog_title_delete_note": "Удалить заметку навсегда?",
-      "dialog_body_delete_note": "После удаления заметки из корзины её невозможно восстановить."
+      "dialog_title_delete_notes_list": "Удалить заметки навсегда?",
+      "dialog_body_delete_note": "После удаления заметки из корзины её будет невозможно восстановить.",
+      "dialog_body_delete_notes_list": "После удаления выбранных заметок из корзины их будет невозможно восстановить.",
+      "message_empty_notes_list": "Нет удалённых заметок",
+      "dialog_title_delete_folder": "Удалить папку с заметками навсегда?",
+      "dialog_title_delete_folders_list": "Удалить папки с заметками навсегда?",
+      "dialog_body_delete_folder": "После удаления папки с заметками из корзины её будет невозможно восстановить.",
+      "dialog_body_delete_folders_list": "После удаления выбранных папок с заметками из корзины их будет невозможно восстановить.",
+      "message_empty_folders_list": "Нет удалённых папок"
     }
   },
   "english": {
@@ -202,7 +210,15 @@
       "top_bar_title": "Trash",
       "title_trashed_folders": "Removed folders",
       "dialog_title_delete_note": "Delete a note permanently?",
-      "dialog_body_delete_note": "Once a note is deleted from the trash, it cannot be restored."
+      "dialog_title_delete_notes_list": "Delete notes permanently?",
+      "dialog_body_delete_note": "After deleting a note from the trash, it will be impossible to restore it.",
+      "dialog_body_delete_notes_list": "Once selected notes are deleted from the trash, they cannot be recovered.",
+      "message_empty_notes_list": "No deleted notes",
+      "dialog_title_delete_folder": "Delete notes folder permanently?",
+      "dialog_title_delete_folders_list": "Delete note folders permanently?",
+      "dialog_body_delete_folder": "After deleting a folder with notes from the trash, it will not be possible to restore it.",
+      "dialog_body_delete_folders_list": "Once the selected notes folders are deleted from the trash, they cannot be restored.",
+      "message_empty_folders_list": "No deleted folders"
     }
   },
   "chinese": {
@@ -305,7 +321,15 @@
       "top_bar_title": "垃圾",
       "title_trashed_folders": "删除的文件夹",
       "dialog_title_delete_note": "永久删除笔记？",
-      "dialog_body_delete_note": "笔记一旦从回收站中删除，便无法恢复。"
+      "dialog_title_delete_notes_list": "永久删除笔记？",
+      "dialog_body_delete_note": "从垃圾桶中删除笔记后，将无法恢复。",
+      "dialog_body_delete_notes_list": "选定的笔记从垃圾箱中删除后，将无法恢复。",
+      "message_empty_notes_list": "没有删除的笔记",
+      "dialog_title_delete_folder": "永久删除笔记文件夹？",
+      "dialog_title_delete_folders_list": "永久删除笔记文件夹？",
+      "dialog_body_delete_folder": "从垃圾桶中删除带有笔记的文件夹后，将无法恢复它。",
+      "dialog_body_delete_folders_list": "选定的笔记文件夹一旦从垃圾桶中删除，便无法恢复。",
+      "message_empty_folders_list": "没有删除的文件夹"
     }
   },
   "chinese_tr": {
@@ -408,7 +432,15 @@
       "top_bar_title": "垃圾",
       "title_trashed_folders": "刪除的文件夾",
       "dialog_title_delete_note": "永久刪除筆記？",
-      "dialog_body_delete_note": "筆記一旦從回收站中刪除，便無法恢復。"
+      "dialog_title_delete_notes_list": "永久刪除筆記？",
+      "dialog_body_delete_note": "從垃圾桶中刪除筆記後，將無法恢復。",
+      "dialog_body_delete_notes_list": "一旦選定的筆記從垃圾箱中刪除，它們將無法恢復。",
+      "message_empty_notes_list": "沒有刪除的筆記",
+      "dialog_title_delete_folder": "永久刪除筆記文件夾？",
+      "dialog_title_delete_folders_list": "永久刪除筆記文件夾？",
+      "dialog_body_delete_folder": "從垃圾桶中刪除帶有筆記的文件夾後，將無法恢復它。",
+      "dialog_body_delete_folders_list": "選定的筆記文件夾一旦從垃圾箱中刪除，便無法恢復。",
+      "message_empty_folders_list": "沒有刪除的文件夾"
     }
   }
 }

@@ -22,6 +22,12 @@ class NotesFoldersRepositoryImpl(
             emit(folders)
         }
 
+    override suspend fun fetchTrashFolders(): NotesFoldersDomainList =
+        cache.fetchCacheFoldersTrashList().transform { cacheNotesList ->
+            val notes = mapper.listDataToDomain(cacheNotesList)
+            emit(notes)
+        }
+
     override fun fetchItem(itemId: Long): NoteFolderDomainItem = cache.fetchCacheOneItemById(itemId)
         .transform { cacheFolder ->
             val folder = mapper.dataToDomain(cacheFolder)
@@ -38,7 +44,7 @@ class NotesFoldersRepositoryImpl(
         cache.updateItem(folder)
     }
 
-    override suspend fun removeItem(item: NoteFolderDomain) {
+    override suspend fun deleteItem(item: NoteFolderDomain) {
         val folder = mapper.domainToData(item)
         cache.removeItem(folder)
     }

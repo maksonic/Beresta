@@ -25,7 +25,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.PlaceholderListWidget
 private const val PLACEHOLDER_LIST_COUNT = 15
 
 @Composable
-internal fun FoldersLoaderWidget(modifier: Modifier = Modifier) {
+internal fun FoldersLoaderWidgetContent(modifier: Modifier) {
     Box(modifier.background(background)) {
         PlaceholderListWidget(
             placeholdersCount = PLACEHOLDER_LIST_COUNT,

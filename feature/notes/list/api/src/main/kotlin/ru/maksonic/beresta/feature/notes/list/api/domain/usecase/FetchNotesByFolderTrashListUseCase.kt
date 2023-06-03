@@ -5,10 +5,10 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.NotesDomainList
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesRepository
 
 /**
- * @Author maksonic on 30.05.2023
+ * @Author maksonic on 03.06.2023
  */
-class FetchRemovedNotesUseCase(
+class FetchNotesByFolderTrashListUseCase(
     private val repository: NotesRepository,
 ) : BaseUseCase.Default<NotesDomainList> {
-    override suspend fun invoke(): NotesDomainList = repository.fetchTrashNotes()
+    override suspend fun invoke(): NotesDomainList = repository.fetchNotesByFolderTrashList()
 }

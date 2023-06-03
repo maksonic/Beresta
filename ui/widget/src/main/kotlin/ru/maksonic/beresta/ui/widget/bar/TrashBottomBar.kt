@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.screen.trash_list.notes.ui.widget
+package ru.maksonic.beresta.ui.widget.bar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -9,11 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.screen.trash_list.notes.core.Msg
-import ru.maksonic.beresta.screen.trash_list.notes.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -23,8 +21,6 @@ import ru.maksonic.beresta.ui.theme.icons.Delete
 import ru.maksonic.beresta.ui.theme.icons.Restart
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.SystemNavigationBarHeight
-import ru.maksonic.beresta.ui.widget.bar.BottomRippleBar
-import ru.maksonic.beresta.ui.widget.bar.DisabledBottomBarPlaceholder
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
@@ -32,9 +28,17 @@ import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 /**
  * @Author maksonic on 30.05.2023
  */
+
+private data class BaseBottomBarItem(
+    val label: String = "",
+    val icon: ImageVector,
+    val action: () -> Unit
+)
+
 @Composable
-internal fun TrashBottomBar(
-    send: SendMessage,
+fun TrashBottomBar(
+    onRestoreClicked: () -> Unit,
+    onDeleteClicked: () -> Unit,
     isSelectionState: Boolean,
     scrollState: LazyListState,
     isDisabledBottomBar: Boolean,
@@ -48,13 +52,12 @@ internal fun TrashBottomBar(
         BaseBottomBarItem(
             label = text.shared.btnTitleRestore,
             icon = AppIcon.Restart,
-            action = {
-                send(Msg.Ui.CancelSelectionState)
-            }),
+            action = onRestoreClicked
+        ),
         BaseBottomBarItem(
             label = text.shared.btnTitleDelete,
             icon = AppIcon.Delete,
-            action = { send(Msg.Ui.OnSelectAllNotesClicked) }
+            action = onDeleteClicked
         )
     )
     val tonal = animateDp(

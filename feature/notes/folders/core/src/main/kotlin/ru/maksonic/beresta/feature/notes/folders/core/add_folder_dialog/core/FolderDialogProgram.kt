@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.core
 
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFolderByIdUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFolderByIdUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteractor
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi

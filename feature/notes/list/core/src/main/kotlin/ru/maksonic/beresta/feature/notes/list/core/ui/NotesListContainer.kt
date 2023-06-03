@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -126,7 +125,6 @@ internal fun NotesListContainer(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NotesResultDataContent(
     modifier: Modifier = Modifier,

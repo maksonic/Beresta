@@ -35,7 +35,7 @@ val baseLightPalette = AppColor(
     outline = Palette.doveGray,
     inverseOnSurface = Palette.white,
     inverseSurface = Palette.gray,
-    inversePrimary = Palette.Red.roseBud,
+    inversePrimary = Palette.white,
     surfaceTint = Palette.gray,
     outlineVariant = Palette.lightSilver,
     scrim = Palette.black.copy(alpha = 0.24f),

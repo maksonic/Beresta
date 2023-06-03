@@ -3,7 +3,7 @@ package ru.maksonic.beresta.screen.main
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescendingByPinTimeThenByDate
 

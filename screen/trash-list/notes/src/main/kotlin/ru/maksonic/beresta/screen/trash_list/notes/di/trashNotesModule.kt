@@ -11,8 +11,8 @@ import ru.maksonic.beresta.screen.trash_list.notes.core.NotesTrashSandbox
 val trashNotesModule = module {
     single { NotesTrashProgram(
         fetchRemovedNotes = get(),
+        notesInteractor = get(),
         notesMapper = get(),
-        navigator = get()
     ) }
 
     viewModel { NotesTrashSandbox(program = get()) }

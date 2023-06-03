@@ -1,17 +1,18 @@
 package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteractor
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescendingByPinTimeThenByDate
-import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
+import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
@@ -27,7 +28,7 @@ class FoldersListProgram(
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val foldersMapper: NoteFolderToUiMapper,
     private val foldersInteractor: NotesFoldersInteractor,
-    private val notesInteractor: RefactorNoteInteractor,
+    private val notesInteractor: NotesInteractor,
     private val notesMapper: NoteUiMapper,
     private val navigator: AppNavigator,
     private val ioDispatcher: CoroutineDispatcher
@@ -99,6 +100,8 @@ class FoldersListProgram(
         val removedNotes = notes.filter { note ->
             removedFolders.find { it.id == note.folderId }?.id == note.folderId
         }.map { it.copy(isMovedToTrash = true) }
+        Log.e("AAA", " removed folders $removedFolders")
+        Log.e("AAA", " removed notes $removedNotes")
 
         foldersInteractor.updateAll(foldersMapper.mapListFrom(removedFolders))
         updateNotes(removedNotes)

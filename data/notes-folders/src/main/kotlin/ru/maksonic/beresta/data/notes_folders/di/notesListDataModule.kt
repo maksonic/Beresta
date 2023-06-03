@@ -6,10 +6,11 @@ import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.data.notes_folders.NotesFoldersRepositoryImpl
 import ru.maksonic.beresta.data.notes_folders.cache.FoldersCacheDataSource
 import ru.maksonic.beresta.data.notes_folders.cache.NoteFolderCacheMapper
-import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFolderByIdUseCase
-import ru.maksonic.beresta.feature.notes.folders.api.domain.FetchFoldersListUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFolderByIdUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteractor
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersRepository
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersTrashListUseCase
 
 /**
  * @Author maksonic on 24.04.2023
@@ -26,4 +27,5 @@ val notesFoldersDataModule = module {
     single<NotesFoldersInteractor> { NotesFoldersInteractor.Impl(repository = get()) }
     single { FetchFoldersListUseCase(repository = get()) }
     single { FetchFolderByIdUseCase(repository = get()) }
+    single { FetchFoldersTrashListUseCase(repository = get()) }
 }

@@ -24,15 +24,16 @@ import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.trash_list.notes.core.Model
 import ru.maksonic.beresta.screen.trash_list.notes.core.Msg
-import ru.maksonic.beresta.screen.trash_list.notes.ui.widget.TrashBottomBar
+import ru.maksonic.beresta.screen.trash_list.notes.ui.widget.EmptyTrashViewState
 import ru.maksonic.beresta.screen.trash_list.notes.ui.widget.TrashedFoldersButton
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.dp10
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
+import ru.maksonic.beresta.ui.widget.bar.TrashBottomBar
+import ru.maksonic.beresta.ui.widget.dialog.TrashDialogAcceptDeleteData
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
-import ru.maksonic.beresta.ui.widget.sheet.TrashNotesModalSheetContent
+import ru.maksonic.beresta.ui.widget.sheet.TrashDeleteModalSheetContent
 
 /**
  * @Author maksonic on 30.05.2023
@@ -74,7 +75,8 @@ internal fun TrashNotesScreenContent(
             )
         }
         TrashBottomBar(
-            send,
+            onRestoreClicked = { send(Msg.Ui.OnBottomBarRestoreSelectedNotesClicked) },
+            onDeleteClicked = { send(Msg.Ui.OnBottomBarDeleteSelectedNotesClicked) },
             scrollState = scrollState,
             isSelectionState = model.value.isSelectionState,
             isDisabledBottomBar = model.value.selectedNotes.isEmpty() && model.value.isSelectionState,
@@ -86,21 +88,20 @@ internal fun TrashNotesScreenContent(
             sheetState = model.value.modalBottomSheetState,
             onDismissRequest = { send(Msg.Inner.UpdatedModalSheetState(false)) },
         ) {
-            TrashNotesModalSheetContent(
+            TrashDeleteModalSheetContent(
                 hideSheet = { send(Msg.Ui.HideModalBottomSheet) },
-                onRestoreClicked = { send(Msg.Ui.OnRestoreFromTrashNoteClicked) },
-                onDeleteClicked = { send(Msg.Ui.OnDeleteNoteClicked) },
+                onRestoreClicked = { send(Msg.Ui.OnModalSheetRestoreClicked) },
+                onDeleteClicked = { send(Msg.Ui.OnModalSheetDeleteClicked) },
             )
         }
     }
 
-    AnimateFadeInOut(
-        visible = model.value.isVisibleAcceptDeleteNotesDialog,
-        fadeInDuration = Theme.animSpeed.dialogVisibility,
-        fadeOutDuration = Theme.animSpeed.dialogVisibility
-    ) {
-        TrashDialogAcceptDeleteData(send)
-    }
+    TrashDialogAcceptDeleteData(
+        isVisible = model.value.isVisibleAcceptDeleteNotesDialog,
+        onCancelClicked = { send(Msg.Ui.OnCancelDeleteWarningDialogClicked) },
+        onAcceptClicked = { send(Msg.Ui.OnAcceptDeleteWarningDialogClicked) },
+        isSingleItemAction = model.value.isSingleItemAction,
+    )
 }
 
 @Composable
@@ -133,16 +134,23 @@ private fun NotesList(
                 notesListApi.NotesLoaderWidget(Modifier)
             }
         } else {
-            items(model.notes.data) { note ->
-                notesListApi.NoteListItem(
-                    isSelected = model.selectedNotes.contains(note),
-                    note = note,
-                    onNoteClicked = { id -> send(Msg.Ui.OnNoteClicked(id)) },
-                    onNoteLongClicked = { id -> send(Msg.Ui.OnNoteLongClicked(id)) },
-                    currentAppLang = AppLanguage.RUSSIAN,
-                    modifier = Modifier
-                )
+            if (model.notes.data.isEmpty()) {
+                item {
+                    EmptyTrashViewState(Modifier.fillParentMaxHeight())
+                }
+            } else {
+                items(model.notes.data) { note ->
+                    notesListApi.NoteListItem(
+                        isSelected = model.selectedNotes.contains(note),
+                        note = note,
+                        onNoteClicked = { id -> send(Msg.Ui.OnNoteClicked(id)) },
+                        onNoteLongClicked = { id -> send(Msg.Ui.OnNoteLongClicked(id)) },
+                        currentAppLang = AppLanguage.RUSSIAN,
+                        modifier = Modifier
+                    )
+                }
             }
         }
     }
 }
+

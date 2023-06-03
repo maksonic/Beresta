@@ -1,6 +1,8 @@
-package ru.maksonic.beresta.feature.notes.folders.api.domain
+package ru.maksonic.beresta.feature.notes.folders.api.domain.usecase
 
 import ru.maksonic.beresta.core.domain.BaseUseCase
+import ru.maksonic.beresta.feature.notes.folders.api.domain.NoteFolderDomainItem
+import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersRepository
 
 /**
  * @Author maksonic on 09.04.2023

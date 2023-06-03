@@ -1,7 +1,9 @@
 package ru.maksonic.beresta.screen.trash_list.folders.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.screen.trash_list.folders.core.FoldersTrashProgram
 import ru.maksonic.beresta.screen.trash_list.folders.core.FoldersTrashSandbox
 
@@ -10,8 +12,13 @@ import ru.maksonic.beresta.screen.trash_list.folders.core.FoldersTrashSandbox
  */
 val trashFoldersModule = module {
     single { FoldersTrashProgram(
-        fetchRemovedNotes = get(),
-        notesMapper = get()
+        fetchFoldersTrashListUseCase = get(),
+        fetchNotesByFolderTrashListUseCase = get(),
+        notesFoldersInteractor = get(),
+        notesInteractor = get(),
+        foldersMapper = get(),
+        notesMapper = get(),
+        ioDispatcher = get(named(CoroutineDispatchers.IO))
     ) }
 
     viewModel { FoldersTrashSandbox(program = get()) }

@@ -1,17 +1,20 @@
 package ru.maksonic.beresta.feature.notes.folders.core
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.ui.FolderDialogContent
 import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidgetContainer
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.FolderItemContent
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -44,6 +47,32 @@ class FoldersListCore : FoldersListApi.Ui {
     }
 
     @Composable
+    override fun FolderListItem(
+        folder: NoteFolderUi,
+        isSelected: Boolean,
+        isCurrent: Boolean,
+        onFolderClicked: (id: Long) -> Unit,
+        onFolderLongPressed: (id: Long) -> Unit,
+        isTrashPlacement: Boolean,
+        modifier: Modifier
+    ) {
+        FolderItemContent(
+            folder = folder,
+            isSelected = isSelected,
+            isCurrent = isCurrent,
+            onFolderClicked = onFolderClicked,
+            onFolderLongPressed = onFolderLongPressed,
+            isTrashPlacement = isTrashPlacement,
+            modifier = modifier
+        )
+    }
+
+    @Composable
+    override fun FoldersLoaderWidget(modifier: Modifier) {
+        FoldersLoaderWidgetContent(modifier)
+    }
+
+    @Composable
     override fun FolderCreationDialog() {
         FolderDialogContent(sharedUiState = sharedUiState)
     }
@@ -60,9 +89,9 @@ class FoldersListCore : FoldersListApi.Ui {
 
     @Composable
     private fun ScreenContainer(
-        api: FoldersListApi.Ui = get(),
-        notesListApi: NotesListApi.Ui = get(),
-        topBarCounterFeatureApi: TopBarCounterApi.Ui = get(),
+        api: FoldersListApi.Ui = koinInject(),
+        notesListApi: NotesListApi.Ui = koinInject(),
+        topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
         sandbox: FoldersScreenSandbox = koinViewModel(),
         router: NotesFoldersScreenRouter
     ) {

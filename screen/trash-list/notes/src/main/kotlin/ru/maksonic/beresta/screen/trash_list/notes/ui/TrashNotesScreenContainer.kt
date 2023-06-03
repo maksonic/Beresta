@@ -41,8 +41,6 @@ internal fun TrashNotesScreenContainer(
         sandbox.send(Msg.Ui.HideModalBottomSheet)
     }
 
-
-
     HandleUiEffects(
         effects = sandbox.effects,
         modalBottomSheetState = model.value.modalBottomSheetState,

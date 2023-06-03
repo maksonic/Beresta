@@ -5,7 +5,7 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDateFormatter
-import ru.maksonic.beresta.feature.notes.list.api.domain.RefactorNoteInteractor
+import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.core.NotesListProgram
@@ -16,7 +16,7 @@ import ru.maksonic.beresta.feature.notes.list.core.ui.NotesListWidget
  * @Author maksonic on 24.04.2023
  */
 val notesListFeatureModel = module {
-    single<RefactorNoteInteractor> { RefactorNoteInteractor.Impl(repository = get()) }
+    single<NotesInteractor> { NotesInteractor.Impl(repository = get()) }
     single<NoteDateFormatter> { NoteDateFormatter.Core() }
     single { NoteUiMapper() }
     single {

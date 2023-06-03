@@ -19,8 +19,11 @@ class NotesCacheDataSource(
 
     fun fetchCacheNotesList(): NotesCacheList = noteDao.fetchNotesList().flowOn(dispatcher)
 
-    fun fetchCacheNotesTrashList(): NotesCacheList =
+    fun fetchCacheNotesWithoutFolderTrashList(): NotesCacheList =
         noteDao.fetchNotesWithoutFolderTrashList().flowOn(dispatcher)
+
+    fun fetchCacheNotesByFolderTrashList(): NotesCacheList =
+        noteDao.fetchNotesByFolderTrashList().flowOn(dispatcher)
 
     fun fetchCacheOneItemById(itemId: Long): NoteCacheItem =
         noteDao.fetchCacheOneItemById(itemId).flowOn(dispatcher)

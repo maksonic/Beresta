@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.ui.widget.placeholder
+package ru.maksonic.beresta.screen.trash_list.notes.ui.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -12,26 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import ru.maksonic.beresta.ui.theme.BerestaTheme
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.images.AppImage
-import ru.maksonic.beresta.ui.theme.images.MaksonicDef
+import ru.maksonic.beresta.ui.theme.images.EmptyTrash
 
 /**
- * @Author maksonic on 26.05.2023
+ * @Author maksonic on 02.06.2023
  */
 @Composable
-fun ScreenPlaceholder(
-    modifier: Modifier = Modifier,
-    imageVector: ImageVector,
-    message: String,
-    backgroundColor: Color = background
-) {
+internal fun EmptyTrashViewState(modifier: Modifier) {
+    val backgroundColor = background
     Box(
         modifier
             .fillMaxSize()
@@ -40,31 +33,20 @@ fun ScreenPlaceholder(
     ) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(Modifier.weight(0.3f))
+            Spacer(Modifier.weight(0.2f))
             Image(
-                imageVector = imageVector,
+                imageVector = AppImage.EmptyTrash,
                 contentDescription = "",
                 modifier = Modifier
                     .weight(0.15f)
                     .aspectRatio(1f)
             )
             Text(
-                text = message,
+                text = text.trash.messageEmptyTrashNotesList,
                 style = TextDesign.title,
                 modifier = Modifier.padding(top = dp16)
             )
-            Spacer(Modifier.weight(0.3f))
+            Spacer(Modifier.weight(0.4f))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ScreenPlaceholderPreview() {
-    BerestaTheme {
-        ScreenPlaceholder(
-            imageVector = AppImage.MaksonicDef,
-            message = "Maksonic"
-        )
     }
 }

@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.notes.folders.api.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 
@@ -22,6 +23,20 @@ interface FoldersListApi {
             currentSelectedChipId: Long,
             isShowPlaceholder: Boolean
         )
+
+        @Composable
+        fun FolderListItem(
+            folder: NoteFolderUi,
+            isSelected: Boolean,
+            isCurrent: Boolean,
+            onFolderClicked: (id: Long) -> Unit,
+            onFolderLongPressed: (id: Long) -> Unit,
+            isTrashPlacement: Boolean,
+            modifier: Modifier
+        )
+
+        @Composable
+        fun FoldersLoaderWidget(modifier: Modifier)
 
         @Composable
         fun FolderCreationDialog()

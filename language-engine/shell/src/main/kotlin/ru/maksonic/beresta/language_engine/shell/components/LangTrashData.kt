@@ -12,9 +12,24 @@ data class LangTrashData(
     val topBarTitleTrash: String = "",
     @SerializedName("title_trashed_folders")
     val topBarTitleTrashedFolders: String = "",
-
     @SerializedName("dialog_title_delete_note")
     val titleDialogDeleteNote: String = "",
+    @SerializedName("dialog_title_delete_notes_list")
+    val titleDialogDeleteNotesList: String = "",
     @SerializedName("dialog_body_delete_note")
     val dialogBodyDeleteNote: String = "",
+    @SerializedName("dialog_body_delete_notes_list")
+    val dialogBodyDeleteNotesList: String = "",
+    @SerializedName("message_empty_notes_list")
+    val messageEmptyTrashNotesList: String = "",
+    @SerializedName("dialog_title_delete_folder")
+    val titleDialogDeleteFolder: String = "",
+    @SerializedName("dialog_title_delete_folders_list")
+    val titleDialogDeleteFoldersList: String = "",
+    @SerializedName("dialog_body_delete_folder")
+    val dialogBodyDeleteFolder: String = "",
+    @SerializedName("dialog_body_delete_folders_list")
+    val dialogBodyDeleteFoldersList: String = "",
+    @SerializedName("message_empty_folders_list")
+    val messageEmptyTrashFoldersList: String = "",
 )

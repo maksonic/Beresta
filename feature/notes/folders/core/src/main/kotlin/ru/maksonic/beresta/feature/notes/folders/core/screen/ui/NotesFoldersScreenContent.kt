@@ -24,7 +24,7 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.updateCurrentSelectedFol
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Eff
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
-import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidget
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.updatePassedList
@@ -34,7 +34,6 @@ import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
@@ -119,24 +118,22 @@ private fun FetchedDataWidget(
     val scrollState = rememberLazyListState()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        AnimateContent(model.base.isLoading) { isLoading ->
-            if (isLoading) {
-                FoldersLoaderWidget(modifier)
-            } else {
-                FoldersListContent(
-                    folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
-                    model = model,
-                    send = send,
-                    scrollState = scrollState,
-                    modifier = modifier
-                )
-                BottomBarContent(
-                    model = model,
-                    send = send,
-                    scrollState = scrollState,
-                    isDisabledBottomBar = model.selectedFolders.isEmpty() && model.isSelectionState,
-                )
-            }
+        FoldersListContent(
+            folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
+            model = model,
+            send = send,
+            scrollState = scrollState,
+            modifier = modifier
+        )
+        BottomBarContent(
+            model = model,
+            send = send,
+            scrollState = scrollState,
+            isDisabledBottomBar = model.selectedFolders.isEmpty() && model.isSelectionState,
+        )
+
+        AnimateFadeInOut(model.base.isLoading) {
+            FoldersLoaderWidgetContent(modifier)
         }
     }
 }

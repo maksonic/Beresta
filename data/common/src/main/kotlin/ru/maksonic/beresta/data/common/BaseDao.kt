@@ -31,7 +31,6 @@ abstract class BaseDao<T> {
     @Delete
     abstract suspend fun deleteAll(data: List<T>)
 
-    @Transaction
     @Delete
     abstract suspend fun deleteItem(item: T)
 }

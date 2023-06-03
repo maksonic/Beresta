@@ -12,7 +12,7 @@ val outlinedLightBlackPalette = baseLightPalette.copy(
     onTertiary = Palette.white,
     tertiaryContainer = Palette.nero,
     onTertiaryContainer = Palette.white,
-    inversePrimary = Palette.black,
+    inversePrimary = Palette.white,
     primary = Palette.nero,
     onSnackContainer = Palette.white,
 )

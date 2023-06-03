@@ -17,7 +17,7 @@ import ru.maksonic.beresta.ui.widget.button.PrimaryButton
  * @Author maksonic on 01.06.2023
  */
 @Composable
-fun TrashNotesModalSheetContent(
+fun TrashDeleteModalSheetContent(
     hideSheet: () -> Unit,
     onRestoreClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
