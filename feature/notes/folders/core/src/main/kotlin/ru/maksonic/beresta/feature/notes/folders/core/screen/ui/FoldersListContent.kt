@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +36,12 @@ import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.inversePrimary
+import ru.maksonic.beresta.ui.theme.color.inverseSurface
 import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
 import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.color.outlineVariant
@@ -112,7 +119,9 @@ internal fun FolderItemContent(
     folder: NoteFolderUi,
     onFolderClicked: (id: Long) -> Unit,
     onFolderLongPressed: (id: Long) -> Unit,
-    isTrashPlacement: Boolean = false
+    isTrashPlacement: Boolean = false,
+    formatter: DateFormatter? = null,
+    currentAppLanguage: AppLanguage = AppLanguage.ENGLISH
 ) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
@@ -123,6 +132,15 @@ internal fun FolderItemContent(
         animationSpec = tween(Theme.animSpeed.common)
     )
 
+    val isTrashItem = isTrashPlacement && formatter != null && folder.dateMovedToTrashRaw != null
+
+    val removeDate = if (isTrashItem) rememberUpdatedState(
+        formatter!!.fetchFormattedUiDate(
+            folder.dateMovedToTrashRaw!!,
+            currentAppLanguage
+        )
+    ) else remember { mutableStateOf("") }
+
     BoxWithScaleInOutOnClick(
         onClick = { if (folder.isSelectable) onFolderClicked(folder.id) },
         onLongClick = { if (folder.isSelectable) onFolderLongPressed(folder.id) },
@@ -132,22 +150,22 @@ internal fun FolderItemContent(
             .padding(top = dp6, bottom = dp6)
             .onFocusChanged { isFocusedItem.value = it.isFocused }
     ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .height(Theme.widgetSize.minimumTouchTargetSize)
-                .padding(start = dp8),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Box(Modifier.size(dp32), contentAlignment = Alignment.Center) {
+        Column {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(Theme.widgetSize.minimumTouchTargetSize),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 if (isCurrent) {
                     Icon(
                         imageVector = AppIcon.Done,
                         tint = tertiaryContainer,
-                        contentDescription = ""
+                        contentDescription = "",
+                        modifier = Modifier.padding(start = dp16)
                     )
                 }
+
                 if (isTrashPlacement) {
                     val iconBackgroundColor = animateColorAsState(
                         if (isSelected) inversePrimary else secondaryContainer,
@@ -156,6 +174,7 @@ internal fun FolderItemContent(
 
                     Box(
                         modifier
+                            .padding(start = dp16)
                             .size(dp32)
                             .clip(CircleShape)
                             .drawBehind { drawRect(iconBackgroundColor.value) },
@@ -169,42 +188,49 @@ internal fun FolderItemContent(
                         )
                     }
                 }
-            }
 
-            Text(
-                text = folder.title,
-                style = TextDesign.title.copy(color = onPrimaryContainer),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = dp8, end = dp8)
-            )
+                Text(
+                    text = folder.title,
+                    style = TextDesign.title.copy(color = onPrimaryContainer),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = dp16, end = dp8)
+                )
 
-            Text(
-                text = folder.notesCount.toString(),
-                style = TextDesign.bodyPrimaryMedium.copy(color = outline),
-                maxLines = 1,
-                modifier = Modifier.padding(end = dp16)
-            )
+                Text(
+                    text = folder.notesCount.toString(),
+                    style = TextDesign.bodyPrimaryMedium.copy(color = outline),
+                    maxLines = 1,
+                    modifier = Modifier.padding(end = dp16)
+                )
 
-            if (!isTrashPlacement) {
-                Box(
-                    Modifier
-                        .padding(end = dp8)
-                        .size(dp16)
-                ) {
-                    AnimateFadeInOut(
-                        visible = folder.isPinned && !folder.isDefaultId()
+                if (!isTrashPlacement) {
+                    Box(
+                        Modifier
+                            .padding(end = dp8)
+                            .size(dp16)
                     ) {
-                        Icon(
-                            imageVector = AppIcon.Pin,
-                            modifier = modifier.size(dp16),
-                            tint = primary,
-                            contentDescription = null
-                        )
+                        AnimateFadeInOut(
+                            visible = folder.isPinned && !folder.isDefaultId()
+                        ) {
+                            Icon(
+                                imageVector = AppIcon.Pin,
+                                modifier = modifier.size(dp16),
+                                tint = primary,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
+            }
+            if (isTrashPlacement) {
+                Text(
+                    text = "${text.trash.hintRemovedDatePrefix} ${removeDate.value}",
+                    style = TextDesign.captionSmall.copy(color = inverseSurface),
+                    modifier = modifier.padding(start = dp16, top = dp8, bottom = dp16)
+                )
             }
         }
     }

@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -24,10 +25,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.androidx.compose.get
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDateFormatter
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.inverseSurface
 import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
@@ -62,7 +63,9 @@ internal fun NoteListItemContent(
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongClicked: (id: Long) -> Unit,
     isEnabledClick: Boolean = true,
+    isTrashPlacement: Boolean = false,
     currentAppLang: AppLanguage,
+    formatter: DateFormatter? = null,
     modifier: Modifier = Modifier
 ) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
@@ -94,7 +97,9 @@ internal fun NoteListItemContent(
                 note = note,
                 maxTitleLength = MAX_TITLE_LENGTH,
                 maxMessageLength = MAX_MESSAGE_LENGTH,
-                currentAppLanguage = currentAppLang
+                isTrashPlacement = isTrashPlacement,
+                currentAppLanguage = currentAppLang,
+                formatter = formatter
             )
         }
     }
@@ -106,16 +111,32 @@ private fun CardContent(
     note: NoteUi,
     maxTitleLength: Int,
     maxMessageLength: Int,
-    currentAppLanguage: AppLanguage,
     isPlaceholder: Boolean = false,
-    formatter: NoteDateFormatter = get(),
+    isTrashPlacement: Boolean = false,
+    currentAppLanguage: AppLanguage,
+    formatter: DateFormatter? = null,
 ) {
-    val date = rememberUpdatedState(
-        formatter.fetchFormattedUiDate(
+    val dateCreation = rememberUpdatedState(
+        formatter?.fetchFormattedUiDate(
             note.dateCreationRaw,
             currentAppLanguage
         )
     )
+
+    val isTrashItem = isTrashPlacement && formatter != null && note.dateMovedToTrashRaw != null
+    val hintPrefixRemovedDate = text.trash.hintRemovedDatePrefix
+    val removeDate = if (isTrashItem) rememberUpdatedState(
+        formatter!!.fetchFormattedUiDate(
+            note.dateMovedToTrashRaw!!,
+            currentAppLanguage
+        )
+    ) else remember { mutableStateOf("") }
+
+    val date = when {
+        isPlaceholder -> remember { mutableStateOf("") }
+        isTrashPlacement -> remember { mutableStateOf("$hintPrefixRemovedDate ${removeDate.value}") }
+        else -> dateCreation
+    }
 
     Text(
         text = note.title.take(maxTitleLength),
@@ -133,9 +154,9 @@ private fun CardContent(
         modifier = modifier.padding(top = dp8, end = dp8)
     )
     Text(
-        text = if (isPlaceholder) "" else date.value,
+        text = date.value ?: "",
         style = TextDesign.captionSmall.copy(color = inverseSurface),
-        modifier = modifier.padding(top = dp16, bottom = dp24)
+        modifier = modifier.padding(top = dp16, bottom = dp8)
     )
 }
 
@@ -193,7 +214,7 @@ internal fun NoteItemPlaceholder(
             maxTitleLength = 0,
             maxMessageLength = 0,
             currentAppLanguage = AppLanguage.ENGLISH,
-            isPlaceholder = true
+            isPlaceholder = true,
         )
     }
 }

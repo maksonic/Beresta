@@ -19,13 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.trash_list.folders.core.Model
 import ru.maksonic.beresta.screen.trash_list.folders.core.Msg
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.dp10
+import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.EmptyTrash
 import ru.maksonic.beresta.ui.widget.bar.TrashBottomBar
@@ -45,6 +47,7 @@ internal fun TrashFoldersScreenContent(
     send: SendMessage,
     foldersListApi: FoldersListApi.Ui,
     topBarCounterApi: TopBarCounterApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
@@ -71,6 +74,7 @@ internal fun TrashFoldersScreenContent(
                 send = send,
                 scrollState = scrollState,
                 foldersListApi = foldersListApi,
+                formatter = formatter,
                 modifier = modifier.padding(paddings)
             )
         }
@@ -112,6 +116,7 @@ private fun FoldersList(
     send: SendMessage,
     scrollState: LazyListState,
     foldersListApi: FoldersListApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier
 ) {
     val bottomContentPadding =
@@ -120,8 +125,8 @@ private fun FoldersList(
     LazyColumn(
         state = scrollState,
         contentPadding = PaddingValues(
-            start = dp10,
-            end = dp10,
+            start = dp16,
+            end = dp16,
             bottom = bottomContentPadding.value
         ),
         modifier = modifier
@@ -149,6 +154,8 @@ private fun FoldersList(
                         onFolderClicked = { id -> send(Msg.Ui.OnFolderClicked(id)) },
                         onFolderLongPressed = { id -> send(Msg.Ui.OnFolderLongClicked(id)) },
                         isTrashPlacement = true,
+                        currentAppLang = model.currentAppLang,
+                        formatter = formatter,
                         modifier = Modifier
                     )
                 }

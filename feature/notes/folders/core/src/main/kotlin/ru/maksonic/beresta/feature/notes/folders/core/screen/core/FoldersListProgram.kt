@@ -96,12 +96,15 @@ class FoldersListProgram(
         notes: List<NoteUi>,
         consumer: (Msg) -> Unit
     ) = withContext(ioDispatcher) {
-        val removedFolders = folders.map { it.copy(isMovedToTrash = true) }
+        val removedFolders = folders.map {
+            it.copy(
+                isMovedToTrash = true,
+                dateMovedToTrashRaw = LocalDateTime.now()
+            )
+        }
         val removedNotes = notes.filter { note ->
             removedFolders.find { it.id == note.folderId }?.id == note.folderId
         }.map { it.copy(isMovedToTrash = true) }
-        Log.e("AAA", " removed folders $removedFolders")
-        Log.e("AAA", " removed notes $removedNotes")
 
         foldersInteractor.updateAll(foldersMapper.mapListFrom(removedFolders))
         updateNotes(removedNotes)
@@ -117,7 +120,8 @@ class FoldersListProgram(
         notes: List<NoteUi>,
         consumer: (Msg) -> Unit
     ) = withContext(ioDispatcher) {
-        val restoredRemovedFolders = removedFolders.map { it.copy(isMovedToTrash = false) }
+        val restoredRemovedFolders =
+            removedFolders.map { it.copy(isMovedToTrash = false, dateMovedToTrashRaw = null) }
         val foldersUi = folders.toMutableList().also { it.addAll(restoredRemovedFolders) }
         val restoredRemovedNotes = removedNotes.map { it.copy(isMovedToTrash = false) }
         val restoredNotes = notes.toMutableList().also { it.addAll(restoredRemovedNotes) }

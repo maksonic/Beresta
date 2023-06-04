@@ -18,6 +18,7 @@ val trashFoldersModule = module {
         notesInteractor = get(),
         foldersMapper = get(),
         notesMapper = get(),
+        appLanguageEngineApi = get(),
         ioDispatcher = get(named(CoroutineDispatchers.IO))
     ) }
 

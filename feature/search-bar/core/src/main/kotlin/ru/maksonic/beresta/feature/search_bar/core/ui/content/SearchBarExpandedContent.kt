@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
@@ -59,7 +59,8 @@ import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 internal fun SearchBarExpandedContent(
     model: Model,
     send: SendMessage,
-    notesListFeature: NotesListApi.Ui,
+    notesListFeatureApi: NotesListApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier = Modifier
 ) {
 
@@ -75,12 +76,15 @@ internal fun SearchBarExpandedContent(
     ) {
         Column {
             InputQueryTextFiled(model = model, send = send)
-            SearchListResult(notes = model.searchList, notesApi = notesListFeature)
+            SearchListResult(
+                notes = model.searchList,
+                notesApi = notesListFeatureApi,
+                formatter = formatter
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InputQueryTextFiled(
     model: Model,
@@ -142,6 +146,7 @@ private fun InputQueryTextFiled(
 private fun SearchListResult(
     notes: NoteUi.Collection,
     notesApi: NotesListApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberLazyListState()
@@ -157,7 +162,9 @@ private fun SearchListResult(
                 isSelected = false,
                 onNoteClicked = {},
                 onNoteLongClicked = { },
+                isTrashPlacement = false,
                 currentAppLang = AppLanguage.ENGLISH,
+                formatter = formatter,
                 modifier = Modifier.animateItemPlacement()
             )
         }

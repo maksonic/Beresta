@@ -20,4 +20,5 @@ data class NoteFolderDomain(
     val isSelectable: Boolean = true,
     val isStickyToStart: Boolean = false,
     val isStickyToEnd: Boolean = false,
+    val dateMovedToTrash: LocalDateTime? = null,
 )

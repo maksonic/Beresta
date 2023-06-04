@@ -16,7 +16,8 @@ class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
         isPinned = i.isPinned,
         pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash,
-        folderId = i.folderId
+        folderId = i.folderId,
+        dateMovedToTrash = i.dateMovedToTrash
     )
 
     override fun domainToData(o: NoteDomain) = NoteCache(
@@ -27,6 +28,7 @@ class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
         isPinned = o.isPinned,
         pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash,
-        folderId = o.folderId
+        folderId = o.folderId,
+        dateMovedToTrash = o.dateMovedToTrash
     )
 }

@@ -4,7 +4,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDateFormatter
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
@@ -17,7 +17,7 @@ import ru.maksonic.beresta.feature.notes.list.core.ui.NotesListWidget
  */
 val notesListFeatureModel = module {
     single<NotesInteractor> { NotesInteractor.Impl(repository = get()) }
-    single<NoteDateFormatter> { NoteDateFormatter.Core() }
+    single<DateFormatter> { DateFormatter.Core() }
     single { NoteUiMapper() }
     single {
         NotesListProgram(

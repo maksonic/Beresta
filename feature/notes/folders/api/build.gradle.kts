@@ -51,6 +51,8 @@ android {
 dependencies {
     implementation(project(module.primary.core.path))
     implementation(project(module.primary.navigation.router.path))
+    implementation(project(module.primary.languageEngine.shell.path))
+    implementation(project(module.feature.notes.list.api.path))
     implementation(platform(lib.compose.bom))
     implementation(lib.compose.ui)
     implementation(lib.compose.runtime)

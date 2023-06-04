@@ -10,6 +10,7 @@ import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 
 /**
  * @Author maksonic on 30.05.2023
@@ -26,6 +27,8 @@ data class Model(
     val isVisibleAcceptDeleteFoldersDialog: Boolean,
     val isVisibleModalSheet: Boolean,
     val isSingleItemAction: Boolean,
+    val currentAppLang: AppLanguage
+
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -41,7 +44,8 @@ data class Model(
             currentClickedFolderId = null,
             isVisibleAcceptDeleteFoldersDialog = false,
             isVisibleModalSheet = false,
-            isSingleItemAction = true
+            isSingleItemAction = true,
+            currentAppLang = AppLanguage.ENGLISH
         )
     }
 }
@@ -70,10 +74,13 @@ sealed class Msg : ElmMessage {
 
         data class FetchedError(val message: String) : Inner()
         data class UpdatedModalSheetState(val isVisible: Boolean) : Inner()
+        data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
+
     }
 }
 
 sealed class Cmd : ElmCommand {
+    object ReadLanguageFromDataStore : Cmd()
     object FetchRemovedData : Cmd()
     data class DeleteOrRestoreFolders(
         val isRestore: Boolean,

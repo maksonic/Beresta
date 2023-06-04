@@ -2,6 +2,7 @@ package ru.maksonic.beresta.screen.trash_list.folders.core
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
@@ -13,6 +14,7 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesByFolderTrashListUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 
 /**
  * @Author maksonic on 30.05.2023
@@ -24,10 +26,12 @@ class FoldersTrashProgram(
     private val notesInteractor: NotesInteractor,
     private val foldersMapper: NoteFolderToUiMapper,
     private val notesMapper: NoteUiMapper,
+    private val appLanguageEngineApi: LanguageEngineApi,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
+            is Cmd.ReadLanguageFromDataStore -> readLanguageFromDatastore(consumer)
             is Cmd.FetchRemovedData -> fetchData(consumer)
             is Cmd.DeleteOrRestoreFolders -> {
                 deleteOrRestoreFolders(cmd.isRestore, cmd.folders, cmd.notes)
@@ -67,11 +71,11 @@ class FoldersTrashProgram(
         runCatching {
             val foldersDomain = foldersMapper.mapListFrom(folders)
             val restoredFolders = foldersDomain.map { folder ->
-                folder.copy(isMovedToTrash = false)
+                folder.copy(isMovedToTrash = false, dateMovedToTrash = null)
             }
             val restoredNotes = notesMapper.mapListFrom(notes)
                 .filter { note -> restoredFolders.any { folder -> note.folderId == folder.id } }
-                .map { note -> note.copy(isMovedToTrash = false) }
+                .map { note -> note.copy(isMovedToTrash = false, dateMovedToTrash = null) }
 
             notesFoldersInteractor.also {
                 if (isRestore) it.updateAll(restoredFolders) else it.deleteAll(foldersDomain)
@@ -80,6 +84,12 @@ class FoldersTrashProgram(
             notesInteractor.also {
                 if (isRestore) it.updateAll(restoredNotes) else it.deleteAll(restoredNotes)
             }
+        }
+    }
+
+    private suspend fun readLanguageFromDatastore(consumer: (Msg) -> Unit) {
+        appLanguageEngineApi.current.collectLatest { savedAppLanguage ->
+            consumer(Msg.Inner.FetchedCurrentAppLang(savedAppLanguage))
         }
     }
 }

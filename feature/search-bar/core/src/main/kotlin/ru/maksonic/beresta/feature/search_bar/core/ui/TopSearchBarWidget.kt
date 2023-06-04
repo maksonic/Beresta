@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
@@ -69,6 +70,7 @@ class TopSearchBarWidget : SearchBarApi.Ui {
         sandbox: SearchBarSandbox = koinViewModel(),
         notesListFeatureApi: NotesListApi.Ui = koinInject(),
         topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
+        dateFormatter: DateFormatter = koinInject(),
         modifier: Modifier = Modifier
     ) {
         val model = sandbox.model.collectAsStateWithLifecycle()
@@ -91,6 +93,7 @@ class TopSearchBarWidget : SearchBarApi.Ui {
                 isColoredBar = notesListSharedUiState.value.isNotColoredTopBar,
                 notesListFeatureApi = notesListFeatureApi,
                 counterApi = topBarCounterFeatureApi,
+                formatter = dateFormatter
             )
         }
     }
@@ -103,6 +106,7 @@ private fun SearchBarContent(
     isColoredBar: Boolean,
     notesListFeatureApi: NotesListApi.Ui,
     counterApi: TopBarCounterApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier = Modifier
 ) {
     val animSpeed = Theme.animSpeed.searchBarTransform
@@ -164,7 +168,15 @@ private fun SearchBarContent(
 
         AnimateContent(model.barState) { state ->
             when {
-                state.isExpanded -> SearchBarExpandedContent(model, send, notesListFeatureApi)
+                state.isExpanded -> {
+                    SearchBarExpandedContent(
+                        model = model,
+                        send = send,
+                        notesListFeatureApi = notesListFeatureApi,
+                        formatter = formatter
+                    )
+                }
+
                 state.isSelection -> SearchBarSelectedContent(counterApi)
                 state.isCollapsed -> {
                     SearchBarCollapsedContent(

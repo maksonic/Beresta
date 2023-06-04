@@ -15,8 +15,10 @@ import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.FolderItemConten
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 
@@ -54,6 +56,8 @@ class FoldersListCore : FoldersListApi.Ui {
         onFolderClicked: (id: Long) -> Unit,
         onFolderLongPressed: (id: Long) -> Unit,
         isTrashPlacement: Boolean,
+        currentAppLang: AppLanguage,
+        formatter: DateFormatter,
         modifier: Modifier
     ) {
         FolderItemContent(
@@ -63,6 +67,8 @@ class FoldersListCore : FoldersListApi.Ui {
             onFolderClicked = onFolderClicked,
             onFolderLongPressed = onFolderLongPressed,
             isTrashPlacement = isTrashPlacement,
+            currentAppLanguage = currentAppLang,
+            formatter = formatter,
             modifier = modifier
         )
     }

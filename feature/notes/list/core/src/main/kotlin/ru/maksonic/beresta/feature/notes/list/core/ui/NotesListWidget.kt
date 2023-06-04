@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes.list.core.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
@@ -30,7 +31,9 @@ class NotesListWidget : NotesListApi.Ui {
         note: NoteUi,
         onNoteClicked: (id: Long) -> Unit,
         onNoteLongClicked: (id: Long) -> Unit,
+        isTrashPlacement: Boolean,
         currentAppLang: AppLanguage,
+        formatter: DateFormatter,
         modifier: Modifier
     ) {
         NoteListItemContent(
@@ -38,7 +41,9 @@ class NotesListWidget : NotesListApi.Ui {
             isSelected = isSelected,
             onNoteClicked = onNoteClicked,
             onNoteLongClicked = onNoteLongClicked,
+            isTrashPlacement = isTrashPlacement,
             currentAppLang = currentAppLang,
+            formatter = formatter,
             modifier = modifier
         )
     }

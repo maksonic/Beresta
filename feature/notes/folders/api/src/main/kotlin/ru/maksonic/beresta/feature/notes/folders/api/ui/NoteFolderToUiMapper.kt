@@ -16,7 +16,8 @@ class NoteFolderToUiMapper : Mapper<NoteFolderDomain, NoteFolderUi> {
         dateCreationRaw = i.dateCreation,
         isSelectable = i.isSelectable,
         isStickyToStart = i.isStickyToStart,
-        isStickyToEnd = i.isStickyToEnd
+        isStickyToEnd = i.isStickyToEnd,
+        dateMovedToTrashRaw = i.dateMovedToTrash
     )
 
     override fun mapFrom(o: NoteFolderUi) = NoteFolderDomain(
@@ -28,6 +29,7 @@ class NoteFolderToUiMapper : Mapper<NoteFolderDomain, NoteFolderUi> {
         dateCreation = o.dateCreationRaw,
         isSelectable = o.isSelectable,
         isStickyToStart = o.isStickyToStart,
-        isStickyToEnd = o.isStickyToEnd
+        isStickyToEnd = o.isStickyToEnd,
+        dateMovedToTrash = o.dateMovedToTrashRaw
     )
 }

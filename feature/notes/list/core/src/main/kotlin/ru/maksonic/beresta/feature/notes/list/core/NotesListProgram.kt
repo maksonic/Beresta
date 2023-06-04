@@ -53,7 +53,13 @@ class NotesListProgram(
         notes: List<NoteUi>,
         consumer: (Msg) -> Unit
     ) {
-        val notesUi = notes.map { it.copy(isMovedToTrash = true, folderId = 2L) }
+        val notesUi = notes.map { note ->
+            note.copy(
+                isMovedToTrash = true,
+                folderId = 2L,
+                dateMovedToTrashRaw = LocalDateTime.now()
+            )
+        }
         val notesDomain = mapper.mapListFrom(notesUi)
         notesInteractor.updateAll(notesDomain)
         delay(SNACK_BAR_VISIBILITY_TIME)
@@ -64,7 +70,7 @@ class NotesListProgram(
         notes: List<NoteUi>,
         consumer: (Msg) -> Unit
     ) {
-        val notesDomain = mapper.mapListFrom(notes)
+        val notesDomain = mapper.mapListFrom(notes.map { it.copy(dateMovedToTrashRaw = null) })
         notesInteractor.updateAll(notesDomain)
         consumer(Msg.Inner.HideRemovedNotesSnackBar)
     }

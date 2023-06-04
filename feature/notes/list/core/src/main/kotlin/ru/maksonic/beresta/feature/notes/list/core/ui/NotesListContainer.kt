@@ -24,6 +24,7 @@ import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateChipsRowVisibility
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateColoredTopBar
@@ -69,6 +70,7 @@ internal fun NotesListContainer(
     sandbox: NotesListSandbox = koinViewModel(),
     notesFoldersFeatureApi: FoldersListApi.Ui = koinInject(),
     topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
+    formatter: DateFormatter = koinInject(),
     sharedUiState: SharedUiState<NotesListSharedUiState>,
     router: MainScreenRouter
 ) {
@@ -111,7 +113,8 @@ internal fun NotesListContainer(
                 NotesResultDataContent(
                     model = model.value,
                     send = sandbox::send,
-                    sharedUiState = sharedUiState
+                    sharedUiState = sharedUiState,
+                    formatter = formatter,
                 )
             }
 
@@ -130,7 +133,8 @@ private fun NotesResultDataContent(
     modifier: Modifier = Modifier,
     model: Model,
     send: SendMessage,
-    sharedUiState: SharedUiState<NotesListSharedUiState>
+    sharedUiState: SharedUiState<NotesListSharedUiState>,
+    formatter: DateFormatter
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     val isScrollUp = scrollState.isScrollUp()
@@ -194,6 +198,7 @@ private fun NotesResultDataContent(
     LaunchedEffect(isCantScrollBackward) {
         sharedUiState.updateColoredTopBar(isCantScrollBackward)
     }
+
     LaunchedEffect(isVisibleFirstNote.value) {
         sharedUiState.updateChipsRowVisibility(isVisibleFirstNote.value)
     }
@@ -231,7 +236,8 @@ private fun NotesResultDataContent(
                         onNoteClicked = { id -> send(Msg.Ui.OnNoteClicked(id)) },
                         onNoteLongClicked = { id -> send(Msg.Ui.OnNoteLongClicked(id)) },
                         currentAppLang = model.currentAppLanguage,
-                        modifier = modifier.animateContentSize()
+                        formatter = formatter,
+                        modifier = modifier.animateContentSize(),
                     )
                 }
             }

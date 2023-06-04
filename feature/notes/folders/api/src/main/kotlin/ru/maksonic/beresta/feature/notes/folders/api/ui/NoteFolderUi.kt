@@ -16,6 +16,7 @@ data class NoteFolderUi(
     val isPinned: Boolean,
     val pinTime: LocalDateTime?,
     val dateCreationRaw: LocalDateTime,
+    val dateMovedToTrashRaw: LocalDateTime?,
     val isSelectable: Boolean = true,
     val isStickyToStart: Boolean = false,
     val isStickyToEnd: Boolean = false,
@@ -33,6 +34,7 @@ data class NoteFolderUi(
             isStickyToEnd = false,
             pinTime = null,
             dateCreationRaw = LocalDateTime.now(),
+            dateMovedToTrashRaw = null,
             notesCount = 0
         )
     }

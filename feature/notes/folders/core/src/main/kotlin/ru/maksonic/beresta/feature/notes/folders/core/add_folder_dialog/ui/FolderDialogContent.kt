@@ -83,17 +83,16 @@ internal fun FolderDialogContent(
         mutableLongStateOf(sharedState.value.passedForEditFolderId)
     }
 
-
     HandleUiEffects(effects = sandbox.effects, sharedUiState = sharedUiState)
 
     BackHandler {
         sandbox.send(Msg.Ui.OnDismissClicked)
     }
 
-      LaunchedEffect(focusRequester) {
-          awaitFrame()
-          focusRequester.requestFocus()
-      }
+    LaunchedEffect(focusRequester) {
+        awaitFrame()
+        focusRequester.requestFocus()
+    }
 
     LaunchedEffect(passedFolderId) {
         sharedState.value.let {
@@ -225,7 +224,7 @@ private fun HandleUiEffects(
                     // Without delay, the input field does not have time
                     // to be cleared after closing the dialog box
                     delay(WAITING_CLEAR_INPUT_FIELD)
-                      focusManager.clearFocus()
+                    focusManager.clearFocus()
                     sharedUiState.hideDialog()
                 }
             }

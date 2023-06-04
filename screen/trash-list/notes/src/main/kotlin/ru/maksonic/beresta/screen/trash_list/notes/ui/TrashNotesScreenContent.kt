@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
@@ -45,6 +46,7 @@ internal fun TrashNotesScreenContent(
     send: SendMessage,
     notesListApi: NotesListApi.Ui,
     topBarCounterApi: TopBarCounterApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
@@ -71,6 +73,7 @@ internal fun TrashNotesScreenContent(
                 send = send,
                 scrollState = scrollState,
                 notesListApi = notesListApi,
+                formatter = formatter,
                 modifier = modifier.padding(paddings)
             )
         }
@@ -110,6 +113,7 @@ private fun NotesList(
     send: SendMessage,
     scrollState: LazyListState,
     notesListApi: NotesListApi.Ui,
+    formatter: DateFormatter,
     modifier: Modifier
 ) {
     val bottomContentPadding =
@@ -145,7 +149,9 @@ private fun NotesList(
                         note = note,
                         onNoteClicked = { id -> send(Msg.Ui.OnNoteClicked(id)) },
                         onNoteLongClicked = { id -> send(Msg.Ui.OnNoteLongClicked(id)) },
-                        currentAppLang = AppLanguage.RUSSIAN,
+                        isTrashPlacement = true,
+                        currentAppLang = model.currentAppLang,
+                        formatter = formatter,
                         modifier = Modifier
                     )
                 }

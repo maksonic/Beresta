@@ -13,6 +13,7 @@ val trashNotesModule = module {
         fetchRemovedNotes = get(),
         notesInteractor = get(),
         notesMapper = get(),
+        appLanguageEngineApi = get()
     ) }
 
     viewModel { NotesTrashSandbox(program = get()) }

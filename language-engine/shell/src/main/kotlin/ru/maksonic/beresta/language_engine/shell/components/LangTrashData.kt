@@ -32,4 +32,6 @@ data class LangTrashData(
     val dialogBodyDeleteFoldersList: String = "",
     @SerializedName("message_empty_folders_list")
     val messageEmptyTrashFoldersList: String = "",
+    @SerializedName("hint_moved_to_trash_date_prefix")
+    val hintRemovedDatePrefix: String = "",
 )

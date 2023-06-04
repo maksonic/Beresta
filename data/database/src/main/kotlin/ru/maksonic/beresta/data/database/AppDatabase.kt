@@ -3,6 +3,8 @@ package ru.maksonic.beresta.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.maksonic.beresta.data.common.LocalDateTimeConverter
 import ru.maksonic.beresta.data.database.folders.NoteFolderCache
 import ru.maksonic.beresta.data.database.folders.NoteFolderDao
@@ -26,3 +28,20 @@ object AppDatabase {
         abstract fun noteFolderDao(): NoteFolderDao
     }
 }
+
+/*val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE notes_folders ADD COLUMN dateMovedToTrash TEXT")
+
+    }
+}
+*/
+/*
+
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE notes_folders ADD COLUMN dateMovedToTrash TEXT")
+
+    }
+}
+*/
