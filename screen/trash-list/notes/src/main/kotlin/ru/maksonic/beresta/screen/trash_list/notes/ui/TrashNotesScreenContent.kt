@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
-import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.trash_list.notes.core.Model
 import ru.maksonic.beresta.screen.trash_list.notes.core.Msg

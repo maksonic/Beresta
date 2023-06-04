@@ -1,14 +1,13 @@
 package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
-import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteractor
+import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescendingByPinTimeThenByDate
