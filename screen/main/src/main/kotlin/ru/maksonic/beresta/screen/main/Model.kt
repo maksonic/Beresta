@@ -12,7 +12,6 @@ import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
-import ru.maksonic.beresta.feature.notes.list.api.ui.SortedNotes
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 
 /**
