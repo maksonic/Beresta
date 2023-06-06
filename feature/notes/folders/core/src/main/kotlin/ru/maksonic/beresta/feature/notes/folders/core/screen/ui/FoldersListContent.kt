@@ -32,6 +32,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Model
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Msg
@@ -75,6 +76,7 @@ internal fun FoldersListContent(
     model: Model,
     send: SendMessage,
     scrollState: LazyListState,
+    stickyItemsTitleFormatter: StickyItemsTitleFormatter,
     modifier: Modifier = Modifier
 ) {
     val defaultPadding = Theme.widgetSize.bottomBarNormalHeight.plus(dp6)
@@ -96,7 +98,9 @@ internal fun FoldersListContent(
                 ),
                 modifier = modifier.fillMaxSize()
             ) {
-                items(folders.data, key = { it.id }) { folder ->
+                items(
+                    items = stickyItemsTitleFormatter.format(folders.data, model.currentLang),
+                    key = { it.id }) { folder ->
                     FolderItemContent(
                         modifier = Modifier.animateItemPlacement(),
                         folder = folder,
@@ -142,8 +146,8 @@ internal fun FolderItemContent(
     ) else remember { mutableStateOf("") }
 
     BoxWithScaleInOutOnClick(
-        onClick = { if (folder.isSelectable) onFolderClicked(folder.id) },
-        onLongClick = { if (folder.isSelectable) onFolderLongPressed(folder.id) },
+        onClick = { onFolderClicked(folder.id) },
+        onLongClick = { onFolderLongPressed(folder.id) },
         backgroundColor = backgroundColor,
         shape = Shape.cornerNormal,
         modifier = modifier

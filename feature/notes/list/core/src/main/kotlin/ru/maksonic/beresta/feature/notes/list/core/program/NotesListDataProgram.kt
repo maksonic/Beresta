@@ -1,27 +1,25 @@
-package ru.maksonic.beresta.feature.notes.list.core
+package ru.maksonic.beresta.feature.notes.list.core.program
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
-import ru.maksonic.beresta.feature.notes.list.api.ui.sortDescendingByPinTimeThenByDate
-import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
+import ru.maksonic.beresta.feature.notes.list.core.Cmd
+import ru.maksonic.beresta.feature.notes.list.core.Msg
 import java.time.LocalDateTime
 
 /**
- * @Author maksonic on 24.04.2023
+ * @Author maksonic on 06.06.2023
  */
-class NotesListProgram(
+class NotesListDataProgram(
     private val notesInteractor: NotesInteractor,
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val mapper: NoteUiMapper,
-    private val appLanguageEngineApi: LanguageEngineApi,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
@@ -34,14 +32,14 @@ class NotesListProgram(
             is Cmd.RemoveSelected -> moveSelectedNotesToTrash(cmd.notes, consumer)
             is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
             is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes, consumer)
-            is Cmd.FetchCurrentLangForNotesDatestamp -> readLanguageFromDatastore(consumer)
+            else -> {}
         }
     }
 
     private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
             fetchNotesUseCase().collect { notesDomain ->
-                val notes = mapper.mapListTo(notesDomain).sortDescendingByPinTimeThenByDate()
+                val notes = mapper.mapListTo(notesDomain)
                 consumer(Msg.Inner.FetchedResultData(NoteUi.Collection(notes)))
             }
         }.onFailure { throwable ->
@@ -87,11 +85,5 @@ class NotesListProgram(
         }
         val notesDomain = mapper.mapListFrom(selected)
         notesInteractor.updateAll(notesDomain)
-    }
-
-    private suspend fun readLanguageFromDatastore(consumer: (Msg) -> Unit) {
-        appLanguageEngineApi.current.collectLatest { savedAppLanguage ->
-            consumer(Msg.Inner.FetchedCurrentAppLang(savedAppLanguage))
-        }
     }
 }

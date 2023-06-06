@@ -14,6 +14,7 @@ val mainScreenModule = module {
     single {
         MainProgram(
             foldersListUseCase = get(), foldersMapper = get(),
+            appLanguageEngineApi = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }

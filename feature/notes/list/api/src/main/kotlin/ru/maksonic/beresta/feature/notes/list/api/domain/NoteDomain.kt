@@ -19,5 +19,6 @@ data class NoteDomain(
     val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false,
     val folderId: Long = 2L,
-    val dateMovedToTrash: LocalDateTime? = null
+    val dateMovedToTrash: LocalDateTime? = null,
+    val dateLastUpdateRaw: LocalDateTime? = null
 )

@@ -8,26 +8,30 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
-import ru.maksonic.beresta.feature.notes.list.core.NotesListProgram
 import ru.maksonic.beresta.feature.notes.list.core.NotesListSandbox
+import ru.maksonic.beresta.feature.notes.list.core.program.NotesListDataProgram
+import ru.maksonic.beresta.feature.notes.list.core.program.NotesListPreferencesProgram
+import ru.maksonic.beresta.feature.notes.list.core.sort.core.SortNotesDatastore
 import ru.maksonic.beresta.feature.notes.list.core.ui.NotesListWidget
 
 /**
  * @Author maksonic on 24.04.2023
  */
 val notesListFeatureModel = module {
+
     single<NotesInteractor> { NotesInteractor.Impl(repository = get()) }
     single<DateFormatter> { DateFormatter.Core() }
     single { NoteUiMapper() }
     single {
-        NotesListProgram(
+        NotesListDataProgram(
             notesInteractor = get(),
             fetchNotesUseCase = get(),
             mapper = get(),
-            appLanguageEngineApi = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }
-    viewModel { NotesListSandbox(program = get()) }
+    single { NotesListPreferencesProgram(appLanguageEngineApi = get(), sortNotesDatastore = get()) }
+    viewModel { NotesListSandbox(notesDataProgram = get(), notesPrefsProgram = get()) }
     single<NotesListApi.Ui> { NotesListWidget() }
+    single<NotesListApi.SortedNotesState> { SortNotesDatastore(datastore = get()) }
 }

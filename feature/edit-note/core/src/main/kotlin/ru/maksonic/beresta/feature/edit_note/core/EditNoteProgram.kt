@@ -41,12 +41,19 @@ class EditNoteProgram(
     }
 
     private suspend fun saveOrUpdateNote(note: NoteUi) {
+        val currentRawTime = LocalDateTime.now()
+
         val noteDomain = mapper.mapFrom(note)
         interactor.let {
             if (note.isDefaultId())
-                it.addNote(noteDomain.copy(dateCreation = LocalDateTime.now()))
+                it.addNote(noteDomain.copy(dateCreation = currentRawTime))
             else
-                it.updateNote(noteDomain.copy(dateCreation = note.dateCreationRaw))
+                it.updateNote(
+                    noteDomain.copy(
+                        dateCreation = note.dateCreationRaw,
+                        dateLastUpdateRaw = currentRawTime
+                    )
+                )
         }
     }
 }

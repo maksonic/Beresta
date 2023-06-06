@@ -4,6 +4,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
@@ -17,6 +18,7 @@ import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersListPro
  */
 val notesFoldersFeatureModel = module {
     single { NoteFolderToUiMapper() }
+    single<StickyItemsTitleFormatter> { StickyItemsTitleFormatter.Core() }
     //dialog
     single {
         FolderDialogProgram(
@@ -36,6 +38,8 @@ val notesFoldersFeatureModel = module {
             notesInteractor = get(),
             notesMapper = get(),
             navigator = get(),
+            appLanguageEngineApi = get(),
+            stickyItemsTitleFormatter = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
 
         )

@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.notes.folders.core.screen.core
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
@@ -10,11 +11,13 @@ import ru.maksonic.beresta.feature.notes.folders.api.domain.NotesFoldersInteract
 import ru.maksonic.beresta.feature.notes.folders.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderToUiMapper
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.api.ui.sortStickyThenDescendingByPinTimeThenByDate
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
+import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import java.time.LocalDateTime
@@ -30,6 +33,8 @@ class FoldersListProgram(
     private val notesInteractor: NotesInteractor,
     private val notesMapper: NoteUiMapper,
     private val navigator: AppNavigator,
+    private val appLanguageEngineApi: LanguageEngineApi,
+    private val stickyItemsTitleFormatter: StickyItemsTitleFormatter,
     private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
@@ -39,6 +44,7 @@ class FoldersListProgram(
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
+            is Cmd.FetchCurrentAppLang -> fetchCurrentAppLang(consumer)
             is Cmd.FetchFolders -> fetchFolders(consumer)
             is Cmd.FetchPassedFromMainScreenArgs -> fetchedPassedNotesMoveState(consumer)
             is Cmd.UpdatePinnedFoldersInCache -> updatePinnedFolders(cmd.pinned)
@@ -65,7 +71,11 @@ class FoldersListProgram(
 
     private suspend fun fetchFolders(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
-            combine(fetchFoldersUseCase(), fetchNotesUseCase()) { folders, notes ->
+            combine(
+                fetchFoldersUseCase(),
+                fetchNotesUseCase(),
+                appLanguageEngineApi.current
+            ) { folders, notes, lang ->
                 val foldersUi = foldersMapper.mapListTo(folders)
                     .map { folder ->
                         val count = notes.count { it.folderId == folder.id }
@@ -73,6 +83,7 @@ class FoldersListProgram(
                             notesCount = if (folder.isStickyToStart) notes.count() else count
                         )
                     }.sortStickyThenDescendingByPinTimeThenByDate()
+                    .also { stickyItemsTitleFormatter.format(it, lang) }
 
                 val notesUi = notesMapper.mapListTo(notes)
                 consumer(Msg.Inner.FetchedFoldersResult(foldersUi, notesUi))
@@ -156,5 +167,11 @@ class FoldersListProgram(
     private suspend fun updateNotes(notes: List<NoteUi>) {
         val notesDomain = notesMapper.mapListFrom(notes)
         notesInteractor.updateAll(notesDomain)
+    }
+
+    private suspend fun fetchCurrentAppLang(consumer: (Msg) -> Unit) {
+        appLanguageEngineApi.current.collectLatest {
+            consumer(Msg.Inner.FetchedCurrentAppLang(it))
+        }
     }
 }

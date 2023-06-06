@@ -5,22 +5,25 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
-import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.updateCurrentSelectedFolder
 import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
@@ -38,6 +41,7 @@ import ru.maksonic.beresta.ui.widget.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.SystemStatusBar
 import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
+import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
  * @Author maksonic on 24.04.2023
@@ -49,6 +53,7 @@ fun MainScreen(router: MainScreenRouter) {
     MainContainer(router = router)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainContainer(
     sandbox: MainSandbox = koinViewModel(),
@@ -63,6 +68,8 @@ private fun MainContainer(
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
+        modalBottomSheetState = model.value.modalBottomSheetState,
+        hideSheet = { sandbox.send(Msg.Inner.UpdatedModalSheetState(false)) },
         foldersSharedUiState = notesFoldersFeatureApi.sharedUiState
     )
 
@@ -77,6 +84,7 @@ private fun MainContainer(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainContent(
     model: Model,
@@ -102,13 +110,11 @@ private fun MainContent(
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         NotesListLayer(
+            model = model,
             send = send,
-            chips = notesFoldersFeatureApi.applyStickyItemsTitle(model.filters),
             notesList = notesListFeatureApi,
             notesFolders = notesFoldersFeatureApi,
             router = router,
-            currentSelectedFolderId = model.currentSelectedFolderId,
-            isShowChipsPlaceholder = model.base.isLoading
         )
 
         BottomBarLayer(
@@ -132,18 +138,33 @@ private fun MainContent(
         ) {
             notesFoldersFeatureApi.FolderCreationDialog()
         }
+
+        AnimateFadeInOut(
+            model.isVisibleModalSheet,
+            fadeInDuration = Theme.animSpeed.dialogVisibility,
+            fadeOutDuration = Theme.animSpeed.dialogVisibility
+        ) {
+            ModalBottomSheetDefault(
+                sheetState = model.modalBottomSheetState,
+                onDismissRequest = { send(Msg.Inner.UpdatedModalSheetState(false)) },
+            ) {
+                notesListFeatureApi.SortNotesModalSheet(
+                    currentSortItemSelected = notesListState.value.currentSortItemSelected,
+                    checkboxSortPinned = notesListState.value.checkboxSortPinned,
+                    onBtnSaveClicked = { send(Msg.Ui.OnHideModalBottomSheet) }
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun NotesListLayer(
+    model: Model,
     send: SendMessage,
-    chips: NoteFolderUi.Collection,
     notesList: NotesListApi.Ui,
     notesFolders: FoldersListApi.Ui,
-    currentSelectedFolderId: Long,
     router: MainScreenRouter,
-    isShowChipsPlaceholder: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(modifier.fillMaxSize()) {
@@ -154,10 +175,11 @@ private fun NotesListLayer(
         }
 
         notesFolders.ChipsWidget(
-            chips = chips,
+            chips = model.filters,
             onChipClicked = { send(Msg.Ui.OnChipFilterClicked(it)) },
-            currentSelectedChipId = currentSelectedFolderId,
-            isShowPlaceholder = isShowChipsPlaceholder
+            currentSelectedChipId = model.currentSelectedFolderId,
+            isShowPlaceholder = model.base.isLoading,
+            currentLanguage = model.currentLang
         )
     }
 }
@@ -191,12 +213,17 @@ private fun EditNoteFabLayer(
         })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: MainScreenRouter,
+    modalBottomSheetState: SheetState,
+    hideSheet: () -> Unit,
     foldersSharedUiState: SharedUiState<FoldersSharedUiState>,
 ) {
+    val scope = rememberCoroutineScope()
+
     HandleEffectsWithLifecycle(effects) { eff ->
         when (eff) {
             is Eff.UpdateCurrentSelectedFolderInSharedState -> {
@@ -209,6 +236,14 @@ private fun HandleUiEffects(
             is Eff.ShowNoteForEdit -> router.toNoteEditor(eff.id)
             is Eff.NavigateToFoldersList -> {
                 router.toFoldersList(false, eff.currentSelectedFolderId)
+            }
+
+            is Eff.HideModalSheet -> {
+                scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
+                    if (!modalBottomSheetState.isVisible) {
+                        hideSheet()
+                    }
+                }
             }
         }
     }

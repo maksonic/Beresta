@@ -24,7 +24,8 @@ class LanguageProviderImpl(
                     settings = settingsText(currentLanguage, data),
                     editNote = editNotesText(currentLanguage, data),
                     folders = folders(currentLanguage, data),
-                    trash = trash(currentLanguage, data)
+                    trash = trash(currentLanguage, data),
+                    sortNotesSheet = sortNotesSheet(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }
@@ -88,5 +89,12 @@ class LanguageProviderImpl(
         AppLanguage.ENGLISH -> data.english.trash
         AppLanguage.CHINESE -> data.chinese.trash
         AppLanguage.CHINESE_TR -> data.chineseTr.trash
+    }
+
+    private fun sortNotesSheet(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.sortNotesSheet
+        AppLanguage.ENGLISH -> data.english.sortNotesSheet
+        AppLanguage.CHINESE -> data.chinese.sortNotesSheet
+        AppLanguage.CHINESE_TR -> data.chineseTr.sortNotesSheet
     }
 }

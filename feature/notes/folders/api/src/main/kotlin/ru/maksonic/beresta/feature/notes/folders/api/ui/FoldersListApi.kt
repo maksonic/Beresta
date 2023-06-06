@@ -23,7 +23,8 @@ interface FoldersListApi {
             chips: NoteFolderUi.Collection,
             onChipClicked: (id: Long) -> Unit,
             currentSelectedChipId: Long,
-            isShowPlaceholder: Boolean
+            isShowPlaceholder: Boolean,
+            currentLanguage: AppLanguage
         )
 
         @Composable
@@ -44,8 +45,5 @@ interface FoldersListApi {
 
         @Composable
         fun FolderCreationDialog()
-
-        @Composable
-        fun applyStickyItemsTitle(folders: NoteFolderUi.Collection): NoteFolderUi.Collection
     }
 }

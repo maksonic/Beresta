@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.screen.main.ui.widget
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -52,7 +51,6 @@ import ru.maksonic.beresta.ui.widget.button.IconAction
  * @Author maksonic on 24.03.2023
  */
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun MainBottomBar(
     state: MainBottomBarState,

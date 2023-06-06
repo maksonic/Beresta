@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.api.ui.showDialog
 import ru.maksonic.beresta.feature.notes.folders.api.ui.updateCurrentSelectedFolder
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.Eff
@@ -49,6 +50,7 @@ internal fun NotesFoldersScreenContent(
     notesFoldersFeatureApi: FoldersListApi.Ui,
     notesListApi: NotesListApi.Ui,
     topBarCounterApi: TopBarCounterApi.Ui,
+    stickyItemsTitleFormatter: StickyItemsTitleFormatter,
     modifier: Modifier = Modifier
 ) {
     val sharedUiState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
@@ -92,7 +94,7 @@ internal fun NotesFoldersScreenContent(
             FetchedDataWidget(
                 model = model,
                 send = send,
-                notesFoldersFeatureApi = notesFoldersFeatureApi,
+                stickyItemsTitleFormatter = stickyItemsTitleFormatter,
                 modifier = modifier.padding(paddings)
             )
         }
@@ -112,17 +114,18 @@ internal fun NotesFoldersScreenContent(
 private fun FetchedDataWidget(
     model: Model,
     send: SendMessage,
-    notesFoldersFeatureApi: FoldersListApi.Ui,
+    stickyItemsTitleFormatter: StickyItemsTitleFormatter,
     modifier: Modifier
 ) {
     val scrollState = rememberLazyListState()
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         FoldersListContent(
-            folders = notesFoldersFeatureApi.applyStickyItemsTitle(model.folders),
+            folders = model.folders,
             model = model,
             send = send,
             scrollState = scrollState,
+            stickyItemsTitleFormatter = stickyItemsTitleFormatter,
             modifier = modifier
         )
         BottomBarContent(

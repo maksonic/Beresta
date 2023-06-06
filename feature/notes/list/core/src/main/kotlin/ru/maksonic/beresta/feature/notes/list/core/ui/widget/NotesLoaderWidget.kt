@@ -1,11 +1,8 @@
 package ru.maksonic.beresta.feature.notes.list.core.ui.widget
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.notes.list.core.ui.NoteItemPlaceholder
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.component.dp10
 import ru.maksonic.beresta.ui.widget.functional.animation.PlaceholderListWidget
 
 /**

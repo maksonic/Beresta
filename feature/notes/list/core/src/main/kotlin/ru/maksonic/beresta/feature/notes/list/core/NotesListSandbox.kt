@@ -2,16 +2,25 @@ package ru.maksonic.beresta.feature.notes.list.core
 
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
+import ru.maksonic.beresta.feature.notes.list.core.program.NotesListDataProgram
+import ru.maksonic.beresta.feature.notes.list.core.program.NotesListPreferencesProgram
 
 /**
  * @Author maksonic on 24.04.2023
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
+class NotesListSandbox(
+    notesDataProgram: NotesListDataProgram,
+    notesPrefsProgram: NotesListPreferencesProgram
+) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchNotesList, Cmd.FetchCurrentLangForNotesDatestamp),
-    subscriptions = listOf(program)
+    initialCmd = setOf(
+        Cmd.FetchNotesList,
+        Cmd.FetchCurrentLangForNotesDatestamp,
+        Cmd.FetchNotesDatastorePrefs
+    ),
+    subscriptions = listOf(notesDataProgram, notesPrefsProgram)
 ) {
     companion object {
         private const val STICKY_START_FOLDER_ID = 1L
@@ -35,9 +44,11 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Inner.FetchedCurrentAppLang -> applyLangToNotesDatestamp(model, msg)
-        is Msg.Inner.FetchedCurrentFolderIdByPassedState -> {
-            fetchedCurrentFolderIdByPassedState(model, msg)
-        }
+        is Msg.Inner.FetchedNotesPrefs -> fetchedNotesPrefs(model, msg)
+        is Msg.Inner.FetchedCurrentFolderIdByPassedState -> fetchedCurrentPassedFolderId(model, msg)
+        is Msg.Inner.UpdatedNotesSortState -> updatedFetchedSortNotesValue(model, msg)
+        is Msg.Inner.UpdatedCheckboxState -> updatedFetchedSortPinnedNotesValue(model, msg)
+        is Msg.Inner.UpdatedGridViewState -> updatedFetchedNotesGridView(model, msg)
     }
 
     private fun fetchedResultData(model: Model, msg: Msg.Inner.FetchedResultData): UpdateResult {
@@ -58,6 +69,15 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
                     isErrorLoading = true
                 ),
                 errorMsg = msg.errorMsg
+            )
+        )
+
+    private fun fetchedNotesPrefs(model: Model, msg: Msg.Inner.FetchedNotesPrefs): UpdateResult =
+        UpdatedModel(
+            model.copy(
+                currentSortItemSelected = msg.sort,
+                gridCount = msg.gridCount,
+                isSortPinnedNotes = msg.isSortPinned
             )
         )
 
@@ -168,8 +188,13 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         effects = setOf(Eff.UpdateSharedUiIsSelectedState(false))
     )
 
-    private fun onChangeGridCountClicked(model: Model): UpdateResult =
-        UpdatedModel(model.copy(gridCount = if (model.gridCount == 1) 2 else 1))
+    private fun onChangeGridCountClicked(model: Model): UpdateResult {
+        val gridCount = if (model.gridCount == 1) 2 else 1
+        return UpdatedModel(
+            model = model.copy(gridCount = gridCount),
+            commands = setOf(Cmd.UpdateGridCountInDatastore(gridCount))
+        )
+    }
 
     private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = UpdatedModel(
         model = model.copy(
@@ -193,8 +218,38 @@ class NotesListSandbox(program: NotesListProgram) : Sandbox<Model, Msg, Cmd, Eff
         msg: Msg.Inner.FetchedCurrentAppLang
     ): UpdateResult = UpdatedModel(model.copy(currentAppLanguage = msg.language))
 
-    private fun fetchedCurrentFolderIdByPassedState(
+    private fun fetchedCurrentPassedFolderId(
         model: Model,
         msg: Msg.Inner.FetchedCurrentFolderIdByPassedState
     ): UpdateResult = UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
+
+    private fun updatedFetchedSortNotesValue(
+        model: Model,
+        msg: Msg.Inner.UpdatedNotesSortState
+    ): UpdateResult {
+        val command = if (msg.current == model.currentSortItemSelected) emptySet()
+        else setOf(Cmd.UpdateNotesSortValueToDatastore(msg.current))
+
+        return UpdatedModel(model.copy(currentSortItemSelected = msg.current), commands = command)
+    }
+
+    private fun updatedFetchedSortPinnedNotesValue(
+        model: Model,
+        msg: Msg.Inner.UpdatedCheckboxState
+    ): UpdateResult {
+        val command = if (msg.isSortPinned == model.isSortPinnedNotes) emptySet()
+        else setOf(Cmd.UpdateSortCheckboxValueInDatastore(msg.isSortPinned))
+
+        return UpdatedModel(model.copy(isSortPinnedNotes = msg.isSortPinned), commands = command)
+    }
+
+    private fun updatedFetchedNotesGridView(
+        model: Model,
+        msg: Msg.Inner.UpdatedGridViewState
+    ): UpdateResult {
+        val command = if (msg.count == model.gridCount) emptySet()
+        else setOf(Cmd.UpdateGridCountInDatastore(msg.count))
+
+        return UpdatedModel(model.copy(gridCount = msg.count), commands = command)
+    }
 }

@@ -37,9 +37,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.api.ui.isDefaultId
 import ru.maksonic.beresta.feature.notes.folders.api.ui.showDialog
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.onSurface
@@ -55,7 +57,6 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.PinFilled
 import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.button.IconAction
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 import ru.maksonic.beresta.ui.widget.functional.animation.rowFadingEdge
 
@@ -67,18 +68,19 @@ internal fun ChipsWidgetContainer(
     chips: NoteFolderUi.Collection,
     notesListApi: NotesListApi.Ui = koinInject(),
     foldersListApi: FoldersListApi.Ui = koinInject(),
+    stickyItemsTitleFormatter: StickyItemsTitleFormatter = koinInject(),
     onChipClicked: (id: Long) -> Unit,
     currentSelectedChipId: Long,
     isShowPlaceholder: Boolean,
+    currentLanguage: AppLanguage,
     modifier: Modifier = Modifier
 ) {
     val notesSharedUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val resultStateColor = remember { mutableStateOf(Color.Transparent) }
-    val tonal =
-        animateDpAsState(
-            if (notesSharedUiState.value.isNotColoredTopBar) Theme.tonal.Level0
-            else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animSpeed.common)
-        )
+    val tonal = animateDpAsState(
+        if (notesSharedUiState.value.isNotColoredTopBar) Theme.tonal.Level0
+        else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animSpeed.common)
+    )
     val chipsOffset = animateDpAsState(
         if (notesSharedUiState.value.isVisibleChipsRow) 0.dp
         else -Theme.widgetSize.topBarNormalHeight, label = ""
@@ -99,11 +101,12 @@ internal fun ChipsWidgetContainer(
             currentSelectedChipId = currentSelectedChipId,
             resultColor = resultStateColor,
             isShowPlaceholder = isShowPlaceholder,
+            stickyItemsTitleFormatter = stickyItemsTitleFormatter,
+            currentLanguage = currentLanguage,
             modifier = modifier
         )
     }
 }
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -114,52 +117,52 @@ private fun ChipsWidgetContent(
     currentSelectedChipId: Long,
     resultColor: State<Color>,
     isShowPlaceholder: Boolean,
+    stickyItemsTitleFormatter: StickyItemsTitleFormatter,
+    currentLanguage: AppLanguage,
     modifier: Modifier
 ) {
     Box(modifier.statusBarsPadding()) {
-        AnimateContent(isShowPlaceholder) { isPlaceholder ->
-            if (isPlaceholder) {
-                ChipsLoaderWidget()
-            } else {
-                Row(
-                    modifier
-                        .fillMaxWidth()
-                        .padding(top = Theme.widgetSize.topBarNormalHeight)
-                        .height(Theme.widgetSize.noteChipsContainerHeight)
-                        .padding(start = dp16),
+        Row(
+            modifier
+                .fillMaxWidth()
+                .padding(top = Theme.widgetSize.topBarNormalHeight)
+                .height(Theme.widgetSize.noteChipsContainerHeight)
+                .padding(start = dp16),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val lazyRowState = rememberLazyListState()
+
+            OverscrollBehavior {
+                LazyRow(
+                    state = lazyRowState,
+                    modifier = modifier
+                        .weight(1f, false)
+                        .rowFadingEdge(
+                            startEdgeInitialColor = resultColor.value,
+                            isVisibleStartEdge = lazyRowState.canScrollBackward,
+                            isVisibleEndEdge = lazyRowState.canScrollForward,
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(dp8),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val lazyRowState = rememberLazyListState()
 
-                    OverscrollBehavior {
-                        LazyRow(
-                            state = lazyRowState,
-                            modifier = modifier
-                                .weight(1f, false)
-                                .rowFadingEdge(
-                                    startEdgeInitialColor = resultColor.value,
-                                    isVisibleStartEdge = lazyRowState.canScrollBackward,
-                                    isVisibleEndEdge = lazyRowState.canScrollForward,
-                                ),
-                            horizontalArrangement = Arrangement.spacedBy(dp8),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            items(
-                                items = chips.data,
-                                key = { chip -> chip.id }) { item ->
-                                val updated =
-                                    item.copy(isSelected = item.id == currentSelectedChipId)
-                                ChipItem(updated, onChipClicked, modifier.animateItemPlacement())
-                            }
-                        }
+                    items(
+                        items = stickyItemsTitleFormatter.format(chips.data, currentLanguage),
+                        key = { chip -> chip.id }) { item ->
+                        val updated =
+                            item.copy(isSelected = item.id == currentSelectedChipId)
+                        ChipItem(updated, onChipClicked, modifier.animateItemPlacement())
                     }
-                    AddNewFilterButton(
-                        onClick = { foldersListApi.sharedUiState.showDialog(true, 0L) },
-                        modifier = modifier.padding(start = dp12, end = dp16)
-                    )
                 }
             }
+            AddNewFilterButton(
+                onClick = { foldersListApi.sharedUiState.showDialog(true, 0L) },
+                modifier = modifier.padding(start = dp12, end = dp16)
+            )
+        }
+
+        if (isShowPlaceholder) {
+            ChipsLoaderWidget()
         }
     }
 }

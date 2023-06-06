@@ -10,9 +10,18 @@ private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
 class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchFolders, Cmd.FetchPassedFromMainScreenArgs),
+    initialCmd = setOf(
+        Cmd.FetchFolders,
+        Cmd.FetchPassedFromMainScreenArgs,
+        Cmd.FetchCurrentAppLang
+    ),
     subscriptions = listOf(program)
 ) {
+    private companion object {
+        private const val STICKY_START_FOLDER_ID = 1L
+        private const val STICKY_END_FOLDER_ID = 2L
+    }
+
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedFoldersResult -> fetchedData(model, msg)
         is Msg.Inner.FetchedPassedArgsFromMain -> fetchedPassedArgsFromMain(model, msg)
@@ -29,6 +38,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Inner.UpdatedRemovedNotes -> updatedRemovedNotes(model, msg)
+        is Msg.Inner.FetchedCurrentAppLang -> fetchedAppLang(model, msg)
     }
 
     private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult {
@@ -98,14 +108,13 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
             if (this) !selectedList.map { it.isPinned }.contains(false) else false
         }
-
-        return if (model.isMoveNotesToFolder) UpdatedModel(model) else UpdatedModel(
-            model.copy(
-                selectedFolders = selectedList,
-                isSelectionState = true,
-                isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
-            )
+        val isSticky = folderId == STICKY_START_FOLDER_ID || folderId == STICKY_END_FOLDER_ID
+        val updateResult = if (model.isMoveNotesToFolder || isSticky) model else model.copy(
+            selectedFolders = selectedList,
+            isSelectionState = true,
+            isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
         )
+        return UpdatedModel(updateResult)
     }
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult =
@@ -201,4 +210,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             )
         )
     )
+
+    private fun fetchedAppLang(model: Model, msg: Msg.Inner.FetchedCurrentAppLang): UpdateResult =
+        UpdatedModel(model.copy(currentLang = msg.language))
 }

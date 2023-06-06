@@ -8,6 +8,7 @@ import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersSharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
+import ru.maksonic.beresta.feature.notes.folders.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.folders.core.add_folder_dialog.ui.FolderDialogContent
 import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidgetContainer
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
@@ -19,7 +20,6 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
-import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.NotesFoldersScreenRouter
 
 /**
@@ -38,13 +38,15 @@ class FoldersListCore : FoldersListApi.Ui {
         chips: NoteFolderUi.Collection,
         onChipClicked: (id: Long) -> Unit,
         currentSelectedChipId: Long,
-        isShowPlaceholder: Boolean
+        isShowPlaceholder: Boolean,
+        currentLanguage: AppLanguage
     ) {
         ChipsWidgetContainer(
             chips = chips,
             onChipClicked = onChipClicked,
             currentSelectedChipId = currentSelectedChipId,
-            isShowPlaceholder = isShowPlaceholder
+            isShowPlaceholder = isShowPlaceholder,
+            currentLanguage = currentLanguage,
         )
     }
 
@@ -84,20 +86,11 @@ class FoldersListCore : FoldersListApi.Ui {
     }
 
     @Composable
-    override fun applyStickyItemsTitle(folders: NoteFolderUi.Collection): NoteFolderUi.Collection =
-        folders.copy(folders.data.map { folder ->
-            when {
-                folder.isStickyToStart -> folder.copy(title = text.folders.titlePinnedStartFolder)
-                folder.isStickyToEnd -> folder.copy(title = text.folders.titlePinnedEndFolder)
-                else -> folder
-            }
-        })
-
-    @Composable
     private fun ScreenContainer(
         api: FoldersListApi.Ui = koinInject(),
         notesListApi: NotesListApi.Ui = koinInject(),
         topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
+        stickyItemsTitleFormatter: StickyItemsTitleFormatter = koinInject(),
         sandbox: FoldersScreenSandbox = koinViewModel(),
         router: NotesFoldersScreenRouter
     ) {
@@ -116,6 +109,7 @@ class FoldersListCore : FoldersListApi.Ui {
             notesFoldersFeatureApi = api,
             notesListApi = notesListApi,
             topBarCounterApi = topBarCounterFeatureApi,
+            stickyItemsTitleFormatter = stickyItemsTitleFormatter,
         )
     }
 }

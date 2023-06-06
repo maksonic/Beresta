@@ -28,6 +28,7 @@ import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateChipsRowVisibility
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateColoredTopBar
+import ru.maksonic.beresta.feature.notes.list.api.ui.updateInitialSortState
 import ru.maksonic.beresta.feature.notes.list.core.Eff
 import ru.maksonic.beresta.feature.notes.list.core.Model
 import ru.maksonic.beresta.feature.notes.list.core.Msg
@@ -76,13 +77,31 @@ internal fun NotesListContainer(
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val foldersState = notesFoldersFeatureApi.sharedUiState.state.collectAsStateWithLifecycle()
+    val notesSharedUiState = sharedUiState.state.collectAsStateWithLifecycle()
 
     HandleUiEffects(effects = sandbox.effects, router = router, sharedUiState = sharedUiState)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(model.value.currentSortItemSelected) {
+        sharedUiState.updateInitialSortState(
+            currentSelection = model.value.currentSortItemSelected,
+            isSortPinned = model.value.isSortPinnedNotes
+        )
+
         topBarCounterFeatureApi.topBarCounterSharedUiState.intiClickActions(
             onCancelClicked = { sandbox.send(Msg.Ui.CancelSelectionState) },
             onSelectAllClicked = { sandbox.send(Msg.Ui.OnSelectAllNotesClicked) }
+        )
+    }
+
+    LaunchedEffect(notesSharedUiState.value.currentSortItemSelected.value) {
+        sandbox.send(
+            Msg.Inner.UpdatedNotesSortState(notesSharedUiState.value.currentSortItemSelected.value)
+        )
+    }
+
+    LaunchedEffect(notesSharedUiState.value.checkboxSortPinned.value) {
+        sandbox.send(
+            Msg.Inner.UpdatedCheckboxState(notesSharedUiState.value.checkboxSortPinned.value)
         )
     }
 
@@ -203,7 +222,12 @@ private fun NotesResultDataContent(
         sharedUiState.updateChipsRowVisibility(isVisibleFirstNote.value)
     }
 
-    LaunchedEffect(notesFilterUpdater.filteredNotes) {
+    LaunchedEffect(
+        notesFilterUpdater.notesList(
+            model.currentSortItemSelected,
+            model.isSortPinnedNotes
+        ).data
+    ) {
         if (!isCantScrollBackward)
             sharedUiState.update { state ->
                 state.copy(
@@ -228,7 +252,10 @@ private fun NotesResultDataContent(
                 modifier = modifier.fillMaxSize()
             ) {
                 items(
-                    items = notesFilterUpdater.filteredNotes,
+                    items = notesFilterUpdater.notesList(
+                        model.currentSortItemSelected,
+                        model.isSortPinnedNotes
+                    ).data,
                     key = { note -> note.id }) { note ->
                     NoteListItemContent(
                         isSelected = model.selectedNotes.contains(note),
@@ -293,7 +320,6 @@ private fun HandleUiEffects(
             is Eff.UpdatePassedNotesSharedState -> {
                 sharedUiState.update { it.copy(passedToFolderNotes = eff.notes) }
             }
-
         }
     }
 }

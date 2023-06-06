@@ -47,6 +47,7 @@
       "btn_title_create": "Создать",
       "btn_title_change": "Изменить",
       "btn_title_restore": "Восстановить",
+      "btn_title_by_default": "По умолчанию",
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_items_count": "Выбрано:",
       "hint_removed_notes_count": "Удалено заметок:",
@@ -109,6 +110,19 @@
       "dialog_body_delete_folders_list": "После удаления выбранных папок с заметками из корзины их будет невозможно восстановить.",
       "message_empty_folders_list": "Нет удалённых папок",
       "hint_moved_to_trash_date_prefix": "удалено"
+    },
+    "sort_notes_sheet": {
+      "title_sheet": "Сортировать заметки",
+      "hint_sort_category_alphabet": "Алфавит",
+      "hint_sort_category_date_creation": "Дата создания",
+      "hint_sort_category_date_update": "Дата изменения",
+      "item_in_alphabet": "В алфавитном порядке",
+      "item_in_reverse_alphabet": "В обратном алфавитном порядке",
+      "item_by_date_creation": "По возрастанию даты создания",
+      "item_by_reverse_date_creation": "По убыванию даты создания",
+      "item_by_date_update": "По возрастанию даты изменения",
+      "item_by_reverse_date_update": "По убыванию даты изменения",
+      "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки"
     }
   },
   "english": {
@@ -159,6 +173,7 @@
       "btn_title_create": "Create",
       "btn_title_change": "Edit",
       "btn_title_restore": "Restore",
+      "btn_title_by_default": "Default",
       "hint_find_note_search_bar": "Find note",
       "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
@@ -221,6 +236,19 @@
       "dialog_body_delete_folders_list": "Once the selected notes folders are deleted from the trash, they cannot be restored.",
       "message_empty_folders_list": "No deleted folders",
       "hint_moved_to_trash_date_prefix": "removed"
+    },
+    "sort_notes_sheet": {
+      "title_sheet": "Sort notes",
+      "hint_sort_category_alphabet": "Alphabet",
+      "hint_sort_category_date_creation": "Date of creation",
+      "hint_sort_category_date_update": "Date of change",
+      "item_in_alphabet": "In alphabet order",
+      "item_in_reverse_alphabet": "In reverse alphabetical order",
+      "item_by_date_creation": "Creation date ascending",
+      "item_by_reverse_date_creation": "Creation date descending",
+      "item_by_date_update": "Date modified ascending",
+      "item_by_reverse_date_update": "Date modified descending",
+      "hint_checkbox_sort_pinned_notes": "Consider pinned notes"
     }
   },
   "chinese": {
@@ -271,6 +299,7 @@
       "btn_title_create": "创造",
       "btn_title_change": "编辑",
       "btn_title_restore": "恢复",
+      "btn_title_by_default": "默认",
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
@@ -333,6 +362,19 @@
       "dialog_body_delete_folders_list": "选定的笔记文件夹一旦从垃圾桶中删除，便无法恢复。",
       "message_empty_folders_list": "没有删除的文件夹",
       "hint_moved_to_trash_date_prefix": "删除"
+    },
+    "sort_notes_sheet": {
+      "title_sheet": "整理笔记",
+      "hint_sort_category_alphabet": "字母",
+      "hint_sort_category_date_creation": "创建日期",
+      "hint_sort_category_date_update": "变更日期",
+      "item_in_alphabet": "按字母顺序",
+      "item_in_reverse_alphabet": "按逆字母顺序排列",
+      "item_by_date_creation": "创建日期升序",
+      "item_by_reverse_date_creation": "创建日期降序",
+      "item_by_date_update": "修改日期升序",
+      "item_by_reverse_date_update": "修改日期降序",
+      "hint_checkbox_sort_pinned_notes": "考虑固定笔记"
     }
   },
   "chinese_tr": {
@@ -383,6 +425,7 @@
       "btn_title_create": "創造",
       "btn_title_change": "編輯",
       "btn_title_restore": "恢復",
+      "btn_title_by_default": "默認",
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
@@ -445,6 +488,19 @@
       "dialog_body_delete_folders_list": "選定的筆記文件夾一旦從垃圾箱中刪除，便無法恢復。",
       "message_empty_folders_list": "沒有刪除的文件夾",
       "hint_moved_to_trash_date_prefix": "刪除"
+    },
+    "sort_notes_sheet": {
+      "title_sheet": "整理筆記",
+      "hint_sort_category_alphabet": "字母",
+      "hint_sort_category_date_creation": "創建日期",
+      "hint_sort_category_date_update": "變更日期",
+      "item_in_alphabet": "按字母順序",
+      "item_in_reverse_alphabet": "按逆字母順序排列",
+      "item_by_date_creation": "創建日期升序",
+      "item_by_reverse_date_creation": "創建日期降序",
+      "item_by_date_update": "修改日期升序",
+      "item_by_reverse_date_update": "修改日期降序",
+      "hint_checkbox_sort_pinned_notes": "考慮固定筆記"
     }
   }
 }

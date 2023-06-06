@@ -1,5 +1,7 @@
 package ru.maksonic.beresta.feature.notes.list.api.ui
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
 
@@ -17,8 +19,11 @@ data class NotesListSharedUiState(
     val removedCurrentNotesCount: Int,
     val onSnackBarClicked: () -> Unit,
     val passedToFolderNotes: List<NoteUi>,
-    val isEnabledBottomBar: Boolean
-) {
+    val isEnabledBottomBar: Boolean,
+    val currentSortItemSelected: MutableState<SortedNotes>,
+    val checkboxSortPinned: MutableState<Boolean>,
+
+    ) {
     companion object {
         private val DefaultState = NotesListSharedUiState(
             isNotColoredTopBar = true,
@@ -31,7 +36,9 @@ data class NotesListSharedUiState(
             removedCurrentNotesCount = 0,
             onSnackBarClicked = {},
             passedToFolderNotes = emptyList(),
-            isEnabledBottomBar = true
+            isEnabledBottomBar = true,
+            currentSortItemSelected = mutableStateOf(SortedNotes.DATE_CREATION_DESC),
+            checkboxSortPinned = mutableStateOf(false)
         )
         val Initial = object : SharedUiState<NotesListSharedUiState>(DefaultState) {}
     }
@@ -79,3 +86,15 @@ fun SharedUiState<NotesListSharedUiState>.updateColoredTopBar(isColored: Boolean
 
 fun SharedUiState<NotesListSharedUiState>.updateChipsRowVisibility(isVisible: Boolean) =
     this.update { it.copy(isVisibleChipsRow = isVisible) }
+
+fun SharedUiState<NotesListSharedUiState>.updateInitialSortState(
+    currentSelection: SortedNotes,
+    isSortPinned: Boolean
+) {
+    this.update {
+        val currentItem = it.currentSortItemSelected.also { item -> item.value = currentSelection }
+        val pinned = it.checkboxSortPinned.also { item -> item.value = isSortPinned }
+
+        it.copy(currentSortItemSelected = currentItem, checkboxSortPinned = pinned)
+    }
+}

@@ -8,6 +8,7 @@ import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
+import ru.maksonic.beresta.feature.notes.list.api.ui.SortedNotes
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 
 /**
@@ -27,8 +28,10 @@ data class Model(
     val isVisibleRemovedSnackBar: Boolean,
     val currentAppLanguage: AppLanguage,
     val currentSelectedFolderId: Long = 1L,
+    val currentSortItemSelected: SortedNotes,
+    val isSortPinnedNotes: Boolean
 
-    ) : ElmModel {
+) : ElmModel {
 
     companion object {
         val Initial = Model(
@@ -40,7 +43,9 @@ data class Model(
             selectedNotes = emptySet(),
             gridCount = 1,
             isVisibleRemovedSnackBar = false,
-            currentAppLanguage = AppLanguage.RUSSIAN
+            currentAppLanguage = AppLanguage.RUSSIAN,
+            currentSortItemSelected = SortedNotes.DATE_CREATION_DESC,
+            isSortPinnedNotes = false
         )
     }
 }
@@ -58,15 +63,24 @@ sealed class Msg : ElmMessage {
         object CancelSelectionState : Ui()
         object OnChangeGridCountClicked : Ui()
         object OnSnackUndoRemoveNotesClicked : Ui()
-
     }
 
     sealed class Inner : Msg() {
         data class FetchedResultData(val notes: NoteUi.Collection) : Inner()
         data class FetchedResultError(val errorMsg: String = "") : Inner()
+        data class FetchedNotesPrefs(
+            val sort: SortedNotes,
+            val isSortPinned: Boolean,
+            val gridCount: Int
+        ): Inner()
+
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
         data class FetchedCurrentFolderIdByPassedState(val id: Long) : Inner()
+
+        data class UpdatedNotesSortState(val current: SortedNotes) : Inner()
+        data class UpdatedCheckboxState(val isSortPinned: Boolean) : Inner()
+        data class UpdatedGridViewState(val count: Int) : Inner()
     }
 }
 
@@ -76,6 +90,10 @@ sealed class Cmd : ElmCommand {
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
     object FetchCurrentLangForNotesDatestamp : Cmd()
+    object FetchNotesDatastorePrefs : Cmd()
+    data class UpdateNotesSortValueToDatastore(val sort: SortedNotes) : Cmd()
+    data class UpdateSortCheckboxValueInDatastore(val isSortPinned: Boolean) : Cmd()
+    data class UpdateGridCountInDatastore(val count: Int): Cmd()
 }
 
 sealed class Eff : ElmEffect {

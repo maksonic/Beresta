@@ -8,6 +8,7 @@ import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
 import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
+import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 
 /**
  * @Author maksonic on 03.04.2023
@@ -25,7 +26,8 @@ data class Model(
     val isVisibleUnpinBottomBarIcon: Boolean,
     val isVisibleRemovedSnackBar: Boolean,
     val isMoveNotesToFolder: Boolean,
-    val moveNotesList: List<NoteUi>
+    val moveNotesList: List<NoteUi>,
+    val currentLang: AppLanguage
 ) : ElmModel {
 
     companion object {
@@ -39,7 +41,8 @@ data class Model(
             isVisibleUnpinBottomBarIcon = false,
             isVisibleRemovedSnackBar = false,
             isMoveNotesToFolder = false,
-            moveNotesList = emptyList()
+            moveNotesList = emptyList(),
+            currentLang = AppLanguage.ENGLISH
         )
     }
 }
@@ -66,10 +69,12 @@ sealed class Msg : ElmMessage {
         data class FetchedPassedArgsFromMain(val isMove: Boolean, val id: Long) : Inner()
         data class FetchedPassedReplaceNotesState(val notes: List<NoteUi>) : Inner()
         data class UpdatedRemovedNotes(val removedNotes: List<NoteUi>) : Inner()
+        data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
+    object FetchCurrentAppLang : Cmd()
     object FetchPassedFromMainScreenArgs : Cmd()
     object FetchFolders : Cmd()
     data class RemoveSelected(val folders: List<NoteFolderUi>, val notes: List<NoteUi>) : Cmd()

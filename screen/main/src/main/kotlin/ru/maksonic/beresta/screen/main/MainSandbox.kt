@@ -1,8 +1,8 @@
 package ru.maksonic.beresta.screen.main
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel
-import ru.maksonic.beresta.feature.notes.folders.api.ui.NoteFolderUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
 
 /**
@@ -10,11 +10,12 @@ import ru.maksonic.beresta.feature.notes.list.api.ui.MainBottomBarState
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MainSandbox(
     mainProgram: MainProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchFoldersChips),
+    initialCmd = setOf(Cmd.FetchFoldersChips, Cmd.FetchCurrentAppLang),
     subscriptions = listOf(mainProgram)
 ) {
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
@@ -23,12 +24,15 @@ class MainSandbox(
         is Msg.Ui.OnBottomBarSettingsClicked -> onSettingsClicked(model)
         is Msg.Ui.OnBottomBarTrashClicked -> onTrashClicked(model)
         is Msg.Ui.OnBottomBarFoldersClicked -> onFoldersListClicked(model)
-        is Msg.Ui.OnBottomBarSortNotesByClicked -> UpdatedModel(model)
+        is Msg.Ui.OnBottomBarSortNotesByClicked -> onSortByClicked(model)
         is Msg.Ui.OnSwitchViewClicked -> onSwitchGridCountClicked(model)
         is Msg.Inner.UpdateBottomPanelState -> updatedBottomBarState(model, msg)
         is Msg.Inner.FetchedChipsResult -> fetchedChipsResult(model, msg)
         is Msg.Ui.OnChipFilterClicked -> onFilterChipClicked(model, msg)
         is Msg.Inner.UpdateCurrentSelectedFolder -> updatedCurrentSelectedFolder(model, msg)
+        is Msg.Inner.UpdatedModalSheetState -> updatedModalSheetState(model, msg)
+        is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
+        is Msg.Inner.FetchedCurrentAppLang -> fetchedAppLang(model, msg)
     }
 
     private fun onAddNoteClicked(model: Model): UpdateResult =
@@ -47,6 +51,9 @@ class MainSandbox(
             model,
             effects = setOf(Eff.NavigateToFoldersList(model.currentSelectedFolderId))
         )
+
+    private fun onSortByClicked(model: Model): UpdateResult =
+        UpdatedModel(model.copy(isVisibleModalSheet = true))
 
     private fun onSwitchGridCountClicked(model: Model): UpdateResult {
         return UpdatedModel(model)
@@ -67,8 +74,8 @@ class MainSandbox(
 
         return UpdatedModel(
             model.copy(
-                base = model.base.copy(isLoading = false),
-                filters = NoteFolderUi.Collection(msg.chips),
+                base = model.base.copy(isLoading = false, isSuccessLoading = true),
+                filters = model.filters.copy(msg.chips),
                 currentSelectedFolderId = initialSelectedChipId
             ),
         )
@@ -84,4 +91,16 @@ class MainSandbox(
         model: Model,
         msg: Msg.Inner.UpdateCurrentSelectedFolder
     ): UpdateResult = UpdatedModel(model.copy(currentSelectedFolderId = msg.id))
+
+    private fun updatedModalSheetState(
+        model: Model,
+        msg: Msg.Inner.UpdatedModalSheetState
+    ): UpdateResult =
+        UpdatedModel(model.copy(isVisibleModalSheet = msg.isVisible))
+
+    private fun onHideModalBottomSheet(model: Model): UpdateResult =
+        UpdatedModel(model, effects = setOf(Eff.HideModalSheet))
+
+    private fun fetchedAppLang(model: Model, msg: Msg.Inner.FetchedCurrentAppLang): UpdateResult =
+        UpdatedModel(model.copy(currentLang = msg.language))
 }
