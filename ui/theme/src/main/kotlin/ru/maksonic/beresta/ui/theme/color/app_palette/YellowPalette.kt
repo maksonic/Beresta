@@ -43,6 +43,10 @@ val filledLightYellowPalette = baseLightPalette.copy(
         t1 = PaletteImageComponent.Trash.Light.t1,
         t2 = PaletteImageComponent.Trash.Light.t2,
         t3 = PaletteImageComponent.Trash.Light.t3,
+        s0 = PaletteImageComponent.Search.Light.s0,
+        s1 = PaletteImageComponent.Search.Light.s1,
+        s2 = PaletteImageComponent.Search.Light.s2,
+        s3 = PaletteImageComponent.Search.Light.s3,
     )
 )
 val filledDarkYellowPalette = baseDarkPalette.copy(
@@ -81,6 +85,10 @@ val filledDarkYellowPalette = baseDarkPalette.copy(
         t1 = PaletteImageComponent.Trash.Dark.t1,
         t2 = PaletteImageComponent.Trash.Dark.t2,
         t3 = PaletteImageComponent.Trash.Dark.t3,
+        s0 = PaletteImageComponent.Search.Dark.s0,
+        s1 = PaletteImageComponent.Search.Dark.s1,
+        s2 = PaletteImageComponent.Search.Dark.s2,
+        s3 = PaletteImageComponent.Search.Dark.s3,
     )
 )
 val outlinedLightYellowPalette = baseLightPalette.copy(
@@ -105,6 +113,10 @@ val outlinedLightYellowPalette = baseLightPalette.copy(
         t1 = PaletteImageComponent.Trash.Light.t1,
         t2 = PaletteImageComponent.Trash.Light.t2,
         t3 = PaletteImageComponent.Trash.Light.t3,
+        s0 = PaletteImageComponent.Search.Light.s0,
+        s1 = PaletteImageComponent.Search.Light.s1,
+        s2 = PaletteImageComponent.Search.Light.s2,
+        s3 = PaletteImageComponent.Search.Light.s3,
     )
 )
 val outlinedDarkYellowPalette = baseDarkPalette.copy(
@@ -126,6 +138,10 @@ val outlinedDarkYellowPalette = baseDarkPalette.copy(
         t1 = PaletteImageComponent.Trash.Dark.t1,
         t2 = PaletteImageComponent.Trash.Dark.t2,
         t3 = PaletteImageComponent.Trash.Dark.t3,
+        s0 = PaletteImageComponent.Search.Dark.s0,
+        s1 = PaletteImageComponent.Search.Dark.s1,
+        s2 = PaletteImageComponent.Search.Dark.s2,
+        s3 = PaletteImageComponent.Search.Dark.s3,
     )
 )
 val highContrastYellowPalette = highContrastPalette.copy(
@@ -147,5 +163,9 @@ val highContrastYellowPalette = highContrastPalette.copy(
         t1 = PaletteImageComponent.Trash.Dark.t1,
         t2 = PaletteImageComponent.Trash.Dark.t2,
         t3 = PaletteImageComponent.Trash.Dark.t3,
+        s0 = PaletteImageComponent.Search.Dark.s0,
+        s1 = PaletteImageComponent.Search.Dark.s1,
+        s2 = PaletteImageComponent.Search.Dark.s2,
+        s3 = PaletteImageComponent.Search.Dark.s3,
     )
 )

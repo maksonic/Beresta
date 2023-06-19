@@ -55,7 +55,6 @@ internal fun TrashNotesScreenContainer(
         send = sandbox::send,
         notesListApi = notesListApi,
         topBarCounterApi = topBarCounterApi,
-        formatter = formatter
     )
 }
 

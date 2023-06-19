@@ -1,4 +1,4 @@
-package ru.maksonic.beresta
+package ru.maksonic.beresta.core
 
 import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
@@ -6,7 +6,6 @@ import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
-import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.color.PaletteStore
 

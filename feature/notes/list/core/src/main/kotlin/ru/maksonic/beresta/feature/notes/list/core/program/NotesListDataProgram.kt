@@ -2,14 +2,18 @@ package ru.maksonic.beresta.feature.notes.list.core.program
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.elm.ElmProgram
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.list.core.Cmd
 import ru.maksonic.beresta.feature.notes.list.core.Msg
+import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 import java.time.LocalDateTime
 
 /**
@@ -19,6 +23,8 @@ class NotesListDataProgram(
     private val notesInteractor: NotesInteractor,
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val mapper: NoteUiMapper,
+    private val dateFormatter: DateFormatter,
+    private val appLanguageEngineApi: LanguageEngineApi,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
 
@@ -38,10 +44,17 @@ class NotesListDataProgram(
 
     private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
-            fetchNotesUseCase().collect { notesDomain ->
-                val notes = mapper.mapListTo(notesDomain)
+            combine(fetchNotesUseCase(), appLanguageEngineApi.current) { notesDomain, lang ->
+                val notes = mapper.mapListTo(notesDomain).map { note ->
+                    note.copy(
+                        dateCreation = dateFormatter.fetchFormattedUiDate(
+                            note.dateCreationRaw, lang
+                        )
+                    )
+                }
                 consumer(Msg.Inner.FetchedResultData(NoteUi.Collection(notes)))
-            }
+            }.collect()
+
         }.onFailure { throwable ->
             consumer(Msg.Inner.FetchedResultError(throwable.localizedMessage.toString()))
         }

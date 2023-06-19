@@ -67,7 +67,7 @@ sealed class Msg : ElmMessage {
 
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedPassedArgsFromMain(val isMove: Boolean, val id: Long) : Inner()
-        data class FetchedPassedReplaceNotesState(val notes: List<NoteUi>) : Inner()
+        data class FetchedPassedToFolderNotes(val notes: List<NoteUi>) : Inner()
         data class UpdatedRemovedNotes(val removedNotes: List<NoteUi>) : Inner()
         data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
     }

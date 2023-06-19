@@ -31,14 +31,25 @@ object PaletteImageComponent {
         }
 
         object Dark {
-            /*   val t0 = Color(0xFF)
-               val t1 = Color(0xFF)
-               val t2 = Color(0xFF)
-               val t3 = Color(0xFF)*/
             val t0 = Color(0xFF595959)
             val t1 = Color(0xFF707070)
             val t2 = Color(0xFFA1A1A1)
             val t3 = Color(0xFF3F3F3F)
+        }
+    }
+
+    object Search {
+        object Light {
+            val s0 = Color(0xFFF1F1F1)
+            val s1 = Color(0xFFDFDFDF)
+            val s2 = Color(0xFFB6B6B6)
+            val s3 = Color(0xFF777777)
+        }
+        object Dark {
+            val s0 = Color(0xFF313131)
+            val s1 = Color(0xFF353535)
+            val s2 = Color(0xFF292929)
+            val s3 = Color(0xFFDBDBDB)
         }
     }
 }

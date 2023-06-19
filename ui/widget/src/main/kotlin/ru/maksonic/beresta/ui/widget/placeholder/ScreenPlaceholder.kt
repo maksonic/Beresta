@@ -45,7 +45,7 @@ fun ScreenPlaceholder(
                 imageVector = imageVector,
                 contentDescription = "",
                 modifier = Modifier
-                    .weight(0.15f)
+                    .weight(0.2f)
                     .aspectRatio(1f)
             )
             Text(

@@ -10,7 +10,8 @@ import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
  */
 private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 
-class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Initial) {
+class SearchBarSandbox(program: SearchProgram) :
+    Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Initial, subscriptions = listOf(program)) {
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnCollapseSearchBarClicked -> onCollapseSearchBarClicked(model)
@@ -18,6 +19,8 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Init
         is Msg.Inner.UpdatedSelectedBarState -> updatedSelectedBarState(model, msg)
         is Msg.Inner.UpdatedUserInputQueryChanged -> updatedInputField(model, msg)
         is Msg.Ui.OnClearInputQueryClicked -> onClearQueryClicked(model)
+        is Msg.Inner.FetchedResultData -> fetchedResultData(model, msg)
+        is Msg.Inner.FetchedResultError -> fetchedResultError(model, msg)
     }
 
     private fun onCollapseSearchBarClicked(model: Model): UpdateResult =
@@ -33,6 +36,7 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Init
     private fun onExpandSearchBarClicked(model: Model): UpdateResult =
         UpdatedModel(
             model.copy(barState = SearchBarState.Expanded),
+            commands = setOf(Cmd.FetchNotesList),
             effects = setOf(Eff.UpdateSharedBarState(SearchBarState.Expanded))
         )
 
@@ -69,7 +73,7 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Init
         return UpdatedModel(
             model = model.copy(
                 searchQuery = msg.updatedQuery,
-                searchList = NoteUi.Collection(searchResult)
+                searchList = model.searchList.copy(searchResult)
             )
         )
     }
@@ -83,8 +87,28 @@ class SearchBarSandbox : Sandbox<Model, Msg, Cmd, Eff>(initialModel = Model.Init
         return when {
             note.title.trim().contains(query.trim(), ignoreCase) -> true
             note.message.trim().contains(query.trim(), ignoreCase) -> true
-            //  note.dateCreation.trim().contains(query.trim(), ignoreCase) -> true
             else -> false
         }
     }
+
+    private fun fetchedResultData(model: Model, msg: Msg.Inner.FetchedResultData): UpdateResult {
+        return UpdatedModel(
+            model.copy(
+                base = model.base.copy(isLoading = false, isSuccessLoading = true),
+                notes = msg.notes
+            )
+        )
+    }
+
+    private fun fetchedResultError(model: Model, msg: Msg.Inner.FetchedResultError): UpdateResult =
+        UpdatedModel(
+            model.copy(
+                base = model.base.copy(
+                    isLoading = false,
+                    isSuccessLoading = false,
+                    isErrorLoading = true,
+                    errorMsg = msg.errorMsg
+                ),
+            )
+        )
 }

@@ -67,6 +67,10 @@ val filledDarkBluePalette = baseDarkPalette.copy(
         t1 = PaletteImageComponent.Trash.Dark.t1,
         t2 = PaletteImageComponent.Trash.Dark.t2,
         t3 = PaletteImageComponent.Trash.Dark.t3,
+        s0 = PaletteImageComponent.Search.Dark.s0,
+        s1 = PaletteImageComponent.Search.Dark.s1,
+        s2 = PaletteImageComponent.Search.Dark.s2,
+        s3 = PaletteImageComponent.Search.Dark.s3,
     )
 )
 val outlinedDarkBluePalette = baseDarkPalette.copy(

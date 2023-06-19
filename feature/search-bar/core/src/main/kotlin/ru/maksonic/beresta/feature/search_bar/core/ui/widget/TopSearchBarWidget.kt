@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.search_bar.core.ui
+package ru.maksonic.beresta.feature.search_bar.core.ui.widget
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
@@ -36,6 +36,7 @@ import ru.maksonic.beresta.feature.search_bar.core.Eff
 import ru.maksonic.beresta.feature.search_bar.core.Model
 import ru.maksonic.beresta.feature.search_bar.core.Msg
 import ru.maksonic.beresta.feature.search_bar.core.SearchBarSandbox
+import ru.maksonic.beresta.feature.search_bar.core.ui.UserAvatarLayer
 import ru.maksonic.beresta.feature.search_bar.core.ui.content.SearchBarCollapsedContent
 import ru.maksonic.beresta.feature.search_bar.core.ui.content.SearchBarExpandedContent
 import ru.maksonic.beresta.feature.search_bar.core.ui.content.SearchBarSelectedContent
@@ -173,7 +174,6 @@ private fun SearchBarContent(
                         model = model,
                         send = send,
                         notesListFeatureApi = notesListFeatureApi,
-                        formatter = formatter
                     )
                 }
 

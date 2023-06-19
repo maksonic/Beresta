@@ -28,13 +28,6 @@ interface StickyItemsTitleFormatter {
                 AppLanguage.CHINESE_TR -> "未分類"
             }
 
-        /*    val list = data.map {
-                when {
-                    it.isStickyToStart -> it.copy(title = stickyStartItemTitle)
-                    it.isStickyToEnd -> it.copy(title = stickyEndItemTitle)
-                    else -> it
-                }
-            }*/
              val list = data.mapIndexed { index, noteFolderUi ->
                 when (index) {
                     0 -> noteFolderUi.copy(title = stickyStartItemTitle)

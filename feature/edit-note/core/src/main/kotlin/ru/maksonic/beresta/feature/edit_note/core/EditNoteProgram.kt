@@ -46,11 +46,11 @@ class EditNoteProgram(
         val noteDomain = mapper.mapFrom(note)
         interactor.let {
             if (note.isDefaultId())
-                it.addNote(noteDomain.copy(dateCreation = currentRawTime))
+                it.addNote(noteDomain.copy(dateCreationRaw = currentRawTime))
             else
                 it.updateNote(
                     noteDomain.copy(
-                        dateCreation = note.dateCreationRaw,
+                        dateCreationRaw = note.dateCreationRaw,
                         dateLastUpdateRaw = currentRawTime
                     )
                 )

@@ -13,15 +13,15 @@ data class NotesListSharedUiState(
     val isVisibleBottomBar: Boolean,
     val isVisibleChipsRow: Boolean,
     val isSelectionState: Boolean,
-    val selectBarActions: Array<BaseBottomBarItem>,
-    val onChangeGridCount: () -> Unit,
     val isVisibleRemovedNotesSnackBar: Boolean,
     val removedCurrentNotesCount: Int,
-    val onSnackBarClicked: () -> Unit,
     val passedToFolderNotes: List<NoteUi>,
     val isEnabledBottomBar: Boolean,
     val currentSortItemSelected: MutableState<SortedNotes>,
     val checkboxSortPinned: MutableState<Boolean>,
+    val selectBarActions: Array<BaseBottomBarItem>,
+    val onSnackBarClicked: () -> Unit,
+    val onChangeGridCount: () -> Unit,
 
     ) {
     companion object {

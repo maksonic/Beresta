@@ -14,7 +14,7 @@ import ru.maksonic.beresta.feature.notes.folders.core.chips_row_widget.ChipsWidg
 import ru.maksonic.beresta.feature.notes.folders.core.screen.core.FoldersScreenSandbox
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.FolderItemContent
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.HandleUiEffects
-import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.NotesFoldersScreenContent
+import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.FoldersScreenContent
 import ru.maksonic.beresta.feature.notes.folders.core.screen.ui.widget.FoldersLoaderWidgetContent
 import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
@@ -103,7 +103,7 @@ class FoldersListCore : FoldersListApi.Ui {
             notesListSharedState = notesListApi.sharedUiState,
         )
 
-        NotesFoldersScreenContent(
+        FoldersScreenContent(
             model = model.value,
             send = sandbox::send,
             notesFoldersFeatureApi = api,

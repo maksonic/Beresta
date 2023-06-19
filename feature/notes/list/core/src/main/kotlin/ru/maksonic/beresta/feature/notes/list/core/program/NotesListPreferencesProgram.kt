@@ -1,11 +1,14 @@
 package ru.maksonic.beresta.feature.notes.list.core.program
 
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.elm.ElmProgram
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListApi
 import ru.maksonic.beresta.feature.notes.list.api.ui.SortedNotes
 import ru.maksonic.beresta.feature.notes.list.core.Cmd
 import ru.maksonic.beresta.feature.notes.list.core.Msg
+import ru.maksonic.beresta.feature.notes.list.core.NoteCardStateDatastore
 import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 
 /**
@@ -13,8 +16,10 @@ import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
  */
 class NotesListPreferencesProgram(
     private val appLanguageEngineApi: LanguageEngineApi,
-    private val sortNotesDatastore: NotesListApi.SortedNotesState
-) : ElmProgram<Msg, Cmd> {
+    private val sortNotesDatastore: NotesListApi.SortedNotesState,
+    private val noteCardStateDatastore: NotesListApi.CardState,
+
+    ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -34,14 +39,29 @@ class NotesListPreferencesProgram(
     }
 
     private suspend fun fetchNotesPrefsFromDatastore(consumer: (Msg) -> Unit) {
+        combine(sortNotesDatastore.current, noteCardStateDatastore.current) { sort, card ->
+            consumer(
+                Msg.Inner.FetchedNotesPrefs(
+                    sort = sort.first,
+                    isSortPinned = sort.second,
+                    gridCount = sort.third,
+                    cardState = card
+                )
+            )
+        }.collect()
+    }
+    /* private suspend fun fetchNotesPrefsFromDatastore(consumer: (Msg) -> Unit) {
         sortNotesDatastore.current.collectLatest { prefs ->
             consumer(
                 Msg.Inner.FetchedNotesPrefs(
-                    sort = prefs.first, isSortPinned = prefs.second, gridCount = prefs.third
+                    sort = prefs.first,
+                    isSortPinned = prefs.second,
+                    gridCount = prefs.third,
+                    cardState =
                 )
             )
         }
-    }
+    }*/
 
     private suspend fun setSortNotesValue(value: SortedNotes) = sortNotesDatastore.setSortBy(value)
 

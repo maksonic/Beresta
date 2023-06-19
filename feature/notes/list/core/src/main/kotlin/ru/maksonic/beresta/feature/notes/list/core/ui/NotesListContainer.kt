@@ -24,7 +24,6 @@ import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.folders.api.ui.FoldersListApi
 import ru.maksonic.beresta.feature.notes.list.api.BaseBottomBarItem
-import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.ui.NotesListSharedUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateChipsRowVisibility
 import ru.maksonic.beresta.feature.notes.list.api.ui.updateColoredTopBar
@@ -71,7 +70,6 @@ internal fun NotesListContainer(
     sandbox: NotesListSandbox = koinViewModel(),
     notesFoldersFeatureApi: FoldersListApi.Ui = koinInject(),
     topBarCounterFeatureApi: TopBarCounterApi.Ui = koinInject(),
-    formatter: DateFormatter = koinInject(),
     sharedUiState: SharedUiState<NotesListSharedUiState>,
     router: MainScreenRouter
 ) {
@@ -133,14 +131,13 @@ internal fun NotesListContainer(
                     model = model.value,
                     send = sandbox::send,
                     sharedUiState = sharedUiState,
-                    formatter = formatter,
                 )
             }
 
             model.value.base.isErrorLoading -> {
                 ScreenPlaceholder(
                     imageVector = AppImage.ErrorFolderPlaceholder,
-                    message = model.value.errorMsg
+                    message = model.value.base.errorMsg ?: "Error"
                 )
             }
         }
@@ -153,7 +150,6 @@ private fun NotesResultDataContent(
     model: Model,
     send: SendMessage,
     sharedUiState: SharedUiState<NotesListSharedUiState>,
-    formatter: DateFormatter
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     val isScrollUp = scrollState.isScrollUp()
@@ -253,17 +249,15 @@ private fun NotesResultDataContent(
             ) {
                 items(
                     items = notesFilterUpdater.notesList(
-                        model.currentSortItemSelected,
-                        model.isSortPinnedNotes
+                        model.currentSortItemSelected, model.isSortPinnedNotes
                     ).data,
                     key = { note -> note.id }) { note ->
                     NoteListItemContent(
-                        isSelected = model.selectedNotes.contains(note),
                         note = note,
+                        state = model.cardState,
+                        isSelected = model.selectedNotes.contains(note),
                         onNoteClicked = { id -> send(Msg.Ui.OnNoteClicked(id)) },
                         onNoteLongClicked = { id -> send(Msg.Ui.OnNoteLongClicked(id)) },
-                        currentAppLang = model.currentAppLanguage,
-                        formatter = formatter,
                         modifier = modifier.animateContentSize(),
                     )
                 }

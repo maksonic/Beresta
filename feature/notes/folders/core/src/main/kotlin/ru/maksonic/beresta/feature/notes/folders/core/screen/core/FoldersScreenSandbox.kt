@@ -25,7 +25,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedFoldersResult -> fetchedData(model, msg)
         is Msg.Inner.FetchedPassedArgsFromMain -> fetchedPassedArgsFromMain(model, msg)
-        is Msg.Inner.FetchedPassedReplaceNotesState -> fetchedPassedNotesMoveState(model, msg)
+        is Msg.Inner.FetchedPassedToFolderNotes -> fetchedPassedNotesMoveState(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnFolderClicked -> onFolderClicked(model, msg)
         is Msg.Ui.OnFolderLongPressed -> onFolderLongClicked(model, msg)
@@ -41,32 +41,37 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Inner.FetchedCurrentAppLang -> fetchedAppLang(model, msg)
     }
 
-    private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult {
-        val folders = if (model.isMoveNotesToFolder) msg.folders.filter { !it.isStickyToStart }
-        else msg.folders
-
-        return UpdatedModel(
+    private fun fetchedData(model: Model, msg: Msg.Inner.FetchedFoldersResult): UpdateResult =
+        UpdatedModel(
             model = model.copy(
                 base = model.base.copy(
                     isLoading = false,
                     isSuccessLoading = true,
                     isError = false
                 ),
-                folders = model.folders.copy(folders), notes = msg.notes,
+                folders = model.folders.copy(msg.folders), notes = msg.notes,
             )
         )
-    }
 
     private fun fetchedPassedArgsFromMain(
         model: Model,
         msg: Msg.Inner.FetchedPassedArgsFromMain
-    ): UpdateResult = UpdatedModel(
-        model = model.copy(isMoveNotesToFolder = msg.isMove, currentSelectedFolderId = msg.id)
-    )
+    ): UpdateResult {
+        val folders = if (msg.isMove) model.folders.data.filter { !it.isStickyToStart }
+        else model.folders.data
+
+        return UpdatedModel(
+            model = model.copy(
+                folders = model.folders.copy(emptyList()),
+                isMoveNotesToFolder = msg.isMove,
+                currentSelectedFolderId = msg.id
+            )
+        )
+    }
 
     private fun fetchedPassedNotesMoveState(
         model: Model,
-        msg: Msg.Inner.FetchedPassedReplaceNotesState
+        msg: Msg.Inner.FetchedPassedToFolderNotes
     ): UpdateResult = UpdatedModel(model.copy(moveNotesList = msg.notes))
 
     private fun onTopBarBackPressed(model: Model): UpdateResult =

@@ -1,22 +1,22 @@
 plugins {
-    androidLibrary()
-    kotlinAndroid()
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
     namespace = module.primary.languageEngine.core.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
 
     packaging {
@@ -45,8 +45,8 @@ dependencies {
     implementation(project(module.primary.data.common.path))
     implementation(project(module.common.coroutineDispatchers.path))
     implementation(project(module.common.jsonConverter.path))
-    implementation(lib.android.gson)
-    implementation(lib.android.datastore)
-    implementation(lib.jetBrains.json)
-    implementation(lib.koin.android)
+    implementation(libs.gson)
+    implementation(libs.datastore)
+    implementation(libs.json)
+    implementation(libs.koin.android)
 }

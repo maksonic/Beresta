@@ -24,5 +24,6 @@ data class LangSharedData(
     @SerializedName("hint_find_note_search_bar") val hintFindNote: String = "",
     @SerializedName("hint_selected_items_count") val hintSelectedItemsCount: String = "",
     @SerializedName("hint_removed_notes_count") val hintRemovedNotesCount: String = "",
-    @SerializedName("hint_no_notes") val hintNoNotes: String = ""
+    @SerializedName("hint_no_notes") val hintNoNotes: String = "",
+    @SerializedName("hint_nothing_found") val hintNothingFound: String = ""
 )

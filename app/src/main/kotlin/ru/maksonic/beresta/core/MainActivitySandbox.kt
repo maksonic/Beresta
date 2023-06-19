@@ -1,4 +1,4 @@
-package ru.maksonic.beresta
+package ru.maksonic.beresta.core
 
 import ru.maksonic.beresta.elm.Sandbox
 import ru.maksonic.beresta.elm.UpdatedModel

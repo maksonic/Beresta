@@ -51,7 +51,8 @@
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_items_count": "Выбрано:",
       "hint_removed_notes_count": "Удалено заметок:",
-      "hint_no_notes": "Нет заметок"
+      "hint_no_notes": "Нет заметок",
+      "hint_nothing_found": "Ничего не найдено"
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -177,7 +178,8 @@
       "hint_find_note_search_bar": "Find note",
       "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
-      "hint_no_notes": "No notes"
+      "hint_no_notes": "No notes",
+      "hint_nothing_found": "Nothing found"
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -303,7 +305,9 @@
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
-      "hint_no_notes": "没有笔记"
+      "hint_no_notes": "没有笔记",
+      "hint_nothing_found": "什么都没找到"
+
     },
     "settings": {
       "top_bar_title": "设置",
@@ -429,7 +433,8 @@
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
-      "hint_no_notes": "沒有筆記"
+      "hint_no_notes": "沒有筆記",
+      "hint_nothing_found": "什麼都沒找到"
     },
     "settings": {
       "top_bar_title": "設置",

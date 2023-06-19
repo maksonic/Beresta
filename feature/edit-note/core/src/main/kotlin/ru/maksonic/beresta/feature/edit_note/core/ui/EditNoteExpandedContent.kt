@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import ru.maksonic.beresta.feature.edit_note.core.Model
@@ -66,21 +67,20 @@ internal fun EditNoteExpandedContent(
             }
         }
         OverContentLayer(
-            send,
+            send = send,
             isScrollUp = isScrollUp.value,
-            isBlankNote = model.currentNote.isBlank()
+            isBlankNote = model.currentNote.isBlank(),
         )
     }
 }
 
 @Composable
 private fun OverContentLayer(send: SendMessage, isScrollUp: Boolean, isBlankNote: Boolean) {
-    Column {
-        EditNoteTopBar(
-            backAction = { send(Msg.Ui.OnTopBarBackPressed) },
-            menuAction = {}
-        )
+    Column(horizontalAlignment = Alignment.End) {
+        EditNoteTopBar(backAction = { send(Msg.Ui.OnTopBarBackPressed) }, menuAction = {})
+
         Spacer(Modifier.weight(1f))
+
         EditorBottomBar(send = send, isScrollUp = isScrollUp, isBlankNote = isBlankNote)
     }
 }

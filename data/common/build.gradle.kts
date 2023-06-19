@@ -1,22 +1,22 @@
 plugins {
-    androidLibrary()
-    kotlinAndroid()
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
     namespace = module.primary.data.common.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
 
     packaging {
@@ -42,8 +42,8 @@ android {
 
 
 dependencies {
-    implementation(lib.android.datastore)
-    implementation(lib.room.runtime)
-    implementation(lib.jetBrains.coroutines)
-    implementation(lib.koin.android)
+    implementation(libs.datastore)
+    implementation(libs.room.runtime)
+    implementation(libs.coroutinesAndroid)
+    implementation(libs.koin.android)
 }

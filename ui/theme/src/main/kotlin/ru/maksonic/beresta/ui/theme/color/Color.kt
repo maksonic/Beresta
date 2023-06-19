@@ -74,6 +74,10 @@ data class PlaceholderColors(
     val t1: Color,
     val t2: Color,
     val t3: Color,
+    val s0: Color,
+    val s1: Color,
+    val s2: Color,
+    val s3: Color,
 )
 
 val primary: Color @Composable get() = Theme.color.primary

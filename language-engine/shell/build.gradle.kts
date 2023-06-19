@@ -1,23 +1,23 @@
 plugins {
-    androidLibrary()
-    kotlinAndroid()
-    kotlinSerialization()
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinPluginSerialization)
 }
 
 android {
     namespace = module.primary.languageEngine.shell.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -26,12 +26,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
 
     buildFeatures {
@@ -39,7 +39,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = androidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
     }
 
     packaging {
@@ -50,8 +50,9 @@ android {
 }
 
 dependencies {
-    implementation(platform(lib.compose.bom))
-    implementation(lib.compose.runtime)
-    implementation(lib.android.gson)
-    implementation(lib.jetBrains.json)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.runtime)
+    implementation(libs.gson)
+    implementation(libs.json)
+    implementation(libs.coroutinesAndroid)
 }

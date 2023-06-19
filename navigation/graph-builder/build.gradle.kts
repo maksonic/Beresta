@@ -1,22 +1,22 @@
 plugins {
-    androidLibrary()
-    kotlinAndroid()
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
     namespace = module.primary.navigation.graphBuilder.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
 
     buildFeatures {
@@ -38,7 +38,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = androidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
     }
 
     packaging {
@@ -58,8 +58,7 @@ dependencies {
     implementation(project(module.feature.splashScreen.api.path))
     implementation(project(module.feature.editNote.api.path))
     implementation(project(module.feature.notes.folders.api.path))
-    implementation(lib.accompanist.navigation)
-    implementation(lib.compose.animation)
-    implementation(lib.koin.android)
-
+    implementation(libs.accompanist.navigation)
+    implementation(libs.compose.animation)
+    implementation(libs.koin.android)
 }

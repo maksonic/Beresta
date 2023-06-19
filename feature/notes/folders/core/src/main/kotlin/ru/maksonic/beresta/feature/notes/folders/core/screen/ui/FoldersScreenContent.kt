@@ -44,7 +44,7 @@ internal typealias SendMessage = (Msg) -> Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun NotesFoldersScreenContent(
+internal fun FoldersScreenContent(
     model: Model,
     send: SendMessage,
     notesFoldersFeatureApi: FoldersListApi.Ui,
@@ -62,14 +62,13 @@ internal fun NotesFoldersScreenContent(
         send(Msg.Ui.CancelSelectionState)
     }
 
-    LaunchedEffect(Unit) {
+ /*   LaunchedEffect(Unit) {
         if (model.isMoveNotesToFolder)
             send(
-                Msg.Inner.FetchedPassedReplaceNotesState(
-                    notesListSharedUiState.value.passedToFolderNotes
+                Msg.Inner.FetchedPassedToFolderNotes(notesListSharedUiState.value.passedToFolderNotes
                 )
             )
-    }
+    }*/
 
     Box(modifier.fillMaxSize()) {
         Scaffold(

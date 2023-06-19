@@ -18,7 +18,7 @@ class NotesListSandbox(
     initialCmd = setOf(
         Cmd.FetchNotesList,
         Cmd.FetchCurrentLangForNotesDatestamp,
-        Cmd.FetchNotesDatastorePrefs
+        Cmd.FetchNotesDatastorePrefs,
     ),
     subscriptions = listOf(notesDataProgram, notesPrefsProgram)
 ) {
@@ -66,9 +66,9 @@ class NotesListSandbox(
                 base = model.base.copy(
                     isLoading = false,
                     isSuccessLoading = false,
-                    isErrorLoading = true
+                    isErrorLoading = true,
+                    errorMsg = msg.errorMsg
                 ),
-                errorMsg = msg.errorMsg
             )
         )
 
@@ -77,7 +77,8 @@ class NotesListSandbox(
             model.copy(
                 currentSortItemSelected = msg.sort,
                 gridCount = msg.gridCount,
-                isSortPinnedNotes = msg.isSortPinned
+                isSortPinnedNotes = msg.isSortPinned,
+                cardState = msg.cardState
             )
         )
 

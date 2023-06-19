@@ -5,8 +5,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
-import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
-import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 
 /**
@@ -24,13 +22,12 @@ interface NotesListApi {
 
         @Composable
         fun NoteListItem(
-            isSelected: Boolean,
             note: NoteUi,
+            state: NoteCardUiState,
+            isSelected: Boolean,
             onNoteClicked: (id: Long) -> Unit,
             onNoteLongClicked: (id: Long) -> Unit,
             isTrashPlacement: Boolean,
-            currentAppLang: AppLanguage,
-            formatter: DateFormatter,
             modifier: Modifier
         )
 
@@ -46,6 +43,11 @@ interface NotesListApi {
             checkboxSortPinned: MutableState<Boolean>,
             onBtnSaveClicked: () -> Unit,
         )
+    }
+
+    interface CardState {
+        val current: Flow<NoteCardUiState>
+        suspend fun updateCornerRadius(radius: NoteCardCornerRadius)
     }
 
     interface SortedNotesState {

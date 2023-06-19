@@ -12,12 +12,11 @@ private typealias UpdateResult = UpdatedModel<Model, Set<Cmd>, Set<Eff>>
 @OptIn(ExperimentalMaterial3Api::class)
 class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchRemovedData, Cmd.ReadLanguageFromDataStore),
+    initialCmd = setOf(Cmd.FetchRemovedData),
     subscriptions = listOf(program)
 ) {
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Inner.FetchedRemovedNotesResult -> fetchedDataResult(model, msg)
-        is Msg.Inner.FetchedCurrentAppLang -> afterApplyLanguage(model, msg)
         is Msg.Inner.FetchedError -> UpdatedModel(model)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnTrashedFoldersBtnClicked -> onTrashedFoldersBtnClicked(model)
@@ -47,12 +46,6 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
             notes = model.notes.copy(msg.notes)
         )
     )
-
-    private fun afterApplyLanguage(
-        model: Model,
-        msg: Msg.Inner.FetchedCurrentAppLang
-    ): UpdateResult =
-        UpdatedModel(model.copy(currentAppLang = msg.language))
 
     private fun onTopBarBackPressed(model: Model): UpdateResult {
         val onClickEffect =

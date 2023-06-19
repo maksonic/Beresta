@@ -1,7 +1,10 @@
 package ru.maksonic.beresta.screen.trash_list.notes.core
 
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.elm.ElmProgram
+import ru.maksonic.beresta.feature.notes.list.api.domain.DateFormatter
 import ru.maksonic.beresta.feature.notes.list.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.list.api.domain.usecase.FetchNotesWithoutFolderTrashListUseCase
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
@@ -16,22 +19,37 @@ class NotesTrashProgram(
     private val notesInteractor: NotesInteractor,
     private val notesMapper: NoteUiMapper,
     private val appLanguageEngineApi: LanguageEngineApi,
+    private val dateFormatter: DateFormatter,
 
     ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchRemovedData -> fetchData(consumer)
             is Cmd.DeleteOrRestoreNotes -> deleteOrRestoreNotes(cmd.isRestore, cmd.notes)
-            is Cmd.ReadLanguageFromDataStore -> readLanguageFromDatastore(consumer)
         }
     }
 
     private suspend fun fetchData(consumer: (Msg) -> Unit) {
         runCatching {
-            fetchRemovedNotes().collect { notesDomain ->
-                val notes = notesMapper.mapListTo(notesDomain)
+            combine(fetchRemovedNotes(), appLanguageEngineApi.current) { notesDomain, lang ->
+                val notes = notesMapper.mapListTo(notesDomain).map { note ->
+                    val dateCreation = dateFormatter.fetchFormattedUiDate(
+                        note.dateCreationRaw, lang
+                    )
+                    val dateMovedToTrash = note.dateMovedToTrashRaw?.let { date ->
+                        dateFormatter.fetchFormattedUiDate(date, lang)
+                    } ?: ""
+
+                    note.copy(
+                        dateCreation = dateCreation, dateMovedToTrash = dateMovedToTrash
+                    )
+                }
+
                 consumer(Msg.Inner.FetchedRemovedNotesResult(notes))
-            }
+            }.collect()
+
+        }.onFailure {
+            consumer(Msg.Inner.FetchedRemovedNotesResult(emptyList()))
         }
     }
 
@@ -53,9 +71,4 @@ class NotesTrashProgram(
         }
     }
 
-    private suspend fun readLanguageFromDatastore(consumer: (Msg) -> Unit) {
-        appLanguageEngineApi.current.collectLatest { savedAppLanguage ->
-            consumer(Msg.Inner.FetchedCurrentAppLang(savedAppLanguage))
-        }
-    }
 }

@@ -42,10 +42,13 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class UpdatedSelectedBarState(val isSelected: Boolean) : Inner()
         data class UpdatedUserInputQueryChanged(val updatedQuery: String) : Inner()
+        data class FetchedResultData(val notes: NoteUi.Collection) : Inner()
+        data class FetchedResultError(val errorMsg: String = "") : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
+    object FetchNotesList : Cmd()
 }
 
 sealed class Eff : ElmEffect {

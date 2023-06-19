@@ -1,29 +1,29 @@
 plugins {
-    androidApp()
-    kotlinAndroid()
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
     namespace = module.primary.app.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        applicationId = androidConfig.applicationId
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
-        versionCode = androidConfig.versionCode
-        versionName = androidConfig.versionName
+        applicationId = AndroidConfig.applicationId
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
+        versionCode = AndroidConfig.versionCode
+        versionName = AndroidConfig.versionName
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
-            isShrinkResources = androidConfig.isShrinkResources
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
+            isShrinkResources = AndroidConfig.isShrinkResources
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -32,17 +32,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = androidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
     }
     packaging {
         resources {
@@ -103,22 +103,22 @@ dependencies {
     implementation(project(module.screen.trashList.notes.path))
     implementation(project(module.screen.trashList.folders.path))
     //libs
-    implementation(lib.accompanist.navigation)
-    implementation(platform(lib.compose.bom))
-    implementation(lib.android.coreKtx)
-    implementation(lib.android.lifecycleRuntimeKtx)
-    implementation(lib.android.splashScreen)
-    implementation(lib.compose.activity)
-    implementation(lib.compose.ui)
-    implementation(lib.compose.uiToolingPreview)
-    implementation(lib.compose.material3)
-    implementation(lib.compose.lifecycle)
-    implementation(lib.koin.android)
-    testImplementation(lib.test.junit4)
-    androidTestImplementation(lib.test.junitExt)
-    androidTestImplementation(lib.test.espresso)
-    debugImplementation(lib.test.composeUiTooling)
-    androidTestImplementation(lib.test.composeJnit4Ui)
-    androidTestImplementation(platform(lib.compose.bom))
-    debugImplementation(lib.test.composeUiManifest)
+    implementation(libs.accompanist.navigation)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.splash.screen)
+    implementation(libs.activity.compose)
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.lifecycle.compose)
+    implementation(libs.koin.android)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 }

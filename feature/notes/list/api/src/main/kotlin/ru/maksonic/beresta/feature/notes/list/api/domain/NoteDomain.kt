@@ -13,7 +13,7 @@ data class NoteDomain(
     val id: Long = 0L,
     val title: String = "",
     val message: String = "",
-    val dateCreation: LocalDateTime = LocalDateTime.now(),
+    val dateCreationRaw: LocalDateTime = LocalDateTime.now(),
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
     val pinTime: LocalDateTime? = null,

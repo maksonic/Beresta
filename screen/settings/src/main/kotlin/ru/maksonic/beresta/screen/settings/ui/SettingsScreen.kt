@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.screen.settings.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -48,7 +49,6 @@ fun SettingsScreen(router: SettingsScreenRouter) {
 @Composable
 private fun Container(router: SettingsScreenRouter, sandbox: SettingsSandbox = koinViewModel()) {
     val model = sandbox.model.collectAsStateWithLifecycle()
-    val currentSheetContent = rememberUpdatedState(model.value.currentSheetContent)
 
     HandleUiEffects(
         effects = sandbox.effects,
@@ -56,46 +56,50 @@ private fun Container(router: SettingsScreenRouter, sandbox: SettingsSandbox = k
         router = router,
         modalBottomSheetState = model.value.modalBottomSheetState
     )
-    Content(model.value, sandbox::send)
 
-    if (model.value.isVisibleModalSheet) {
-        ModalBottomSheetDefault(
-            sheetState = model.value.modalBottomSheetState,
-            onDismissRequest = { sandbox.send(Msg.Inner.UpdatedModalSheetState(false)) },
-        ) {
-            MultipleModalBottomSheetContent(sandbox::send, currentSheetContent)
-        }
-    }
+    Content(model.value, sandbox::send)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifier) {
+    val currentSheetContent = rememberUpdatedState(model.currentSheetContent)
     val scrollState = rememberScrollState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
-    Scaffold(
-        topBar = {
-            TopAppBarCollapsingLarge(
-                scrollBehavior = scrollBehavior,
-                title = text.settings.topBarTitle,
-                onBackAction = { send(Msg.Ui.OnTopBarBackPressed) }
-            )
-        },
-        containerColor = background,
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) { paddings ->
+    Box {
+        Scaffold(
+            topBar = {
+                TopAppBarCollapsingLarge(
+                    scrollBehavior = scrollBehavior,
+                    title = text.settings.topBarTitle,
+                    onBackAction = { send(Msg.Ui.OnTopBarBackPressed) }
+                )
+            },
+            containerColor = background,
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        ) { paddings ->
 
-        Column(
-            modifier = modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize()
-                .padding(paddingValues = paddings)
-        ) {
-            GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
-            AccountSettingsItem(send)
-            SupportSettingsItem(send)
+            Column(
+                modifier = modifier
+                    .verticalScroll(scrollState)
+                    .fillMaxSize()
+                    .padding(paddingValues = paddings)
+            ) {
+                GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
+                AccountSettingsItem(send)
+                SupportSettingsItem(send)
+            }
+        }
+
+        if (model.isVisibleModalSheet) {
+            ModalBottomSheetDefault(
+                sheetState = model.modalBottomSheetState,
+                onDismissRequest = { send(Msg.Inner.UpdatedModalSheetState(false)) },
+            ) {
+                MultipleModalBottomSheetContent(send, currentSheetContent)
+            }
         }
     }
 }

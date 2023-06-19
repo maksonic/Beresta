@@ -7,6 +7,7 @@ import ru.maksonic.beresta.elm.ElmCommand
 import ru.maksonic.beresta.elm.ElmEffect
 import ru.maksonic.beresta.elm.ElmMessage
 import ru.maksonic.beresta.elm.ElmModel
+import ru.maksonic.beresta.feature.notes.list.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.list.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.list.api.ui.SortedNotes
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
@@ -29,7 +30,8 @@ data class Model(
     val currentAppLanguage: AppLanguage,
     val currentSelectedFolderId: Long = 1L,
     val currentSortItemSelected: SortedNotes,
-    val isSortPinnedNotes: Boolean
+    val isSortPinnedNotes: Boolean,
+    val cardState: NoteCardUiState
 
 ) : ElmModel {
 
@@ -45,7 +47,8 @@ data class Model(
             isVisibleRemovedSnackBar = false,
             currentAppLanguage = AppLanguage.RUSSIAN,
             currentSortItemSelected = SortedNotes.DATE_CREATION_DESC,
-            isSortPinnedNotes = false
+            isSortPinnedNotes = false,
+            cardState = NoteCardUiState.Initial
         )
     }
 }
@@ -71,8 +74,9 @@ sealed class Msg : ElmMessage {
         data class FetchedNotesPrefs(
             val sort: SortedNotes,
             val isSortPinned: Boolean,
-            val gridCount: Int
-        ): Inner()
+            val gridCount: Int,
+            val cardState: NoteCardUiState
+        ) : Inner()
 
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
@@ -93,7 +97,7 @@ sealed class Cmd : ElmCommand {
     object FetchNotesDatastorePrefs : Cmd()
     data class UpdateNotesSortValueToDatastore(val sort: SortedNotes) : Cmd()
     data class UpdateSortCheckboxValueInDatastore(val isSortPinned: Boolean) : Cmd()
-    data class UpdateGridCountInDatastore(val count: Int): Cmd()
+    data class UpdateGridCountInDatastore(val count: Int) : Cmd()
 }
 
 sealed class Eff : ElmEffect {

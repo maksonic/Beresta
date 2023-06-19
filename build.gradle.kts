@@ -1,6 +1,6 @@
 plugins {
-    pluginAndroidApp()
-    pluginKotlinSerialization()
-    id("com.android.library") version "8.0.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.8.21" apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.kotlinPluginSerialization) apply false
 }

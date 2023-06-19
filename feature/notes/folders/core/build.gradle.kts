@@ -1,22 +1,22 @@
 plugins {
-    androidLibrary()
-    kotlinAndroid()
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
     namespace = module.feature.notes.folders.core.namespace
-    compileSdk = androidConfig.compileSdk
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        minSdk = androidConfig.minSdk
-        targetSdk = androidConfig.targetSdk
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
 
-        testInstrumentationRunner = androidConfig.testInstrumentationRunner
+        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
     buildTypes {
-        getByName(buildConfig.type.current) {
-            isMinifyEnabled = androidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.current) {
+            isMinifyEnabled = AndroidConfig.isMinifyEnabled
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = androidConfig.javaVersion
-        targetCompatibility = androidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.javaVersion
+        targetCompatibility = AndroidConfig.javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = androidConfig.jvmTarget
+        jvmTarget = AndroidConfig.jvmTarget
     }
 
     buildFeatures {
@@ -38,7 +38,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = androidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
     }
 
     packaging {
@@ -59,14 +59,14 @@ dependencies {
     implementation(project(module.feature.notes.folders.api.path))
     implementation(project(module.feature.notes.list.api.path))
     implementation(project(module.feature.topBarCounter.api.path))
-    implementation(platform(lib.compose.bom))
-    implementation(lib.compose.activity)
-    implementation(lib.compose.lifecycle)
-    implementation(lib.compose.material)
-    implementation(lib.compose.material3)
-    implementation(lib.compose.ui)
-    implementation(lib.compose.uiToolingPreview)
-    implementation(lib.koin.android)
-    debugImplementation(lib.test.composeUiManifest)
-    debugImplementation(lib.test.composeUiTooling)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.activity.compose)
+    implementation(libs.lifecycle.compose)
+    implementation(libs.material)
+    implementation(libs.material3)
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.koin.android)
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 }

@@ -1,4 +1,4 @@
-package ru.maksonic.beresta
+package ru.maksonic.beresta.core
 
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
@@ -12,6 +12,7 @@ import ru.maksonic.beresta.data.common.di.dataCommonModule
 import ru.maksonic.beresta.data.database.di.databaseModule
 import ru.maksonic.beresta.data.notes_folders.di.notesFoldersDataModule
 import ru.maksonic.beresta.data.notes.di.notesListDataModule
+import ru.maksonic.beresta.di.appModule
 import ru.maksonic.beresta.feature.edit_note.core.di.editNoteFeatureModule
 import ru.maksonic.beresta.feature.language_picker.core.di.languagePickerApiFeatureModule
 import ru.maksonic.beresta.feature.notes.folders.core.di.notesFoldersFeatureModel
@@ -32,15 +33,6 @@ import ru.maksonic.beresta.screen.trash_list.notes.di.trashNotesModule
  * @Author maksonic on 22.04.2023
  */
 class BerestaApplication : Application() {
-    private val appModule = module {
-        single {
-            MainActivityProgram(
-                theme = get(), palette = get(), language = get(), languageProvider = get()
-            )
-        }
-        viewModel { MainActivitySandbox(mainActivityProgram = get()) }
-    }
-
     private val modules = listOf(
         appModule,
         coroutineDispatchersModule,

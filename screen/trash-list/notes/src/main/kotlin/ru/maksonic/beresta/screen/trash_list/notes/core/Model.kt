@@ -68,12 +68,10 @@ sealed class Msg : ElmMessage {
         data class FetchedRemovedNotesResult(val notes: List<NoteUi>) : Inner()
         data class FetchedError(val message: String) : Inner()
         data class UpdatedModalSheetState(val isVisible: Boolean): Inner()
-        data class FetchedCurrentAppLang(val language: AppLanguage) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object ReadLanguageFromDataStore : Cmd()
     object FetchRemovedData : Cmd()
     data class DeleteOrRestoreNotes(val isRestore: Boolean, val notes: List<NoteUi>) : Cmd()
 }
