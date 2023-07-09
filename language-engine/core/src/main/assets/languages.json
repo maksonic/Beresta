@@ -35,6 +35,8 @@
       ]
     },
     "shared": {
+      "note": "Заметка",
+      "note_title": "Заголовок",
       "btn_title_save": "Сохранить",
       "btn_title_cancel": "Отменить",
       "btn_title_close": "Закрыть",
@@ -47,12 +49,16 @@
       "btn_title_create": "Создать",
       "btn_title_change": "Изменить",
       "btn_title_restore": "Восстановить",
+      "btn_title_retry": "Повторить",
       "btn_title_by_default": "По умолчанию",
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_items_count": "Выбрано:",
       "hint_removed_notes_count": "Удалено заметок:",
       "hint_no_notes": "Нет заметок",
-      "hint_nothing_found": "Ничего не найдено"
+      "hint_nothing_found": "Ничего не найдено",
+      "hint_an_error_has_occurred": "Произошла ошибка",
+      "note_title_placeholder": "Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда нужно быстро заполнить макеты или прототипы содержимым. Это тестовый контент, который не должен нести никакого смысла, лишь показать наличие самого текста или продемонстрировать типографику в деле.",
+      "note_message_placeholder": "Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда нужно быстро заполнить макеты или прототипы содержимым. Это тестовый контент, который не должен нести никакого смысла, лишь показать наличие самого текста или продемонстрировать типографику в деле."
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -71,6 +77,15 @@
       "title_theme_light": "Светлая",
       "title_theme_night": "Тёмная",
       "title_theme_high_contrast": "Высококонтрастная"
+    },
+    "settings_appearance": {
+      "top_bar_title": "Внешний вид",
+      "title_note_card": "Карточка",
+      "item_note_card_shape": "Углы",
+      "hint_note_card_rounded_shape": "Круглые",
+      "hint_note_card_squared_shape": "Квадратные",
+      "item_note_card_elevation": "Тень",
+      "item_note_card_max_lines": "Количество строк"
     },
     "editor": {
       "hint_input_title": "Заголовок",
@@ -162,6 +177,8 @@
       ]
     },
     "shared": {
+      "note": "Note",
+      "note_title": "Title",
       "btn_title_save": "Save",
       "btn_title_cancel": "Cancel",
       "btn_title_close": "Close",
@@ -174,12 +191,16 @@
       "btn_title_create": "Create",
       "btn_title_change": "Edit",
       "btn_title_restore": "Restore",
+      "btn_title_retry": "Retry",
       "btn_title_by_default": "Default",
       "hint_find_note_search_bar": "Find note",
       "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
       "hint_no_notes": "No notes",
-      "hint_nothing_found": "Nothing found"
+      "hint_nothing_found": "Nothing found",
+      "hint_an_error_has_occurred": "An error has occurred",
+      "note_title_placeholder": "Fishtext is used by designers, planners, and front-end developers when they need to quickly populate layouts or prototypes with content. This is test content that should not make any sense, just show the presence of the text itself or demonstrate typography in action.",
+      "note_message_placeholder": "Fishtext is used by designers, planners, and front-end developers when they need to quickly populate layouts or prototypes with content. This is test content that should not make any sense, just show the presence of the text itself or demonstrate typography in action."
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -198,6 +219,15 @@
       "title_theme_light": "Light",
       "title_theme_night": "Night",
       "title_theme_high_contrast": "High contrast"
+    },
+    "settings_appearance": {
+      "top_bar_title": "Appearance",
+      "title_note_card": "Card",
+      "item_note_card_shape": "Corners",
+      "hint_note_card_rounded_shape": "Round",
+      "hint_note_card_squared_shape": "Square",
+      "item_note_card_elevation": "Elevation",
+      "item_note_card_max_lines": "Number of lines"
     },
     "editor": {
       "hint_input_title": "Title",
@@ -289,6 +319,8 @@
       ]
     },
     "shared": {
+      "note": "笔记",
+      "note_title": "标题",
       "btn_title_save": "节省",
       "btn_title_cancel": "取消",
       "btn_title_close": "关闭",
@@ -301,13 +333,16 @@
       "btn_title_create": "创造",
       "btn_title_change": "编辑",
       "btn_title_restore": "恢复",
+      "btn_title_retry": "重试",
       "btn_title_by_default": "默认",
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
       "hint_no_notes": "没有笔记",
-      "hint_nothing_found": "什么都没找到"
-
+      "hint_nothing_found": "什么都没找到",
+      "hint_an_error_has_occurred": "发生了错误",
+      "note_title_placeholder": "注释标题",
+      "note_message_placeholder": "设计师、规划人员和前端开发人员在需要快速填充内容的布局或原型时会使用 Fishtext。 这是测试内容，应该没有任何意义，只是显示文本本身的存在或演示实际的排版。"
     },
     "settings": {
       "top_bar_title": "设置",
@@ -326,6 +361,15 @@
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
       "title_theme_high_contrast": "高对比度"
+    },
+    "settings_appearance": {
+      "top_bar_title": "外貌",
+      "title_note_card": "卡片",
+      "item_note_card_shape": "角球",
+      "hint_note_card_rounded_shape": "圆形的",
+      "hint_note_card_squared_shape": "正方形",
+      "item_note_card_elevation": "海拔",
+      "item_note_card_max_lines": "行数"
     },
     "editor": {
       "hint_input_title": "标题",
@@ -417,6 +461,8 @@
       ]
     },
     "shared": {
+      "note": "筆記",
+      "note_title": "標題",
       "btn_title_save": "保存",
       "btn_title_cancel": "取消",
       "btn_title_close": "關閉",
@@ -429,12 +475,14 @@
       "btn_title_create": "創造",
       "btn_title_change": "編輯",
       "btn_title_restore": "恢復",
+      "btn_title_retry": "重試",
       "btn_title_by_default": "默認",
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
       "hint_no_notes": "沒有筆記",
-      "hint_nothing_found": "什麼都沒找到"
+      "hint_nothing_found": "什麼都沒找到",
+      "hint_an_error_has_occurred": "發生了錯誤"
     },
     "settings": {
       "top_bar_title": "設置",
@@ -452,7 +500,18 @@
       "title_theme_system": "系統",
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
-      "title_theme_high_contrast": "高對比度"
+      "title_theme_high_contrast": "高對比度",
+      "note_title_placeholder": "註釋標題",
+      "note_message_placeholder": "設計師、規劃人員和前端開發人員在需要用內容快速填充佈局或原型時會使用 Fishtext。 這是測試內容，應該沒有任何意義，只是顯示文本本身的存在或演示實際的排版。"
+    },
+    "settings_appearance": {
+      "top_bar_title": "外貌",
+      "title_note_card": "卡片",
+      "item_note_card_shape": "角球",
+      "hint_note_card_rounded_shape": "圓形的",
+      "hint_note_card_squared_shape": "正方形",
+      "item_note_card_elevation": "海拔",
+      "item_note_card_max_lines": "行數"
     },
     "editor": {
       "hint_input_title": "標題",

@@ -14,6 +14,11 @@ object screen {
         namespace = "ru.maksonic.beresta.screen.settings"
     )
 
+    object settingsAppearance : base(
+        path = ":screen:settings:appearance",
+        namespace = "ru.maksonic.beresta.screen.settings.appearance"
+    )
+
     object editNote : base(
         path = ":screen:edit-note",
         namespace = "ru.maksonic.beresta.screen.edit_note"
@@ -24,9 +29,15 @@ object screen {
             path = ":screen:trash-list:notes",
             namespace = "ru.maksonic.beresta.screen.trash_list.notes"
         )
+
         object folders : base(
             path = ":screen:trash-list:folders",
             namespace = "ru.maksonic.beresta.screen.trash_list.folders"
         )
     }
+
+    object folders : base(
+        path = ":screen:folders",
+        namespace = "ru.maksonic.beresta.screen.folders"
+    )
 }

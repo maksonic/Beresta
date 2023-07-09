@@ -6,8 +6,8 @@ import org.gradle.api.JavaVersion
 object AndroidConfig {
     const val kotlinCompilerExtensionVersion = "1.4.7"
     const val applicationId = "ru.maksonic.beresta"
-    const val compileSdk = 33
-    const val targetSdk = 33
+    const val compileSdk = 34
+    const val targetSdk = 34
     const val minSdk = 26
     const val versionName = "1.0"
     const val versionCode = 1

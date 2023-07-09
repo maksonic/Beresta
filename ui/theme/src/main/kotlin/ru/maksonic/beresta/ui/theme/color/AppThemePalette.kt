@@ -18,9 +18,11 @@ enum class AppThemePalette {
 data class PaletteStore(
     val light: AppThemePalette,
     val dark: AppThemePalette,
+    val highContrast: AppThemePalette
 ) : Serializable {
     companion object {
-        val Default = PaletteStore(AppThemePalette.BLUE, AppThemePalette.BLUE_OUT)
+        val Default =
+            PaletteStore(AppThemePalette.BLUE, AppThemePalette.BLUE_OUT, AppThemePalette.BLUE)
     }
 
     override fun toString(): String = "($light, $dark)"

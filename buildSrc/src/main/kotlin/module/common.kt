@@ -13,4 +13,9 @@ object common {
         path = ":common:json-converter",
         namespace = "ru.maksonic.beresta.common.json_converter"
     )
+
+    object globalModelStore : base(
+        path = ":common:global-model-store",
+        namespace = "ru.maksonic.beresta.common.global_model_store"
+    )
 }

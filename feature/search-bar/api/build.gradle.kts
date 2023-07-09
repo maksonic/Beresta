@@ -50,6 +50,8 @@ android {
 
 dependencies {
     implementation(project(module.primary.core.path))
+    implementation(project(module.primary.elm.path))
+    implementation(project(module.feature.notes.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
 }

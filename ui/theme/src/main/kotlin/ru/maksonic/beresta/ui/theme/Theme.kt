@@ -9,6 +9,7 @@ import ru.maksonic.beresta.ui.theme.component.*
  * @Author maksonic on 08.11.2022
  */
 object Theme {
+    val darkMode: AppDarkMode @Composable get() = LocalAppDarkMode.current
     val color: AppColor @Composable get() = LocalAppColors.current
     val widgetSize: AppWidgetSize @Composable get() = LocalAppWidgetSize.current
     val elevation: AppElevation @Composable get() = LocalAppElevation.current

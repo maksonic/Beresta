@@ -14,23 +14,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp32
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.MaksonicDef
+import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 
 /**
  * @Author maksonic on 26.05.2023
  */
+private const val FAIL_MESSAGE_MAX_LINES = 3
+
 @Composable
 fun ScreenPlaceholder(
-    modifier: Modifier = Modifier,
     imageVector: ImageVector,
     message: String,
-    backgroundColor: Color = background
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = background,
+    isError: Boolean = false,
+    onErrorBtnClicked: () -> Unit = {}
 ) {
     Box(
         modifier
@@ -45,14 +54,36 @@ fun ScreenPlaceholder(
                 imageVector = imageVector,
                 contentDescription = "",
                 modifier = Modifier
-                    .weight(0.2f)
+                    .weight(0.15f)
                     .aspectRatio(1f)
             )
+
+            if (isError) {
+                Text(
+                    text = text.shared.hintAnErrorHasOccurred,
+                    style = TextDesign.topBar,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = dp16)
+                )
+            }
+
             Text(
                 text = message,
                 style = TextDesign.title,
-                modifier = Modifier.padding(top = dp16)
+                maxLines = FAIL_MESSAGE_MAX_LINES,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = dp16, start = dp16, end = dp16)
             )
+
+            if (isError) {
+                PrimaryButton(
+                    action = onErrorBtnClicked,
+                    title = text.shared.btnTitleRetry,
+                    modifier = modifier.padding(top = dp32)
+                )
+            }
+
             Spacer(Modifier.weight(0.3f))
         }
     }

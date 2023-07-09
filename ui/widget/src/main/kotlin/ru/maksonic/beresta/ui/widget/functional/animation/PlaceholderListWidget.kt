@@ -25,15 +25,15 @@ private const val DELAY_DIFFERENCE = 150
 
 @Composable
 fun PlaceholderListWidget(
+    modifier: Modifier = Modifier,
     placeholdersCount: Int,
     isColumn: Boolean = true,
-    modifier: Modifier = Modifier,
     placeholderContent: @Composable (animateColor: Animatable<Color, AnimationVector4D>) -> Unit
 ) {
     val delayList = List(placeholdersCount) { INITIAL_DELAY }
         .runningReduce { acc, i -> (acc + i) - DELAY_DIFFERENCE }
 
-    val placeholderContent = remember { movableContentOf {
+    val placeholder = remember { movableContentOf {
         repeat(placeholdersCount) {
             PlaceholderWidget(
                 enterDelay = delayList[it],
@@ -43,10 +43,7 @@ fun PlaceholderListWidget(
         }
     }}
 
-    if (isColumn)
-        Column(modifier) { placeholderContent() }
-    else
-        Row(modifier) { placeholderContent() }
+    if (isColumn) Column(modifier) { placeholder() } else Row(modifier) { placeholder() }
 }
 
 @Composable

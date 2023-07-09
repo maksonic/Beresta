@@ -29,9 +29,9 @@ object primary {
             path = ":data:notes",
             namespace = "ru.maksonic.beresta.data.notes"
         )
-        object notesFolders : base(
-            path = ":data:notes-folders",
-            namespace = "ru.maksonic.beresta.data.notes_folders"
+        object folders : base(
+            path = ":data:folders",
+            namespace = "ru.maksonic.beresta.data.folders"
         )
     }
 

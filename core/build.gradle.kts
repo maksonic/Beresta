@@ -49,6 +49,8 @@ android {
 }
 
 dependencies {
+    implementation(project(module.primary.languageEngine.shell.path))
+    implementation(project(module.primary.ui.theme.path))
     implementation(libs.datastore)
     implementation(libs.koin.android)
 }

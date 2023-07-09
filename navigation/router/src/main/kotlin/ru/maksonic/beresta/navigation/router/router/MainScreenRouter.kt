@@ -7,4 +7,5 @@ data class MainScreenRouter(
     val toSettings: () -> Unit,
     val toTrash: () -> Unit,
     val toNoteEditor: (id: Long?) -> Unit,
-    val toFoldersList: (isMoveNotesToFolderState: Boolean, currentSelectedFolderId: Long) -> Unit)
+    val toFoldersList: (passedListIds: List<Long>) -> Unit
+)

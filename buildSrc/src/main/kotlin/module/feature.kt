@@ -10,9 +10,9 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.splash_screen.api"
         )
 
-        object core : base(
-            path = ":feature:splash-screen:core",
-            namespace = "ru.maksonic.beresta.feature.splash_screen.core"
+        object ui : base(
+            path = ":feature:splash-screen:ui",
+            namespace = "ru.maksonic.beresta.feature.splash_screen.ui"
         )
     }
 
@@ -26,6 +26,11 @@ object feature {
             path = ":feature:onboarding:core",
             namespace = "ru.maksonic.beresta.feature.onboarding.core"
         )
+
+        object ui : base(
+            path = ":feature:onboarding:ui",
+            namespace = "ru.maksonic.beresta.feature.onboarding.ui"
+        )
     }
 
     object languagePicker {
@@ -37,6 +42,11 @@ object feature {
         object core : base(
             path = ":feature:language-picker:core",
             namespace = "ru.maksonic.beresta.feature.language_picker.core"
+        )
+
+        object ui : base(
+            path = ":feature:language-picker:ui",
+            namespace = "ru.maksonic.beresta.feature.language_picker.ui"
         )
     }
 
@@ -50,31 +60,45 @@ object feature {
             path = ":feature:theme-picker:core",
             namespace = "ru.maksonic.beresta.feature.theme_picker.core"
         )
+
+        object ui : base(
+            path = ":feature:theme-picker:ui",
+            namespace = "ru.maksonic.beresta.feature.theme_picker.ui"
+        )
     }
 
     object notes {
-        object list {
-            object api : base(
-                path = ":feature:notes:list:api",
-                namespace = "ru.maksonic.beresta.feature.notes.list.api"
-            )
+        object api : base(
+            path = ":feature:notes:api",
+            namespace = "ru.maksonic.beresta.feature.notes.api"
+        )
 
-            object core : base(
-                path = ":feature:notes:list:core",
-                namespace = "ru.maksonic.beresta.feature.notes.list.core"
-            )
-        }
-        object folders {
-            object api : base(
-                path = ":feature:notes:folders:api",
-                namespace = "ru.maksonic.beresta.feature.notes.folders.api"
-            )
+        object core : base(
+            path = ":feature:notes:core",
+            namespace = "ru.maksonic.beresta.feature.notes.core"
+        )
 
-            object core : base(
-                path = ":feature:notes:folders:core",
-                namespace = "ru.maksonic.beresta.feature.notes.folders.core"
-            )
-        }
+        object ui : base(
+            path = ":feature:notes:ui",
+            namespace = "ru.maksonic.beresta.feature.notes.ui"
+        )
+    }
+
+    object foldersChipsRow {
+        object api : base(
+            path = ":feature:folders-chips:api",
+            namespace = "ru.maksonic.beresta.feature.folders_chips.api"
+        )
+
+        object core : base(
+            path = ":feature:folders-chips:core",
+            namespace = "ru.maksonic.beresta.feature.folders_chips.core"
+        )
+
+        object ui : base(
+            path = ":feature:folders-chips:ui",
+            namespace = "ru.maksonic.beresta.feature.folders_chips.ui"
+        )
     }
 
     object editNote {
@@ -83,9 +107,9 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.edit_note.api"
         )
 
-        object core : base(
-            path = ":feature:edit-note:core",
-            namespace = "ru.maksonic.beresta.feature.edit_note.core"
+        object ui : base(
+            path = ":feature:edit-note:ui",
+            namespace = "ru.maksonic.beresta.feature.edit_note.ui"
         )
     }
 
@@ -95,9 +119,9 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.search_bar.api"
         )
 
-        object core : base(
-            path = ":feature:search-bar:core",
-            namespace = "ru.maksonic.beresta.feature.search_bar.core"
+        object ui : base(
+            path = ":feature:search-bar:ui",
+            namespace = "ru.maksonic.beresta.feature.search_bar.ui"
         )
     }
 
@@ -107,9 +131,26 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.top_bar_counter.api"
         )
 
+        object ui : base(
+            path = ":feature:top-bar-counter:ui",
+            namespace = "ru.maksonic.beresta.feature.top_bar_counter.ui"
+        )
+    }
+
+    object sortingSheet {
+        object api : base(
+            path = ":feature:sorting-sheet:api",
+            namespace = "ru.maksonic.beresta.feature.soring_sheet.api"
+        )
+
         object core : base(
-            path = ":feature:top-bar-counter:core",
-            namespace = "ru.maksonic.beresta.feature.top_bar_counter.core"
+            path = ":feature:sorting-sheet:core",
+            namespace = "ru.maksonic.beresta.feature.soring_sheet.core"
+        )
+
+        object ui : base(
+            path = ":feature:sorting-sheet:ui",
+            namespace = "ru.maksonic.beresta.feature.soring_sheet.ui"
         )
     }
 }

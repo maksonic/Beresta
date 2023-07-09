@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
-import ru.maksonic.beresta.ui.widget.SurfacePro
 import ru.maksonic.beresta.ui.widget.functional.clickAction
 import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 /**
  * @Author maksonic on 31.03.2023

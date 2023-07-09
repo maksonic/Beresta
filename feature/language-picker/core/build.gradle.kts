@@ -33,10 +33,6 @@ android {
         jvmTarget = AndroidConfig.jvmTarget
     }
 
-    buildFeatures {
-        compose = true
-    }
-
     composeOptions {
         kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
     }
@@ -49,17 +45,10 @@ android {
 }
 
 dependencies {
-    implementation(project(module.primary.languageEngine.shell.path))
-    implementation(project(module.feature.languagePicker.api.path))
     implementation(project(module.primary.ui.theme.path))
-    implementation(project(module.primary.ui.widget.path))
-    implementation(platform(libs.compose.bom))
-    implementation(libs.activity.compose)
-    implementation(libs.lifecycle.compose)
-    implementation(libs.material3)
-    implementation(libs.ui)
-    implementation(libs.ui.tooling.preview)
+    implementation(project(module.primary.languageEngine.shell.path))
+    implementation(project(module.primary.data.common.path))
+    implementation(project(module.feature.languagePicker.api.path))
+    implementation(libs.datastore)
     implementation(libs.koin.android)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
 }

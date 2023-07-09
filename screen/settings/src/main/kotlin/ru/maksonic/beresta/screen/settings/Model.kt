@@ -3,12 +3,13 @@ package ru.maksonic.beresta.screen.settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.maksonic.beresta.elm.BaseModel
-import ru.maksonic.beresta.elm.ElmCommand
-import ru.maksonic.beresta.elm.ElmEffect
-import ru.maksonic.beresta.elm.ElmMessage
-import ru.maksonic.beresta.elm.ElmModel
+import ru.maksonic.beresta.elm.core.ElmBaseModel
+import ru.maksonic.beresta.elm.core.ElmCommand
+import ru.maksonic.beresta.elm.core.ElmEffect
+import ru.maksonic.beresta.elm.core.ElmMessage
+import ru.maksonic.beresta.elm.core.ElmModel
 import ru.maksonic.beresta.screen.settings.ui.widget.ModalSheetContent
 import ru.maksonic.beresta.ui.theme.AppTheme
 
@@ -17,18 +18,18 @@ import ru.maksonic.beresta.ui.theme.AppTheme
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Stable
+@Immutable
 data class Model(
-    val base: BaseModel,
+    val base: ElmBaseModel,
     val currentSheetContent: ModalSheetContent,
     val modalBottomSheetState: SheetState,
     val currentTheme: AppTheme,
     val isDarkTheme: Boolean,
     val isVisibleModalSheet: Boolean
 ) : ElmModel {
-
     companion object {
         val Initial = Model(
-            base = BaseModel.Initial,
+            base = ElmBaseModel.Initial,
             currentSheetContent = ModalSheetContent.NOTHING,
             modalBottomSheetState = SheetState(
                 initialValue = SheetValue.Hidden,
@@ -57,7 +58,7 @@ sealed class Msg : ElmMessage {
 
     sealed class Inner : Msg() {
         data class FetchedTheme(val theme: AppTheme, val isDark: Boolean) : Inner()
-        data class UpdatedModalSheetState(val isVisible: Boolean): Inner()
+        object HiddenModalBottomSheet : Inner()
     }
 }
 
@@ -67,5 +68,6 @@ sealed class Cmd : ElmCommand {
 
 sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
+    object NavigateToAppearance : Eff()
     object HideModalSheet : Eff()
 }

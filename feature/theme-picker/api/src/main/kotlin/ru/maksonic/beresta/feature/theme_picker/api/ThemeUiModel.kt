@@ -14,7 +14,6 @@ data class ThemeUiModel(
     val theme: AppTheme,
     val title: String = "",
     val icon: ImageVector,
-    val isSelected: Boolean = false
 ) {
 
     companion object {
@@ -23,47 +22,12 @@ data class ThemeUiModel(
             AppTheme.LIGHT,
             title = AppTheme.LIGHT.title,
             icon = AppIcon.ThemeLight,
-            isSelected = false
         )
     }
 
-    data class Collection(val data: Array<ThemeUiModel>) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
+    data class Collection(val data: List<ThemeUiModel>)
 
-            other as Collection
-
-            if (!data.contentEquals(other.data)) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            return data.contentHashCode()
-        }
-    }
-
-    data class Palette(val id: Int, val palette: AppThemePalette, val isSelected: Boolean = false) {
-
-        data class Collection(val filled: Array<Palette>, val outlined: Array<Palette>) {
-            override fun equals(other: Any?): Boolean {
-                if (this === other) return true
-                if (javaClass != other?.javaClass) return false
-
-                other as Collection
-
-                if (!filled.contentEquals(other.filled)) return false
-                if (!outlined.contentEquals(other.outlined)) return false
-
-                return true
-            }
-
-            override fun hashCode(): Int {
-                var result = filled.contentHashCode()
-                result = 31 * result + outlined.contentHashCode()
-                return result
-            }
-        }
+    data class Palette(val id: Int, val palette: AppThemePalette) {
+        data class Collection(val filled: List<Palette>, val outlined: List<Palette>)
     }
 }

@@ -22,6 +22,7 @@ class LanguageProviderImpl(
                     onboarding = onboardingText(currentLanguage, data),
                     shared = shared(currentLanguage, data),
                     settings = settingsText(currentLanguage, data),
+                    settingsAppearance = settingsAppearanceText(currentLanguage, data),
                     editNote = editNotesText(currentLanguage, data),
                     folders = folders(currentLanguage, data),
                     trash = trash(currentLanguage, data),
@@ -69,6 +70,14 @@ class LanguageProviderImpl(
         AppLanguage.CHINESE -> data.chinese.settings
         AppLanguage.CHINESE_TR -> data.chineseTr.settings
     }
+
+    private fun settingsAppearanceText(language: AppLanguage, data: LanguageStore) =
+        when (language) {
+            AppLanguage.RUSSIAN -> data.russian.settingsAppearance
+            AppLanguage.ENGLISH -> data.english.settingsAppearance
+            AppLanguage.CHINESE -> data.chinese.settingsAppearance
+            AppLanguage.CHINESE_TR -> data.chineseTr.settingsAppearance
+        }
 
     private fun shared(language: AppLanguage, data: LanguageStore) = when (language) {
         AppLanguage.RUSSIAN -> data.russian.shared

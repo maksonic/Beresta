@@ -31,7 +31,7 @@ fun BoxWithScaleInOutOnClick(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     onClick: () -> Unit = {},
-    onLongClick: () -> Unit = {},
+    onLongClick: () -> Unit = onClick,
     backgroundColor: State<Color> = remember { mutableStateOf(Color.Transparent) },
     shape: Shape = RoundedCornerShape(0.dp),
     content: @Composable () -> Unit
@@ -58,7 +58,7 @@ fun BoxWithScaleInOutOnClick(
                 pressedState.value = RowClickState.UNPRESSED
             }
         },
-        interactionSource = MutableInteractionSource(),
+        interactionSource = remember { MutableInteractionSource() },
         indication = null
     ) else
         modifier

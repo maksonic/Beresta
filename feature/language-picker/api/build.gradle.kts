@@ -52,4 +52,5 @@ dependencies {
     implementation(project(module.primary.languageEngine.shell.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
+    implementation(libs.ui)
 }

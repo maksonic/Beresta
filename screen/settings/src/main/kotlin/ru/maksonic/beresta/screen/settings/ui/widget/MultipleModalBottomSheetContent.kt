@@ -29,13 +29,13 @@ internal fun MultipleModalBottomSheetContent(
 ) {
     when (currentSheetContent.value) {
         ModalSheetContent.LANGUAGE_SELECTOR -> {
-            languageSheet.BottomSheetContent(
+            languageSheet.SheetContent(
                 hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) }
             )
         }
 
         ModalSheetContent.THEME_SELECTOR -> {
-            themeSheet.BottomSheetContent(
+            themeSheet.SheetContent(
                 hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) },
             )
         }

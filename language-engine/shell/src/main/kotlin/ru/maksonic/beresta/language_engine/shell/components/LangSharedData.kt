@@ -8,6 +8,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class LangSharedData(
+    @SerializedName("note") val note: String = "",
+    @SerializedName("note_title") val title: String = "",
     @SerializedName("btn_title_save") val btnTitleSave: String = "",
     @SerializedName("btn_title_cancel") val btnTitleCancel: String = "",
     @SerializedName("btn_title_close") val btnTitleClose: String = "",
@@ -20,10 +22,14 @@ data class LangSharedData(
     @SerializedName("btn_title_create") val btnTitleCreate: String = "",
     @SerializedName("btn_title_change") val btnTitleChange: String = "",
     @SerializedName("btn_title_restore") val btnTitleRestore: String = "",
+    @SerializedName("btn_title_retry") val btnTitleRetry: String = "",
     @SerializedName("btn_title_by_default") val btnTitleByDefault: String = "",
     @SerializedName("hint_find_note_search_bar") val hintFindNote: String = "",
     @SerializedName("hint_selected_items_count") val hintSelectedItemsCount: String = "",
     @SerializedName("hint_removed_notes_count") val hintRemovedNotesCount: String = "",
     @SerializedName("hint_no_notes") val hintNoNotes: String = "",
-    @SerializedName("hint_nothing_found") val hintNothingFound: String = ""
+    @SerializedName("hint_nothing_found") val hintNothingFound: String = "",
+    @SerializedName("hint_an_error_has_occurred") val hintAnErrorHasOccurred: String = "",
+    @SerializedName("note_title_placeholder") val noteTitlePlaceholder: String = "",
+    @SerializedName("note_message_placeholder") val noteMessagePlaceholder: String = "",
 )

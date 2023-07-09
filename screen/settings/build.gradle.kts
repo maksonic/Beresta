@@ -9,8 +9,6 @@ android {
 
     defaultConfig {
         minSdk = AndroidConfig.minSdk
-        targetSdk = AndroidConfig.targetSdk
-
         testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
@@ -58,7 +56,6 @@ dependencies {
     implementation(project(module.primary.ui.widget.path))
     implementation(project(module.feature.languagePicker.api.path))
     implementation(project(module.feature.themePicker.api.path))
-    implementation(project(module.primary.ui.widget.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

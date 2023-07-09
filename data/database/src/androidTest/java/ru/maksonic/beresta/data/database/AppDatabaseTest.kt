@@ -9,7 +9,7 @@ import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.runner.RunWith
-import ru.maksonic.beresta.data.database.folders.NoteFolderCache
+import ru.maksonic.beresta.data.database.folders.FolderCache
 import ru.maksonic.beresta.data.database.folders.NoteFolderDao
 
 
@@ -35,7 +35,7 @@ internal class AppDatabaseTest : TestCase() {
 
     @Test
     fun testCheckInsertAndGetFolderItem() = runBlocking {
-        val folder = NoteFolderCache(101, "TestFolder")
+        val folder = FolderCache(101, "TestFolder")
         dao.insertItem(folder)
         val folderList = dao.fetchCacheList()
 

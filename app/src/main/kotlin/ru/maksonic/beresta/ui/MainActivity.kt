@@ -8,10 +8,11 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -26,17 +27,18 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
-import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi
+import ru.maksonic.beresta.core.Msg
 import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
+import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.navigation.router.navigator.AppNavigator
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.HighContrastTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.color.PaletteStore
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.widget.SurfacePro
+import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.component.AppDarkMode
+import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 class MainActivity : ComponentActivity() {
 
@@ -45,12 +47,12 @@ class MainActivity : ComponentActivity() {
 
         //If the value is less than .9f, then friezes are visible when changing the theme
         private const val THEME_CHANGE_TARGET_ALPHA = .9f
+        private const val THEME_CHANGE_ANIM_DURATION = 300
     }
 
     private val sandbox: MainActivitySandbox by viewModel()
-    private val navigator: AppNavigator by inject()
+    private val navigator: AbstractNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
-    private val darkModeChecker: ThemePickerApi.DarkModeChecker by inject()
     private val splashVisibility = MutableStateFlow(true)
 
     @OptIn(ExperimentalAnimationApi::class)
@@ -59,38 +61,43 @@ class MainActivity : ComponentActivity() {
         updateSplashState()
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
+        fixChinesVendorEmptyScreen()
         setContent {
             navigator.navController = rememberAnimatedNavController()
-            val model = sandbox.model.collectAsStateWithLifecycle(lifecycle).value
+            val model = sandbox.model.collectAsStateWithLifecycle(lifecycle)
             val isDarkTheme = isSystemInDarkTheme()
-            darkModeChecker.checkSystemDarkTheme(isDarkTheme)
+
+            LaunchedEffect(isDarkTheme) {
+                sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkTheme))
+            }
 
             AnimatedContent(
                 modifier = Modifier.fillMaxSize(),
-                targetState = model.theme,
+                targetState = model.value.currentTheme,
                 transitionSpec = {
                     fadeIn(
                         initialAlpha = THEME_CHANGE_INITIAL_ALPHA,
-                        animationSpec = tween(300, 0)
-                    ) with fadeOut(
+                        animationSpec = tween(THEME_CHANGE_ANIM_DURATION, 0)
+                    ) togetherWith fadeOut(
                         targetAlpha = THEME_CHANGE_TARGET_ALPHA,
-                        animationSpec = tween(300, 0)
+                        animationSpec = tween(THEME_CHANGE_ANIM_DURATION, 0)
                     )
                 },
                 label = "MainActivityContentAnimation",
             ) { animatedTheme ->
                 initTheme(
                     theme = animatedTheme,
-                    isDark = isDarkTheme,
-                    language = model.languageProvider,
-                    palette = model.themePalette
+                    darkMode = model.value.darkMode,
+                    language = model.value.languageProvider,
+                    palette = model.value.themePalette
                 ).invoke {
 
-                    SystemComponentColor(theme = model.theme, isDarkTheme = isDarkTheme)
+                    SystemComponentColor(
+                        theme = animatedTheme,
+                        isDarkTheme = model.value.darkMode.value
+                    )
 
-                    SurfacePro(color = background) {
-
+                    SurfacePro(color = surface) {
                         AnimatedNavHost(
                             navController = navigator.navController,
                             startDestination = Destination.route,
@@ -107,13 +114,13 @@ class MainActivity : ComponentActivity() {
 
     private fun initTheme(
         theme: AppTheme,
-        isDark: Boolean,
+        darkMode: AppDarkMode,
         language: BerestaLanguage,
         palette: PaletteStore,
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
         AppTheme.SYSTEM -> { content ->
             AppTheme(
-                darkTheme = isDark,
+                darkMode = darkMode,
                 provideLanguages = language,
                 palette = palette,
                 content = content
@@ -122,7 +129,7 @@ class MainActivity : ComponentActivity() {
 
         AppTheme.LIGHT -> { content ->
             AppTheme(
-                darkTheme = false,
+                darkMode = AppDarkMode.Disabled,
                 provideLanguages = language,
                 palette = palette,
                 content = content
@@ -131,7 +138,7 @@ class MainActivity : ComponentActivity() {
 
         AppTheme.DARK -> { content ->
             AppTheme(
-                darkTheme = true,
+                darkMode = AppDarkMode.Enabled,
                 provideLanguages = language,
                 palette = palette,
                 content = content
@@ -140,9 +147,9 @@ class MainActivity : ComponentActivity() {
 
         AppTheme.HIGH_CONTRAST -> { content ->
             HighContrastTheme(
-                darkTheme = true,
+                darkMode = AppDarkMode.Enabled,
                 provideLanguages = language,
-                palette = palette.dark,
+                palette = palette.highContrast,
                 content = content
             )
         }
@@ -153,6 +160,14 @@ class MainActivity : ComponentActivity() {
             splashVisibility.update { true }
             delay(50)
             splashVisibility.update { false }
+        }
+    }
+
+    //On some Chinese devices, when launching app or switching the theme, a blank screen appears.
+    private fun fixChinesVendorEmptyScreen() {
+        lifecycleScope.launch {
+            delay(50)
+            window.setBackgroundDrawableResource(android.R.color.transparent)
         }
     }
 }

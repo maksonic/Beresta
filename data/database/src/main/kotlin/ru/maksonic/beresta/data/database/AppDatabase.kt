@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.maksonic.beresta.data.common.LocalDateTimeConverter
-import ru.maksonic.beresta.data.database.folders.NoteFolderCache
+import ru.maksonic.beresta.data.database.folders.FolderCache
 import ru.maksonic.beresta.data.database.folders.NoteFolderDao
 import ru.maksonic.beresta.data.database.notes.NoteCache
 import ru.maksonic.beresta.data.database.notes.NoteDao
@@ -17,7 +17,7 @@ object AppDatabase {
     private const val DB_VERSION = 1
 
     @Database(
-        entities = [NoteCache::class, NoteFolderCache::class],
+        entities = [NoteCache::class, FolderCache::class],
         version = DB_VERSION, exportSchema = false
     )
     @TypeConverters(LocalDateTimeConverter::class)
@@ -26,20 +26,3 @@ object AppDatabase {
         abstract fun noteFolderDao(): NoteFolderDao
     }
 }
-
-/*val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE notes_folders ADD COLUMN dateMovedToTrash TEXT")
-
-    }
-}
-*/
-/*
-
-val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("ALTER TABLE notes_folders ADD COLUMN dateMovedToTrash TEXT")
-
-    }
-}
-*/

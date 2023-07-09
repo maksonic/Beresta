@@ -11,7 +11,10 @@ import ru.maksonic.beresta.core.MainActivitySandbox
 internal val appModule = module {
     single {
         MainActivityProgram(
-            theme = get(), palette = get(), language = get(), languageProvider = get()
+            languageEngineApi = get(),
+            languageProvider = get(),
+            themeFeatureApi = get(),
+            paletteFeatureApi = get()
         )
     }
     viewModel { MainActivitySandbox(mainActivityProgram = get()) }

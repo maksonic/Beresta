@@ -9,8 +9,6 @@ android {
 
     defaultConfig {
         minSdk = AndroidConfig.minSdk
-        targetSdk = AndroidConfig.targetSdk
-
         testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
     }
 
@@ -51,7 +49,7 @@ android {
 dependencies {
     implementation(project(module.primary.core.path))
     implementation(project(module.primary.navigation.router.path))
-    implementation(project(module.feature.notes.list.api.path))
+    implementation(project(module.feature.notes.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     implementation(libs.ui)

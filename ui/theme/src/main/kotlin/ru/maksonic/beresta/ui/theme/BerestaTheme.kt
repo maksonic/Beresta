@@ -41,6 +41,7 @@ import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightPurplePalette
 import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightRedPalette
 import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightYellowPalette
 import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
+import ru.maksonic.beresta.ui.theme.component.AppDarkMode
 import ru.maksonic.beresta.ui.theme.component.AppImage
 
 /**
@@ -48,14 +49,14 @@ import ru.maksonic.beresta.ui.theme.component.AppImage
  */
 @Composable
 fun BerestaTheme(
+    darkMode: AppDarkMode = AppDarkMode(isSystemInDarkTheme()),
     lightPalette: AppColor = baseLightPalette,
     darkPalette: AppColor = baseDarkPalette,
-    darkTheme: Boolean = isSystemInDarkTheme(),
     provideLanguages: BerestaLanguage = BerestaLanguage(),
     animationVelocity: AppAnimationVelocity.Value = AppAnimationVelocity.Value.NORMAL,
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) darkPalette else lightPalette
+    val colors = if (darkMode.value) darkPalette else lightPalette
 
     val animations = when (animationVelocity) {
         AppAnimationVelocity.Value.DISABLE -> AppAnimationVelocity.Disabled
@@ -65,8 +66,9 @@ fun BerestaTheme(
     }
 
     AppLocalProvider(
+        darkMode = darkMode,
         colors = colors,
-        images = provideImages(darkTheme),
+        images = provideImages(darkMode.value),
         languages = provideLanguages,
         animations = animations,
         content = content
@@ -75,7 +77,7 @@ fun BerestaTheme(
 
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = false,
+    darkMode: AppDarkMode,
     provideLanguages: BerestaLanguage,
     palette: PaletteStore,
     content: @Composable () -> Unit
@@ -112,9 +114,9 @@ fun AppTheme(
         AppThemePalette.YELLOW_OUT -> outlinedDarkYellowPalette
     }
     BerestaTheme(
+        darkMode = darkMode,
         lightPalette = lightPalette,
         darkPalette = darkPalette,
-        darkTheme = darkTheme,
         provideLanguages = provideLanguages,
         content = content
     )
@@ -122,7 +124,7 @@ fun AppTheme(
 
 @Composable
 fun HighContrastTheme(
-    darkTheme: Boolean = true,
+    darkMode: AppDarkMode,
     provideLanguages: BerestaLanguage,
     palette: AppThemePalette = AppThemePalette.BLUE,
     content: @Composable () -> Unit
@@ -138,13 +140,12 @@ fun HighContrastTheme(
     }
 
     BerestaTheme(
+        darkMode = darkMode,
         darkPalette = contrastPalette,
-        darkTheme = darkTheme,
         provideLanguages = provideLanguages,
         content = content
     )
 }
-
 
 private fun provideImages(isDark: Boolean): AppImage {
     val splashCenterLogo =

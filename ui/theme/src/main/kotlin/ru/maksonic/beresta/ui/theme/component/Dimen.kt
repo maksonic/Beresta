@@ -25,3 +25,5 @@ val dimens = AppDimen(
 
 val dimenAnimDef @Composable get() = Theme.dimen.durationAnimDefault
 val dimenAnimFast @Composable get() = Theme.dimen.durationAnimFast
+
+

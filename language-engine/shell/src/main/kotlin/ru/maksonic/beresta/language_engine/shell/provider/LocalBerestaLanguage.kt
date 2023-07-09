@@ -5,12 +5,13 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import ru.maksonic.beresta.language_engine.shell.components.LangEditorData
 import ru.maksonic.beresta.language_engine.shell.components.LangFoldersListData
 import ru.maksonic.beresta.language_engine.shell.components.LangOnboardingData
-import ru.maksonic.beresta.language_engine.shell.components.LangSettingsScreenData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsScreenData
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
 import ru.maksonic.beresta.language_engine.shell.components.LangSortNotesSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.OnboardingDataItem
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceScreenData
 
 /**
  * @Author maksonic on 16.02.2023
@@ -36,10 +37,26 @@ data class BerestaLanguage(
     ),
     val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData(),
+    val settingsAppearance: LangSettingsAppearanceScreenData = LangSettingsAppearanceScreenData(),
     val editNote: LangEditorData = LangEditorData(),
-    val folders : LangFoldersListData = LangFoldersListData(),
+    val folders: LangFoldersListData = LangFoldersListData(),
     val trash: LangTrashData = LangTrashData(),
     val sortNotesSheet: LangSortNotesSheetData = LangSortNotesSheetData()
-)
+) {
+    companion object {
+        val Empty = BerestaLanguage(
+            langTitle = "",
+            translatedLanguage = TranslatedLanguage(),
+            onboarding = LangOnboardingData(Array(ONBOARDINGS_COUNT) { OnboardingDataItem() }),
+            shared = LangSharedData(),
+            settings = LangSettingsScreenData(),
+            settingsAppearance = LangSettingsAppearanceScreenData(),
+            editNote = LangEditorData(),
+            folders = LangFoldersListData(),
+            trash = LangTrashData(),
+            sortNotesSheet = LangSortNotesSheetData()
+        )
+    }
+}
 
 val text: BerestaLanguage @Composable get() = LocalBerestaLanguage.current

@@ -1,0 +1,31 @@
+package ru.maksonic.beresta.screen.settings.appearance.ui.widget
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
+import ru.maksonic.beresta.screen.settings.appearance.core.ModalSheetContent
+import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
+
+/**
+ * @Author maksonic on 08.07.2023
+ */
+@Composable
+internal fun MultipleModalBottomSheetContent(
+    send: SendMessage,
+    currentSheetContent: State<ModalSheetContent>,
+    noteCardState: State<NoteCardUiState>,
+    modifier: Modifier = Modifier,
+) {
+    when (currentSheetContent.value) {
+
+        ModalSheetContent.NOTE_CARD_LINES_PICKER -> {
+            NoteCardLinesPickerSheetContent(send, noteCardState)
+        }
+
+        ModalSheetContent.NOTHING -> Box(modifier.size(1.dp))
+    }
+}

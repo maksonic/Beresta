@@ -5,11 +5,10 @@ import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 
 /**
- * @Author maksonic on 22.04.2023
+ * @Author maksonic on 19.06.2023
  */
 interface OnboardingApi {
-
-    interface VisibilityBehavior {
+    interface Feature {
         suspend fun notShowAgain()
         val currentState: Flow<Boolean>
     }
@@ -17,5 +16,9 @@ interface OnboardingApi {
     interface Ui {
         @Composable
         fun Screen(router: OnboardingRouter)
+
+        enum class BottomSheetContent {
+            NOTHING, LANGUAGE_PICKER, THEME_PICKER
+        }
     }
 }

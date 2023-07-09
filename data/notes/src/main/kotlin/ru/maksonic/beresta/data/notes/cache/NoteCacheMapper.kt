@@ -2,7 +2,7 @@ package ru.maksonic.beresta.data.notes.cache
 
 import ru.maksonic.beresta.data.common.DataMapper
 import ru.maksonic.beresta.data.database.notes.NoteCache
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDomain
+import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
 
 /**
  * @Author maksonic on 21.02.2023

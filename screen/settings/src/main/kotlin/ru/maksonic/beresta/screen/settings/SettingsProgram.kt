@@ -1,16 +1,13 @@
 package ru.maksonic.beresta.screen.settings
 
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import ru.maksonic.beresta.elm.ElmProgram
+import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi
 
 /**
  * @Author maksonic on 23.01.2023
  */
 class SettingsProgram(
-    private val themeSelector: ThemePickerApi.Theme,
-    private val darkModeChecker: ThemePickerApi.DarkModeChecker,
+    private val themeSelector: ThemePickerApi.Feature.Theme
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
@@ -20,11 +17,8 @@ class SettingsProgram(
     }
 
     private suspend fun fetchTheme(consumer: (Msg) -> Unit) {
-        combine(
-            themeSelector.current,
-            darkModeChecker.isEnabledSystemDarkModeState
-        ) { theme, isDark ->
-            consumer(Msg.Inner.FetchedTheme(theme, isDark))
-        }.collect()
+        themeSelector.current.collect { theme ->
+            consumer(Msg.Inner.FetchedTheme(theme.first, theme.second))
+        }
     }
 }

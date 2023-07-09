@@ -3,10 +3,10 @@ package ru.maksonic.beresta.data.notes
 import kotlinx.coroutines.flow.transform
 import ru.maksonic.beresta.data.notes.cache.NoteCacheMapper
 import ru.maksonic.beresta.data.notes.cache.NotesCacheDataSource
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDomain
-import ru.maksonic.beresta.feature.notes.list.api.domain.NoteDomainItem
-import ru.maksonic.beresta.feature.notes.list.api.domain.NotesDomainList
-import ru.maksonic.beresta.feature.notes.list.api.domain.NotesRepository
+import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
+import ru.maksonic.beresta.feature.notes.api.domain.NoteDomainItem
+import ru.maksonic.beresta.feature.notes.api.domain.NotesDomainList
+import ru.maksonic.beresta.feature.notes.api.domain.NotesRepository
 
 /**
  * @Author maksonic on 21.02.2023

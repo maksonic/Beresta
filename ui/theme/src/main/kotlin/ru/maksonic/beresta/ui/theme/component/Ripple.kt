@@ -21,6 +21,17 @@ object AppRipple : RippleTheme {
     )
 }
 
+object PrimaryRipple : RippleTheme {
+    @Composable
+    override fun defaultColor(): Color = Theme.color.primary
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(
+        Theme.color.primary,
+        lightTheme = !isSystemInDarkTheme()
+    )
+}
+
 object NoRippleTheme : RippleTheme {
     @Composable
     override fun defaultColor() = Color.Unspecified

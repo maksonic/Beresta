@@ -57,6 +57,7 @@ android {
 
 dependencies {
     //primary
+    implementation(project(module.primary.core.path))
     implementation(project(module.primary.elm.path))
     implementation(project(module.primary.languageEngine.core.path))
     implementation(project(module.primary.languageEngine.shell.path))
@@ -64,44 +65,55 @@ dependencies {
     implementation(project(module.primary.navigation.router.path))
     implementation(project(module.primary.ui.theme.path))
     implementation(project(module.primary.ui.widget.path))
-    implementation(project(module.common.coroutineDispatchers.path))
-    implementation(project(module.common.jsonConverter.path))
     implementation(project(module.primary.data.common.path))
     implementation(project(module.primary.data.database.path))
+    implementation(project(module.primary.data.notes.path))
+    implementation(project(module.primary.data.folders.path))
+    //common
+    implementation(project(module.common.coroutineDispatchers.path))
+    implementation(project(module.common.jsonConverter.path))
     //features
     implementation(project(module.feature.splashScreen.api.path))
-    implementation(project(module.feature.splashScreen.core.path))
+    implementation(project(module.feature.splashScreen.ui.path))
 
     implementation(project(module.feature.onboarding.api.path))
     implementation(project(module.feature.onboarding.core.path))
-
-    implementation(project(module.feature.languagePicker.api.path))
-    implementation(project(module.feature.languagePicker.core.path))
+    implementation(project(module.feature.onboarding.ui.path))
 
     implementation(project(module.feature.themePicker.api.path))
     implementation(project(module.feature.themePicker.core.path))
+    implementation(project(module.feature.themePicker.ui.path))
+
+    implementation(project(module.feature.languagePicker.api.path))
+    implementation(project(module.feature.languagePicker.core.path))
+    implementation(project(module.feature.languagePicker.ui.path))
+
+    implementation(project(module.feature.notes.api.path))
+    implementation(project(module.feature.notes.core.path))
+    implementation(project(module.feature.notes.ui.path))
 
     implementation(project(module.feature.editNote.api.path))
-    implementation(project(module.feature.editNote.core.path))
+    implementation(project(module.feature.editNote.ui.path))
 
-    implementation(project(module.feature.notes.list.api.path))
-    implementation(project(module.feature.notes.list.core.path))
-    implementation(project(module.feature.notes.folders.api.path))
-    implementation(project(module.feature.notes.folders.core.path))
-    implementation(project(module.primary.data.notes.path))
-    implementation(project(module.primary.data.notesFolders.path))
+    implementation(project(module.feature.foldersChipsRow.api.path))
+    implementation(project(module.feature.foldersChipsRow.core.path))
+    implementation(project(module.feature.foldersChipsRow.ui.path))
 
     implementation(project(module.feature.searchBar.api.path))
-    implementation(project(module.feature.searchBar.core.path))
+    implementation(project(module.feature.searchBar.ui.path))
 
     implementation(project(module.feature.topBarCounter.api.path))
-    implementation(project(module.feature.topBarCounter.core.path))
+    implementation(project(module.feature.topBarCounter.ui.path))
+
+    implementation(project(module.feature.sortingSheet.api.path))
+    implementation(project(module.feature.sortingSheet.core.path))
+    implementation(project(module.feature.sortingSheet.ui.path))
 
     //screens
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.path))
-    implementation(project(module.screen.trashList.notes.path))
-    implementation(project(module.screen.trashList.folders.path))
+    implementation(project(module.screen.settingsAppearance.path))
+    implementation(project(module.screen.folders.path))
     //libs
     implementation(libs.accompanist.navigation)
     implementation(platform(libs.compose.bom))

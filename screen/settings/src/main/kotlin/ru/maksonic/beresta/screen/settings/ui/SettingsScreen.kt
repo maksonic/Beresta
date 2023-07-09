@@ -2,8 +2,10 @@ package ru.maksonic.beresta.screen.settings.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,19 +22,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.navigation.router.router.SettingsScreenRouter
+import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
 import ru.maksonic.beresta.screen.settings.Eff
 import ru.maksonic.beresta.screen.settings.Model
 import ru.maksonic.beresta.screen.settings.Msg
 import ru.maksonic.beresta.screen.settings.SettingsSandbox
 import ru.maksonic.beresta.screen.settings.ui.widget.MultipleModalBottomSheetContent
-import ru.maksonic.beresta.screen.settings.ui.widget.item.AccountSettingsItem
-import ru.maksonic.beresta.screen.settings.ui.widget.item.GeneralSettingsItem
-import ru.maksonic.beresta.screen.settings.ui.widget.item.SupportSettingsItem
+import ru.maksonic.beresta.screen.settings.ui.widget.items.AccountSettingsItem
+import ru.maksonic.beresta.screen.settings.ui.widget.items.GeneralSettingsItem
+import ru.maksonic.beresta.screen.settings.ui.widget.items.SupportSettingsItem
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.widget.bar.TopAppBarCollapsingLarge
-import ru.maksonic.beresta.ui.widget.functional.HandleEffectsWithLifecycle
+import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
 import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
@@ -52,9 +55,9 @@ private fun Container(router: SettingsScreenRouter, sandbox: SettingsSandbox = k
 
     HandleUiEffects(
         effects = sandbox.effects,
-        hideSheet = { sandbox.send(Msg.Inner.UpdatedModalSheetState(false)) },
+        hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         router = router,
-        modalBottomSheetState = model.value.modalBottomSheetState
+        modalBottomSheetState = model.value.modalBottomSheetState,
     )
 
     Content(model.value, sandbox::send)
@@ -62,7 +65,11 @@ private fun Container(router: SettingsScreenRouter, sandbox: SettingsSandbox = k
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifier) {
+private fun Content(
+    model: Model,
+    send: SendMessage,
+    modifier: Modifier = Modifier
+) {
     val currentSheetContent = rememberUpdatedState(model.currentSheetContent)
     val scrollState = rememberScrollState()
     val scrollBehavior =
@@ -81,22 +88,23 @@ private fun Content(model: Model, send: SendMessage, modifier: Modifier = Modifi
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
 
-            Column(
-                modifier = modifier
-                    .verticalScroll(scrollState)
-                    .fillMaxSize()
-                    .padding(paddingValues = paddings)
-            ) {
-                GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
-                AccountSettingsItem(send)
-                SupportSettingsItem(send)
+            Box(modifier.padding(paddings)) {
+                Column(
+                    modifier = modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxSize()
+                ) {
+                    GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
+                    AccountSettingsItem(send)
+                    SupportSettingsItem(send)
+                    Spacer(modifier.size(dp16))
+                }
             }
         }
-
         if (model.isVisibleModalSheet) {
             ModalBottomSheetDefault(
                 sheetState = model.modalBottomSheetState,
-                onDismissRequest = { send(Msg.Inner.UpdatedModalSheetState(false)) },
+                onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
             ) {
                 MultipleModalBottomSheetContent(send, currentSheetContent)
             }
@@ -114,9 +122,10 @@ private fun HandleUiEffects(
 ) {
     val scope = rememberCoroutineScope()
 
-    HandleEffectsWithLifecycle(effects) { eff ->
+    ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
+            is Eff.NavigateToAppearance -> router.toAppearance()
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
@@ -124,6 +133,7 @@ private fun HandleUiEffects(
                     }
                 }
             }
+
         }
     }
 }

@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    implementation(project(module.feature.notes.list.api.path))
+    implementation(project(module.feature.notes.api.path))
     implementation(project(module.primary.core.path))
     implementation(project(module.primary.data.common.path))
     implementation(project(module.primary.data.database.path))

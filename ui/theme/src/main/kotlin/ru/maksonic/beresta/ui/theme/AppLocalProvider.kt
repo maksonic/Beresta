@@ -8,9 +8,11 @@ import ru.maksonic.beresta.language_engine.shell.provider.LocalBerestaLanguage
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.LocalAppColors
 import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
+import ru.maksonic.beresta.ui.theme.component.AppDarkMode
 import ru.maksonic.beresta.ui.theme.component.AppImage
 import ru.maksonic.beresta.ui.theme.component.AppRipple
 import ru.maksonic.beresta.ui.theme.component.LocalAppAnimationVelocity
+import ru.maksonic.beresta.ui.theme.component.LocalAppDarkMode
 import ru.maksonic.beresta.ui.theme.component.LocalAppDimen
 import ru.maksonic.beresta.ui.theme.component.LocalAppElevation
 import ru.maksonic.beresta.ui.theme.component.LocalAppImage
@@ -30,6 +32,7 @@ import ru.maksonic.beresta.ui.theme.component.widgetsSize
  */
 @Composable
 fun AppLocalProvider(
+    darkMode: AppDarkMode,
     colors: AppColor,
     images: AppImage,
     languages: BerestaLanguage,
@@ -48,6 +51,7 @@ fun AppLocalProvider(
         LocalBerestaLanguage provides languages,
         LocalAppTonal provides tonalElevations,
         LocalAppAnimationVelocity provides animations,
+        LocalAppDarkMode provides darkMode,
         content = content
     )
 }

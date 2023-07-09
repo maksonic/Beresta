@@ -8,7 +8,7 @@ import ru.maksonic.beresta.screen.settings.SettingsSandbox
 /**
  * @Author maksonic on 30.04.2023
  */
-val settingsModule = module {
-    single { SettingsProgram(themeSelector = get(), darkModeChecker = get()) }
+val settingsScreenModule = module {
+    single { SettingsProgram(themeSelector = get()) }
     viewModel { SettingsSandbox(program = get()) }
 }

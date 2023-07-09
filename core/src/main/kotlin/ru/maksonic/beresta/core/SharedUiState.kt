@@ -20,4 +20,10 @@ abstract class SharedUiState<T>(initial: T) {
         val newState = updateBlock(mutableState.value)
         mutableState.update { newState }
     }
+
+    fun updateAndGet(updateBlock: (T) -> T): SharedUiState<T> {
+        val newState = updateBlock(mutableState.value)
+        mutableState.update { newState }
+        return this
+    }
 }

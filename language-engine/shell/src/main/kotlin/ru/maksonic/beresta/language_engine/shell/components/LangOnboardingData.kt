@@ -16,10 +16,10 @@ data class OnboardingDataItem(
 
 @Serializable
 data class LangOnboardingData(
+    @SerializedName("onboarding_data") val data: Array<OnboardingDataItem>,
     @SerializedName("btn_title_next") val btnTitleNext: String = "",
     @SerializedName("btn_title_sync") val btnTitleSync: String = "",
     @SerializedName("btn_title_skip_sync") val btnTitleSkipSync: String = "",
-    @SerializedName("onboarding_data") val data: Array<OnboardingDataItem>,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -30,9 +30,7 @@ data class LangOnboardingData(
         if (btnTitleNext != other.btnTitleNext) return false
         if (btnTitleSync != other.btnTitleSync) return false
         if (btnTitleSkipSync != other.btnTitleSkipSync) return false
-        if (!data.contentEquals(other.data)) return false
-
-        return true
+        return data.contentEquals(other.data)
     }
 
     override fun hashCode(): Int {
