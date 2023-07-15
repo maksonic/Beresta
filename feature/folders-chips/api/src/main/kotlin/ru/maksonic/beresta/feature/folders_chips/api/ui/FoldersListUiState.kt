@@ -14,7 +14,6 @@ data class FoldersListUiState(
     val collection: FolderUi.Collection,
     val selectedList: Set<FolderUi>,
     val removedFolders: Set<FolderUi>,
-    val currentId: Long
 ) {
     companion object {
         val Initial = FoldersListUiState(
@@ -22,7 +21,6 @@ data class FoldersListUiState(
             collection = FolderUi.Collection.Empty,
             selectedList = emptySet(),
             removedFolders = emptySet(),
-            currentId = 1L
         )
     }
 }

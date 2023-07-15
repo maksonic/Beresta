@@ -53,16 +53,17 @@ fun BerestaTheme(
     lightPalette: AppColor = baseLightPalette,
     darkPalette: AppColor = baseDarkPalette,
     provideLanguages: BerestaLanguage = BerestaLanguage(),
-    animationVelocity: AppAnimationVelocity.Value = AppAnimationVelocity.Value.NORMAL,
+    animationVelocity: AppAnimationVelocity.Key = AppAnimationVelocity.Key.NORMAL,
     content: @Composable () -> Unit
 ) {
     val colors = if (darkMode.value) darkPalette else lightPalette
 
     val animations = when (animationVelocity) {
-        AppAnimationVelocity.Value.DISABLE -> AppAnimationVelocity.Disabled
-        AppAnimationVelocity.Value.SLOW -> AppAnimationVelocity.Slow
-        AppAnimationVelocity.Value.NORMAL -> AppAnimationVelocity.Normal
-        AppAnimationVelocity.Value.FAST -> AppAnimationVelocity.Fast
+        AppAnimationVelocity.Key.DISABLE -> AppAnimationVelocity.Disabled
+        AppAnimationVelocity.Key.SLOW -> AppAnimationVelocity.Slow
+        AppAnimationVelocity.Key.NORMAL -> AppAnimationVelocity.Normal
+        AppAnimationVelocity.Key.FAST -> AppAnimationVelocity.Fast
+        AppAnimationVelocity.Key.VERY_FAST -> AppAnimationVelocity.VeryFast
     }
 
     AppLocalProvider(
@@ -80,6 +81,7 @@ fun AppTheme(
     darkMode: AppDarkMode,
     provideLanguages: BerestaLanguage,
     palette: PaletteStore,
+    animationVelocity: AppAnimationVelocity.Key,
     content: @Composable () -> Unit
 ) {
     val lightPalette = when (palette.light) {
@@ -118,6 +120,7 @@ fun AppTheme(
         lightPalette = lightPalette,
         darkPalette = darkPalette,
         provideLanguages = provideLanguages,
+        animationVelocity = animationVelocity,
         content = content
     )
 }
@@ -127,6 +130,7 @@ fun HighContrastTheme(
     darkMode: AppDarkMode,
     provideLanguages: BerestaLanguage,
     palette: AppThemePalette = AppThemePalette.BLUE,
+    animationVelocity: AppAnimationVelocity.Key,
     content: @Composable () -> Unit
 ) {
     val contrastPalette = when (palette) {
@@ -143,6 +147,7 @@ fun HighContrastTheme(
         darkMode = darkMode,
         darkPalette = contrastPalette,
         provideLanguages = provideLanguages,
+        animationVelocity = animationVelocity,
         content = content
     )
 }

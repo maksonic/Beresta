@@ -22,6 +22,7 @@ data class FolderCache(
     val isSticky: Boolean = false,
     val pinTime: LocalDateTime? = null,
     val dateCreation: LocalDateTime = LocalDateTime.now(),
+    val dateLastUpdateRaw: LocalDateTime? = null,
     val isSelectable: Boolean = true,
     val isStickyToStart: Boolean = false,
     val isStickyToEnd: Boolean = false,

@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
@@ -127,6 +128,7 @@ private fun SelectedStateBarContent(
     isVisibleUnpinBtn: State<Boolean>,
     isDisabledBottomBar: State<Boolean>,
 ) {
+    val currentSelectedFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
     val actions = arrayOf(
         BaseBottomBarItem(
             label = if (isVisibleUnpinBtn.value) text.shared.btnTitleUnpin else text.shared.btnTitlePin,
@@ -147,7 +149,9 @@ private fun SelectedStateBarContent(
         BaseBottomBarItem(
             label = text.shared.btnTitleRemove,
             icon = AppIcon.MoveTrash,
-            action = { send(Msg.Ui.OnBottomBarRemoveSelectedClicked) }
+            action = {
+                send(Msg.Ui.OnBottomBarRemoveSelectedClicked(currentSelectedFolderId.value))
+            }
         )
     )
 

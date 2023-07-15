@@ -32,9 +32,8 @@ internal fun ChipItem(
     onChipClicked: (id: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pinIconTint = animateColorAsState(
-        if (isSelected) onTertiaryContainer else onBackground, label = ""
-    )
+    val pinIconTint =
+        animateColorAsState(if (isSelected) onTertiaryContainer else onBackground, label = "")
 
     FilterChip(
         selected = isSelected,

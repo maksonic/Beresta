@@ -37,7 +37,7 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 data class DropdownMenuItem(val title: String, val onClick: () -> Unit)
 
 @Composable
-fun SettingWithDropdownClickableItem(
+fun SettingDropdownClickableItem(
     settingItem: SettingItem,
     dropdownMenuItems: List<DropdownMenuItem>,
     modifier: Modifier = Modifier

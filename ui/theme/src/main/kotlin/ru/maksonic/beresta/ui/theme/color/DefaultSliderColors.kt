@@ -11,6 +11,6 @@ val DefaultSliderColors @Composable get() = SliderDefaults.colors(
     thumbColor = primary,
     activeTickColor = onPrimary,
     activeTrackColor = primary,
-    inactiveTickColor = onSurfaceVariant,
-    inactiveTrackColor = TonalElevationToken.Level5
+    inactiveTickColor = onPrimary,
+    inactiveTrackColor = TonalElevationToken.Level5,
 )

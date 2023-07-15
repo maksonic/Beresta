@@ -20,8 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.edit_note.ui.Msg
 import ru.maksonic.beresta.feature.edit_note.ui.ui.SendMessage
+import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.theme.color.onSurface
@@ -51,7 +54,8 @@ internal fun EditorBottomBar(
     send: SendMessage,
     isScrollUp: State<Boolean>,
     isBlankNote: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject()
 ) {
     val panelHeight = Theme.widgetSize.bottomMainBarHeight.plus(SystemNavigationBarHeight)
     val panelOffset = animateDp(if (isScrollUp.value) 0.dp else panelHeight)
@@ -61,13 +65,14 @@ internal fun EditorBottomBar(
             .fillMaxWidth(),
         contentAlignment = Alignment.TopEnd
     ) {
+        val currentFolderId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
         val fabUnselectedColor = tertiaryContainer.copy(alpha = 0.35f).compositeOver(background)
         val fabColor = animateColorAsState(
             if (isBlankNote) fabUnselectedColor else tertiaryContainer, label = ""
         )
         val fabElevation = animateDpAsState(
             if (isScrollUp.value) Theme.tonal.Level0 else Theme.tonal.Level3,
-            animationSpec = tween(Theme.animSpeed.common), label = ""
+            animationSpec = tween(Theme.animVelocity.common), label = ""
         )
         val fabIconColor = animateColorAsState(
             if (isBlankNote) onTertiaryContainer.copy(alpha = 0.5f)
@@ -87,7 +92,7 @@ internal fun EditorBottomBar(
         }
 
         FloatingFabButton(
-            onClick = { send(Msg.Ui.OnSaveNoteClicked) },
+            onClick = { send(Msg.Ui.OnSaveNoteClicked(currentFolderId.value)) },
             enabled = !isBlankNote,
             fabColor = fabColor.value,
             shadowElevation = fabElevation.value,

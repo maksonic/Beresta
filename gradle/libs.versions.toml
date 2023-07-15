@@ -46,7 +46,7 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-ui = { group = "androidx.compose.ui", name = "ui" }
+ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-material" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -83,7 +83,6 @@ accompanist-systemuicontroller = { group = "com.google.accompanist", name = "acc
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat-appcompat" }
-com-google-android-material-material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

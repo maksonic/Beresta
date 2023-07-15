@@ -20,7 +20,7 @@ internal fun EditNoteExpandableFab(
     api: EditNoteApi.Ui = koinInject()
 ) {
     val fabTransition = animateFloatAsState(
-        if (isVisible.value) 1f else 0f, tween(Theme.animSpeed.common), label = ""
+        if (isVisible.value) 1f else 0f, tween(Theme.animVelocity.common), label = ""
     )
 
     api.ExpandableScreen(router = null, isEntryPoint = false, modifier.graphicsLayer {

@@ -4,7 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
-import ru.maksonic.beresta.navigation.router.Destination
 
 /**
  * @Author maksonic on 24.01.2023

@@ -18,5 +18,5 @@ object Theme {
     val dimen: AppDimen @Composable get() = LocalAppDimen.current
     val shape: AppShape @Composable get() = LocalAppShape.current
     val tonal: AppTonal @Composable get() = LocalAppTonal.current
-    val animSpeed: AppAnimationVelocity @Composable get() = LocalAppAnimationVelocity.current
+    val animVelocity: AppAnimationVelocity @Composable get() = LocalAppAnimationVelocity.current
 }

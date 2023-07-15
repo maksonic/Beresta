@@ -84,7 +84,7 @@ private fun SearchBarContent(
     modifier: Modifier = Modifier
 ) {
     val isCollapsed = rememberUpdatedState(uiState.value.barState.isCollapsed)
-    val animSpeed = Theme.animSpeed.searchBarTransform
+    val animSpeed = Theme.animVelocity.searchBarTransform
     val initTopPadding = SystemStatusBarHeight.plus(dp4)
     val paddingTop = animateDp(if (isCollapsed.value) initTopPadding else 0.dp, animSpeed)
     val paddingStart = animateDp(if (isCollapsed.value) 68.dp else 0.dp, animSpeed)
@@ -92,7 +92,7 @@ private fun SearchBarContent(
     val cornerRadius = animateIntAsState(if (isCollapsed.value) 50 else 0, tween(animSpeed))
     val tonal = animateDp(
         if (isInitialNotesScroll.value)
-            Theme.tonal.Level0 else Theme.tonal.Level2, Theme.animSpeed.common
+            Theme.tonal.Level0 else Theme.tonal.Level2, Theme.animVelocity.common
     )
 
     BoxWithConstraints(modifier.fillMaxWidth()) {
@@ -119,8 +119,8 @@ private fun SearchBarContent(
         ) { resultColor ->
 
             val tween = when (uiState.value.barState) {
-                SearchBarState.Selected -> Theme.animSpeed.disabled
-                else -> Theme.animSpeed.common
+                SearchBarState.Selected -> Theme.animVelocity.disabled
+                else -> Theme.animVelocity.common
             }
 
             val color = animateColorAsState(

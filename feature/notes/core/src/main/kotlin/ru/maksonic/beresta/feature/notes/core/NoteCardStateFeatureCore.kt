@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.maksonic.beresta.data.common.Datastore
-import ru.maksonic.beresta.feature.notes.api.NoteCardElevation
-import ru.maksonic.beresta.feature.notes.api.NoteCardShape
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardElevation
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 
 /**

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(module.primary.ui.widget.path))
     implementation(project(module.feature.notes.api.path))
     implementation(project(module.feature.sortingSheet.api.path))
+    implementation(project(module.feature.foldersChipsRow.api.path))
     implementation(libs.material3)
     implementation(libs.lifecycle.compose)
     implementation(libs.ui)

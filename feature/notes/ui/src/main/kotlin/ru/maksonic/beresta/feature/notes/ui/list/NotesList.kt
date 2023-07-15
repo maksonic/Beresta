@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes.ui.list
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
@@ -17,14 +18,12 @@ class NotesList : NotesApi.Ui.List {
     @Composable
     override fun Widget(
         state: NotesListUiState,
-        currentFolderId: Long,
         onNoteClicked: (id: Long) -> Unit,
         onNoteLongClicked: (id: Long) -> Unit,
         chipsRowOffsetHeightPx: MutableState<Float>
     ) {
         Container(
             state = state,
-            currentFolderId = currentFolderId,
             sharedUiState = sharedUiState,
             onNoteClicked = onNoteClicked,
             onNoteLongClicked = onNoteLongClicked,
@@ -33,8 +32,8 @@ class NotesList : NotesApi.Ui.List {
     }
 
     @Composable
-    override fun Placeholder(gridCellsCount: Int) {
-        PlaceholderContent(gridCellsCount)
+    override fun Placeholder(gridCellsCount: Int, modifier: Modifier) {
+        PlaceholderContent(gridCellsCount, modifier)
     }
 }
 

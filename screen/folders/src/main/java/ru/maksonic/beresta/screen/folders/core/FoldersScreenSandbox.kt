@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.screen.folders.core
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.Loading
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedFailure
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
@@ -34,14 +35,17 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Ui.OnTopBarSelectAllClicked -> onSelectAllFoldersClicked(model)
         is Msg.Ui.OnAddNewFolderClicked -> onAddNewFolderClicked(model)
         is Msg.Ui.OnBottomBarPinSelectedClicked -> onBarPinSelectedClicked(model)
-        is Msg.Ui.OnBottomBarRemoveSelectedClicked -> onBarMoveSelectedToTrashClicked(model)
+        is Msg.Ui.OnBottomBarRemoveSelectedClicked -> onBarMoveSelectedToTrashClicked(model, msg)
         is Msg.Ui.OnBottomBarEditSelectedClicked -> onBarEditClicked(model)
         is Msg.Inner.HideRemovedFoldersSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
+        //modal sheet
+        is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
+        is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
     }
 
     private fun retryFetchData(model: Model): UpdateResult = ElmUpdate(
-        model.copy(base = model.base.Loading), commands = setOf(Cmd.FetchFoldersWithNotes)
+        model.copy(base = model.base.Loading), commands = setOf(Cmd.RetryFetchFoldersWithNotes)
     )
 
     private fun fetchedFoldersWithNotes(
@@ -62,7 +66,15 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     private fun onTopBarBackPressed(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateBack))
 
-    private fun onTopBarSortFoldersClicked(model: Model): UpdateResult = ElmUpdate(model)
+    @OptIn(ExperimentalMaterial3Api::class)
+    private fun onTopBarSortFoldersClicked(model: Model): UpdateResult = ElmUpdate(
+        model.copy(
+            modalSheet = model.modalSheet.copy(
+                isVisible = true,
+                content = ModalSheetContent.SORT_FOLDERS
+            )
+        )
+    )
 
     private fun onFolderClicked(model: Model, msg: Msg.Ui.OnFolderClicked): UpdateResult =
         if (model.isSelectionState)
@@ -131,28 +143,28 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         )
     }
 
-    private fun onBarMoveSelectedToTrashClicked(model: Model): UpdateResult {
-        val folders = model.folders.data.filter { !model.selectedList.contains(it) }
+    private fun onBarMoveSelectedToTrashClicked(model: Model, msg: Msg.Ui.OnBottomBarRemoveSelectedClicked): UpdateResult {
         val isShowLoading = model.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
         // Set initial sticky folder to current if previous current folder was moved to trash.
-        val isRemoveCurrentFolder =
-            model.selectedList.map { folder -> folder.id == model.currentSelectedFolderId }
+        val isWasRemovedCurrentFolder =
+            model.selectedList.map { folder -> folder.id == msg.currentSelectedFolderId }
                 .contains(true)
-        val currentSelectedId =
-            if (isRemoveCurrentFolder) STICKY_START_FOLDER_ID else model.currentSelectedFolderId
 
+        val currentSelectedId = if (isWasRemovedCurrentFolder) STICKY_START_FOLDER_ID
+        else msg.currentSelectedFolderId
 
         return ElmUpdate(
             model = model.copy(
                 base = model.base.copy(isLoading = isShowLoading),
-                folders = model.folders.copy(folders),
                 selectedList = emptySet(),
                 removedList = model.selectedList,
                 isSelectionState = false,
                 isVisibleRemovedSnackBar = true
             ),
-            commands = setOf(Cmd.RemoveSelected(model.selectedList.toList())),
-            effects = setOf(Eff.UpdateCurrentSelectedFolderInSharedState(currentSelectedId))
+            commands = setOf(
+                Cmd.RemoveSelected(model.selectedList.toList()),
+                Cmd.UpdateCurrentSelectedFolder(currentSelectedId)
+            ),
         )
     }
 
@@ -180,4 +192,17 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             commands = setOf(Cmd.UndoRemovedFolders(restored))
         )
     }
+
+    private fun onHideModalBottomSheet(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
+        model.copy(
+            modalSheet = model.modalSheet.copy(
+                isVisible = false, content = ModalSheetContent.NOTHING
+            )
+        )
+    )
+
 }

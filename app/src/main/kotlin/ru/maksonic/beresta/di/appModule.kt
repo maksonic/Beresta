@@ -14,7 +14,8 @@ internal val appModule = module {
             languageEngineApi = get(),
             languageProvider = get(),
             themeFeatureApi = get(),
-            paletteFeatureApi = get()
+            paletteFeatureApi = get(),
+            animationVelocity = get()
         )
     }
     viewModel { MainActivitySandbox(mainActivityProgram = get()) }

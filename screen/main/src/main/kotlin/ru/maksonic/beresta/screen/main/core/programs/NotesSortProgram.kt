@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.notes.api.NotesApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.screen.main.core.Cmd
 import ru.maksonic.beresta.screen.main.core.Msg
@@ -11,7 +12,7 @@ import ru.maksonic.beresta.screen.main.core.Msg
 /**
  * @Author maksonic on 03.07.2023
  */
-class NotesPreferencesProgram(
+class NotesSortProgram(
     private val listSortStateUiApi: SortingSheetApi.Ui,
     private val listSortStateFeatureState: SortingSheetApi.Feature.State,
     private val noteCardUiState: NotesApi.Ui.Card,
@@ -26,7 +27,7 @@ class NotesPreferencesProgram(
     }
 
     private suspend fun fetchNotesState() = combine(
-        listSortStateFeatureState.current, noteCardFeatureState.current
+        listSortStateFeatureState.current(SortDataKey.NOTES), noteCardFeatureState.current
     ) { sortState, cardState ->
         listSortStateUiApi.state.update(sortState)
         noteCardUiState.state.update(cardState)

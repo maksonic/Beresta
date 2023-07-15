@@ -35,6 +35,8 @@ include(":screen:main")
 include(":screen:settings")
 include(":screen:settings:appearance")
 include(":screen:folders")
+include(":screen:trash-list:notes")
+include(":screen:trash-list:folders")
 
 //features
 include(":feature:splash-screen:api")

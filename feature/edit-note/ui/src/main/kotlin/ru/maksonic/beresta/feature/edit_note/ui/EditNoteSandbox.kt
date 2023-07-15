@@ -25,7 +25,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Inner.CheckedEntryPoint -> checkedEntryPoint(model, msg)
         is Msg.Inner.ShowedKeyboardForExpandedFab -> showedKeyboardWithFocus(model)
         is Msg.Inner.FetchedPassedNoteResult -> fetchedPassedNoteResult(model, msg)
-        is Msg.Ui.OnSaveNoteClicked -> onSaveNoteClicked(model)
+        is Msg.Ui.OnSaveNoteClicked -> onSaveNoteClicked(model, msg)
         is Msg.Inner.UpdatedCurrentNoteTitle -> updatedNoteTitle(model, msg)
         is Msg.Inner.UpdatedCurrentNoteMessage -> updatedNoteMessage(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
@@ -35,7 +35,6 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Ui.OnAddImagesClicked -> ElmUpdate(model)
         is Msg.Ui.OnSetNoteWallpaperClicked -> ElmUpdate(model)
         is Msg.Ui.OnStartRecordVoiceClicked -> ElmUpdate(model)
-        is Msg.Inner.UpdatedCurrentSelectedFolderId -> fetchedPassedCurrentFolderId(model, msg)
     }
 
     private fun checkedEntryPoint(model: Model, msg: Msg.Inner.CheckedEntryPoint): UpdateResult =
@@ -50,18 +49,12 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     private fun fetchedPassedNoteResult(
         model: Model,
         msg: Msg.Inner.FetchedPassedNoteResult
-    ): UpdateResult =
-        ElmUpdate(
-            model.copy(
-                base = model.base.loadedSuccess,
-                currentNote = msg.note,
-            )
-        )
+    ): UpdateResult = ElmUpdate(model.copy(base = model.base.loadedSuccess, currentNote = msg.note))
 
-    private fun onSaveNoteClicked(model: Model): UpdateResult {
+    private fun onSaveNoteClicked(model: Model, msg: Msg.Ui.OnSaveNoteClicked): UpdateResult {
         //Set default id when passed id equals sticky end folder id.
         val folderId =
-            if (model.currentSelectedFolderId == 1L) 2L else model.currentSelectedFolderId
+            if (msg.currentFolderId == 1L) 2L else msg.currentFolderId
 
         val note = model.currentNote.copy(folderId = folderId)
         val showSnackIfIsNotNewNote = if (model.currentNote.isDefaultId()) emptySet()
@@ -116,10 +109,4 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
     private fun onExpandFabClicked(model: Model): UpdateResult =
         ElmUpdate(model = model.copy(isEntryPoint = false, isExpandedFab = true))
-
-    private fun fetchedPassedCurrentFolderId(
-        model: Model,
-        msg: Msg.Inner.UpdatedCurrentSelectedFolderId
-    ): UpdateResult =
-        ElmUpdate(model = model.copy(currentSelectedFolderId = msg.id))
 }

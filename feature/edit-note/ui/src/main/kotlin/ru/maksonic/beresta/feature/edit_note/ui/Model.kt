@@ -19,7 +19,6 @@ data class Model(
     val isEntryPoint: Boolean,
     val isExpandedFab: Boolean,
     val currentNote: NoteUi,
-    val currentSelectedFolderId: Long,
     ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -27,14 +26,13 @@ data class Model(
             isEntryPoint = false,
             isExpandedFab = false,
             currentNote = NoteUi.Default,
-            currentSelectedFolderId = 0L
         )
     }
 }
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object OnSaveNoteClicked : Ui()
+        data class OnSaveNoteClicked(val currentFolderId: Long) : Ui()
         object OnTopBarBackPressed : Ui()
         object OnExpandFabClicked : Ui()
         //Idle BottomBar actions
@@ -51,7 +49,6 @@ sealed class Msg : ElmMessage {
         data class FetchedPassedNoteResult(val note: NoteUi) : Inner()
         data class UpdatedCurrentNoteTitle(val text: String) : Inner()
         data class UpdatedCurrentNoteMessage(val text: String) : Inner()
-        data class UpdatedCurrentSelectedFolderId(val id: Long) : Inner()
     }
 }
 

@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
+import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.Msg
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.SortingSheetSandbox
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -25,6 +27,7 @@ internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
 internal fun Container(
+    sortDataKey: SortDataKey,
     hideSheet: () -> Unit,
     listSortUiState: State<ListSortUiState>,
     modifier: Modifier = Modifier,
@@ -36,13 +39,18 @@ internal fun Container(
             .verticalScroll(rememberScrollState())
             .padding(bottom = dp16), horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val title = with(text.sortSheet) {
+            if (sortDataKey.isNotes) titleSheetNotes else titleSheetFolders
+        }
+
         Text(
-            text = text.sortNotesSheet.titleSheet,
+            text = title,
             style = TextDesign.topBar,
             modifier = modifier.padding(bottom = dp16)
         )
 
         Content(
+            sortDataKey = sortDataKey,
             send = sandbox::send,
             sortState = listSortUiState,
             hideSheet = hideSheet,

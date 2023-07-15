@@ -12,6 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 
 /**
  * @Author maksonic on 04.07.2023
@@ -20,11 +21,12 @@ import ru.maksonic.beresta.feature.notes.api.NotesApi
 internal fun Container(
     isLoading: State<Boolean>,
     chips: FolderUi.Collection,
-    currentSelectedId: MutableState<Long>,
     chipsRowOffsetHeightPx: MutableState<Float>,
     onAddNewChipClicked: () -> Unit,
+    updateCurrentSelectedFolder: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    notesListApi: NotesApi.Ui.List = koinInject()
+    notesListApi: NotesApi.Ui.List = koinInject(),
+    listSortUiState: SortingSheetApi.Ui = koinInject(),
 ) {
     val notesSharedUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
 
@@ -38,10 +40,11 @@ internal fun Container(
         } else {
             Content(
                 chips = chips,
-                currentSelectedId = currentSelectedId,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
                 onAddNewChipClicked = onAddNewChipClicked,
-                notesSharedUiState = notesSharedUiState
+                updateCurrentSelectedFolder = updateCurrentSelectedFolder,
+                notesSharedUiState = notesSharedUiState,
+                listSortUiState = listSortUiState
             )
         }
     }

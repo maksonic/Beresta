@@ -6,8 +6,9 @@ import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.screen.main.core.programs.ChipsDataProgram
+import ru.maksonic.beresta.screen.main.core.programs.ChipsSortProgram
 import ru.maksonic.beresta.screen.main.core.programs.NotesDataProgram
-import ru.maksonic.beresta.screen.main.core.programs.NotesPreferencesProgram
+import ru.maksonic.beresta.screen.main.core.programs.NotesSortProgram
 
 /**
  * @Author maksonic on 22.06.2023
@@ -17,12 +18,18 @@ private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 @OptIn(ExperimentalMaterial3Api::class)
 class MainSandbox(
     notesDataProgram: NotesDataProgram,
-    notesPreferencesProgram: NotesPreferencesProgram,
+    notesSortProgram: NotesSortProgram,
     chipsDataProgram: ChipsDataProgram,
+    chipsSortProgram: ChipsSortProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
     initialCmd = setOf(Cmd.FetchNotesListFeatureState, Cmd.FetchNotesData, Cmd.FetchChipsData),
-    subscriptions = listOf(notesDataProgram, notesPreferencesProgram, chipsDataProgram)
+    subscriptions = listOf(
+        notesDataProgram,
+        notesSortProgram,
+        chipsDataProgram,
+        chipsSortProgram
+    )
 ) {
     companion object {
         private const val STICKY_START_FOLDER_ID = 1L
@@ -40,7 +47,6 @@ class MainSandbox(
         is Msg.Ui.CancelNotesSelection -> onCancelSelectionClicked(model)
         //chips
         is Msg.Inner.FetchedChipsData -> fetchedChipsData(model, msg)
-        is Msg.Inner.UpdatedCurrentSelectedChipId -> updatedCurrentSelectedChipId(model, msg)
         //idle bottom bar actions
         is Msg.Ui.OnBottomBarSettingsClicked -> onBottomBarSettingsClicked(model)
         is Msg.Ui.OnBottomBarFoldersClicked -> onBottomBarFoldersClicked(model)
@@ -58,7 +64,7 @@ class MainSandbox(
         //search bar
         is Msg.Ui.OnCollapseSearchBar -> onCollapseSearchBar(model)
         is Msg.Ui.OnExpandSearchBar -> onExpandSearchBar(model)
-        is Msg.Ui.OnCounterBarSelectAllClicked -> onCounterBarSelectAllClicked(model)
+        is Msg.Ui.OnCounterBarSelectAllClicked -> onCounterBarSelectAllClicked(model, msg)
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
         //other
         //snack bar
@@ -127,11 +133,6 @@ class MainSandbox(
             ),
         )
 
-    private fun updatedCurrentSelectedChipId(
-        model: Model,
-        msg: Msg.Inner.UpdatedCurrentSelectedChipId
-    ): UpdateResult = ElmUpdate(model.copy(chips = model.chips.copy(currentId = msg.id)))
-
     private fun onBottomBarSettingsClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSettings))
 
@@ -157,7 +158,8 @@ class MainSandbox(
         )
     )
 
-    private fun onBottomBarTrashClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onBottomBarTrashClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.NavigateToTrash))
 
     private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult = ElmUpdate(model)
 
@@ -226,18 +228,20 @@ class MainSandbox(
 
     private fun onCounterBarShareClicked(model: Model): UpdateResult = ElmUpdate(model)
 
-    private fun onCounterBarSelectAllClicked(model: Model): UpdateResult {
-        val currentSelectedId = model.chips.currentId
+    private fun onCounterBarSelectAllClicked(
+        model: Model,
+        msg: Msg.Ui.OnCounterBarSelectAllClicked
+    ): UpdateResult {
         val filteredNotes = model.notes.collection.data.filter { note ->
-            when (currentSelectedId) {
+            when (msg.currentFolderId) {
                 STICKY_START_FOLDER_ID -> true
                 STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
-                else -> note.folderId == currentSelectedId
+                else -> note.folderId == msg.currentFolderId
             }
         }
 
         val selectedList = model.notes.selectedList.toMutableSet().also { list ->
-            if (currentSelectedId == STICKY_START_FOLDER_ID) {
+            if (msg.currentFolderId == STICKY_START_FOLDER_ID) {
                 if (list.containsAll(model.notes.collection.data)) list.clear()
                 else list.addAll(model.notes.collection.data)
             } else {

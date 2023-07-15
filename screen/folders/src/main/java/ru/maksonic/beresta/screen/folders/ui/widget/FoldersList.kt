@@ -5,14 +5,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
+import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
 import ru.maksonic.beresta.screen.folders.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -20,6 +28,7 @@ import ru.maksonic.beresta.ui.theme.component.dp6
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.ErrorFolderPlaceholder
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
+import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 
 /**
@@ -27,21 +36,26 @@ import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
  */
 @Composable
 internal fun FoldersList(
-    scrollState: LazyListState,
-    foldersUiItemApi: FoldersApi.Ui.FolderItem,
+    folderUiItemApi: FoldersApi.Ui.FolderItem,
+    foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
     model: State<Model>,
     send: SendMessage,
+    updateFirstVisibleFolderOffset: (Boolean) -> Unit,
+    updateCanScrollForwardState: (Boolean) -> Unit,
+    listSortUiState: SortingSheetApi.Ui,
     modifier: Modifier = Modifier
 ) {
     Box(modifier.fillMaxSize()) {
         when {
-            model.value.base.isLoading -> PlaceholderContent(modifier)
+            model.value.base.isLoading -> foldersPlaceholderApi.List(modifier)
             model.value.base.successAfterLoading -> {
                 FetchedSuccess(
-                    scrollState = scrollState,
-                    foldersUiItemApi = foldersUiItemApi,
+                    folderUiItemApi = folderUiItemApi,
                     model = model,
                     send = send,
+                    updateFirstVisibleFolderOffset = updateFirstVisibleFolderOffset,
+                    updateCanScrollForwardState = updateCanScrollForwardState,
+                    listSortUiState = listSortUiState,
                     modifier = modifier
                 )
             }
@@ -61,38 +75,62 @@ internal fun FoldersList(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FetchedSuccess(
-    scrollState: LazyListState,
-    foldersUiItemApi: FoldersApi.Ui.FolderItem,
-    model: State<Model>,
+    folderUiItemApi: FoldersApi.Ui.FolderItem,
     send: SendMessage,
+    model: State<Model>,
+    updateFirstVisibleFolderOffset: (Boolean) -> Unit,
+    updateCanScrollForwardState: (Boolean) -> Unit,
+    listSortUiState: SortingSheetApi.Ui,
     modifier: Modifier
 ) {
+    val foldersSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
+    val scrollState = rememberLazyListState()
+    val isVisibleFirstFolderOffset = scrollState.isVisibleFirstItemOffset()
     val defaultPadding = Theme.widgetSize.bottomBarNormalHeight.plus(dp6)
     val bottomContentPadding = animateDp(
         if (model.value.isSelectionState) defaultPadding else defaultPadding.plus(dp16)
     )
 
-    LazyColumn(
-        state = scrollState,
-        contentPadding = PaddingValues(
-            top = dp6,
-            start = dp16,
-            end = dp16,
-            bottom = bottomContentPadding.value
-        ),
-        modifier = modifier.fillMaxSize()
-    ) {
-        itemsIndexed(
-            items = model.value.folders.data,
-            key = { index, item -> if (index == 0) index else item.id }) { _, folder ->
-            foldersUiItemApi.Widget(
-                isSelected = model.value.selectedList.contains(folder) && folder.isSelectable,
-                folder = folder,
-                isTrashPlacement = false,
-                onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
-                onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
-                modifier = modifier.animateItemPlacement()
+    LaunchedEffect(isVisibleFirstFolderOffset.value) {
+        updateFirstVisibleFolderOffset(isVisibleFirstFolderOffset.value)
+    }
+
+    LaunchedEffect(scrollState.canScrollForward) {
+        updateCanScrollForwardState(scrollState.canScrollForward)
+    }
+
+    CompositionLocalProvider(LocalListSortState provides foldersSortState.value) {
+        val foldersSorter = rememberUpdatedState(
+            FoldersSorter(
+                list = model.value.folders.data,
+                order = listUiSortState.folders.order,
+                isSortPinned = listUiSortState.folders.isSortPinned,
+                sort = listUiSortState.folders.sort
             )
+        )
+
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(
+                top = dp6,
+                start = dp16,
+                end = dp16,
+                bottom = bottomContentPadding.value
+            ),
+            modifier = modifier.fillMaxSize()
+        ) {
+            itemsIndexed(
+                items = foldersSorter.value.sortedList,
+                key = { index, item -> if (index == 0) index else item.id }) { _, folder ->
+                folderUiItemApi.Widget(
+                    isSelected = model.value.selectedList.contains(folder) && folder.isSelectable,
+                    folder = folder,
+                    isTrashPlacement = false,
+                    onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },
+                    onFolderLongPressed = { send(Msg.Ui.OnFolderLongPressed(folder.id)) },
+                    modifier = modifier.animateItemPlacement()
+                )
+            }
         }
     }
 }

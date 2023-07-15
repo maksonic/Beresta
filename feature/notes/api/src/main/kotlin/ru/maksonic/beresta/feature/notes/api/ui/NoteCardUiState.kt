@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.notes.api
+package ru.maksonic.beresta.feature.notes.api.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf

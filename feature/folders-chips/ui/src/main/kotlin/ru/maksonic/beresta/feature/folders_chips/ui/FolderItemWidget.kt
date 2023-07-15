@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.folders_chips.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
@@ -66,18 +65,24 @@ class FolderItemWidget : FoldersApi.Ui.FolderItem {
         onFolderLongPressed: (id: Long) -> Unit,
         modifier: Modifier
     ) {
-        Content(isSelected, folder, isTrashPlacement, onFolderClicked, onFolderLongPressed)
+        Content(
+            isSelected = isSelected,
+            folder = folder,
+            isTrashPlacement = isTrashPlacement,
+            onFolderClicked = onFolderClicked,
+            onFolderLongPressed = onFolderLongPressed
+        )
     }
 }
 
 @Composable
 private fun Content(
+    modifier: Modifier = Modifier,
     isSelected: Boolean,
     folder: FolderUi,
     isTrashPlacement: Boolean = false,
     onFolderClicked: (id: Long) -> Unit,
-    onFolderLongPressed: (id: Long) -> Unit,
-    modifier: Modifier = Modifier
+    onFolderLongPressed: (id: Long) -> Unit
 ) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
@@ -85,7 +90,7 @@ private fun Content(
     val backgroundColor = animateColorAsState(
         if (isSelected) isSelectedColors else colors,
         label = "",
-        animationSpec = tween(Theme.animSpeed.common)
+        animationSpec = tween(Theme.animVelocity.common)
     )
 
 

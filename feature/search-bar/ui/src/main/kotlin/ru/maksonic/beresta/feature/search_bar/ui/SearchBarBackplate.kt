@@ -40,7 +40,7 @@ internal fun SearchBarBackplate(
     )
 
     val iconScale = animateFloatAsState(
-        if (isSelectedState.value) 0f else 1f, tween(Theme.animSpeed.common), label = ""
+        if (isSelectedState.value) 0f else 1f, tween(Theme.animVelocity.common), label = ""
     )
 
     SurfacePro(

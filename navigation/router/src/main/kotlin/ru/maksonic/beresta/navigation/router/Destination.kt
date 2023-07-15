@@ -12,8 +12,8 @@ object Destination : AbstractDestination(route = "root") {
         object Appearance : AbstractDestination(route = "settings.appearance")
     }
 
+    object Folders : AbstractDestination(route = "folders", argKey = "passedNotesIds")
     object TrashNotesList : AbstractDestination(route = "trash_notes_list")
     object TrashFoldersList : AbstractDestination(route = "trash_folders_list")
-    object Folders : AbstractDestination(route = "folders", argKey = "passedNotesIds")
 
 }

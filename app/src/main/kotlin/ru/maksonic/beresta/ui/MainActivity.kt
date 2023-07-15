@@ -13,6 +13,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -35,8 +36,10 @@ import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.HighContrastTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.PaletteStore
 import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
 import ru.maksonic.beresta.ui.theme.component.AppDarkMode
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
@@ -89,7 +92,8 @@ class MainActivity : ComponentActivity() {
                     theme = animatedTheme,
                     darkMode = model.value.darkMode,
                     language = model.value.languageProvider,
-                    palette = model.value.themePalette
+                    palette = model.value.themePalette,
+                    animVelocity = model.value.animationVelocity
                 ).invoke {
 
                     SystemComponentColor(
@@ -98,13 +102,14 @@ class MainActivity : ComponentActivity() {
                     )
 
                     SurfacePro(color = surface) {
+                        val animationVelocity = rememberUpdatedState(Theme.animVelocity.navigationVelocity)
                         AnimatedNavHost(
                             navController = navigator.navController,
                             startDestination = Destination.route,
                             modifier = Modifier
                                 .fillMaxSize()
                         ) {
-                            graphBuilder.buildGraph(graphBuilder = this)
+                            graphBuilder.buildGraph(graphBuilder = this, animationVelocity.value)
                         }
                     }
                 }
@@ -117,12 +122,14 @@ class MainActivity : ComponentActivity() {
         darkMode: AppDarkMode,
         language: BerestaLanguage,
         palette: PaletteStore,
+        animVelocity: AppAnimationVelocity.Key
     ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
         AppTheme.SYSTEM -> { content ->
             AppTheme(
                 darkMode = darkMode,
                 provideLanguages = language,
                 palette = palette,
+                animationVelocity = animVelocity,
                 content = content
             )
         }
@@ -132,6 +139,7 @@ class MainActivity : ComponentActivity() {
                 darkMode = AppDarkMode.Disabled,
                 provideLanguages = language,
                 palette = palette,
+                animationVelocity = animVelocity,
                 content = content
             )
         }
@@ -141,6 +149,7 @@ class MainActivity : ComponentActivity() {
                 darkMode = AppDarkMode.Enabled,
                 provideLanguages = language,
                 palette = palette,
+                animationVelocity = animVelocity,
                 content = content
             )
         }
@@ -150,6 +159,7 @@ class MainActivity : ComponentActivity() {
                 darkMode = AppDarkMode.Enabled,
                 provideLanguages = language,
                 palette = palette.highContrast,
+                animationVelocity = animVelocity,
                 content = content
             )
         }

@@ -6,3 +6,5 @@ package ru.maksonic.beresta.feature.sorting_sheet.api
 enum class SortDataKey {
     NOTES, FOLDERS
 }
+
+val SortDataKey.isNotes get() = this == SortDataKey.NOTES

@@ -15,7 +15,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 @Composable
 fun animateDp(
     state: Dp,
-    duration: Int = Theme.animSpeed.common,
+    duration: Int = Theme.animVelocity.common,
     label: String = "DpAnimation",
     finishedListener: ((Dp) -> Unit)? = null
 ): State<Dp> {

@@ -19,7 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.sorting_sheet.api.Order
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
+import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
 import ru.maksonic.beresta.ui.theme.color.outline
@@ -34,6 +37,7 @@ import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
  */
 @Composable
 internal fun OrderSelector(
+    key: SortDataKey,
     onOrderClicked: (Order) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -44,8 +48,9 @@ internal fun OrderSelector(
     ) {
 
         Item(
+            key = key,
             order = Order.ASCENDING,
-            title = "По порядку",
+            title = text.sortSheet.hintSortByAscending,
             modifier = modifier.weight(1f),
             onOrderClicked = onOrderClicked
         )
@@ -53,8 +58,9 @@ internal fun OrderSelector(
         Spacer(modifier.width(dp16))
 
         Item(
+            key = key,
             order = Order.DESCENDING,
-            title = "В обратном порядке",
+            title = text.sortSheet.hintSortByDescending,
             modifier = modifier.weight(1f),
             onOrderClicked = onOrderClicked
         )
@@ -63,12 +69,14 @@ internal fun OrderSelector(
 
 @Composable
 private fun Item(
+    key: SortDataKey,
     order: Order,
     title: String,
     modifier: Modifier,
     onOrderClicked: (Order) -> Unit
 ) {
-    val isSelected = rememberUpdatedState(order == listUiSortState.order)
+    val value = if (key.isNotes) listUiSortState.notes else listUiSortState.folders
+    val isSelected = rememberUpdatedState(order == value.order)
 
     BoxWithScaleInOutOnClick(
         onClick = { onOrderClicked(order) },

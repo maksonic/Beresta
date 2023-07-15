@@ -57,6 +57,7 @@ dependencies {
     implementation(project(module.feature.foldersChipsRow.api.path))
     implementation(project(module.feature.foldersChipsRow.core.path))
     implementation(project(module.feature.notes.api.path))
+    implementation(project(module.feature.sortingSheet.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

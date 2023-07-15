@@ -4,7 +4,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
-import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.screen.folders.core.FoldersListProgram
 import ru.maksonic.beresta.screen.folders.core.FoldersScreenSandbox
 
@@ -23,7 +22,7 @@ val foldersScreenModule = module {
             navigator = get(),
             appLanguageEngineApi = get(),
             stickyItemsTitleFormatter = get(),
-            currentSelectedFolderId = get(named(FoldersApi.CurrentFolderKey.VALUE)),
+            chipsRowApi = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
 
         )

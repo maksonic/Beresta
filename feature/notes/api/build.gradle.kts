@@ -51,6 +51,7 @@ android {
 dependencies {
     implementation(project(module.primary.core.path))
     implementation(project(module.primary.elm.path))
+    implementation(project(module.feature.sortingSheet.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.material3)
     implementation(libs.compose.runtime)

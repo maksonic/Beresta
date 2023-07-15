@@ -86,6 +86,7 @@ private fun HandleUiEffects(
 
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToFolders -> router.toFoldersList(eff.ids)
+            is Eff.NavigateToTrash -> router.toTrash()
             is Eff.ShowAddNewChipDialog -> sharedFolderDialogUiState.showForEdit(0L)
         }
     }

@@ -10,9 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import ru.maksonic.beresta.feature.notes.api.LocalNoteCardState
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
-import ru.maksonic.beresta.feature.notes.api.noteUiCardState
+import ru.maksonic.beresta.feature.notes.api.ui.LocalNoteCardState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.noteUiCardState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.ui.theme.color.outlineVariant
 import ru.maksonic.beresta.ui.theme.color.primaryContainer
@@ -46,8 +46,7 @@ fun Container(
         BoxWithScaleInOutOnClick(
             onClick = { onNoteClicked(note.id) },
             onLongClick = { onNoteLongClicked(note.id) },
-            modifier = modifier
-                .onFocusChanged { isFocusedItem.value = it.isFocused }
+            modifier = modifier.onFocusChanged { isFocusedItem.value = it.isFocused }
         ) {
             SurfacePro(
                 shadowElevation = noteUiCardState.elevation.dp,

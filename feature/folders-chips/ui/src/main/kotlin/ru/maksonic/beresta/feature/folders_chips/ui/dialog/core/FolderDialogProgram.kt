@@ -1,10 +1,12 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.core
 
 import ru.maksonic.beresta.elm.core.ElmProgram
+import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
 import ru.maksonic.beresta.feature.folders_chips.api.domain.usecase.FetchFolderByIdUseCase
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderToUiMapper
+import ru.maksonic.beresta.feature.folders_chips.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
+import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
 import ru.maksonic.beresta.feature.folders_chips.api.ui.isDefaultId
 import java.time.LocalDateTime
 
@@ -13,8 +15,10 @@ import java.time.LocalDateTime
  */
 class FolderDialogProgram(
     private val fetchFolderByIdUseCase: FetchFolderByIdUseCase,
+    private val fetchFoldersListUseCase: FetchFoldersListUseCase,
     private val interactor: FoldersInteractor,
-    private val mapper: FolderToUiMapper,
+    private val mapper: FolderUiMapper,
+    private val chipsRowApi: FoldersApi.Ui.ChipsRow
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -37,10 +41,17 @@ class FolderDialogProgram(
     private suspend fun saveOrUpdateCurrentFolder(folder: FolderUi) {
         val folderDomain = mapper.mapFrom(folder)
         interactor.let {
-            if (folder.isDefaultId())
+            if (folder.isDefaultId()) {
                 it.addFolder(folderDomain.copy(dateCreation = LocalDateTime.now()))
-            else
+                updateCurrentFolder()
+            } else {
                 it.updateFolder(folderDomain.copy(dateCreation = folder.dateCreationRaw))
+            }
         }
+    }
+
+    private suspend fun updateCurrentFolder() = fetchFoldersListUseCase().collect { list ->
+        val lastAddedFolder = list.maxBy { folder -> folder.id }
+        chipsRowApi.currentSelectedId.update(lastAddedFolder.id)
     }
 }

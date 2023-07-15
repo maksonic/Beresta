@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
+import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -56,7 +57,7 @@ fun Content(
     val isVisibleEditFab = rememberUpdatedState(model.value.isVisibleEditFab)
     val selectedNotesCount = rememberUpdatedState(model.value.notes.selectedList.count())
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
-    val currentSelectedChipId = rememberUpdatedState(chipsRowApi.currentSelectedChipId.value)
+    val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
@@ -84,17 +85,14 @@ fun Content(
         counterApi.counterState.value = selectedNotesCount.value
     }
 
-    LaunchedEffect(currentSelectedChipId.value) {
-        send(Msg.Inner.UpdatedCurrentSelectedChipId(currentSelectedChipId.value))
-    }
-
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
-        CompositionLocalProvider(LocalListSortState provides notesSortState.value) {
-
+        CompositionLocalProvider(
+            LocalListSortState provides notesSortState.value,
+            LocalCurrentSelectedFolderState provides currentSelectedChipId.value
+            ) {
             NotesList(
                 model = model,
                 send = send,
-                currentFolderId = model.value.chips.currentId,
                 api = notesListApi,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             )

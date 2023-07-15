@@ -7,7 +7,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangFoldersListData
 import ru.maksonic.beresta.language_engine.shell.components.LangOnboardingData
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsScreenData
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
-import ru.maksonic.beresta.language_engine.shell.components.LangSortNotesSheetData
+import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceScreenData
@@ -26,5 +26,5 @@ data class Russian(
     @SerializedName("editor") val editor: LangEditorData,
     @SerializedName("folders") val folders: LangFoldersListData,
     @SerializedName("trash") val trash: LangTrashData,
-    @SerializedName("sort_notes_sheet") val sortNotesSheet: LangSortNotesSheetData
+    @SerializedName("sort_notes_sheet") val sortNotesSheet: LangSortSheetData
 )

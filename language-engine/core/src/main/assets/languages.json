@@ -39,6 +39,7 @@
       "note_title": "Заголовок",
       "btn_title_save": "Сохранить",
       "btn_title_cancel": "Отменить",
+      "btn_title_accept": "Ок",
       "btn_title_close": "Закрыть",
       "btn_title_hide": "Скрыть",
       "btn_title_pin": "Закрепить",
@@ -57,8 +58,8 @@
       "hint_no_notes": "Нет заметок",
       "hint_nothing_found": "Ничего не найдено",
       "hint_an_error_has_occurred": "Произошла ошибка",
-      "note_title_placeholder": "Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда нужно быстро заполнить макеты или прототипы содержимым. Это тестовый контент, который не должен нести никакого смысла, лишь показать наличие самого текста или продемонстрировать типографику в деле.",
-      "note_message_placeholder": "Рыбатекст используется дизайнерами, проектировщиками и фронтендерами, когда нужно быстро заполнить макеты или прототипы содержимым. Это тестовый контент, который не должен нести никакого смысла, лишь показать наличие самого текста или продемонстрировать типографику в деле."
+      "note_title_placeholder": "Здоровый праздничный ужин вовсе не обязательно должен состоять из шпината, гречки и вареной куриной грудки. Самыми лучшими способами приготовления еды являются следующие: варка на пару, запекание или варка в воде. Помимо стандартных мандаринов и ананасов, отличным украшением любого стола станут необычные, экзотические фрукты. Здоровой может быть даже выпечка, если она приготовлена на пару. Человеческий организм получает почти все необходимые вещества именно через пищу и воду. С питанием связаны все жизненно важные функции организма. Недостаток полезных веществ, содержащихся в том же мясе, например железа высокой биологической доступности, может вызвать серьезные проблемы со здоровьем.",
+      "note_message_placeholder": "Здоровый праздничный ужин вовсе не обязательно должен состоять из шпината, гречки и вареной куриной грудки. Самыми лучшими способами приготовления еды являются следующие: варка на пару, запекание или варка в воде. Помимо стандартных мандаринов и ананасов, отличным украшением любого стола станут необычные, экзотические фрукты. Здоровой может быть даже выпечка, если она приготовлена на пару. Человеческий организм получает почти все необходимые вещества именно через пищу и воду. С питанием связаны все жизненно важные функции организма. Недостаток полезных веществ, содержащихся в том же мясе, например железа высокой биологической доступности, может вызвать серьезные проблемы со здоровьем."
     },
     "settings": {
       "top_bar_title": "Настройки",
@@ -85,7 +86,14 @@
       "hint_note_card_rounded_shape": "Круглые",
       "hint_note_card_squared_shape": "Квадратные",
       "item_note_card_elevation": "Тень",
-      "item_note_card_max_lines": "Количество строк"
+      "item_note_card_max_lines": "Количество строк",
+      "title_animations": "Анимации",
+      "item_velocity": "Скорость",
+      "hint_animation_velocity_disabled": "Выключено",
+      "hint_animation_velocity_slow": "Медленно",
+      "hint_animation_velocity_normal": "Нормально",
+      "hint_animation_velocity_fast": "Быстро",
+      "hint_animation_velocity_very_fast": "Очень быстро"
     },
     "editor": {
       "hint_input_title": "Заголовок",
@@ -128,17 +136,15 @@
       "hint_moved_to_trash_date_prefix": "удалено"
     },
     "sort_notes_sheet": {
-      "title_sheet": "Сортировать заметки",
+      "title_sheet_notes": "Сортировать заметки",
+      "title_sheet_folders": "Сортировать папки",
+      "hint_sort_by_ascending": "По порядку",
+      "hint_sort_by_descending": "В обратном порядке",
       "hint_sort_category_alphabet": "Алфавит",
       "hint_sort_category_date_creation": "Дата создания",
       "hint_sort_category_date_update": "Дата изменения",
-      "item_in_alphabet": "В алфавитном порядке",
-      "item_in_reverse_alphabet": "В обратном алфавитном порядке",
-      "item_by_date_creation": "По возрастанию даты создания",
-      "item_by_reverse_date_creation": "По убыванию даты создания",
-      "item_by_date_update": "По возрастанию даты изменения",
-      "item_by_reverse_date_update": "По убыванию даты изменения",
-      "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки"
+      "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки",
+      "hint_checkbox_sort_pinned_folders": "Учитывать закрепленные папки"
     }
   },
   "english": {
@@ -181,6 +187,7 @@
       "note_title": "Title",
       "btn_title_save": "Save",
       "btn_title_cancel": "Cancel",
+      "btn_title_accept": "Ok",
       "btn_title_close": "Close",
       "btn_title_hide": "Hide",
       "btn_title_pin": "Pin",
@@ -199,8 +206,8 @@
       "hint_no_notes": "No notes",
       "hint_nothing_found": "Nothing found",
       "hint_an_error_has_occurred": "An error has occurred",
-      "note_title_placeholder": "Fishtext is used by designers, planners, and front-end developers when they need to quickly populate layouts or prototypes with content. This is test content that should not make any sense, just show the presence of the text itself or demonstrate typography in action.",
-      "note_message_placeholder": "Fishtext is used by designers, planners, and front-end developers when they need to quickly populate layouts or prototypes with content. This is test content that should not make any sense, just show the presence of the text itself or demonstrate typography in action."
+      "note_title_placeholder": "A healthy festive dinner does not necessarily have to consist of spinach, buckwheat and boiled chicken breast. The following are the best ways to prepare food: cooking on steam, baking, or cooking in water. In addition to the standard tangerines and pineapples, unusual, exotic fruits will be a different decoration of any table. Even baking can be healthy if it is cooked on steam. The human organism receives almost all the necessary substances precisely through food and water. All the vital functions of the organism are connected with nutrition. A lack of useful substances contained in meat, for example iron with high biological availability, can cause serious health problems.",
+      "note_message_placeholder": "A healthy festive dinner does not necessarily have to consist of spinach, buckwheat and boiled chicken breast. The following are the best ways to prepare food: cooking on steam, baking, or cooking in water. In addition to the standard tangerines and pineapples, unusual, exotic fruits will be a different decoration of any table. Even baking can be healthy if it is cooked on steam. The human organism receives almost all the necessary substances precisely through food and water. All the vital functions of the organism are connected with nutrition. A lack of useful substances contained in meat, for example iron with high biological availability, can cause serious health problems."
     },
     "settings": {
       "top_bar_title": "Settings",
@@ -227,7 +234,14 @@
       "hint_note_card_rounded_shape": "Round",
       "hint_note_card_squared_shape": "Square",
       "item_note_card_elevation": "Elevation",
-      "item_note_card_max_lines": "Number of lines"
+      "item_note_card_max_lines": "Number of lines",
+      "title_animations": "Animations",
+      "item_velocity": "Velocity",
+      "hint_animation_velocity_disabled": "Disabled",
+      "hint_animation_velocity_slow": "Slow",
+      "hint_animation_velocity_normal": "Normal",
+      "hint_animation_velocity_fast": "Fast",
+      "hint_animation_velocity_very_fast": "Very fast"
     },
     "editor": {
       "hint_input_title": "Title",
@@ -270,17 +284,15 @@
       "hint_moved_to_trash_date_prefix": "removed"
     },
     "sort_notes_sheet": {
-      "title_sheet": "Sort notes",
+      "title_sheet_notes": "Sort notes",
+      "title_sheet_folders": "Sort folders",
+      "hint_sort_by_ascending": "Ascending",
+      "hint_sort_by_descending": "Descending",
       "hint_sort_category_alphabet": "Alphabet",
       "hint_sort_category_date_creation": "Date of creation",
       "hint_sort_category_date_update": "Date of change",
-      "item_in_alphabet": "In alphabet order",
-      "item_in_reverse_alphabet": "In reverse alphabetical order",
-      "item_by_date_creation": "Creation date ascending",
-      "item_by_reverse_date_creation": "Creation date descending",
-      "item_by_date_update": "Date modified ascending",
-      "item_by_reverse_date_update": "Date modified descending",
-      "hint_checkbox_sort_pinned_notes": "Consider pinned notes"
+      "hint_checkbox_sort_pinned_notes": "Consider pinned notes",
+      "hint_checkbox_sort_pinned_folders": "Consider pinned folders"
     }
   },
   "chinese": {
@@ -323,6 +335,7 @@
       "note_title": "标题",
       "btn_title_save": "节省",
       "btn_title_cancel": "取消",
+      "btn_title_accept": "好的",
       "btn_title_close": "关闭",
       "btn_title_hide": "隐藏",
       "btn_title_pin": "修理",
@@ -341,8 +354,8 @@
       "hint_no_notes": "没有笔记",
       "hint_nothing_found": "什么都没找到",
       "hint_an_error_has_occurred": "发生了错误",
-      "note_title_placeholder": "注释标题",
-      "note_message_placeholder": "设计师、规划人员和前端开发人员在需要快速填充内容的布局或原型时会使用 Fishtext。 这是测试内容，应该没有任何意义，只是显示文本本身的存在或演示实际的排版。"
+      "note_title_placeholder": "健康的节日晚餐不一定非得由菠菜、荞麦和煮鸡胸肉组成。 以下是准备食物的最佳方法：蒸汽烹饪、烘烤或水中烹饪。 除了标准的橘子和菠萝外，不寻常的异国水果也将成为任何餐桌的不同装饰。 如果用蒸汽烹饪，即使是烘焙也可以是健康的。 人体机体几乎通过食物和水获取所有必需物质。 有机体的所有重要功能都与营养有关。 肉类中缺乏有用的物质，例如生物利用度高的铁，可能会导致严重的健康问题。",
+      "note_message_placeholder": "健康的节日晚餐不一定非得由菠菜、荞麦和煮鸡胸肉组成。 以下是准备食物的最佳方法：蒸汽烹饪、烘烤或水中烹饪。 除了标准的橘子和菠萝外，不寻常的异国水果也将成为任何餐桌的不同装饰。 如果用蒸汽烹饪，即使是烘焙也可以是健康的。 人体机体几乎通过食物和水获取所有必需物质。 有机体的所有重要功能都与营养有关。 肉类中缺乏有用的物质，例如生物利用度高的铁，可能会导致严重的健康问题。"
     },
     "settings": {
       "top_bar_title": "设置",
@@ -369,7 +382,14 @@
       "hint_note_card_rounded_shape": "圆形的",
       "hint_note_card_squared_shape": "正方形",
       "item_note_card_elevation": "海拔",
-      "item_note_card_max_lines": "行数"
+      "item_note_card_max_lines": "行数",
+      "title_animations": "动画",
+      "item_velocity": "速度",
+      "hint_animation_velocity_disabled": "残疾人",
+      "hint_animation_velocity_slow": "慢的",
+      "hint_animation_velocity_normal": "普通的",
+      "hint_animation_velocity_fast": "快速地",
+      "hint_animation_velocity_very_fast": "非常快"
     },
     "editor": {
       "hint_input_title": "标题",
@@ -412,17 +432,15 @@
       "hint_moved_to_trash_date_prefix": "删除"
     },
     "sort_notes_sheet": {
-      "title_sheet": "整理笔记",
+      "title_sheet_notes": "整理笔记",
+      "title_sheet_folders": "对文件夹进行排序",
+      "hint_sort_by_ascending": "升序",
+      "hint_sort_by_descending": "降序",
       "hint_sort_category_alphabet": "字母",
       "hint_sort_category_date_creation": "创建日期",
       "hint_sort_category_date_update": "变更日期",
-      "item_in_alphabet": "按字母顺序",
-      "item_in_reverse_alphabet": "按逆字母顺序排列",
-      "item_by_date_creation": "创建日期升序",
-      "item_by_reverse_date_creation": "创建日期降序",
-      "item_by_date_update": "修改日期升序",
-      "item_by_reverse_date_update": "修改日期降序",
-      "hint_checkbox_sort_pinned_notes": "考虑固定笔记"
+      "hint_checkbox_sort_pinned_notes": "考虑固定笔记",
+      "hint_checkbox_sort_pinned_folders": "考虑固定文件夹"
     }
   },
   "chinese_tr": {
@@ -465,6 +483,7 @@
       "note_title": "標題",
       "btn_title_save": "保存",
       "btn_title_cancel": "取消",
+      "btn_title_accept": "好的",
       "btn_title_close": "關閉",
       "btn_title_hide": "隱藏",
       "btn_title_pin": "修理",
@@ -482,7 +501,9 @@
       "hint_removed_notes_count": "刪除的筆記:",
       "hint_no_notes": "沒有筆記",
       "hint_nothing_found": "什麼都沒找到",
-      "hint_an_error_has_occurred": "發生了錯誤"
+      "hint_an_error_has_occurred": "發生了錯誤",
+      "note_title_placeholder": "健康的節日晚餐不一定非得由菠菜、蕎麥和煮雞胸肉組成。 以下是準備食物的最佳方法：蒸汽烹飪、烘烤或水中烹飪。 除了標準的橘子和菠蘿外，不尋常的異國水果也將成為任何餐桌的不同裝飾。 如果用蒸汽烹飪，即使是烘焙也可以是健康的。 人體機體幾乎通過食物和水獲取所有必需物質。 有機體的所有重要功能都與營養有關。 肉類中缺乏有用的物質，例如生物利用度高的鐵，可能會導致嚴重的健康問題。",
+      "note_message_placeholder": "健康的節日晚餐不一定非得由菠菜、蕎麥和煮雞胸肉組成。 以下是準備食物的最佳方法：蒸汽烹飪、烘烤或水中烹飪。 除了標準的橘子和菠蘿外，不尋常的異國水果也將成為任何餐桌的不同裝飾。 如果用蒸汽烹飪，即使是烘焙也可以是健康的。 人體機體幾乎通過食物和水獲取所有必需物質。 有機體的所有重要功能都與營養有關。 肉類中缺乏有用的物質，例如生物利用度高的鐵，可能會導致嚴重的健康問題。"
     },
     "settings": {
       "top_bar_title": "設置",
@@ -500,9 +521,7 @@
       "title_theme_system": "系統",
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
-      "title_theme_high_contrast": "高對比度",
-      "note_title_placeholder": "註釋標題",
-      "note_message_placeholder": "設計師、規劃人員和前端開發人員在需要用內容快速填充佈局或原型時會使用 Fishtext。 這是測試內容，應該沒有任何意義，只是顯示文本本身的存在或演示實際的排版。"
+      "title_theme_high_contrast": "高對比度"
     },
     "settings_appearance": {
       "top_bar_title": "外貌",
@@ -511,7 +530,14 @@
       "hint_note_card_rounded_shape": "圓形的",
       "hint_note_card_squared_shape": "正方形",
       "item_note_card_elevation": "海拔",
-      "item_note_card_max_lines": "行數"
+      "item_note_card_max_lines": "行數",
+      "title_animations": "動畫",
+      "item_velocity": "速度",
+      "hint_animation_velocity_disabled": "殘疾人",
+      "hint_animation_velocity_slow": "慢的",
+      "hint_animation_velocity_normal": "普通的",
+      "hint_animation_velocity_fast": "快速地",
+      "hint_animation_velocity_very_fast": "非常快"
     },
     "editor": {
       "hint_input_title": "標題",
@@ -554,17 +580,15 @@
       "hint_moved_to_trash_date_prefix": "刪除"
     },
     "sort_notes_sheet": {
-      "title_sheet": "整理筆記",
+      "title_sheet_notes": "整理筆記",
+      "title_sheet_folders": "對文件夾進行排序",
+      "hint_sort_by_ascending": "升序",
+      "hint_sort_by_descending": "降序",
       "hint_sort_category_alphabet": "字母",
       "hint_sort_category_date_creation": "創建日期",
       "hint_sort_category_date_update": "變更日期",
-      "item_in_alphabet": "按字母順序",
-      "item_in_reverse_alphabet": "按逆字母順序排列",
-      "item_by_date_creation": "創建日期升序",
-      "item_by_reverse_date_creation": "創建日期降序",
-      "item_by_date_update": "修改日期升序",
-      "item_by_reverse_date_update": "修改日期降序",
-      "hint_checkbox_sort_pinned_notes": "考慮固定筆記"
+      "hint_checkbox_sort_pinned_notes": "考慮固定筆記",
+      "hint_checkbox_sort_pinned_folders": "考慮固定文件夾"
     }
   }
 }

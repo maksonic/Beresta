@@ -39,7 +39,7 @@ internal fun EditNoteTopBar(
     val offsetValue = -panelHeight.plus(SystemStatusBarHeight)
     val panelOffset = animateDp(if (isScrollUp.value) 0.dp else offsetValue)
     val color = animateColorAsState(
-        if (canScrollBackward.value) surfaceVariant else surface, tween(Theme.animSpeed.common)
+        if (canScrollBackward.value) surfaceVariant else surface, tween(Theme.animVelocity.common)
     )
 
     Row(

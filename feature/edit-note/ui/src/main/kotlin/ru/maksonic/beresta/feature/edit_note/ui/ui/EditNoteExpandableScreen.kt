@@ -27,13 +27,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.ui.EditNoteSandbox
 import ru.maksonic.beresta.feature.edit_note.ui.Eff
 import ru.maksonic.beresta.feature.edit_note.ui.Msg
-import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.notes.api.ui.isBlank
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
@@ -62,7 +60,6 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
         isEntryPoint: Boolean,
         modifier: Modifier
     ) {
-
         ExpandableScreenContainer(
             isEntryPoint = isEntryPoint,
             router = router,
@@ -76,12 +73,10 @@ private fun ExpandableScreenContainer(
     isEntryPoint: Boolean,
     router: EditNoteRouter?,
     modifier: Modifier,
-    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
-    val currentSelectedFolderId = rememberUpdatedState(chipsRowApi.currentSelectedChipId.value)
 
     HandleUiEffects(sandbox.effects, router, focusRequester)
 
@@ -92,15 +87,12 @@ private fun ExpandableScreenContainer(
     LaunchedEffect(isEntryPoint) {
         sandbox.send(Msg.Inner.CheckedEntryPoint(isEntryPoint))
     }
-    LaunchedEffect(currentSelectedFolderId.value) {
-        sandbox.send(Msg.Inner.UpdatedCurrentSelectedFolderId(currentSelectedFolderId.value))
-    }
 
     BoxWithConstraints(
         Modifier.fillMaxWidth(),
         contentAlignment = Alignment.BottomEnd
     ) {
-        val animSpeed = Theme.animSpeed.createNoteFabExpand
+        val animSpeed = Theme.animVelocity.createNoteFabExpand
         val fullHeight = this.maxHeight
         val fullWidth = this.maxWidth
         val fabSize = Theme.widgetSize.btnFabSize
@@ -128,7 +120,7 @@ private fun ExpandableScreenContainer(
                     .height(height.value)
                     .width(width.value),
             ) {
-                AnimateContent(model.value.isExpandedFab) { isExpanded ->
+                AnimateContent(model.value.isExpandedFab, animSpeed = animSpeed) { isExpanded ->
                     if (isExpanded) {
                         EditNoteExpandedContent(
                             model = model.value,
@@ -160,7 +152,7 @@ private fun HandleUiEffects(
     val scope = rememberCoroutineScope()
     val keyboard = LocalSoftwareKeyboardController.current
     val noteMaxLengthWarning = rememberUpdatedState(newValue = text.editNote.noteMaxLengthWarning)
-    val keyboardDelay = Theme.animSpeed.common
+    val keyboardDelay = Theme.animVelocity.common
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router?.let { it.onBack() }

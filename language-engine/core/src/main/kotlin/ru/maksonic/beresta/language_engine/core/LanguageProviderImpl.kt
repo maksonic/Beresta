@@ -26,7 +26,7 @@ class LanguageProviderImpl(
                     editNote = editNotesText(currentLanguage, data),
                     folders = folders(currentLanguage, data),
                     trash = trash(currentLanguage, data),
-                    sortNotesSheet = sortNotesSheet(currentLanguage, data)
+                    sortSheet = sortNotesSheet(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }

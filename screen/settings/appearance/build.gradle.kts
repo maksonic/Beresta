@@ -57,6 +57,7 @@ dependencies {
     implementation(project(module.feature.notes.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
+    implementation(libs.datastore)
     implementation(libs.lifecycle.compose)
     implementation(libs.material3)
     implementation(libs.ui)

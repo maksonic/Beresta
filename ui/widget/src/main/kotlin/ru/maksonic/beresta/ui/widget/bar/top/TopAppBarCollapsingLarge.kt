@@ -27,7 +27,7 @@ fun TopAppBarCollapsingLarge(
     val tonal =
         animateDpAsState(
             if (scrollBehavior?.state?.collapsedFraction == 0f) Theme.tonal.Level0
-            else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animSpeed.common)
+            else Theme.tonal.Level2, label = "", animationSpec = tween(Theme.animVelocity.common)
         )
 
     SurfacePro(tonalElevation = tonal.value) { color ->

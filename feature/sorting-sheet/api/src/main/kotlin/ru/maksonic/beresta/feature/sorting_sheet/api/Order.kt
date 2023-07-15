@@ -6,3 +6,5 @@ package ru.maksonic.beresta.feature.sorting_sheet.api
 enum class Order {
     ASCENDING, DESCENDING
 }
+
+val Order.isAscending get() = this == Order.ASCENDING

@@ -13,9 +13,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.feature.notes.api.LocalNoteCardState
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
-import ru.maksonic.beresta.feature.notes.api.noteUiCardState
+import ru.maksonic.beresta.feature.notes.api.ui.LocalNoteCardState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.noteUiCardState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
@@ -56,7 +56,7 @@ internal fun NoteCardLinesPickerSheetContent(
 
             ModalSheetBottomButtonsRow(
                 onLeftClicked = { send(Msg.Ui.OnModalSheetLinesPickerDefaultClicked) },
-                onRightClicked = { send(Msg.Ui.OnModalSheetLinesPickerSaveClicked) }
+                onRightClicked = { send(Msg.Ui.OnModalSheetAcceptClicked) }
             )
         }
     }

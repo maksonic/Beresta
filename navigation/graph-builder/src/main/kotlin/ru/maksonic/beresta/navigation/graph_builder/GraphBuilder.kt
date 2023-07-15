@@ -13,39 +13,45 @@ import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsAppearanceScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.splashScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashFoldersScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashNotesScreen
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.ui.theme.component.NavigationVelocity
 
 /**
  * @Author maksonic on 15.12.2022
  */
 interface GraphBuilder {
-    fun buildGraph(graphBuilder: NavGraphBuilder)
+    fun buildGraph(graphBuilder: NavGraphBuilder, navigationVelocity: NavigationVelocity)
 
     class Core(
         private val navigator: AbstractNavigator, private val apiStore: FeatureApiStore
     ) : GraphBuilder {
-
-        private companion object {
-            private const val DEF_ANIM_SPEED = 300
-        }
-
         @OptIn(ExperimentalAnimationApi::class)
-        override fun buildGraph(graphBuilder: NavGraphBuilder) {
+        override fun buildGraph(
+            graphBuilder: NavGraphBuilder,
+            navigationVelocity: NavigationVelocity
+        ) {
+            val fade = navigationVelocity.fade
+            val slide = navigationVelocity.slide
+
             graphBuilder.navigation(
                 route = Destination.route,
                 startDestination = Destination.Splash.route,
-                enterTransition = { fadeIn(animationSpec = tween(DEF_ANIM_SPEED)) },
-                exitTransition = { fadeOut(animationSpec = tween(DEF_ANIM_SPEED)) }
+                enterTransition = { fadeIn(animationSpec = tween(fade)) },
+                exitTransition = { fadeOut(animationSpec = tween(fade)) }
             ) {
                 with(navigator) {
                     splashScreen(apiStore.splash, this)
                     onboardingScreen(apiStore.onboarding, this)
                     mainScreen(this)
-                    settingsScreen(this, DEF_ANIM_SPEED)
-                    settingsAppearanceScreen(this, DEF_ANIM_SPEED)
+                    settingsScreen(this, slide)
+                    settingsAppearanceScreen(this, slide)
                     editNoteScreen(apiStore.editNote, this)
-                    foldersScreen(this, DEF_ANIM_SPEED)
+                    foldersScreen(this, slide)
+                    trashNotesScreen(this, slide)
+                    trashFoldersScreen(this, slide)
                 }
             }
         }

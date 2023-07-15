@@ -14,7 +14,8 @@ class MainActivitySandbox(mainActivityProgram: MainActivityProgram) : Sandbox<Mo
     initialCmd = setOf(
         Cmd.FetchAppLangProvider,
         Cmd.FetchThemeFromDataStore,
-        Cmd.FetchThemePaletteFromDataStore
+        Cmd.FetchThemePaletteFromDataStore,
+        Cmd.FetchAnimationVelocity
     ),
     subscriptions = listOf(mainActivityProgram)
 ) {
@@ -23,6 +24,7 @@ class MainActivitySandbox(mainActivityProgram: MainActivityProgram) : Sandbox<Mo
         is Msg.Inner.FetchedThemePalette -> fetchedThemePalette(model, msg)
         is Msg.Inner.UpdatedThemeDarkModeValue -> updatedThemeDarkMode(model, msg)
         is Msg.Inner.FetchedLanguageProvider -> fetchedLangProvider(model, msg)
+        is Msg.Inner.FetchedAnimationsVelocity -> fetchedAnimationsVelocity(model, msg)
     }
 
     private fun fetchedTheme(model: Model, msg: Msg.Inner.FetchedTheme): UpdateResult =
@@ -78,4 +80,9 @@ class MainActivitySandbox(mainActivityProgram: MainActivityProgram) : Sandbox<Mo
         model: Model,
         msg: Msg.Inner.FetchedLanguageProvider
     ): UpdateResult = ElmUpdate(model.copy(languageProvider = msg.provider))
+
+    private fun fetchedAnimationsVelocity(
+        model: Model,
+        msg: Msg.Inner.FetchedAnimationsVelocity
+    ): UpdateResult = ElmUpdate(model.copy(animationVelocity = msg.key))
 }

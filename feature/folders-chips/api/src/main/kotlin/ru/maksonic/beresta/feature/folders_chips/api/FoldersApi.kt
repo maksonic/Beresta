@@ -16,7 +16,7 @@ interface FoldersApi {
 
     interface Ui {
         interface ChipsRow {
-            val currentSelectedChipId: MutableState<Long>
+            val currentSelectedId: SharedUiState<Long>
 
             @Composable
             fun Widget(
@@ -45,8 +45,12 @@ interface FoldersApi {
                 modifier: Modifier
             )
         }
-    }
-    object CurrentFolderKey {
-        const val VALUE = "passedCurrentFolderId"
+        interface Placeholder {
+            @Composable
+            fun List(modifier: Modifier)
+
+            @Composable
+            fun TrashList(modifier: Modifier)
+        }
     }
 }

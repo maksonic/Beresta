@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.sorting_sheet.api
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
 
@@ -11,12 +10,12 @@ import ru.maksonic.beresta.core.SharedUiState
 interface SortingSheetApi {
     interface Feature {
         interface State {
-            val current: Flow<ListSortUiState>
-            suspend fun setOrderState(order: Order)
-            suspend fun setSortState(sort: Sort)
-            suspend fun setCheckboxState(isSortPinned: Boolean)
+            fun current(key: SortDataKey): Flow<ListSortUiState>
+            suspend fun setOrderState(value: Pair<SortDataKey, Order>)
+            suspend fun setSortState(value: Pair<SortDataKey, Sort>)
+            suspend fun setCheckboxState(value: Pair<SortDataKey, Boolean>)
             suspend fun setGridCount(cellCount: Int)
-            suspend fun resetSortState()
+            suspend fun resetSortState(key: SortDataKey)
         }
     }
 
@@ -24,7 +23,7 @@ interface SortingSheetApi {
         val state: SharedUiState<ListSortUiState>
 
         @Composable
-        fun SheetContent(hideSheet: () -> Unit)
+        fun SheetContent(sortDataKey: SortDataKey, hideSheet: () -> Unit)
     }
 }
 

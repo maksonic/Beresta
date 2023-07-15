@@ -16,6 +16,7 @@ data class FolderUi(
     val isPinned: Boolean,
     val pinTime: LocalDateTime?,
     val dateCreationRaw: LocalDateTime,
+    val dateLastUpdateRaw: LocalDateTime?,
     val dateCreation: String = "",
     val dateMovedToTrashRaw: LocalDateTime?,
     val dateMovedToTrash: String? = "",
@@ -35,11 +36,15 @@ data class FolderUi(
             isStickyToStart = false,
             isStickyToEnd = false,
             pinTime = null,
+            dateLastUpdateRaw = null,
             dateCreationRaw = LocalDateTime.now(),
             dateMovedToTrashRaw = null,
             notesCount = 0
         )
     }
+
+    fun trash() = this.copy(isMovedToTrash = true, dateMovedToTrashRaw = LocalDateTime.now())
+    fun restored() = this.copy(isMovedToTrash = false, dateMovedToTrashRaw = null)
 
     @Stable
     @Immutable
@@ -51,10 +56,3 @@ data class FolderUi(
 }
 
 fun FolderUi.isDefaultId() = this.id == 0L
-
-fun List<FolderUi>.sortStickyThenDescendingByPinTimeThenByDate() =
-    this.sortedWith(comparator = compareByDescending<FolderUi> { it.isStickyToStart }
-        .thenByDescending { it.pinTime }
-        .thenByDescending { it.dateCreationRaw }
-        .thenByDescending { it.isStickyToEnd }
-    )

@@ -2,7 +2,7 @@ package ru.maksonic.beresta.feature.notes.ui.di
 
 import org.koin.dsl.module
 import ru.maksonic.beresta.core.SharedUiState
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.ui.card.NoteCard

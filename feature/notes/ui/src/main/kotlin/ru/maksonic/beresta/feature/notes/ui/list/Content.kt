@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes.ui.list
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,10 +14,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -26,9 +27,9 @@ import androidx.compose.ui.platform.LocalDensity
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
 import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiState
 import ru.maksonic.beresta.feature.notes.api.ui.updateScroll
-import ru.maksonic.beresta.feature.notes.ui.NotesFilterUpdater
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
@@ -43,7 +44,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 @Composable
 internal fun Content(
     state: NotesListUiState,
-    updater: NotesFilterUpdater,
+    sorter: State<NotesSorter>,
     noteCard: NotesApi.Ui.Card,
     sharedUiState: SharedUiState<SharedNotesUiState>,
     onNoteClicked: (id: Long) -> Unit,
@@ -106,10 +107,6 @@ internal fun Content(
             .nestedScroll(scrollConnection)
     ) {
         OverscrollBehavior {
-            val order = rememberUpdatedState(listUiSortState.order)
-            val sort = rememberUpdatedState(listUiSortState.sort)
-            val isSortPinned = rememberUpdatedState(listUiSortState.isSortPinned)
-
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Fixed(listUiSortState.gridCount),
@@ -124,14 +121,14 @@ internal fun Content(
                     .statusBarsPadding()
             ) {
                 itemsIndexed(
-                    items = updater.list(order.value, sort.value, isSortPinned.value),
+                    items = sorter.value.sortedWithFilterList,
                     key = { index, item -> if (index == 0) index else item.id }) { _, note ->
                     noteCard.Widget(
                         note = note,
                         isSelected = state.selectedList.contains(note),
                         onNoteClicked = onNoteClicked,
                         onNoteLongClicked = onNoteLongClicked,
-                        modifier = modifier.animateItemPlacement()
+                        modifier = modifier.animateItemPlacement(tween(Theme.animVelocity.common))
                     )
                 }
             }

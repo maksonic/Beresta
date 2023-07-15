@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.Sort
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
+import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.Msg
 import ru.maksonic.beresta.feature.sorting_sheet.ui.ui.widget.CheckboxButton
@@ -27,6 +29,7 @@ import ru.maksonic.beresta.ui.widget.button.ModalSheetBottomButtonsRow
  */
 @Composable
 internal fun Content(
+    sortDataKey: SortDataKey,
     send: SendMessage,
     sortState: State<ListSortUiState>,
     hideSheet: () -> Unit,
@@ -35,13 +38,18 @@ internal fun Content(
 
     CompositionLocalProvider(LocalListSortState provides sortState.value) {
         Column {
-            OrderSelector(onOrderClicked = { send(Msg.Ui.OnOrderClicked(it)) })
+            OrderSelector(
+                key = sortDataKey,
+                onOrderClicked = { send(Msg.Ui.OnOrderClicked(Pair(sortDataKey, it))) }
+            )
+
+            val sort = if (sortDataKey.isNotes) listUiSortState.notes else listUiSortState.folders
 
             sortVariants.forEach { item ->
                 SortItem(
                     item = item,
-                    selected = item.second == listUiSortState.sort,
-                    onSelect = { send(Msg.Ui.OnSortSelected(it)) }
+                    selected = item.second == sort.sort,
+                    onSelect = { send(Msg.Ui.OnSortSelected(Pair(sortDataKey, it))) }
                 )
             }
 
@@ -52,10 +60,10 @@ internal fun Content(
                     .padding(start = dp32, end = dp32, top = dp16, bottom = dp16)
             )
 
-            CheckboxButton { send(Msg.Ui.OnCheckboxClicked(it)) }
+            CheckboxButton(sortDataKey) { send(Msg.Ui.OnCheckboxClicked(Pair(sortDataKey, it))) }
 
             ModalSheetBottomButtonsRow(
-                onLeftClicked = { send(Msg.Ui.OnDefaultBtnClicked) },
+                onLeftClicked = { send(Msg.Ui.OnDefaultBtnClicked(sortDataKey)) },
                 onRightClicked = hideSheet
             )
         }
@@ -63,10 +71,10 @@ internal fun Content(
 }
 
 private val sortVariants
-    @Composable get() = with(text.sortNotesSheet) {
+    @Composable get() = with(text.sortSheet) {
         listOf(
-            "Алфавит" to Sort.ALPHABET,
-            "Дата создания" to Sort.DATE_CREATION,
-            "Дата изменения" to Sort.DATE_UPDATE,
+            hintSortCategoryAlphabet to Sort.ALPHABET,
+            hintSortCategoryDateCreation to Sort.DATE_CREATION,
+            hintSortCategoryDateUpdate to Sort.DATE_UPDATE,
         )
     }

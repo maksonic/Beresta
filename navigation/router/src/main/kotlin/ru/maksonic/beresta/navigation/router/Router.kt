@@ -8,6 +8,8 @@ import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
 import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsAppearanceScreenRouter
+import ru.maksonic.beresta.navigation.router.router.trash.TrashFoldersScreenRouter
+import ru.maksonic.beresta.navigation.router.router.trash.TrashNotesScreenRouter
 
 /**
  * @Author maksonic on 15.11.2022
@@ -20,4 +22,6 @@ interface Router {
     fun settingsAppearanceRouter(entry: NavBackStackEntry): SettingsAppearanceScreenRouter
     fun editNoteRouter(entry: NavBackStackEntry): EditNoteRouter
     fun foldersRouter(entry: NavBackStackEntry): FoldersScreenRouter
+    fun trashNotesRouter(entry: NavBackStackEntry): TrashNotesScreenRouter
+    fun trashFoldersRouter(entry: NavBackStackEntry): TrashFoldersScreenRouter
 }

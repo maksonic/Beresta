@@ -12,6 +12,7 @@ data class LangSharedData(
     @SerializedName("note_title") val title: String = "",
     @SerializedName("btn_title_save") val btnTitleSave: String = "",
     @SerializedName("btn_title_cancel") val btnTitleCancel: String = "",
+    @SerializedName("btn_title_accept") val btnTitleAccept: String = "",
     @SerializedName("btn_title_close") val btnTitleClose: String = "",
     @SerializedName("btn_title_hide") val btnTitleHide: String = "",
     @SerializedName("btn_title_pin") val btnTitlePin: String = "",

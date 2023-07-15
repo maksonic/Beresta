@@ -13,7 +13,7 @@ import ru.maksonic.beresta.screen.settings.ui.SettingsScreen
  * @Author maksonic on 17.02.2023
  */
 @OptIn(ExperimentalAnimationApi::class)
-internal fun NavGraphBuilder.settingsScreen(navigator: AbstractNavigator, defAnimSpeed: Int) {
+internal fun NavGraphBuilder.settingsScreen(navigator: AbstractNavigator, animationVelocity: Int) {
     composable(
         route = Destination.Settings.route,
         enterTransition = {
@@ -21,7 +21,7 @@ internal fun NavGraphBuilder.settingsScreen(navigator: AbstractNavigator, defAni
                 Destination.Main.route ->
                     slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(defAnimSpeed)
+                        animationSpec = tween(animationVelocity)
                     )
                 else -> null
             }
@@ -31,7 +31,7 @@ internal fun NavGraphBuilder.settingsScreen(navigator: AbstractNavigator, defAni
                 Destination.Main.route ->
                     slideOutOfContainer(
                         AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(defAnimSpeed)
+                        animationSpec = tween(animationVelocity)
                     )
                 else -> null
             }

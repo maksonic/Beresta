@@ -34,24 +34,34 @@ import ru.maksonic.beresta.screen.folders.di.foldersScreenModule
 import ru.maksonic.beresta.screen.main.di.mainScreenModule
 import ru.maksonic.beresta.screen.settings.appearance.di.settingsAppearanceScreenModule
 import ru.maksonic.beresta.screen.settings.di.settingsScreenModule
+import ru.maksonic.beresta.screen.trash_list.folders.di.trashFoldersScreenModule
+import ru.maksonic.beresta.screen.trash_list.notes.di.trashNotesScreenModule
 
 /**
  * @Author maksonic on 22.04.2023
  */
 class BerestaApplication : Application() {
     private val modules = listOf(
+        //core
         appModule,
         coreModule,
-        settingsScreenModule,
-        settingsAppearanceScreenModule,
         coroutineDispatchersModule,
-        navigationModule,
         jsonConverterModule,
         languageEngineModule,
+        navigationModule,
+        //data
         dataCommonModule,
         databaseModule,
         notesDataModule,
         foldersDataModule,
+        //screens
+        mainScreenModule,
+        settingsScreenModule,
+        settingsAppearanceScreenModule,
+        foldersScreenModule,
+        trashNotesScreenModule,
+        trashFoldersScreenModule,
+        //features
         themePickerUiFeatureModule,
         themePickerCoreFeatureModule,
         languagePickerUiFeatureModule,
@@ -59,7 +69,6 @@ class BerestaApplication : Application() {
         splashScreenCoreFeatureModule,
         onboardingCoreFeatureModule,
         onboardingUiFeatureModule,
-        mainScreenModule,
         notesUiFeatureModule,
         notesCoreFeatureModule,
         editNoteUiFeatureModule,
@@ -67,9 +76,8 @@ class BerestaApplication : Application() {
         topBarCounterUiFeatureModule,
         foldersChipsRowUiFeatureModule,
         foldersChipsRowCoreFeatureModule,
-        foldersScreenModule,
         sortingSheetUiFeatureModule,
-        listSortCoreFeatureModule
+        listSortCoreFeatureModule,
     )
 
     override fun onCreate() {

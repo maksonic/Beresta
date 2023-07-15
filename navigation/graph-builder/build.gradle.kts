@@ -48,10 +48,13 @@ android {
 
 dependencies {
     implementation(project(module.primary.navigation.router.path))
+    implementation(project(module.primary.ui.theme.path))
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.path))
     implementation(project(module.screen.settingsAppearance.path))
     implementation(project(module.screen.folders.path))
+    implementation(project(module.screen.trashList.notes.path))
+    implementation(project(module.screen.trashList.folders.path))
     implementation(project(module.feature.onboarding.api.path))
     implementation(project(module.feature.splashScreen.api.path))
     implementation(project(module.feature.editNote.api.path))

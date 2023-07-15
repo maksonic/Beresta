@@ -11,6 +11,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
+import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
@@ -27,10 +29,13 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  */
 @Composable
 internal fun CheckboxButton(
+    key: SortDataKey,
     modifier: Modifier = Modifier,
     onCheckboxClicked: (Boolean) -> Unit
 ) {
-    val isChecked = rememberUpdatedState(!listUiSortState.isSortPinned)
+    val sortState = if (key.isNotes) listUiSortState.notes else listUiSortState.folders
+    val isChecked = rememberUpdatedState(!sortState.isSortPinned)
+
     Row(
         modifier
             .fillMaxWidth()
@@ -39,8 +44,12 @@ internal fun CheckboxButton(
             .clickAction(primary) { onCheckboxClicked(isChecked.value) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        val title = with(text.sortSheet) {
+            if (key.isNotes) hintCheckboxPinnedNotes else hintCheckboxPinnedFolders
+        }
+
         Checkbox(
-            checked = listUiSortState.isSortPinned,
+            checked = sortState.isSortPinned,
             onCheckedChange = onCheckboxClicked,
             colors = CheckboxDefaults.colors(
                 checkedColor = tertiaryContainer,
@@ -52,7 +61,7 @@ internal fun CheckboxButton(
             )
         )
         Text(
-            text = text.sortNotesSheet.hintCheckboxSortPinned,
+            text = title,
             style = TextDesign.captionNormal.copy(tertiaryContainer)
         )
     }

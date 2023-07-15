@@ -17,6 +17,7 @@ import ru.maksonic.beresta.ui.theme.icons.SelectAll
 import ru.maksonic.beresta.ui.theme.icons.SortBy
 import ru.maksonic.beresta.ui.widget.bar.top.TopAppCollapsingCounterBar
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 06.07.2023
@@ -47,25 +48,33 @@ internal fun TopBar(
                 send(Msg.Ui.OnTopBarBackPressed)
             }
         },
-        actions = { ActionIcon(send, isSelectionState) }
+        actions = {
+            ActionIcon(
+                send = send,
+                isVisible = model.value.base.successAfterLoading,
+                isSelectionState = isSelectionState
+            )
+        }
     )
 }
 
 @Composable
-private fun ActionIcon(send: SendMessage, isSelectionState: State<Boolean>) {
-    Crossfade(
-        targetState = isSelectionState.value,
-        animationSpec = tween(Theme.animSpeed.common)
-    ) {
-        ClickableIcon(
-            icon = if (it) AppIcon.SelectAll else AppIcon.SortBy,
-            action = {
-                if (isSelectionState.value) {
-                    send(Msg.Ui.OnTopBarSelectAllClicked)
-                } else {
-                    send(Msg.Ui.OnTopBarSortFolderClicked)
+private fun ActionIcon(send: SendMessage, isVisible: Boolean, isSelectionState: State<Boolean>) {
+    AnimateFadeInOut(isVisible) {
+        Crossfade(
+            targetState = isSelectionState.value,
+            animationSpec = tween(Theme.animVelocity.common)
+        ) {
+            ClickableIcon(
+                icon = if (it) AppIcon.SelectAll else AppIcon.SortBy,
+                action = {
+                    if (isSelectionState.value) {
+                        send(Msg.Ui.OnTopBarSelectAllClicked)
+                    } else {
+                        send(Msg.Ui.OnTopBarSortFolderClicked)
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }

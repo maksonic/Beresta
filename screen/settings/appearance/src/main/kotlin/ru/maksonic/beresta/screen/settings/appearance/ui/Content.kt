@@ -22,6 +22,7 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Model
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.MultipleModalBottomSheetContent
+import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.AnimationsSettingItem
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.CardSettingItem
 import ru.maksonic.beresta.ui.theme.color.background
 import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
@@ -44,7 +45,10 @@ internal fun Content(
     val currentSheetContent = rememberUpdatedState(model.value.modalSheet.content)
     val noteCardState = noteCardApi.state.state.collectAsStateWithLifecycle()
 
-    Box(modifier.fillMaxSize().navigationBarsPadding()) {
+    Box(
+        modifier
+            .fillMaxSize()
+            .navigationBarsPadding()) {
         Scaffold(
             topBar = {
                 TopAppBarCollapsingLarge(
@@ -57,8 +61,13 @@ internal fun Content(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
 
-            Column(modifier.verticalScroll(scrollState).padding(paddings)) {
-                CardSettingItem(send, noteCardState)
+            Column(
+                modifier
+                    .verticalScroll(scrollState)
+                    .padding(paddings)) {
+                CardSettingItem(send, noteCardState, model.value.currentLang)
+
+                AnimationsSettingItem(send)
             }
         }
 

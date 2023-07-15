@@ -5,6 +5,7 @@ import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi
 import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 import ru.maksonic.beresta.language_engine.shell.provider.LanguageProvider
+import ru.maksonic.beresta.screen.settings.appearance.core.AnimationVelocity
 
 /**
  * @Author maksonic on 18.02.2023
@@ -13,7 +14,8 @@ class MainActivityProgram(
     private val themeFeatureApi: ThemePickerApi.Feature.Theme,
     private val paletteFeatureApi: ThemePickerApi.Feature.Palette,
     private val languageEngineApi: LanguageEngineApi,
-    private val languageProvider: LanguageProvider
+    private val languageProvider: LanguageProvider,
+    private val animationVelocity: AnimationVelocity,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -21,6 +23,7 @@ class MainActivityProgram(
             is Cmd.FetchThemePaletteFromDataStore -> fetchThemePaletteFromDatastore(consumer)
             is Cmd.FetchAppLangProvider -> fetchAppLangProvider(consumer)
             is Cmd.UpdateDarkModeInDatastore -> updateDarkModeValue(cmd.isDarkMode)
+            is Cmd.FetchAnimationVelocity -> fetchAnimationVelocity(consumer)
         }
     }
 
@@ -44,4 +47,9 @@ class MainActivityProgram(
     private suspend fun updateDarkModeValue(isDarkMode: Boolean) {
         themeFeatureApi.updateDarkMode(isDarkMode)
     }
+
+    private suspend fun fetchAnimationVelocity(consumer: (Msg) -> Unit) =
+        animationVelocity.currentCacheVelocity.collect {
+            consumer(Msg.Inner.FetchedAnimationsVelocity(it.current))
+        }
 }

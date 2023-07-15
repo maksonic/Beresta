@@ -53,7 +53,7 @@ dependencies {
     implementation(project(module.primary.elm.path))
     implementation(project(module.primary.navigation.router.path))
     implementation(project(module.primary.languageEngine.shell.path))
-    implementation(project(module.feature.notes.api.path))
+    implementation(project(module.feature.sortingSheet.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
 }

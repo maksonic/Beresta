@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.DateFormatter
-import ru.maksonic.beresta.feature.notes.api.LocalNoteCardState
-import ru.maksonic.beresta.feature.notes.api.NoteCardShape
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
-import ru.maksonic.beresta.feature.notes.api.isEnabled
-import ru.maksonic.beresta.feature.notes.api.isSquare
-import ru.maksonic.beresta.feature.notes.api.noteUiCardState
+import ru.maksonic.beresta.feature.notes.api.ui.LocalNoteCardState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.isEnabled
+import ru.maksonic.beresta.feature.notes.api.ui.isSquare
+import ru.maksonic.beresta.feature.notes.api.ui.noteUiCardState
 import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
@@ -43,7 +43,7 @@ import ru.maksonic.beresta.ui.widget.button.settings.DropdownMenuItem
 import ru.maksonic.beresta.ui.widget.button.settings.RightPart
 import ru.maksonic.beresta.ui.widget.button.settings.SettingClickableItem
 import ru.maksonic.beresta.ui.widget.button.settings.SettingItem
-import ru.maksonic.beresta.ui.widget.button.settings.SettingWithDropdownClickableItem
+import ru.maksonic.beresta.ui.widget.button.settings.SettingDropdownClickableItem
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.surface.SettingContainer
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
@@ -57,6 +57,7 @@ import java.time.LocalDateTime
 internal fun CardSettingItem(
     send: SendMessage,
     noteCardState: State<NoteCardUiState>,
+    currentLang: AppLanguage,
     modifier: Modifier = Modifier
 ) {
     CompositionLocalProvider(LocalNoteCardState provides noteCardState.value) {
@@ -65,9 +66,9 @@ internal fun CardSettingItem(
 
             SettingTitle(title = text.settingsAppearance.titleNoteCard)
 
-            Card(modifier)
+            Card(modifier, currentLang)
 
-            SettingWithDropdownClickableItem(shapeSettingItem(), dropdownMenuItems(send))
+            SettingDropdownClickableItem(shapeSettingItem(), dropdownMenuItems(send))
 
             items(send).forEach { item ->
                 SettingClickableItem(item)
@@ -79,6 +80,7 @@ internal fun CardSettingItem(
 @Composable
 private fun Card(
     modifier: Modifier,
+    currentLang: AppLanguage,
     dateFormatter: DateFormatter = koinInject()
 ) {
     val corner = animateDp(with(noteUiCardState.shape) { if (isSquare) dp else dp })
@@ -103,7 +105,7 @@ private fun Card(
                     style = TextDesign.title.copy(color = onPrimaryContainer),
                     maxLines = noteUiCardState.maxTitleLines,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = modifier.animateContentSize(tween(Theme.animSpeed.common))
+                    modifier = modifier.animateContentSize(tween(Theme.animVelocity.common))
                 )
 
                 Text(
@@ -111,13 +113,10 @@ private fun Card(
                     style = TextDesign.bodyPrimary.copy(color = onPrimaryContainer),
                     maxLines = noteUiCardState.maxMessageLines,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = modifier.animateContentSize(tween(Theme.animSpeed.common))
+                    modifier = modifier.animateContentSize(tween(Theme.animVelocity.common))
                 )
                 Text(
-                    text = dateFormatter.fetchFormattedUiDate(
-                        LocalDateTime.now(),
-                        AppLanguage.RUSSIAN
-                    ),
+                    text = dateFormatter.fetchFormattedUiDate(LocalDateTime.now(), currentLang),
                     style = TextDesign.captionSmall.copy(color = inverseSurface),
                     maxLines = 1,
                     modifier = Modifier.padding(top = dp8)

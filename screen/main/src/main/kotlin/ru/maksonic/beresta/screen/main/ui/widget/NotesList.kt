@@ -6,24 +6,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.api.NotesApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
-import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
-import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.component.dp10
+import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
+import ru.maksonic.beresta.ui.widget.bar.system.SystemStatusBarHeight
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 
 /**
@@ -33,7 +30,6 @@ import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 fun NotesList(
     model: State<Model>,
     send: SendMessage,
-    currentFolderId: Long,
     api: NotesApi.Ui.List,
     chipsRowOffsetHeightPx: MutableState<Float>,
     modifier: Modifier = Modifier,
@@ -41,13 +37,19 @@ fun NotesList(
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         when {
             model.value.notes.state.isLoading -> {
-                api.Placeholder(listUiSortState.gridCount)
+                val topPadding = Theme.widgetSize.topBarNormalHeight
+                    .plus(Theme.widgetSize.noteChipsContainerHeight)
+                    .plus(SystemStatusBarHeight).plus(dp4)
+
+                api.Placeholder(
+                    listUiSortState.gridCount,
+                    modifier.padding(top = topPadding, start = dp10, end = dp10)
+                )
             }
 
             model.value.notes.state.successAfterLoading -> {
                 api.Widget(
                     state = model.value.notes,
-                    currentFolderId = currentFolderId,
                     onNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },
                     onNoteLongClicked = { send(Msg.Ui.OnNoteLongClicked(it)) },
                     chipsRowOffsetHeightPx = chipsRowOffsetHeightPx

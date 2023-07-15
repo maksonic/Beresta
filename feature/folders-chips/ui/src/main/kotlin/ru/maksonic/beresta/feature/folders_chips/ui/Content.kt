@@ -12,14 +12,22 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
+import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
 import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiState
+import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
+import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
@@ -37,21 +45,22 @@ import kotlin.math.roundToInt
 @Composable
 internal fun Content(
     chips: FolderUi.Collection,
-    currentSelectedId: MutableState<Long>,
     chipsRowOffsetHeightPx: MutableState<Float>,
     onAddNewChipClicked: () -> Unit,
+    updateCurrentSelectedFolder: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    notesSharedUiState: State<SharedNotesUiState>
+    notesSharedUiState: State<SharedNotesUiState>,
+    listSortUiState: SortingSheetApi.Ui
 ) {
+    val listSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
     val tonal = animateDp(
         if (!notesSharedUiState.value.canScrollBackward) Theme.tonal.Level0 else Theme.tonal.Level2
     )
 
     SurfacePro(
         tonalElevation = tonal.value,
-        modifier = modifier.offset {
-            IntOffset(x = 0, y = chipsRowOffsetHeightPx.value.roundToInt())
-        }
+        modifier = modifier
+            .offset { IntOffset(x = 0, y = chipsRowOffsetHeightPx.value.roundToInt()) }
     ) { resultColor ->
         Row(
             modifier
@@ -62,34 +71,46 @@ internal fun Content(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val lazyRowState = rememberLazyListState()
-
-            LaunchedEffect(currentSelectedId.value) {
-                lazyRowState.autoScrollToCurrentChip(chips.data, currentSelectedId.value)
-            }
-
+            val currentSelectedId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
             OverscrollBehavior {
-                LazyRow(
-                    state = lazyRowState,
-                    modifier = modifier
-                        .weight(1f, false)
-                        .rowFadingEdge(
-                            startEdgeInitialColor = resultColor,
-                            isVisibleStartEdge = lazyRowState.canScrollBackward,
-                            isVisibleEndEdge = lazyRowState.canScrollForward,
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(dp8),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    items(
-                        items = chips.data,
-                        key = { chip -> chip.id }) { item ->
-                        ChipItem(
-                            item = item,
-                            isSelected = item.id == currentSelectedId.value,
-                            onChipClicked = { currentSelectedId.value = it },
-                            modifier = modifier.animateItemPlacement()
+                CompositionLocalProvider(LocalListSortState provides listSortState.value) {
+                    val chipsSorter = rememberUpdatedState(
+                        FoldersSorter(
+                            list = chips.data,
+                            order = listUiSortState.folders.order,
+                            isSortPinned = listUiSortState.folders.isSortPinned,
+                            sort = listUiSortState.folders.sort
                         )
+                    )
+
+                    LaunchedEffect(currentSelectedId.value) {
+                        lazyRowState.autoScrollToCurrentChip(
+                            chipsSorter.value.sortedList, currentSelectedId.value
+                        )
+                    }
+
+                    LazyRow(
+                        state = lazyRowState,
+                        modifier = modifier
+                            .weight(1f, false)
+                            .rowFadingEdge(
+                                startEdgeInitialColor = resultColor,
+                                isVisibleStartEdge = lazyRowState.canScrollBackward,
+                                isVisibleEndEdge = lazyRowState.canScrollForward,
+                            ),
+                        horizontalArrangement = Arrangement.spacedBy(dp8),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        items(
+                            items = chipsSorter.value.sortedList,
+                            key = { chip -> chip.id }) { item ->
+                            ChipItem(
+                                item = item,
+                                isSelected = item.id == currentSelectedId.value,
+                                onChipClicked = { updateCurrentSelectedFolder(it) },
+                                modifier = modifier.animateItemPlacement()
+                            )
+                        }
                     }
                 }
             }

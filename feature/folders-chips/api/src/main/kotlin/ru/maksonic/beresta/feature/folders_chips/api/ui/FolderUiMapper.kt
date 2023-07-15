@@ -6,7 +6,7 @@ import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
 /**
  * @Author maksonic on 30.03.2023
  */
-class FolderToUiMapper : Mapper<FolderDomain, FolderUi> {
+class FolderUiMapper : Mapper<FolderDomain, FolderUi> {
     override fun mapTo(i: FolderDomain) = FolderUi(
         id = i.id,
         title = i.title,
@@ -15,6 +15,7 @@ class FolderToUiMapper : Mapper<FolderDomain, FolderUi> {
         isPinned = i.isPinned,
         pinTime = i.pinTime,
         dateCreationRaw = i.dateCreation,
+        dateLastUpdateRaw = i.dateLastUpdateRaw,
         isSelectable = i.isSelectable,
         isStickyToStart = i.isStickyToStart,
         isStickyToEnd = i.isStickyToEnd,
@@ -29,6 +30,7 @@ class FolderToUiMapper : Mapper<FolderDomain, FolderUi> {
         isPinned = o.isPinned,
         pinTime = o.pinTime,
         dateCreation = o.dateCreationRaw,
+        dateLastUpdateRaw = o.dateLastUpdateRaw,
         isSelectable = o.isSelectable,
         isStickyToStart = o.isStickyToStart,
         isStickyToEnd = o.isStickyToEnd,

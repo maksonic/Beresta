@@ -16,7 +16,7 @@ val editNoteUiFeatureModule = module {
             interactor = get(),
             fetchNoteByIdUseCase = get(),
             mapper = get(),
-            navigator = get()
+            navigator = get(),
         )
     }
     single<EditNoteApi.Ui> { EditNoteExpandableScreen() }

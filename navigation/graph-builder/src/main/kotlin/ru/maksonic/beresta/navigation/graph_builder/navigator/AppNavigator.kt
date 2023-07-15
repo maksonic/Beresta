@@ -10,6 +10,8 @@ import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
 import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsAppearanceScreenRouter
+import ru.maksonic.beresta.navigation.router.router.trash.TrashFoldersScreenRouter
+import ru.maksonic.beresta.navigation.router.router.trash.TrashNotesScreenRouter
 
 /**
  * @Author maksonic on 15.11.2022
@@ -52,4 +54,12 @@ class AppNavigator : AbstractNavigator() {
 
     override fun foldersRouter(entry: NavBackStackEntry) =
         FoldersScreenRouter(onBack = ::backPressed)
+
+    override fun trashNotesRouter(entry: NavBackStackEntry) = TrashNotesScreenRouter(
+        onBack = ::backPressed,
+        toTrashedFoldersList = { navigate(entry, Destination.TrashFoldersList.route) }
+    )
+
+    override fun trashFoldersRouter(entry: NavBackStackEntry) =
+        TrashFoldersScreenRouter(onBack = ::backPressed)
 }

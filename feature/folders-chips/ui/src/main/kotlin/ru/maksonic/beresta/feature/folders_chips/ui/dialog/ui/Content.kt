@@ -1,8 +1,6 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,7 +38,6 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.button.DialogButton
 
 /**
  * @Author maksonic on 03.07.2023
@@ -62,18 +59,14 @@ internal fun Content(
         focusRequester.requestFocus()
     }
 
-     LaunchedEffect(passedFolderId.longValue) {
-         send(Msg.Inner.FetchedEditableFolderId(passedFolderId.longValue))
-     }
+    LaunchedEffect(passedFolderId.longValue) {
+        send(Msg.Inner.FetchedEditableFolderId(passedFolderId.longValue))
+    }
 
-    Column(
-        modifier
-            .fillMaxWidth()
-            .padding(start = dp16, end = dp16),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val dialogTitle = if (model.value.isNewFolder) text.folders.titleDialogNewFolder
-        else text.folders.titleDialogEditFolder
+    val dialogTitle = if (model.value.isNewFolder) text.folders.titleDialogNewFolder
+    else text.folders.titleDialogEditFolder
+
+    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
         Text(
             dialogTitle,
@@ -82,27 +75,6 @@ internal fun Content(
         )
 
         InputFolderName(model, send, focusRequester)
-
-        Row(
-            modifier.padding(top = dp16),
-            horizontalArrangement = Arrangement.spacedBy(dp16)
-        ) {
-            val acceptBtnTitle = if (model.value.isNewFolder) text.shared.btnTitleCreate
-            else text.shared.btnTitleChange
-
-            DialogButton(
-                action = { send(Msg.Ui.OnDismissClicked) },
-                title = text.shared.btnTitleCancel,
-                isDismiss = true,
-                modifier = Modifier.weight(1f)
-            )
-            DialogButton(
-                action = { send(Msg.Ui.OnAcceptClicked) },
-                title = acceptBtnTitle,
-                isDismiss = false,
-                modifier = Modifier.weight(1f)
-            )
-        }
     }
 }
 

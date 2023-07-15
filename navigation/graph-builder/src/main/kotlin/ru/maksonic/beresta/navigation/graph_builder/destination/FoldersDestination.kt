@@ -15,7 +15,7 @@ import ru.maksonic.beresta.screen.folders.ui.FoldersScreen
  * @Author maksonic on 03.04.2023
  */
 @OptIn(ExperimentalAnimationApi::class)
-internal fun NavGraphBuilder.foldersScreen(navigator: AbstractNavigator, defAnimSpeed: Int) {
+internal fun NavGraphBuilder.foldersScreen(navigator: AbstractNavigator, animationVelocity: Int) {
     composable(
         route = Destination.Folders.routeWithArg,
         arguments = listOf(navArgument(Destination.Folders.passedKey) {
@@ -26,7 +26,7 @@ internal fun NavGraphBuilder.foldersScreen(navigator: AbstractNavigator, defAnim
                 Destination.Main.route ->
                     slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Up,
-                        animationSpec = tween(defAnimSpeed)
+                        animationSpec = tween(animationVelocity)
                     )
 
                 else -> null
@@ -37,7 +37,7 @@ internal fun NavGraphBuilder.foldersScreen(navigator: AbstractNavigator, defAnim
                 Destination.Main.route ->
                     slideOutOfContainer(
                         AnimatedContentTransitionScope.SlideDirection.Down,
-                        animationSpec = tween(defAnimSpeed)
+                        animationSpec = tween(animationVelocity)
                     )
 
                 else -> null

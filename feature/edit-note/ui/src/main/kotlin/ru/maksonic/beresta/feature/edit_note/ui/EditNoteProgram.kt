@@ -17,7 +17,7 @@ class EditNoteProgram(
     private val interactor: NotesInteractor,
     private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
     private val mapper: NoteUiMapper,
-    private val navigator: AbstractNavigator
+    private val navigator: AbstractNavigator,
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
@@ -35,6 +35,7 @@ class EditNoteProgram(
                 val note = mapper.mapTo(noteDomain)
                 consumer(Msg.Inner.FetchedPassedNoteResult(note))
             }
+
         }.onFailure {
             consumer(Msg.Inner.FetchedPassedNoteResult(NoteUi.Default))
         }

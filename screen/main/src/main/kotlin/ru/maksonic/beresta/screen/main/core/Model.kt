@@ -87,7 +87,7 @@ sealed class Msg : ElmMessage {
         object OnCollapseSearchBar : Ui()
         object OnExpandSearchBar : Ui()
         object OnCounterBarShareClicked : Ui()
-        object OnCounterBarSelectAllClicked : Ui()
+        data class OnCounterBarSelectAllClicked(val currentFolderId: Long) : Ui()
         data class OnChangeGridViewClicked(val count: Int) : Ui()
         //all
         object OnHideModalBottomSheet : Ui()
@@ -102,7 +102,6 @@ sealed class Msg : ElmMessage {
         object HiddenModalBottomSheet : Inner()
         object HideRemovedNotesSnackBar : Inner()
         data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
-        data class UpdatedCurrentSelectedChipId(val id: Long) : Inner()
     }
 }
 
@@ -114,6 +113,7 @@ sealed class Cmd : ElmCommand {
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
     object FetchChipsData : Cmd()
+    object FetchChipsSortState : Cmd()
 }
 
 sealed class Eff : ElmEffect {
@@ -121,6 +121,7 @@ sealed class Eff : ElmEffect {
     object HideModalSheet : Eff()
     object NavigateToSettings : Eff()
     data class NavigateToFolders(val ids: List<Long>) : Eff()
+    object NavigateToTrash : Eff()
     object ShowAddNewChipDialog : Eff()
 
 }

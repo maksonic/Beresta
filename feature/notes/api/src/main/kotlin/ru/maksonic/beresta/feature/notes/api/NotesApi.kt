@@ -5,6 +5,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardElevation
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiState
@@ -34,14 +37,13 @@ interface NotesApi {
             @Composable
             fun Widget(
                 state: NotesListUiState,
-                currentFolderId: Long,
                 onNoteClicked: (id: Long) -> Unit,
                 onNoteLongClicked: (id: Long) -> Unit,
                 chipsRowOffsetHeightPx: MutableState<Float>
             )
 
             @Composable
-            fun Placeholder(gridCellsCount: Int)
+            fun Placeholder(gridCellsCount: Int, modifier: Modifier)
         }
     }
 

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.feature.notes.api.NoteCardUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.screen.settings.appearance.core.ModalSheetContent
 import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
 
@@ -26,6 +26,9 @@ internal fun MultipleModalBottomSheetContent(
             NoteCardLinesPickerSheetContent(send, noteCardState)
         }
 
+        ModalSheetContent.ANIMATIONS_VELOCITY_PICKER -> {
+            AnimationsVelocityPickerSheetContent(send)
+        }
         ModalSheetContent.NOTHING -> Box(modifier.size(1.dp))
     }
 }
