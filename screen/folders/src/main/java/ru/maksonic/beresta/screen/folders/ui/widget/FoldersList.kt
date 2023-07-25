@@ -15,18 +15,21 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
+import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
 import ru.maksonic.beresta.screen.folders.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp6
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.PhonelinkLock
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.ErrorFolderPlaceholder
+import ru.maksonic.beresta.ui.widget.button.QuaternaryButton
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
@@ -119,6 +122,18 @@ private fun FetchedSuccess(
             ),
             modifier = modifier.fillMaxSize()
         ) {
+
+            if (!model.value.isMoveNotesToFolder) {
+                item {
+                    QuaternaryButton(
+                        isEnabled = !model.value.isSelectionState,
+                        title = "Скрытые заметки",
+                        prefixIcon = AppIcon.PhonelinkLock,
+                        onNavigateToFoldersClicked = { send(Msg.Ui.OnToHiddenNotesClicked) }
+                    )
+                }
+            }
+
             itemsIndexed(
                 items = foldersSorter.value.sortedList,
                 key = { index, item -> if (index == 0) index else item.id }) { _, folder ->

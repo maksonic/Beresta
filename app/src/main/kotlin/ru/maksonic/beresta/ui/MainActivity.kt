@@ -29,6 +29,8 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.Msg
+import ru.maksonic.beresta.core.VibrationPerformer
+import ru.maksonic.beresta.core.secure.ScreenCaptureManager
 import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
@@ -57,13 +59,17 @@ class MainActivity : ComponentActivity() {
     private val navigator: AbstractNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
     private val splashVisibility = MutableStateFlow(true)
+    private val screenCaptureManager: ScreenCaptureManager by inject()
+    private val vibrationPerformer: VibrationPerformer by inject()
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        screenCaptureManager.initMutablePermission(window, lifecycleScope)
         updateSplashState()
         installSplashScreen()
         super.onCreate(savedInstanceState)
+
         fixChinesVendorEmptyScreen()
         setContent {
             navigator.navController = rememberAnimatedNavController()
@@ -102,7 +108,8 @@ class MainActivity : ComponentActivity() {
                     )
 
                     SurfacePro(color = surface) {
-                        val animationVelocity = rememberUpdatedState(Theme.animVelocity.navigationVelocity)
+                        val animationVelocity =
+                            rememberUpdatedState(Theme.animVelocity.navigationVelocity)
                         AnimatedNavHost(
                             navController = navigator.navController,
                             startDestination = Destination.route,

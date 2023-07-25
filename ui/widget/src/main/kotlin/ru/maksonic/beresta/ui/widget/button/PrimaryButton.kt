@@ -3,11 +3,13 @@ package ru.maksonic.beresta.ui.widget.button
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,6 +25,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.transparent
+import ru.maksonic.beresta.ui.theme.component.AppRipple
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 
 /**
@@ -49,24 +52,27 @@ fun PrimaryButton(
         mutableStateOf(true)
     }
 
-    Button(
-        onClick = {
-            scope.launch {
-                isEnabled = false
-                action.invoke()
-                delay(clickTimeOut)
-                isEnabled = true
-            }
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = onTertiaryContainer
-        ),
-        elevation = elevation,
-        shape = shape,
-        border = border,
-        modifier = modifier.height(Theme.widgetSize.btnPrimaryHeight)
-    ) {
-        Text(text = title, color = titleColor, style = TextDesign.title)
+    CompositionLocalProvider(LocalRippleTheme provides AppRipple) {
+
+        Button(
+            onClick = {
+                scope.launch {
+                    isEnabled = false
+                    action.invoke()
+                    delay(clickTimeOut)
+                    isEnabled = true
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = backgroundColor,
+                contentColor = onTertiaryContainer
+            ),
+            elevation = elevation,
+            shape = shape,
+            border = border,
+            modifier = modifier.height(Theme.widgetSize.btnPrimaryHeight)
+        ) {
+            Text(text = title, color = titleColor, style = TextDesign.title)
+        }
     }
 }

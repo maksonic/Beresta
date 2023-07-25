@@ -45,7 +45,12 @@ class FolderDialogProgram(
                 it.addFolder(folderDomain.copy(dateCreation = LocalDateTime.now()))
                 updateCurrentFolder()
             } else {
-                it.updateFolder(folderDomain.copy(dateCreation = folder.dateCreationRaw))
+                it.updateFolder(
+                    folderDomain.copy(
+                        dateCreation = folder.dateCreationRaw,
+                        dateLastUpdateRaw = LocalDateTime.now()
+                    )
+                )
             }
         }
     }

@@ -3,6 +3,7 @@ package ru.maksonic.beresta.navigation.router
 import androidx.navigation.NavBackStackEntry
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
+import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
@@ -24,4 +25,5 @@ interface Router {
     fun foldersRouter(entry: NavBackStackEntry): FoldersScreenRouter
     fun trashNotesRouter(entry: NavBackStackEntry): TrashNotesScreenRouter
     fun trashFoldersRouter(entry: NavBackStackEntry): TrashFoldersScreenRouter
+    fun hiddenNotesRouter(entry: NavBackStackEntry): HiddenNotesScreenRouter
 }

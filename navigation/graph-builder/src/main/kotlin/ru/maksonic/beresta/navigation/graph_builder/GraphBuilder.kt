@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.navigation
 import ru.maksonic.beresta.navigation.graph_builder.destination.editNoteScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.foldersScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.hiddenNotesScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.mainScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsAppearanceScreen
@@ -15,6 +16,7 @@ import ru.maksonic.beresta.navigation.graph_builder.destination.settings.setting
 import ru.maksonic.beresta.navigation.graph_builder.destination.splashScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashFoldersScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashNotesScreen
+import ru.maksonic.beresta.navigation.graph_builder.navigator.NavigationAnimator
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.ui.theme.component.NavigationVelocity
@@ -26,7 +28,9 @@ interface GraphBuilder {
     fun buildGraph(graphBuilder: NavGraphBuilder, navigationVelocity: NavigationVelocity)
 
     class Core(
-        private val navigator: AbstractNavigator, private val apiStore: FeatureApiStore
+        private val navigator: AbstractNavigator,
+        private val apiStore: FeatureApiStore,
+        private val animator: NavigationAnimator
     ) : GraphBuilder {
         @OptIn(ExperimentalAnimationApi::class)
         override fun buildGraph(
@@ -46,12 +50,13 @@ interface GraphBuilder {
                     splashScreen(apiStore.splash, this)
                     onboardingScreen(apiStore.onboarding, this)
                     mainScreen(this)
-                    settingsScreen(this, slide)
+                    settingsScreen(this, slide, animator)
                     settingsAppearanceScreen(this, slide)
                     editNoteScreen(apiStore.editNote, this)
-                    foldersScreen(this, slide)
-                    trashNotesScreen(this, slide)
-                    trashFoldersScreen(this, slide)
+                    foldersScreen(this, slide, animator)
+                    trashNotesScreen(this, slide, animator)
+                    trashFoldersScreen(this, slide, animator)
+                    hiddenNotesScreen(this, slide, animator)
                 }
             }
         }

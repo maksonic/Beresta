@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.navigation.router.router.trash.TrashFoldersScreenRouter
@@ -29,6 +30,7 @@ internal fun Container(
     folderUiItemApi: FoldersApi.Ui.FolderItem = koinInject(),
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder = koinInject(),
     sandbox: FoldersTrashSandbox = koinViewModel(),
+    vibrationPerformer: VibrationPerformer = koinInject(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -52,6 +54,7 @@ internal fun Container(
         foldersPlaceholderApi = foldersPlaceholderApi,
         model = model,
         send = sandbox::send,
+        vibrationPerformer = vibrationPerformer
     )
 }
 

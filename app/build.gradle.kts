@@ -109,6 +109,10 @@ dependencies {
     implementation(project(module.feature.sortingSheet.core.path))
     implementation(project(module.feature.sortingSheet.ui.path))
 
+    implementation(project(module.feature.hiddenNotes.api.path))
+    implementation(project(module.feature.hiddenNotes.core.path))
+    implementation(project(module.feature.hiddenNotes.ui.path))
+
     //screens
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.path))
@@ -116,6 +120,7 @@ dependencies {
     implementation(project(module.screen.folders.path))
     implementation(project(module.screen.trashList.notes.path))
     implementation(project(module.screen.trashList.folders.path))
+    implementation(project(module.screen.hiddenNotes.path))
     //libs
     implementation(libs.accompanist.navigation)
     implementation(platform(libs.compose.bom))
@@ -123,6 +128,7 @@ dependencies {
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.splash.screen)
     implementation(libs.activity.compose)
+    implementation(libs.datastore)
     implementation(libs.ui)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)

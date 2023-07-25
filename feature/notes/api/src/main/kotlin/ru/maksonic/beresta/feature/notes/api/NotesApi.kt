@@ -1,7 +1,8 @@
 package ru.maksonic.beresta.feature.notes.api
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.core.SharedUiState
@@ -10,7 +11,8 @@ import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiState
+import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
+import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
 
 /**
  * @Author maksonic on 22.06.2023
@@ -32,14 +34,20 @@ interface NotesApi {
         }
 
         interface List {
-            val sharedUiState: SharedUiState<SharedNotesUiState>
+            val sharedUiState: SharedUiState<SharedNotesUiScrollState>
 
             @Composable
             fun Widget(
+                modifier: Modifier,
+                placeholderModifier: Modifier,
                 state: NotesListUiState,
+                sorter: State<NotesSorter>,
                 onNoteClicked: (id: Long) -> Unit,
                 onNoteLongClicked: (id: Long) -> Unit,
-                chipsRowOffsetHeightPx: MutableState<Float>
+                chipsRowOffsetHeightPx: State<Float>,
+                updateChipsRowOffsetHeight: (Float) -> Unit,
+                updatedCanScrollBackwardValue: (Boolean) -> Unit,
+                contentPaddingValues: PaddingValues
             )
 
             @Composable

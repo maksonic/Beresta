@@ -7,7 +7,7 @@ import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
 import ru.maksonic.beresta.feature.folders_chips.ui.FolderItemWidget
 import ru.maksonic.beresta.feature.folders_chips.ui.FoldersChipsRowWidget
-import ru.maksonic.beresta.feature.folders_chips.ui.FoldersPlaceholder
+import ru.maksonic.beresta.feature.folders_chips.ui.widget.FoldersPlaceholder
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.core.FolderDialogProgram
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.core.FolderDialogSandbox
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.ui.AddNewChipDialog

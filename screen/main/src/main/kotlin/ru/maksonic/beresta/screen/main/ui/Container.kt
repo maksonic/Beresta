@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
 import ru.maksonic.beresta.feature.folders_chips.api.ui.showForEdit
+import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
@@ -28,14 +28,16 @@ import ru.maksonic.beresta.screen.main.core.Msg
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Container(
+internal fun Container(
     router: MainScreenRouter,
     notesListApi: NotesApi.Ui.List = koinInject(),
     counterApi: TopBarCounterApi.Ui = koinInject(),
     chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     sandbox: MainSandbox = koinViewModel(),
-    listSortUiState: SortingSheetApi.Ui = koinInject()
+    listSortUiState: SortingSheetApi.Ui = koinInject(),
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
+    vibrationPerformer: VibrationPerformer = koinInject(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -44,8 +46,9 @@ fun Container(
         router = router,
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
-        sharedFolderDialogUiState = chipsDialogApi.sharedUiState,
-    )
+        chipsDialogApi = chipsDialogApi,
+        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
+        )
 
     Content(
         model = model,
@@ -54,7 +57,9 @@ fun Container(
         counterApi = counterApi,
         chipsRowApi = chipsRowApi,
         chipsDialogApi = chipsDialogApi,
-        listSortUiState = listSortUiState
+        listSortUiState = listSortUiState,
+        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
+        vibrationPerformer = vibrationPerformer
     )
 }
 
@@ -64,7 +69,8 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: MainScreenRouter,
     modalBottomSheetState: SheetState,
-    sharedFolderDialogUiState: SharedUiState<SharedNewFolderDialogUiState>,
+    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     hideSheet: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -87,7 +93,11 @@ private fun HandleUiEffects(
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToFolders -> router.toFoldersList(eff.ids)
             is Eff.NavigateToTrash -> router.toTrash()
-            is Eff.ShowAddNewChipDialog -> sharedFolderDialogUiState.showForEdit(0L)
+            is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
+            is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.showForEdit(0L)
+            is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
+                hiddenNotesEnterPasswordDialog.visibility.update(true)
+            }
         }
     }
 }

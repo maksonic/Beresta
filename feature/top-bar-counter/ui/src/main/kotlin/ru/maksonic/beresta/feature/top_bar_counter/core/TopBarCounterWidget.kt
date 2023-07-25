@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onPrimary
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp4
@@ -33,6 +31,7 @@ import ru.maksonic.beresta.ui.theme.icons.Close
 import ru.maksonic.beresta.ui.theme.icons.SelectAll
 import ru.maksonic.beresta.ui.theme.icons.ShareIos
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 30.04.2023
@@ -52,19 +51,16 @@ class TopBarCounterWidget : TopBarCounterApi.Ui {
 
 @Composable
 private fun Content(
-    state: MutableState<Int>,
+    state: State<Int>,
     onCancelClicked: () -> Unit,
     onSelectAllClicked: () -> Unit,
     onShareSelectedClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier
-            .fillMaxWidth()
-            .height(Theme.widgetSize.topBarNormalHeight),
+        modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-
         Row(
             modifier
                 .padding(start = dp4, end = dp4)
@@ -78,10 +74,12 @@ private fun Content(
 
             Spacer(modifier.weight(1f))
 
-            ClickableIcon(
-                icon = AppIcon.ShareIos,
-                action = onShareSelectedClicked
-            )
+            AnimateFadeInOut(state.value != 0) {
+                ClickableIcon(
+                    icon = AppIcon.ShareIos,
+                    action = onShareSelectedClicked
+                )
+            }
 
             ClickableIcon(
                 icon = AppIcon.SelectAll,

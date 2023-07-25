@@ -23,7 +23,11 @@ class MainSandbox(
     chipsSortProgram: ChipsSortProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchNotesListFeatureState, Cmd.FetchNotesData, Cmd.FetchChipsData),
+    initialCmd = setOf(
+        Cmd.FetchNotesListFeatureState,
+        Cmd.FetchNotesData,
+        Cmd.FetchChipsData
+    ),
     subscriptions = listOf(
         notesDataProgram,
         notesSortProgram,
@@ -71,6 +75,7 @@ class MainSandbox(
         is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
+        is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
     }
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
@@ -161,7 +166,9 @@ class MainSandbox(
     private fun onBottomBarTrashClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToTrash))
 
-    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult = ElmUpdate(
+        model, effects = setOf(Eff.ShowedHiddenNotesEnterPasswordDialog)
+    )
 
     private fun onBottomBarPinSelectedClicked(model: Model): UpdateResult = ElmUpdate(
         model = model.copy(notes = model.notes.copy(selectedList = emptySet())),
@@ -287,4 +294,13 @@ class MainSandbox(
 
     private fun onAddNewChipClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
+
+    private fun navigatedToHiddenNotes(model: Model): UpdateResult = ElmUpdate(
+        model.copy(
+            isVisibleEditFab = true,
+            notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+        ),
+        effects = setOf(Eff.NavigateToHiddenNotes)
+    )
 }

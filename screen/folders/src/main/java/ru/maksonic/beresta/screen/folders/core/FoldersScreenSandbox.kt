@@ -42,6 +42,9 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         //modal sheet
         is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
+        //hidden notes
+        is Msg.Ui.OnToHiddenNotesClicked -> onToHiddenNotesClicked(model)
+        is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
     }
 
     private fun retryFetchData(model: Model): UpdateResult = ElmUpdate(
@@ -143,7 +146,10 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         )
     }
 
-    private fun onBarMoveSelectedToTrashClicked(model: Model, msg: Msg.Ui.OnBottomBarRemoveSelectedClicked): UpdateResult {
+    private fun onBarMoveSelectedToTrashClicked(
+        model: Model,
+        msg: Msg.Ui.OnBottomBarRemoveSelectedClicked
+    ): UpdateResult {
         val isShowLoading = model.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
         // Set initial sticky folder to current if previous current folder was moved to trash.
         val isWasRemovedCurrentFolder =
@@ -204,5 +210,11 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             )
         )
     )
+
+    private fun onToHiddenNotesClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.ShowedHiddenNotesEnterPasswordDialog))
+
+    private fun navigatedToHiddenNotes(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.NavigateToHiddenNotes))
 
 }

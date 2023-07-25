@@ -37,6 +37,7 @@ include(":screen:settings:appearance")
 include(":screen:folders")
 include(":screen:trash-list:notes")
 include(":screen:trash-list:folders")
+include(":screen:hidden-notes")
 
 //features
 include(":feature:splash-screen:api")
@@ -74,3 +75,7 @@ include(":feature:top-bar-counter:ui")
 include(":feature:sorting-sheet:api")
 include(":feature:sorting-sheet:core")
 include(":feature:sorting-sheet:ui")
+
+include(":feature:hidden-notes:api")
+include(":feature:hidden-notes:core")
+include(":feature:hidden-notes:ui")

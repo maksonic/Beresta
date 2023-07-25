@@ -8,10 +8,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.semantics.Role
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.maksonic.beresta.core.VibrationPerformer
 
 /**
  * @Author maksonic on 15.11.2022
@@ -33,7 +35,7 @@ fun Modifier.clickAction(
     val coroutineScope = rememberCoroutineScope()
     val currentClickListener by rememberUpdatedState(onClick)
 
-    Modifier.rippleClickable(isEnabled, rippleColor = rippleColor) {
+    Modifier.rippleClickable(enabled = isEnabled, rippleColor = rippleColor) {
         coroutineScope.launch {
             isEnabled = false
             currentClickListener.invoke()
@@ -44,6 +46,7 @@ fun Modifier.clickAction(
 }
 
 fun Modifier.rippleClickable(
+    performer: VibrationPerformer? = null,
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
@@ -59,12 +62,17 @@ fun Modifier.rippleClickable(
         properties["onClick"] = onClick
     }
 ) {
+    val view = LocalView.current
+
+    val indication =
+        rememberUpdatedState(if (enabled) rememberRipple(color = rippleColor) else null)
+
     Modifier.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
-        onClick = onClick,
+        onClick = { onClick().let { performer?.keyboardTapVibration(view) } },
         role = role,
-        indication = rememberRipple(color = rippleColor, bounded = true),
+        indication = indication.value,
         interactionSource = remember { MutableInteractionSource() }
     )
 }

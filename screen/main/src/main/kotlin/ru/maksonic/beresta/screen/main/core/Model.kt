@@ -61,8 +61,8 @@ data class Model(
             chips = FoldersListUiState.Initial,
             modalSheet = ModalSheet.Initial,
             bottomBarState = MainBottomBarState.IDLE,
-            searchBarState = SearchBarUiState.Initial,
-            isVisibleEditFab = true,
+            searchBarState = SearchBarUiState.InitialMainNotes,
+            isVisibleEditFab = true
         )
     }
 }
@@ -99,9 +99,10 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
+        data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
         object HiddenModalBottomSheet : Inner()
         object HideRemovedNotesSnackBar : Inner()
-        data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
+        object NavigatedToHiddenNotes : Inner()
     }
 }
 
@@ -122,6 +123,7 @@ sealed class Eff : ElmEffect {
     object NavigateToSettings : Eff()
     data class NavigateToFolders(val ids: List<Long>) : Eff()
     object NavigateToTrash : Eff()
+    object NavigateToHiddenNotes : Eff()
     object ShowAddNewChipDialog : Eff()
-
+    object ShowedHiddenNotesEnterPasswordDialog : Eff()
 }

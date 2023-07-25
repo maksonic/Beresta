@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import ru.maksonic.beresta.language_engine.shell.components.LangEditorData
 import ru.maksonic.beresta.language_engine.shell.components.LangFoldersListData
+import ru.maksonic.beresta.language_engine.shell.components.LangHiddenNotesData
 import ru.maksonic.beresta.language_engine.shell.components.LangOnboardingData
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsScreenData
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
@@ -41,7 +42,8 @@ data class BerestaLanguage(
     val editNote: LangEditorData = LangEditorData(),
     val folders: LangFoldersListData = LangFoldersListData(),
     val trash: LangTrashData = LangTrashData(),
-    val sortSheet: LangSortSheetData = LangSortSheetData()
+    val sortSheet: LangSortSheetData = LangSortSheetData(),
+    val hiddenNotes: LangHiddenNotesData = LangHiddenNotesData()
 ) {
     companion object {
         val Empty = BerestaLanguage(
@@ -54,7 +56,8 @@ data class BerestaLanguage(
             editNote = LangEditorData(),
             folders = LangFoldersListData(),
             trash = LangTrashData(),
-            sortSheet = LangSortSheetData()
+            sortSheet = LangSortSheetData(),
+            hiddenNotes = LangHiddenNotesData()
         )
     }
 }

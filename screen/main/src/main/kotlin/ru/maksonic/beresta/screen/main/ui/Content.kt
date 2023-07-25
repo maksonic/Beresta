@@ -15,9 +15,12 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
+import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -38,7 +41,7 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Content(
+internal fun Content(
     model: State<Model>,
     send: SendMessage,
     modifier: Modifier = Modifier,
@@ -46,7 +49,9 @@ fun Content(
     counterApi: TopBarCounterApi.Ui,
     chipsRowApi: FoldersApi.Ui.ChipsRow,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    listSortUiState: SortingSheetApi.Ui
+    listSortUiState: SortingSheetApi.Ui,
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
+    vibrationPerformer: VibrationPerformer
 ) {
     val sharedNotesUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
@@ -59,6 +64,7 @@ fun Content(
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
+    val view = LocalView.current
 
     LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
         isVisibleBottomBar.value =
@@ -69,10 +75,14 @@ fun Content(
     }
 
     LaunchedEffect(isSelectionState.value) {
-        if (isSelectionState.value)
-            mainBottomBarState.value = MainBottomBarState.SELECTION
-        else
-            mainBottomBarState.value = MainBottomBarState.IDLE
+        if (isSelectionState.value) {
+            vibrationPerformer.keyboardTapVibration(view)
+        }
+
+        val value =
+            if (isSelectionState.value) MainBottomBarState.SELECTION else MainBottomBarState.IDLE
+
+        mainBottomBarState.value = value
     }
 
     LaunchedEffect(model.value.notes.collection) {
@@ -86,16 +96,21 @@ fun Content(
     }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+        val isCanScrollBackwardState = rememberSaveable { mutableStateOf(false) }
+
         CompositionLocalProvider(
             LocalListSortState provides notesSortState.value,
             LocalCurrentSelectedFolderState provides currentSelectedChipId.value
-            ) {
+        ) {
             NotesList(
                 model = model,
                 send = send,
                 api = notesListApi,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
+                updateChipsRowOffsetHeight = { chipsRowOffsetHeightPx.floatValue = it },
+                updatedCanScrollBackwardValue = { isCanScrollBackwardState.value = it }
             )
+
             MainBottomBar(
                 state = mainBottomBarState,
                 send = send,
@@ -103,17 +118,18 @@ fun Content(
                 isVisibleBottomBar = isVisibleBottomBar,
                 isEnabledBar = isEnabledBottomBar,
                 isShowUnpinBtn = isShowUnpinBtn,
-                sharedNotesUiState = notesListApi.sharedUiState
+                sharedNotesUiScrollState = notesListApi.sharedUiState
             )
 
             ChipsRow(
                 api = chipsRowApi,
                 model = model,
+                isColoredBackground = isCanScrollBackwardState,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
-                onAddNewChipClicked = { send(Msg.Ui.OnAddNewChipClicked) }
+                onAddNewChipClicked = { send(Msg.Ui.OnAddNewChipClicked) },
             )
 
-            MainSearchBar(model, send)
+            MainSearchBar(model, send, isColoredBackplate = isCanScrollBackwardState)
 
             EditNoteExpandableFab(isVisibleEditFab, modifier)
 
@@ -127,6 +143,8 @@ fun Content(
             }
 
             chipsDialogApi.Widget()
+
+            hiddenNotesEnterPasswordDialog.Widget { send(Msg.Inner.NavigatedToHiddenNotes) }
         }
     }
 }

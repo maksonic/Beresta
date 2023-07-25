@@ -18,6 +18,7 @@ internal fun MultipleModalBottomSheetContent(
     send: SendMessage,
     currentSheetContent: State<ModalSheetContent>,
     noteCardState: State<NoteCardUiState>,
+    currentVelocityTitle: State<String>,
     modifier: Modifier = Modifier,
 ) {
     when (currentSheetContent.value) {
@@ -27,7 +28,7 @@ internal fun MultipleModalBottomSheetContent(
         }
 
         ModalSheetContent.ANIMATIONS_VELOCITY_PICKER -> {
-            AnimationsVelocityPickerSheetContent(send)
+            AnimationsVelocityPickerSheetContent(send, currentVelocityTitle)
         }
         ModalSheetContent.NOTHING -> Box(modifier.size(1.dp))
     }

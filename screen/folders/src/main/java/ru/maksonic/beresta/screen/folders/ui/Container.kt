@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
 import ru.maksonic.beresta.feature.folders_chips.api.ui.showForEdit
+import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
 import ru.maksonic.beresta.screen.folders.core.Eff
@@ -31,25 +31,30 @@ internal fun Container(
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder = koinInject(),
     sandbox: FoldersScreenSandbox = koinViewModel(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
     listSortUiState: SortingSheetApi.Ui = koinInject(),
+    vibrationPerformer: VibrationPerformer = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
     HandleUiEffects(
-        sandbox.effects,
-        router,
-        chipsDialogApi.sharedUiState,
+        effects = sandbox.effects,
+        router = router,
+        chipsDialogApi = chipsDialogApi,
+        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
     )
 
     Content(
-        foldersUiItemApi,
-        foldersPlaceholderApi,
-        chipsDialogApi,
-        model,
-        sandbox::send,
-        listSortUiState
+        foldersUiItemApi = foldersUiItemApi,
+        foldersPlaceholderApi = foldersPlaceholderApi,
+        chipsDialogApi = chipsDialogApi,
+        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
+        model = model,
+        send = sandbox::send,
+        listSortUiState = listSortUiState,
+        vibrationPerformer = vibrationPerformer
     )
 }
 
@@ -58,7 +63,8 @@ internal fun Container(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: FoldersScreenRouter,
-    addFolderDialogSharedUiState: SharedUiState<SharedNewFolderDialogUiState>,
+    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     modalBottomSheetState: SheetState,
     hideSheet: () -> Unit,
 ) {
@@ -67,13 +73,18 @@ private fun HandleUiEffects(
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
-            is Eff.ShowFolderDialog -> addFolderDialogSharedUiState.showForEdit(eff.id)
+            is Eff.ShowFolderDialog -> chipsDialogApi.sharedUiState.showForEdit(eff.id)
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
                         hideSheet()
                     }
                 }
+            }
+
+            is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
+            is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
+                hiddenNotesEnterPasswordDialog.visibility.update(true)
             }
         }
     }

@@ -63,6 +63,7 @@ dependencies {
     implementation(project(module.feature.topBarCounter.api.path))
     implementation(project(module.feature.foldersChipsRow.api.path))
     implementation(project(module.feature.sortingSheet.api.path))
+    implementation(project(module.feature.hiddenNotes.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

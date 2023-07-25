@@ -145,6 +145,16 @@
       "hint_sort_category_date_update": "Дата изменения",
       "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки",
       "hint_checkbox_sort_pinned_folders": "Учитывать закрепленные папки"
+    },
+    "hidden_notes": {
+      "top_bar_title": "Скрытые заметки",
+      "dialog_title": "Установить ПИН-код",
+      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно изменить или восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
+      "hint_create_code": "Введите 6-значный код",
+      "hint_create_repeat_code": "Повторите код ещё раз",
+      "hint_verify_code": "Введите ПИН-код",
+      "hint_fail_creation": "Ошибка. ПИН-коды не совпали.",
+      "hint_fail_verification": "Ошибка. Неверный ПИН-код."
     }
   },
   "english": {
@@ -293,6 +303,16 @@
       "hint_sort_category_date_update": "Date of change",
       "hint_checkbox_sort_pinned_notes": "Consider pinned notes",
       "hint_checkbox_sort_pinned_folders": "Consider pinned folders"
+    },
+    "hidden_notes": {
+      "top_bar_title": "Скрытые заметки",
+      "dialog_title": "Установить ПИН-код",
+      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно изменить или восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
+      "hint_create_code": "Введите 6-значный код",
+      "hint_create_repeat_code": "Повторите код ещё раз",
+      "hint_verify_code": "Введите ПИН-код",
+      "hint_fail_creation": "Ошибка. ПИН-коды не совпали.",
+      "hint_fail_verification": "Ошибка. Неверный ПИН-код."
     }
   },
   "chinese": {

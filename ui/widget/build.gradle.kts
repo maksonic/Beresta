@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation(project(module.primary.core.path))
     implementation(project(module.primary.ui.theme.path))
     implementation(project(module.primary.languageEngine.shell.path))
     implementation(libs.accompanist.pager)

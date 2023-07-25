@@ -81,6 +81,7 @@ sealed class Msg : ElmMessage {
         object OnBottomBarEditSelectedClicked : Ui()
         object OnSnackUndoRemoveFoldersClicked : Ui()
         object OnHideModalBottomSheet : Ui()
+        object OnToHiddenNotesClicked : Ui()
     }
 
     sealed class Inner : Msg() {
@@ -92,6 +93,7 @@ sealed class Msg : ElmMessage {
         data class FetchedDataError(val errorMsg: String = "") : Inner()
         object HideRemovedFoldersSnackBar : Inner()
         object HiddenModalBottomSheet : Inner()
+        object NavigatedToHiddenNotes : Inner()
     }
 }
 
@@ -107,6 +109,8 @@ sealed class Cmd : ElmCommand {
 
 sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
+    object ShowedHiddenNotesEnterPasswordDialog : Eff()
+    object NavigateToHiddenNotes : Eff()
     data class ShowFolderDialog(val id: Long = 0L) : Eff()
     object HideModalSheet : Eff()
 }

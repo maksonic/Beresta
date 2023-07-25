@@ -15,6 +15,8 @@ import ru.maksonic.beresta.di.appModule
 import ru.maksonic.beresta.feature.edit_note.ui.di.editNoteUiFeatureModule
 import ru.maksonic.beresta.feature.folders_chips.core.di.foldersChipsRowCoreFeatureModule
 import ru.maksonic.beresta.feature.folders_chips.ui.di.foldersChipsRowUiFeatureModule
+import ru.maksonic.beresta.feature.hidden_notes.core.di.hiddenNotesCoreFeatureModule
+import ru.maksonic.beresta.feature.hidden_notes.ui.di.hiddenNotesUiFeatureModule
 import ru.maksonic.beresta.feature.language_picker.core.di.languagePickerCoreFeatureModule
 import ru.maksonic.beresta.feature.language_picker.ui.di.languagePickerUiFeatureModule
 import ru.maksonic.beresta.feature.notes.core.di.notesCoreFeatureModule
@@ -31,6 +33,7 @@ import ru.maksonic.beresta.feature.top_bar_counter.core.di.topBarCounterUiFeatur
 import ru.maksonic.beresta.language_engine.core.di.languageEngineModule
 import ru.maksonic.beresta.navigation.graph_builder.di.navigationModule
 import ru.maksonic.beresta.screen.folders.di.foldersScreenModule
+import ru.maksonic.beresta.screen.hidden_notes.di.hiddenNotesScreenModule
 import ru.maksonic.beresta.screen.main.di.mainScreenModule
 import ru.maksonic.beresta.screen.settings.appearance.di.settingsAppearanceScreenModule
 import ru.maksonic.beresta.screen.settings.di.settingsScreenModule
@@ -61,6 +64,7 @@ class BerestaApplication : Application() {
         foldersScreenModule,
         trashNotesScreenModule,
         trashFoldersScreenModule,
+        hiddenNotesScreenModule,
         //features
         themePickerUiFeatureModule,
         themePickerCoreFeatureModule,
@@ -78,6 +82,8 @@ class BerestaApplication : Application() {
         foldersChipsRowCoreFeatureModule,
         sortingSheetUiFeatureModule,
         listSortCoreFeatureModule,
+        hiddenNotesCoreFeatureModule,
+        hiddenNotesUiFeatureModule
     )
 
     override fun onCreate() {

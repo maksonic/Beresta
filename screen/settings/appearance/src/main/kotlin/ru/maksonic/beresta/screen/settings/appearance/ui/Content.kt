@@ -24,7 +24,9 @@ import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.AnimationsSettingItem
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.CardSettingItem
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
+import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
 import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
 import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
@@ -48,7 +50,20 @@ internal fun Content(
     Box(
         modifier
             .fillMaxSize()
-            .navigationBarsPadding()) {
+            .navigationBarsPadding()
+    ) {
+        val currentVelocityTitle = rememberUpdatedState(
+            with(text.settingsAppearance) {
+                when (Theme.animVelocity.current) {
+                    AppAnimationVelocity.Key.SLOW -> hintAnimSlow
+                    AppAnimationVelocity.Key.NORMAL -> hintAnimNormal
+                    AppAnimationVelocity.Key.FAST -> hintAnimFast
+                    AppAnimationVelocity.Key.VERY_FAST -> hintAnimVeryFast
+                    else -> hintAnimDisabled
+                }
+            }
+        )
+
         Scaffold(
             topBar = {
                 TopAppBarCollapsingLarge(
@@ -60,14 +75,14 @@ internal fun Content(
             containerColor = background,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
-
             Column(
                 modifier
                     .verticalScroll(scrollState)
-                    .padding(paddings)) {
+                    .padding(paddings)
+            ) {
                 CardSettingItem(send, noteCardState, model.value.currentLang)
 
-                AnimationsSettingItem(send)
+                AnimationsSettingItem(send, currentVelocityTitle)
             }
         }
 
@@ -76,7 +91,12 @@ internal fun Content(
                 sheetState = model.value.modalSheet.state,
                 onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
             ) {
-                MultipleModalBottomSheetContent(send, currentSheetContent, noteCardState)
+                MultipleModalBottomSheetContent(
+                    send,
+                    currentSheetContent,
+                    noteCardState,
+                    currentVelocityTitle
+                )
             }
         }
     }

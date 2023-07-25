@@ -9,12 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
+import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
@@ -127,37 +132,42 @@ private fun SelectedStateBarContent(
     selectedFoldersCount: Int,
     isVisibleUnpinBtn: State<Boolean>,
     isDisabledBottomBar: State<Boolean>,
+    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject()
 ) {
-    val currentSelectedFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
-    val actions = arrayOf(
-        BaseBottomBarItem(
-            label = if (isVisibleUnpinBtn.value) text.shared.btnTitleUnpin else text.shared.btnTitlePin,
-            icon = if (isVisibleUnpinBtn.value) AppIcon.Unpin else AppIcon.Pin,
-            action = {
-                send(Msg.Ui.OnBottomBarPinSelectedClicked)
-                send(Msg.Ui.CancelSelectionState)
-            }),
-        BaseBottomBarItem(
-            label = text.shared.btnTitleChange,
-            icon = AppIcon.Edit,
-            action = {
-                send(Msg.Ui.OnBottomBarEditSelectedClicked)
-                send(Msg.Ui.CancelSelectionState)
-            },
-            isEmpty = selectedFoldersCount > 1
-        ),
-        BaseBottomBarItem(
-            label = text.shared.btnTitleRemove,
-            icon = AppIcon.MoveTrash,
-            action = {
-                send(Msg.Ui.OnBottomBarRemoveSelectedClicked(currentSelectedFolderId.value))
-            }
+    val currentFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
+    CompositionLocalProvider(LocalCurrentSelectedFolderState provides currentFolder.value) {
+        val currentSelectedFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
+
+        val actions = arrayOf(
+            BaseBottomBarItem(
+                label = if (isVisibleUnpinBtn.value) text.shared.btnTitleUnpin else text.shared.btnTitlePin,
+                icon = if (isVisibleUnpinBtn.value) AppIcon.Unpin else AppIcon.Pin,
+                action = {
+                    send(Msg.Ui.OnBottomBarPinSelectedClicked)
+                    send(Msg.Ui.CancelSelectionState)
+                }),
+            BaseBottomBarItem(
+                label = text.shared.btnTitleChange,
+                icon = AppIcon.Edit,
+                action = {
+                    send(Msg.Ui.OnBottomBarEditSelectedClicked)
+                    send(Msg.Ui.CancelSelectionState)
+                },
+                isEmpty = selectedFoldersCount > 1
+            ),
+            BaseBottomBarItem(
+                label = text.shared.btnTitleRemove,
+                icon = AppIcon.MoveTrash,
+                action = {
+                    send(Msg.Ui.OnBottomBarRemoveSelectedClicked(currentSelectedFolderId.value))
+                }
+            )
         )
-    )
 
-    BottomBarOld(actions)
+        BottomBarOld(actions)
 
-    AnimateFadeInOut(isDisabledBottomBar.value) {
-        DisabledBottomBarPlaceholder()
+        AnimateFadeInOut(isDisabledBottomBar.value) {
+            DisabledBottomBarPlaceholder()
+        }
     }
 }

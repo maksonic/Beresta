@@ -55,6 +55,7 @@ dependencies {
     implementation(project(module.screen.folders.path))
     implementation(project(module.screen.trashList.notes.path))
     implementation(project(module.screen.trashList.folders.path))
+    implementation(project(module.screen.hiddenNotes.path))
     implementation(project(module.feature.onboarding.api.path))
     implementation(project(module.feature.splashScreen.api.path))
     implementation(project(module.feature.editNote.api.path))

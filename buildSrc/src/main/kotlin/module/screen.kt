@@ -40,4 +40,9 @@ object screen {
         path = ":screen:folders",
         namespace = "ru.maksonic.beresta.screen.folders"
     )
+
+    object hiddenNotes : base(
+        path = ":screen:hidden-notes",
+        namespace = "ru.maksonic.beresta.screen.hidden_notes"
+    )
 }

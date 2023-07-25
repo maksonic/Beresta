@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.folders_chips.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
@@ -18,13 +17,15 @@ class FoldersChipsRowWidget(
     @Composable
     override fun Widget(
         isLoading: State<Boolean>,
+        isColoredBackground: State<Boolean>,
         chips: FolderUi.Collection,
-        chipsRowOffsetHeightPx: MutableState<Float>,
+        chipsRowOffsetHeightPx: State<Float>,
         onAddNewChipClicked: () -> Unit,
     ) {
 
         Container(
             isLoading = isLoading,
+            isColoredBackground = isColoredBackground,
             chips = chips,
             chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             onAddNewChipClicked = onAddNewChipClicked,

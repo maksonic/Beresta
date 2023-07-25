@@ -71,7 +71,7 @@ internal fun Content(
         Text(
             dialogTitle,
             style = TextDesign.topBar,
-            modifier = modifier.padding(dp16)
+            modifier = modifier.padding(bottom = dp16)
         )
 
         InputFolderName(model, send, focusRequester)

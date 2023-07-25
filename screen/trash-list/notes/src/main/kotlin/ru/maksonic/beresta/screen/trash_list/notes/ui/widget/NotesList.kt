@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,8 +23,12 @@ import ru.maksonic.beresta.screen.trash_list.notes.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp6
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.RemoveFolder
 import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.EmptyTrash
+import ru.maksonic.beresta.ui.widget.button.QuaternaryButton
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
@@ -67,7 +72,14 @@ internal fun NotesList(
             ) {
 
                 item {
-                    TrashedFoldersButton { send(Msg.Ui.OnTrashedFoldersBtnClicked) }
+                    QuaternaryButton(
+                        isEnabled = !model.value.isSelectionState,
+                        title = text.trash.topBarTitleTrashedFolders,
+                        prefixIcon = AppIcon.RemoveFolder,
+                        modifier = Modifier.padding(start = dp6, end = dp6)
+                    ) {
+                        send(Msg.Ui.OnTrashedFoldersBtnClicked)
+                    }
                 }
 
                 when {

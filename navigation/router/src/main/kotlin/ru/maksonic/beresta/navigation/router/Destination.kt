@@ -8,12 +8,11 @@ object Destination : AbstractDestination(route = "root") {
     object Onboarding : AbstractDestination(route = "onboarding")
     object Main : AbstractDestination(route = "main")
     object EditNote : AbstractDestination(route = "edit_note", argKey = "noteId")
-    object Settings : AbstractDestination(route = "settings") {
-        object Appearance : AbstractDestination(route = "settings.appearance")
-    }
-
     object Folders : AbstractDestination(route = "folders", argKey = "passedNotesIds")
     object TrashNotesList : AbstractDestination(route = "trash_notes_list")
     object TrashFoldersList : AbstractDestination(route = "trash_folders_list")
-
+    object HiddenNotes : AbstractDestination(route = "hidden_notes")
+    object Settings : AbstractDestination(route = "settings") {
+        object Appearance : AbstractDestination(route = "settings.appearance")
+    }
 }

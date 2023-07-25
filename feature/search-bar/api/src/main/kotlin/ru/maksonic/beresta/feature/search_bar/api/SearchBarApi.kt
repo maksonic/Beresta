@@ -9,13 +9,15 @@ import androidx.compose.runtime.State
 interface SearchBarApi {
     enum class ActionKey {
         OnExpandBar, OnCollapseBar,
-        OnCancelClicked, OnShareClicked, OnSelectAllClicked, OnChangeGridClicked
+        OnCancelClicked, OnShareClicked, OnSelectAllClicked, OnChangeGridClicked,
+        OnUserAvatarClicked, OnBackClicked, OnSortByClicked
     }
 
     interface Ui {
         @Composable
         fun Widget(
             state: State<SearchBarUiState>,
+            isColoredBackplate: State<Boolean>,
             actions: Map<ActionKey, () -> Unit>,
             onSearchResultNoteClicked: (Long) -> Unit,
         )

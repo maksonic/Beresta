@@ -5,7 +5,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -13,7 +12,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableFloatStateOf
@@ -28,13 +26,10 @@ import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiState
+import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
 import ru.maksonic.beresta.feature.notes.api.ui.updateScroll
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.component.dp10
-import ru.maksonic.beresta.ui.theme.component.dp4
-import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 
 /**
@@ -43,14 +38,17 @@ import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun Content(
+    modifier: Modifier,
     state: NotesListUiState,
     sorter: State<NotesSorter>,
     noteCard: NotesApi.Ui.Card,
-    sharedUiState: SharedUiState<SharedNotesUiState>,
+    sharedUiState: SharedUiState<SharedNotesUiScrollState>,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongClicked: (id: Long) -> Unit,
-    chipsRowOffsetHeightPx: MutableState<Float>,
-    modifier: Modifier = Modifier
+    chipsRowOffsetHeightPx: State<Float>,
+    updateChipsRowOffsetHeight: (Float) -> Unit,
+    updatedCanScrollBackwardValue: (Boolean) -> Unit,
+    contentPaddingValues: PaddingValues,
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     val scrollOffset = remember { mutableFloatStateOf(0f) }
@@ -60,7 +58,8 @@ internal fun Content(
     val isBottomScroll = remember {
         derivedStateOf { !scrollState.canScrollForward && !scrollState.isScrollInProgress }
     }
-    val chipsHeight = Theme.widgetSize.topBarNormalHeight
+
+    val chipsHeight = Theme.widgetSize.topBarSmallHeight
     val chipsRowHeightPx = with(LocalDensity.current) { (chipsHeight).roundToPx().toFloat() }
 
     val scrollConnection = remember {
@@ -75,9 +74,9 @@ internal fun Content(
                 val newChipsOffset = chipsRowOffsetHeightPx.value + delta
 
                 if (scrollState.canScrollBackward) {
-                    chipsRowOffsetHeightPx.value = newChipsOffset.coerceIn(-chipsRowHeightPx, 0f)
+                    updateChipsRowOffsetHeight(newChipsOffset.coerceIn(-chipsRowHeightPx, 0f))
                 } else {
-                    chipsRowOffsetHeightPx.value = 0f
+                    updateChipsRowOffsetHeight(0f)
                 }
 
                 sharedUiState.updateScroll(newOffset > scrollOffset.floatValue)
@@ -88,7 +87,7 @@ internal fun Content(
     }
 
     LaunchedEffect(scrollState.canScrollBackward) {
-        sharedUiState.update { it.copy(canScrollBackward = scrollState.canScrollBackward) }
+        updatedCanScrollBackwardValue(scrollState.canScrollBackward)
     }
 
     LaunchedEffect(isInitialScroll.value) {
@@ -103,22 +102,13 @@ internal fun Content(
         modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .padding(top = Theme.widgetSize.topBarNormalHeight)
             .nestedScroll(scrollConnection)
     ) {
         OverscrollBehavior {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
                 columns = StaggeredGridCells.Fixed(listUiSortState.gridCount),
-                contentPadding = PaddingValues(
-                    top = Theme.widgetSize.noteChipsContainerHeight.plus(dp4),
-                    start = dp10,
-                    end = dp10,
-                    bottom = Theme.widgetSize.bottomMainBarHeight.plus(SystemNavigationBarHeight)
-                ),
-                modifier = modifier
-                    .fillMaxSize()
-                    .statusBarsPadding()
+                contentPadding = contentPaddingValues
             ) {
                 itemsIndexed(
                     items = sorter.value.sortedWithFilterList,
@@ -128,7 +118,7 @@ internal fun Content(
                         isSelected = state.selectedList.contains(note),
                         onNoteClicked = onNoteClicked,
                         onNoteLongClicked = onNoteLongClicked,
-                        modifier = modifier.animateItemPlacement(tween(Theme.animVelocity.common))
+                        modifier = Modifier.animateItemPlacement(tween(Theme.animVelocity.common))
                     )
                 }
             }

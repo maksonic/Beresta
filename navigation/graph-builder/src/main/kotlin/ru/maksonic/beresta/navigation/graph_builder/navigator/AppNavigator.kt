@@ -5,6 +5,7 @@ import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
+import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
@@ -37,7 +38,8 @@ class AppNavigator : AbstractNavigator() {
         },
         toFoldersList = { passedListIds ->
             navigate(entry, Destination.Folders.passedArgs(passedListIds))
-        }
+        },
+        toHiddenNotes = { navigate(entry, Destination.HiddenNotes.route) }
     )
 
     override fun settingsRouter(entry: NavBackStackEntry) =
@@ -53,7 +55,10 @@ class AppNavigator : AbstractNavigator() {
         EditNoteRouter(onBack = ::backPressed)
 
     override fun foldersRouter(entry: NavBackStackEntry) =
-        FoldersScreenRouter(onBack = ::backPressed)
+        FoldersScreenRouter(
+            onBack = ::backPressed,
+            toHiddenNotes = { navigate(entry, Destination.HiddenNotes.route) }
+        )
 
     override fun trashNotesRouter(entry: NavBackStackEntry) = TrashNotesScreenRouter(
         onBack = ::backPressed,
@@ -62,4 +67,7 @@ class AppNavigator : AbstractNavigator() {
 
     override fun trashFoldersRouter(entry: NavBackStackEntry) =
         TrashFoldersScreenRouter(onBack = ::backPressed)
+
+    override fun hiddenNotesRouter(entry: NavBackStackEntry) =
+        HiddenNotesScreenRouter(::backPressed)
 }

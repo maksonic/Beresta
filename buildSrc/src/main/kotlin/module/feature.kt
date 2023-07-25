@@ -153,4 +153,21 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.soring_sheet.ui"
         )
     }
+
+    object hiddenNotes {
+        object api : base(
+            path = ":feature:hidden-notes:api",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes.api"
+        )
+
+        object core : base(
+            path = ":feature:hidden-notes:core",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes.core"
+        )
+
+        object ui : base(
+            path = ":feature:hidden-notes:ui",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes.ui"
+        )
+    }
 }

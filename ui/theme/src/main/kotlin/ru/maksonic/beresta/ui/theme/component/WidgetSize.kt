@@ -16,6 +16,7 @@ data class AppWidgetSize(
     val btnPrimaryHeight: Dp,
     val topBarNormalHeight: Dp,
     val topBarMediumHeight: Dp,
+    val topBarSmallHeight: Dp,
     val topBarLargeCollapsedHeight: Dp,
     val bottomBarNormalHeight: Dp,
     val bottomMainBarHeight: Dp,
@@ -32,6 +33,7 @@ val widgetsSize = AppWidgetSize(
     btnPrimaryHeight = 56.dp,
     topBarNormalHeight = 56.dp,
     topBarMediumHeight = 80.dp,
+    topBarSmallHeight = 64.dp,
     topBarLargeCollapsedHeight = 64.dp,
     bottomBarNormalHeight = 56.dp,
     bottomMainBarHeight = 80.dp,
@@ -40,5 +42,5 @@ val widgetsSize = AppWidgetSize(
     modalSheetItemHeight = 48.dp,
     searchBarCollapsedHeight = 48.dp,
     btnFabSize = 56.dp,
-    noteChipsContainerHeight = 64.dp
+    noteChipsContainerHeight = 56.dp
 )

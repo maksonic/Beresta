@@ -15,10 +15,7 @@ internal fun NavGraphBuilder.settingsAppearanceScreen(
     navigator: AbstractNavigator,
     animationVelocity: Int
 ) {
-    composable(
-        route = Destination.Settings.Appearance.route,
-
-    ) { navBackStackEntry ->
+    composable(route = Destination.Settings.Appearance.route) { navBackStackEntry ->
         val router = navigator.settingsAppearanceRouter(navBackStackEntry)
         SettingsAppearanceScreen(router)
     }

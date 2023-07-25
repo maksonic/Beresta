@@ -15,9 +15,10 @@ import ru.maksonic.beresta.screen.main.ui.SendMessage
  * @Author maksonic on 02.07.2023
  */
 @Composable
-fun MainSearchBar(
+internal fun MainSearchBar(
     model: State<Model>,
     send: SendMessage,
+    isColoredBackplate: State<Boolean>,
     searchBarApi: SearchBarApi.Ui = koinInject()
 ) {
     val searchBarState = rememberUpdatedState(model.value.searchBarState)
@@ -38,6 +39,7 @@ fun MainSearchBar(
 
     searchBarApi.Widget(
         state = searchBarState,
+        isColoredBackplate = isColoredBackplate,
         actions = actions,
         onSearchResultNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },
     )

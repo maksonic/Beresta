@@ -6,25 +6,24 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.TonalElevationToken
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.widget.button.PrimaryToggle
 import ru.maksonic.beresta.ui.widget.functional.rippleClickable
 
 /**
@@ -52,12 +51,29 @@ data class SettingComponentItem(val title: String, val items: List<SettingItem>)
 
 
 @Composable
-fun SettingClickableItem(setting: SettingItem, modifier: Modifier = Modifier) {
+fun SettingClickableItem(
+    setting: SettingItem,
+    modifier: Modifier = Modifier,
+    vibrationPerformer: VibrationPerformer = koinInject()
+) {
+    val view = LocalView.current
+
     Row(
         modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = Theme.widgetSize.minimumTouchTargetSize)
-            .rippleClickable(rippleColor = primary) { setting.onClick() },
+            .rippleClickable(rippleColor = primary) {
+                setting
+                    .onClick()
+                    .let {
+                        if (setting.rightPart == RightPart.TOGGLE) {
+                            vibrationPerformer.toggleTapVibration(
+                                view,
+                                isEnabled = setting.isEnabledToggle
+                            )
+                        }
+                    }
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (setting.prefixIcon != null) {
@@ -94,7 +110,9 @@ fun SettingClickableItem(setting: SettingItem, modifier: Modifier = Modifier) {
         when (setting.rightPart) {
             RightPart.NOTHING -> {}
             RightPart.CURRENT_VALUE -> SettingValueHint(setting.valueHint, modifier)
-            RightPart.TOGGLE -> Toggle(setting.isEnabledToggle, setting.onToggleClicked)
+            RightPart.TOGGLE -> {
+                PrimaryToggle(setting.isEnabledToggle, setting.onToggleClicked, vibrationPerformer)
+            }
         }
     }
 }
@@ -105,32 +123,5 @@ private fun SettingValueHint(hint: String, modifier: Modifier) {
         text = hint,
         style = TextDesign.bodyPrimary.copy(color = outline),
         modifier = modifier.padding(end = dp16),
-    )
-}
-
-@Composable
-private fun Toggle(isEnabledToggle: Boolean, onToggleClicked: () -> Unit) {
-    Switch(
-        checked = isEnabledToggle,
-        onCheckedChange = { onToggleClicked() },
-        modifier = Modifier.padding(end = dp16),
-        colors = SwitchColors(
-            checkedThumbColor = surface,
-            checkedTrackColor = primary,
-            checkedBorderColor = primary,
-            checkedIconColor = Color.Red,
-            uncheckedThumbColor = outline,
-            uncheckedTrackColor = TonalElevationToken.Level2,
-            uncheckedBorderColor = outline,
-            uncheckedIconColor = Color.Black,
-            disabledCheckedThumbColor = Color.Black,
-            disabledCheckedTrackColor = Color.Black,
-            disabledCheckedBorderColor = Color.Black,
-            disabledCheckedIconColor = Color.Black,
-            disabledUncheckedThumbColor = Color.Black,
-            disabledUncheckedTrackColor = Color.Black,
-            disabledUncheckedBorderColor = Color.Black,
-            disabledUncheckedIconColor = Color.Black
-        )
     )
 }

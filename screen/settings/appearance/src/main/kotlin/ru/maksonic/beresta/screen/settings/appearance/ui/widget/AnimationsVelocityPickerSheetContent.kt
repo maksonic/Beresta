@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
@@ -57,9 +56,10 @@ private const val SLIDER_STEP = 3
 @Composable
 internal fun AnimationsVelocityPickerSheetContent(
     send: SendMessage,
+    currentVelocityTitle: State<String>
 ) {
     Column {
-        BaseLinesPicker() { marker ->
+        BaseLinesPicker(currentVelocityTitle) { marker ->
             val velocity = when (marker) {
                 1F -> AppAnimationVelocity.Key.SLOW
                 2F -> AppAnimationVelocity.Key.NORMAL
@@ -79,21 +79,11 @@ internal fun AnimationsVelocityPickerSheetContent(
 
 @Composable
 private fun BaseLinesPicker(
+    currentVelocityTitle: State<String>,
     modifier: Modifier = Modifier,
     updatePosition: (Float) -> Unit,
 ) {
     val currentVelocityState = rememberUpdatedState(Theme.animVelocity.current)
-    val currentKeyTitle = rememberUpdatedState(
-        with(text.settingsAppearance) {
-            when (Theme.animVelocity.current) {
-                AppAnimationVelocity.Key.SLOW -> hintAnimSlow
-                AppAnimationVelocity.Key.NORMAL -> hintAnimNormal
-                AppAnimationVelocity.Key.FAST -> hintAnimFast
-                AppAnimationVelocity.Key.VERY_FAST -> hintAnimVeryFast
-                else -> hintAnimDisabled
-            }
-        }
-    )
 
     Column(
         modifier
@@ -112,7 +102,7 @@ private fun BaseLinesPicker(
 
             Text(text = "x0", style = TextDesign.captionNormal)
 
-            Text(text = currentKeyTitle.value, style = TextDesign.title.copy(onSurface))
+            Text(text = currentVelocityTitle.value, style = TextDesign.title.copy(onSurface))
 
             Text(text = "x2", style = TextDesign.captionNormal)
         }
