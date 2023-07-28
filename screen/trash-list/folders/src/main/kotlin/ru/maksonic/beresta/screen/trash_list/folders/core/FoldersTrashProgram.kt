@@ -96,11 +96,11 @@ class FoldersTrashProgram(
                 .map { note -> note.copy(isMovedToTrash = false, dateMovedToTrash = null) }
 
             notesFoldersInteractor.also {
-                if (isRestore) it.updateAll(restoredFolders) else it.deleteAll(foldersDomain)
+                if (isRestore) it.updateList(restoredFolders) else it.deleteList(foldersDomain)
             }
 
             notesInteractor.also {
-                if (isRestore) it.updateAll(restoredNotes) else it.deleteAll(restoredNotes)
+                if (isRestore) it.updateList(restoredNotes) else it.deleteList(restoredNotes)
             }
         }
     }

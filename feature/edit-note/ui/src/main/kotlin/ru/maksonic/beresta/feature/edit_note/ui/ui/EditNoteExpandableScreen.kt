@@ -58,11 +58,13 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
     override fun ExpandableScreen(
         router: EditNoteRouter?,
         isEntryPoint: Boolean,
+        isHiddenNotes: Boolean,
         modifier: Modifier
     ) {
         ExpandableScreenContainer(
             isEntryPoint = isEntryPoint,
             router = router,
+            isHiddenNotes = isHiddenNotes,
             modifier = modifier
         )
     }
@@ -72,6 +74,7 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
 private fun ExpandableScreenContainer(
     isEntryPoint: Boolean,
     router: EditNoteRouter?,
+    isHiddenNotes: Boolean,
     modifier: Modifier,
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
@@ -102,18 +105,17 @@ private fun ExpandableScreenContainer(
         val endPadding = animateDp(if (model.value.isExpandedFab) dp0 else dp16, animSpeed)
         val bottomPadding =
             animateDp(if (model.value.isExpandedFab) dp0 else initBottomPadding, animSpeed)
-        val fabColor = animateColorAsState(
-            if (model.value.isExpandedFab) surface else tertiaryContainer,
-            tween(animSpeed), label = ""
+        val color = animateColorAsState(
+            if (model.value.isExpandedFab) surface else tertiaryContainer, tween(animSpeed)
         )
         val isFullExpanded = height.value == fullHeight
-        val fabShape = if (isFullExpanded) 0.dp else dp16
+        val fabShape = if (isFullExpanded) 0.dp else if (isHiddenNotes) 50.dp else dp16
 
         if (isEntryPoint) {
             EditNoteExpandedContent(model.value, sandbox::send, focusRequester)
         } else {
             SurfacePro(
-                color = fabColor.value,
+                color = color.value,
                 shape = RoundedCornerShape(fabShape),
                 modifier = modifier
                     .padding(bottom = bottomPadding.value, end = endPadding.value)
@@ -126,8 +128,7 @@ private fun ExpandableScreenContainer(
                             model = model.value,
                             send = sandbox::send,
                             focusRequester = focusRequester,
-                            modifier = Modifier
-                                .size(width = width.value, height = height.value)
+                            modifier = Modifier.size(width = width.value, height = height.value)
                         )
                     } else {
                         EditNoteCollapsedContent(

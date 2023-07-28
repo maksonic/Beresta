@@ -15,12 +15,10 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
-import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -51,7 +49,6 @@ internal fun Content(
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     listSortUiState: SortingSheetApi.Ui,
     hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
-    vibrationPerformer: VibrationPerformer
 ) {
     val sharedNotesUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
@@ -64,7 +61,6 @@ internal fun Content(
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
-    val view = LocalView.current
 
     LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
         isVisibleBottomBar.value =
@@ -75,10 +71,6 @@ internal fun Content(
     }
 
     LaunchedEffect(isSelectionState.value) {
-        if (isSelectionState.value) {
-            vibrationPerformer.keyboardTapVibration(view)
-        }
-
         val value =
             if (isSelectionState.value) MainBottomBarState.SELECTION else MainBottomBarState.IDLE
 
@@ -144,7 +136,9 @@ internal fun Content(
 
             chipsDialogApi.Widget()
 
-            hiddenNotesEnterPasswordDialog.Widget { send(Msg.Inner.NavigatedToHiddenNotes) }
+            hiddenNotesEnterPasswordDialog.Widget(
+                onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) }
+            )
         }
     }
 }

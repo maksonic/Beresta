@@ -22,7 +22,7 @@ val mainScreenModule = module {
     }
     single {
         ChipsDataProgram(
-            foldersListUseCase = get(),
+            interactor = get(),
             foldersMapper = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO)),
             appLanguageEngineApi = get(),
@@ -32,7 +32,6 @@ val mainScreenModule = module {
     single {
         NotesDataProgram(
             notesInteractor = get(),
-            fetchNotesUseCase = get(),
             mapper = get(),
             appLanguageEngineApi = get(),
             dateFormatter = get(),

@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.semantics.Role
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.maksonic.beresta.core.VibrationPerformer
+import ru.maksonic.beresta.core.system.VibrationPerformer
 
 /**
  * @Author maksonic on 15.11.2022

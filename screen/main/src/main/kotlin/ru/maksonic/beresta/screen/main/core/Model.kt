@@ -101,7 +101,7 @@ sealed class Msg : ElmMessage {
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
         data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
         object HiddenModalBottomSheet : Inner()
-        object HideRemovedNotesSnackBar : Inner()
+        object HiddenRemovedNotesSnackBar : Inner()
         object NavigatedToHiddenNotes : Inner()
     }
 }
@@ -123,7 +123,7 @@ sealed class Eff : ElmEffect {
     object NavigateToSettings : Eff()
     data class NavigateToFolders(val ids: List<Long>) : Eff()
     object NavigateToTrash : Eff()
-    object NavigateToHiddenNotes : Eff()
+    data class NavigateToHiddenNotes(val ids: List<Long>) : Eff()
     object ShowAddNewChipDialog : Eff()
     object ShowedHiddenNotesEnterPasswordDialog : Eff()
 }

@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.edit_note.ui
 
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
-import ru.maksonic.beresta.feature.notes.api.domain.usecase.FetchNoteByIdUseCase
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.api.ui.isDefaultId
@@ -15,7 +14,6 @@ import java.time.LocalDateTime
  */
 class EditNoteProgram(
     private val interactor: NotesInteractor,
-    private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
     private val mapper: NoteUiMapper,
     private val navigator: AbstractNavigator,
 ) : ElmProgram<Msg, Cmd> {
@@ -31,7 +29,7 @@ class EditNoteProgram(
         val id = navigator.getLong(Destination.EditNote.passedKey)
 
         runCatching {
-            fetchNoteByIdUseCase(id).collect { noteDomain ->
+            interactor.fetchById(id).collect { noteDomain ->
                 val note = mapper.mapTo(noteDomain)
                 consumer(Msg.Inner.FetchedPassedNoteResult(note))
             }
@@ -47,11 +45,12 @@ class EditNoteProgram(
 
         interactor.let {
             if (note.isDefaultId())
-                it.addNote(noteDomain.copy(dateCreationRaw = currentRawTime))
+                it.add(noteDomain.copy(dateCreationRaw = currentRawTime))
             else
-                it.updateNote(
+                it.update(
                     noteDomain.copy(
-                        dateCreationRaw = note.dateCreationRaw, dateLastUpdateRaw = currentRawTime
+                        dateCreationRaw = note.dateCreationRaw,
+                        dateLastUpdateRaw = currentRawTime
                     )
                 )
         }

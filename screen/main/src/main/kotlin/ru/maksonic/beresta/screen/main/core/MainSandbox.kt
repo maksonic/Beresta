@@ -23,17 +23,8 @@ class MainSandbox(
     chipsSortProgram: ChipsSortProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(
-        Cmd.FetchNotesListFeatureState,
-        Cmd.FetchNotesData,
-        Cmd.FetchChipsData
-    ),
-    subscriptions = listOf(
-        notesDataProgram,
-        notesSortProgram,
-        chipsDataProgram,
-        chipsSortProgram
-    )
+    initialCmd = setOf(Cmd.FetchNotesListFeatureState, Cmd.FetchNotesData, Cmd.FetchChipsData),
+    subscriptions = listOf(notesDataProgram, notesSortProgram, chipsDataProgram, chipsSortProgram)
 ) {
     companion object {
         private const val STICKY_START_FOLDER_ID = 1L
@@ -72,7 +63,7 @@ class MainSandbox(
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
         //other
         //snack bar
-        is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
+        is Msg.Inner.HiddenRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
@@ -122,7 +113,7 @@ class MainSandbox(
     }
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult = ElmUpdate(
-        model = model.copy(
+        model.copy(
             isVisibleEditFab = true,
             notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
             searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
@@ -171,7 +162,7 @@ class MainSandbox(
     )
 
     private fun onBottomBarPinSelectedClicked(model: Model): UpdateResult = ElmUpdate(
-        model = model.copy(notes = model.notes.copy(selectedList = emptySet())),
+        model.copy(notes = model.notes.copy(selectedList = emptySet())),
         commands = setOf(Cmd.UpdatePinnedNotesInCache(model.notes.selectedList))
     )
 
@@ -192,7 +183,7 @@ class MainSandbox(
         val isShowLoading = model.notes.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
 
         return ElmUpdate(
-            model = model.copy(
+            model.copy(
                 isVisibleEditFab = true,
                 notes = model.notes.copy(
                     state = model.notes.state.copy(isLoading = isShowLoading),
@@ -271,7 +262,7 @@ class MainSandbox(
     }
 
     private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = ElmUpdate(
-        model = model.copy(
+        model.copy(
             base = model.base.copy(isLoading = false),
             notes = model.notes.copy(
                 removedList = emptySet(),
@@ -285,7 +276,7 @@ class MainSandbox(
         val isShowLoading = restored.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
 
         return ElmUpdate(
-            model = model.copy(
+            model.copy(
                 notes = model.notes.copy(state = model.notes.state.copy(isLoading = isShowLoading))
             ),
             commands = setOf(Cmd.UndoRemoveNotes(restored))
@@ -295,12 +286,16 @@ class MainSandbox(
     private fun onAddNewChipClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
 
-    private fun navigatedToHiddenNotes(model: Model): UpdateResult = ElmUpdate(
-        model.copy(
-            isVisibleEditFab = true,
-            notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
-        ),
-        effects = setOf(Eff.NavigateToHiddenNotes)
-    )
+    private fun navigatedToHiddenNotes(model: Model): UpdateResult {
+        val args = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
+            model.notes.selectedList.map { it.id } else emptyList()
+
+        return ElmUpdate(
+            model.copy(
+                isVisibleEditFab = true,
+                notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            ), effects = setOf(Eff.NavigateToHiddenNotes(args))
+        )
+    }
 }

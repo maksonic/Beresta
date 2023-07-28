@@ -10,6 +10,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalView
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.feature.notes.api.ui.LocalNoteCardState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.ui.noteUiCardState
@@ -33,8 +36,10 @@ fun Container(
     isSelected: Boolean,
     onNoteClicked: (Long) -> Unit,
     onNoteLongClicked: (Long) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    vibrationPerformer: VibrationPerformer = koinInject()
 ) {
+    val view = LocalView.current
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
     val colors = if (isFocusedItem.value) outlineVariant else primaryContainer
@@ -45,7 +50,11 @@ fun Container(
 
         BoxWithScaleInOutOnClick(
             onClick = { onNoteClicked(note.id) },
-            onLongClick = { onNoteLongClicked(note.id) },
+            onLongClick = {
+                onNoteLongClicked(note.id).run {
+                    vibrationPerformer.keyboardTapVibration(view)
+                }
+            },
             modifier = modifier.onFocusChanged { isFocusedItem.value = it.isFocused }
         ) {
             SurfacePro(

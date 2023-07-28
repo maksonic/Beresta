@@ -57,10 +57,13 @@ internal fun Content(
     val statusBarHeight = SystemStatusBarHeight.plus(8.dp)
     val cornerRadius = animateIntAsState(if (isCollapsed.value) 50 else 0, tween(animSpeed))
     val tonal = animateDp(
-        if (isColoredBackplate.value.or(isExpanded.value)) Theme.tonal.Level0
-        else Theme.tonal.Level2, Theme.animVelocity.common
+        if (isExpanded.value) {
+            Theme.tonal.Level0
+        } else {
+            if (isColoredBackplate.value) Theme.tonal.Level2 else Theme.tonal.Level0
+        },
+        Theme.animVelocity.common
     )
-
     val paddingEdge = animateDp(if (isCollapsed.value) dp56 else 0.dp, animSpeed)
     val isDisabledTopPaddingAnimation = rememberSaveable { mutableStateOf(false) }
     val paddingTop = if (isDisabledTopPaddingAnimation.value) rememberUpdatedState(statusBarHeight)

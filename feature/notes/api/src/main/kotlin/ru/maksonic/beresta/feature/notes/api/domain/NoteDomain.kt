@@ -16,6 +16,7 @@ data class NoteDomain(
     val dateCreationRaw: LocalDateTime = LocalDateTime.now(),
     val isSelected: Boolean = false,
     val isPinned: Boolean = false,
+    val isHidden: Boolean = false,
     val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false,
     val folderId: Long = 2L,

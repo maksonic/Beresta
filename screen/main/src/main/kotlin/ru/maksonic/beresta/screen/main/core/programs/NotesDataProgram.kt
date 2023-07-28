@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import ru.maksonic.beresta.core.DateFormatter
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
-import ru.maksonic.beresta.feature.notes.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
 import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
@@ -21,7 +20,6 @@ import java.time.LocalDateTime
  */
 class NotesDataProgram(
     private val notesInteractor: NotesInteractor,
-    private val fetchNotesUseCase: FetchNotesUseCase,
     private val mapper: NoteUiMapper,
     private val appLanguageEngineApi: LanguageEngineApi,
     private val dateFormatter: DateFormatter,
@@ -44,7 +42,10 @@ class NotesDataProgram(
 
     private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
-            combine(fetchNotesUseCase(), appLanguageEngineApi.current) { notesDomain, lang ->
+            combine(
+                notesInteractor.fetchList(),
+                appLanguageEngineApi.current
+            ) { notesDomain, lang ->
                 val notes = mapper.mapListTo(notesDomain).map { note ->
                     note.copy(
                         dateCreation = dateFormatter.fetchFormattedUiDate(
@@ -70,9 +71,9 @@ class NotesDataProgram(
                 )
             }
             val notesDomain = mapper.mapListFrom(notesUi)
-            notesInteractor.updateAll(notesDomain)
+            notesInteractor.updateList(notesDomain)
             delay(SNACK_BAR_VISIBILITY_TIME)
-            consumer(Msg.Inner.HideRemovedNotesSnackBar)
+            consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
         }
 
     private suspend fun undoRemovedFromTrash(
@@ -80,8 +81,8 @@ class NotesDataProgram(
         consumer: (Msg) -> Unit
     ) {
         val restored = mapper.mapListFrom(notes.map { it.copy(dateMovedToTrashRaw = null) })
-        notesInteractor.updateAll(restored)
-        consumer(Msg.Inner.HideRemovedNotesSnackBar)
+        notesInteractor.updateList(restored)
+        consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
     }
 
     private suspend fun updatePinnedNotes(notes: Set<NoteUi>) {
@@ -95,6 +96,6 @@ class NotesDataProgram(
             )
         }
         val notesDomain = mapper.mapListFrom(selected)
-        notesInteractor.updateAll(notesDomain)
+        notesInteractor.updateList(notesDomain)
     }
 }

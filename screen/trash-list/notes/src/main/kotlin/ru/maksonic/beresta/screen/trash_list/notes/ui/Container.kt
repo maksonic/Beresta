@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.navigation.router.router.trash.TrashNotesScreenRouter
@@ -30,7 +29,6 @@ internal fun Container(
     notesListUiApi: NotesApi.Ui.List = koinInject(),
     noteCardUiApi: NotesApi.Ui.Card = koinInject(),
     sandbox: NotesTrashSandbox = koinViewModel(),
-    vibrationPerformer: VibrationPerformer = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -53,8 +51,7 @@ internal fun Container(
         model = model,
         send = sandbox::send,
         notesListUiApi = notesListUiApi,
-        noteCardUiApi = noteCardUiApi,
-        vibrationPerformer = vibrationPerformer
+        noteCardUiApi = noteCardUiApi
     )
 }
 

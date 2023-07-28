@@ -20,6 +20,11 @@ internal fun NavGraphBuilder.editNoteScreen(api: EditNoteApi.Ui, navigator: Abst
         arguments = listOf(navArgument(Destination.EditNote.passedKey) { type = NavType.LongType })
     ) { navBackStackEntry ->
         val router = navigator.editNoteRouter(navBackStackEntry)
-        api.ExpandableScreen(router, isEntryPoint = true, Modifier)
+        api.ExpandableScreen(
+            router = router,
+            isEntryPoint = true,
+            isHiddenNotes = false,
+            modifier = Modifier
+        )
     }
 }

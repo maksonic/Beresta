@@ -11,18 +11,18 @@ import ru.maksonic.beresta.data.common.BaseDao
 @Dao
 abstract class NoteDao : BaseDao<NoteCache>() {
 
-    @Query("SELECT * FROM notes WHERE isMovedToTrash == 0")
-    abstract fun fetchNotesList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isMovedToTrash == 0 AND isHidden == 0")
+    abstract fun fetchList(): Flow<List<NoteCache>>
 
-    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId != 2")
-    abstract fun fetchNotesByFolderTrashList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId != 2 AND isHidden == 0")
+    abstract fun fetchTrashListByFolder(): Flow<List<NoteCache>>
 
-    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId == 2")
-    abstract fun fetchNotesWithoutFolderTrashList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId == 2 AND isHidden == 0")
+    abstract fun fetchWithoutFolderTrashList(): Flow<List<NoteCache>>
 
     @Query("SELECT * FROM notes WHERE id = :itemId")
-    abstract fun fetchCacheOneItemById(itemId: Long): Flow<NoteCache>
+    abstract fun fetchItemById(itemId: Long): Flow<NoteCache>
 
-    @Query("SELECT EXISTS(SELECT * FROM notes WHERE id = :id)")
-    abstract fun isNoteIsExist(id : Long) : Boolean
+    @Query("SELECT * FROM notes WHERE isHidden == 1")
+    abstract fun fetchHiddenList(): Flow<List<NoteCache>>
 }

@@ -33,11 +33,9 @@ import kotlin.math.absoluteValue
  */
 private const val PAGES_COUNT = 4
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun Content(
+internal fun Content(
     send: SendMessage,
     pagerState: PagerState,
     bottomSheetState: SheetState,

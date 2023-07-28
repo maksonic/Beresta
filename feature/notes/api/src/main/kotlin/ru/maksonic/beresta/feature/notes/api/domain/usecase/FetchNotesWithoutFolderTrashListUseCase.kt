@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.feature.notes.api.domain.usecase
 
-import ru.maksonic.beresta.core.domain.BaseUseCase
+import ru.maksonic.beresta.core.domain.UseCase
 import ru.maksonic.beresta.feature.notes.api.domain.NotesDomainList
 import ru.maksonic.beresta.feature.notes.api.domain.NotesRepository
 
@@ -9,6 +9,6 @@ import ru.maksonic.beresta.feature.notes.api.domain.NotesRepository
  */
 class FetchNotesWithoutFolderTrashListUseCase(
     private val repository: NotesRepository,
-) : BaseUseCase.Default<NotesDomainList> {
+) : UseCase.Default<NotesDomainList> {
     override suspend fun invoke(): NotesDomainList = repository.fetchNotesWithoutFolderTrashList()
 }

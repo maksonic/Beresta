@@ -10,6 +10,11 @@ import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 interface EditNoteApi {
     interface Ui {
         @Composable
-        fun ExpandableScreen(router: EditNoteRouter?, isEntryPoint: Boolean, modifier: Modifier)
+        fun ExpandableScreen(
+            router: EditNoteRouter?,
+            isEntryPoint: Boolean,
+            isHiddenNotes: Boolean,
+            modifier: Modifier
+        )
     }
 }

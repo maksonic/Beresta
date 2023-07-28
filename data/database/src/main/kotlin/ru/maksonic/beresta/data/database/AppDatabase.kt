@@ -3,7 +3,6 @@ package ru.maksonic.beresta.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ru.maksonic.beresta.data.common.LocalDateTimeConverter
 import ru.maksonic.beresta.data.database.folders.FolderCache
 import ru.maksonic.beresta.data.database.folders.NoteFolderDao
 import ru.maksonic.beresta.data.database.notes.NoteCache

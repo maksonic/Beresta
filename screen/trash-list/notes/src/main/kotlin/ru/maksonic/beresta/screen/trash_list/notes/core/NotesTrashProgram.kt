@@ -60,9 +60,9 @@ class NotesTrashProgram(
                     val restored = notesDomain.map { note ->
                         note.copy(isMovedToTrash = false, dateMovedToTrash = null)
                     }
-                    it.updateAll(restored)
+                    it.updateList(restored)
                 } else
-                    it.deleteAll(notesDomain)
+                    it.deleteList(notesDomain)
             }
         }
     }

@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.feature.folders_chips.api.domain.usecase
 
-import ru.maksonic.beresta.core.domain.BaseUseCase
+import ru.maksonic.beresta.core.domain.UseCase
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersDomainList
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersRepository
 
@@ -9,6 +9,6 @@ import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersRepository
  */
 class FetchFoldersTrashListUseCase(
     private val repository: FoldersRepository,
-) : BaseUseCase.Default<FoldersDomainList> {
+) : UseCase.Default<FoldersDomainList> {
     override suspend fun invoke(): FoldersDomainList = repository.fetchTrashFolders()
 }

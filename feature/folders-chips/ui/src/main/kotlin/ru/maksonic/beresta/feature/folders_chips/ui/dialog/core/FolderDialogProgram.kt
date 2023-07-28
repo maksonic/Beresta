@@ -3,8 +3,6 @@ package ru.maksonic.beresta.feature.folders_chips.ui.dialog.core
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
-import ru.maksonic.beresta.feature.folders_chips.api.domain.usecase.FetchFolderByIdUseCase
-import ru.maksonic.beresta.feature.folders_chips.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
 import ru.maksonic.beresta.feature.folders_chips.api.ui.isDefaultId
@@ -14,8 +12,6 @@ import java.time.LocalDateTime
  * @Author maksonic on 30.03.2023
  */
 class FolderDialogProgram(
-    private val fetchFolderByIdUseCase: FetchFolderByIdUseCase,
-    private val fetchFoldersListUseCase: FetchFoldersListUseCase,
     private val interactor: FoldersInteractor,
     private val mapper: FolderUiMapper,
     private val chipsRowApi: FoldersApi.Ui.ChipsRow
@@ -29,7 +25,7 @@ class FolderDialogProgram(
 
     private suspend fun fetchFolderById(id: Long, consumer: (Msg) -> Unit) {
         runCatching {
-            fetchFolderByIdUseCase(id).collect { folderDomain ->
+            interactor.fetchById(id).collect { folderDomain ->
                 val folder = mapper.mapTo(folderDomain)
                 consumer(Msg.Inner.FetchFolderData(folder))
             }
@@ -42,10 +38,10 @@ class FolderDialogProgram(
         val folderDomain = mapper.mapFrom(folder)
         interactor.let {
             if (folder.isDefaultId()) {
-                it.addFolder(folderDomain.copy(dateCreation = LocalDateTime.now()))
+                it.add(folderDomain.copy(dateCreation = LocalDateTime.now()))
                 updateCurrentFolder()
             } else {
-                it.updateFolder(
+                it.update(
                     folderDomain.copy(
                         dateCreation = folder.dateCreationRaw,
                         dateLastUpdateRaw = LocalDateTime.now()
@@ -55,7 +51,7 @@ class FolderDialogProgram(
         }
     }
 
-    private suspend fun updateCurrentFolder() = fetchFoldersListUseCase().collect { list ->
+    private suspend fun updateCurrentFolder() = interactor.fetchList().collect { list ->
         val lastAddedFolder = list.maxBy { folder -> folder.id }
         chipsRowApi.currentSelectedId.update(lastAddedFolder.id)
     }

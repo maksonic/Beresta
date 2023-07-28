@@ -12,14 +12,11 @@ import ru.maksonic.beresta.data.common.BaseDao
 abstract class NoteFolderDao : BaseDao<FolderCache>() {
 
     @Query("SELECT * FROM notes_folders WHERE isMovedToTrash == 0")
-    abstract fun fetchFoldersList(): Flow<List<FolderCache>>
+    abstract fun fetchList(): Flow<List<FolderCache>>
 
     @Query("SELECT * FROM notes_folders WHERE isMovedToTrash == 1")
-    abstract fun fetchFoldersTrashList(): Flow<List<FolderCache>>
+    abstract fun fetchTrashList(): Flow<List<FolderCache>>
 
     @Query("SELECT * FROM notes_folders WHERE id = :itemId")
-    abstract fun fetchCacheOneItemById(itemId: Long): Flow<FolderCache>
-
-    @Query("SELECT EXISTS(SELECT * FROM notes_folders WHERE id = :id)")
-    abstract fun isFolderIsExist(id : Long) : Boolean
+    abstract fun fetchItemById(itemId: Long): Flow<FolderCache>
 }

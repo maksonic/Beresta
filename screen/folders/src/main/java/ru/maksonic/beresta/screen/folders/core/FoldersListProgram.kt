@@ -12,13 +12,11 @@ import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
-import ru.maksonic.beresta.feature.folders_chips.api.domain.usecase.FetchFoldersListUseCase
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
 import ru.maksonic.beresta.feature.folders_chips.api.ui.StickyItemsTitleFormatter
 import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
 import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
-import ru.maksonic.beresta.feature.notes.api.domain.usecase.FetchNotesUseCase
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
 import ru.maksonic.beresta.feature.notes.api.ui.findNotesByFoldersId
@@ -32,8 +30,6 @@ import java.time.LocalDateTime
  * @Author maksonic on 03.04.2023
  */
 class FoldersListProgram(
-    private val fetchFoldersUseCase: FetchFoldersListUseCase,
-    private val fetchNotesUseCase: FetchNotesUseCase,
     private val foldersMapper: FolderUiMapper,
     private val foldersInteractor: FoldersInteractor,
     private val notesInteractor: NotesInteractor,
@@ -70,7 +66,9 @@ class FoldersListProgram(
     private suspend fun fetchFoldersWithNotes(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
         runCatching {
             combine(
-                fetchFoldersUseCase(), fetchNotesUseCase(), appLanguageEngineApi.current
+                foldersInteractor.fetchList(),
+                notesInteractor.fetchList(),
+                appLanguageEngineApi.current
             ) { folders, notes, lang ->
                 val passedNotesIds = navigator.getListLongFromString(Destination.Folders.passedKey)
                 val isMoveNotesState = passedNotesIds.isNotEmpty()
@@ -88,6 +86,7 @@ class FoldersListProgram(
 
         }.onFailure { consumer(Msg.Inner.FetchedDataError(it.localizedMessage ?: "Error")) }
     }
+
     private suspend fun retryFetchFoldersWithNotes(consumer: (Msg) -> Unit) {
         delay(RETRY_REQUEST_DELAY)
         fetchFoldersWithNotes(consumer)
@@ -107,7 +106,7 @@ class FoldersListProgram(
 
         updateFolderNotes(removedDomainFolders.map { it.id }, true)
 
-        foldersInteractor.updateAll(removedDomainFolders)
+        foldersInteractor.updateList(removedDomainFolders)
         delay(SNACK_BAR_VISIBILITY_TIME)
         consumer(Msg.Inner.HideRemovedFoldersSnackBar)
     }
@@ -121,7 +120,7 @@ class FoldersListProgram(
 
         updateFolderNotes(restoredUiFolders.map { it.id }, false)
 
-        foldersInteractor.updateAll(restoredDomainFolders)
+        foldersInteractor.updateList(restoredDomainFolders)
         consumer(Msg.Inner.HideRemovedFoldersSnackBar)
     }
 
@@ -136,7 +135,7 @@ class FoldersListProgram(
             )
         }
         val foldersDomain = foldersMapper.mapListFrom(selected)
-        foldersInteractor.updateAll(foldersDomain)
+        foldersInteractor.updateList(foldersDomain)
     }
 
     private suspend fun changeNotesFolderId(folderId: Long) {
@@ -144,10 +143,10 @@ class FoldersListProgram(
 
         updateCurrentSelectedFolderState(folderId)
 
-        fetchNotesUseCase().collect { notesDomain ->
+        notesInteractor.fetchList().collect { notesDomain ->
             val passedNotes = notesDomain.filter { it.id in passedNotesIds }
             val updated = passedNotes.map { it.copy(folderId = folderId) }
-            notesInteractor.updateAll(updated)
+            notesInteractor.updateList(updated)
         }
     }
 
@@ -157,7 +156,7 @@ class FoldersListProgram(
         val notes = notesMapper.mapListFrom(if (isTrashed) removedUiNotes else restoredUiNotes)
 
         _removedNotes.value = if (isTrashed) removedUiNotes else emptyList()
-        notesInteractor.updateAll(notes)
+        notesInteractor.updateList(notes)
     }
 
     private fun List<FolderDomain>.mapToUi(

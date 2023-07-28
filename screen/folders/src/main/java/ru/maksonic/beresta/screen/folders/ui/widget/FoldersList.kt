@@ -19,6 +19,7 @@ import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.SendMessage
@@ -127,7 +128,7 @@ private fun FetchedSuccess(
                 item {
                     QuaternaryButton(
                         isEnabled = !model.value.isSelectionState,
-                        title = "Скрытые заметки",
+                        title = text.hiddenNotes.topBarTitle,
                         prefixIcon = AppIcon.PhonelinkLock,
                         onNavigateToFoldersClicked = { send(Msg.Ui.OnToHiddenNotesClicked) }
                     )

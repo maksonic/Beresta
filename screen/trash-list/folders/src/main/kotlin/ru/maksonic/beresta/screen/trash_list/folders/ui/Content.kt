@@ -8,15 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalView
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.screen.trash_list.folders.core.Model
 import ru.maksonic.beresta.screen.trash_list.folders.core.Msg
@@ -38,19 +35,11 @@ internal fun Content(
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
     model: State<Model>,
     send: SendMessage,
-    vibrationPerformer: VibrationPerformer,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val isVisibleFirstItemOffset = remember { mutableStateOf(true) }
-    val view = LocalView.current
-
-    LaunchedEffect(model.value.isSelectionState) {
-        if (model.value.isSelectionState) {
-            vibrationPerformer.keyboardTapVibration(view)
-        }
-    }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Scaffold(

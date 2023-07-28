@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 /**
  * @Author maksonic on 19.12.2022
  */
-abstract class BaseCacheSource<T>(
+abstract class BaseDataSource<T>(
     private val baseDao: BaseDao<T>,
     private val dispatcher: CoroutineDispatcher,
 ) {

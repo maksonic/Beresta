@@ -1,10 +1,10 @@
 package ru.maksonic.beresta.feature.folders_chips.api.domain
 
-import ru.maksonic.beresta.core.domain.BaseRepository
+import ru.maksonic.beresta.core.domain.Repository
 
 /**
  * @Author maksonic on 30.03.2023
  */
-interface FoldersRepository : BaseRepository<FolderDomain> {
+interface FoldersRepository : Repository<FolderDomain> {
     suspend fun fetchTrashFolders(): FoldersDomainList
 }

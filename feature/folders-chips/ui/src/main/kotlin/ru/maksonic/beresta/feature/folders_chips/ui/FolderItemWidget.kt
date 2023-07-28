@@ -20,8 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.isDefaultId
@@ -82,7 +85,8 @@ private fun Content(
     folder: FolderUi,
     isTrashPlacement: Boolean = false,
     onFolderClicked: (id: Long) -> Unit,
-    onFolderLongPressed: (id: Long) -> Unit
+    onFolderLongPressed: (id: Long) -> Unit,
+    vibrationPerformer: VibrationPerformer = koinInject()
 ) {
     val isFocusedItem = rememberSaveable { mutableStateOf(false) }
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
@@ -92,11 +96,15 @@ private fun Content(
         label = "",
         animationSpec = tween(Theme.animVelocity.common)
     )
-
+    val view = LocalView.current
 
     BoxWithScaleInOutOnClick(
         onClick = { onFolderClicked(folder.id) },
-        onLongClick = { onFolderLongPressed(folder.id) },
+        onLongClick = {
+            onFolderLongPressed(folder.id).run {
+                vibrationPerformer.keyboardTapVibration(view)
+            }
+        },
         backgroundColor = backgroundColor,
         shape = Shape.cornerNormal,
         modifier = modifier

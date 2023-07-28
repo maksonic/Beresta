@@ -154,20 +154,20 @@ object feature {
         )
     }
 
-    object hiddenNotes {
+    object hiddenNotesDialog {
         object api : base(
-            path = ":feature:hidden-notes:api",
-            namespace = "ru.maksonic.beresta.feature.hidden_notes.api"
+            path = ":feature:hidden-notes-dialog:api",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes_dialog.api"
         )
 
         object core : base(
-            path = ":feature:hidden-notes:core",
-            namespace = "ru.maksonic.beresta.feature.hidden_notes.core"
+            path = ":feature:hidden-notes-dialog:core",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes_dialog.core"
         )
 
         object ui : base(
-            path = ":feature:hidden-notes:ui",
-            namespace = "ru.maksonic.beresta.feature.hidden_notes.ui"
+            path = ":feature:hidden-notes-dialog:ui",
+            namespace = "ru.maksonic.beresta.feature.hidden_notes_dialog.ui"
         )
     }
 }

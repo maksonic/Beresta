@@ -23,9 +23,13 @@ internal fun EditNoteExpandableFab(
         if (isVisible.value) 1f else 0f, tween(Theme.animVelocity.common), label = ""
     )
 
-    api.ExpandableScreen(router = null, isEntryPoint = false, modifier.graphicsLayer {
-        scaleX = fabTransition.value
-        scaleY = fabTransition.value
-        alpha = fabTransition.value
-    })
+    api.ExpandableScreen(
+        router = null,
+        isEntryPoint = false,
+        isHiddenNotes = false,
+        modifier = modifier.graphicsLayer {
+            scaleX = fabTransition.value
+            scaleY = fabTransition.value
+            alpha = fabTransition.value
+        })
 }

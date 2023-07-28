@@ -19,7 +19,11 @@ class HiddenNotesSandbox(
     hiddenNotesSortProgram: HiddenNotesSortProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchNotesListFeatureState, Cmd.FetchNotesData),
+    initialCmd = setOf(
+        Cmd.FetchNotesListFeatureState,
+        Cmd.FetchNotesData,
+        Cmd.FetchMovedForHideNotesData
+    ),
     subscriptions = listOf(hiddenNotesDataProgram, hiddenNotesSortProgram)
 ) {
     companion object {
@@ -37,9 +41,8 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnChangeGridViewClicked -> onSearchBarGridViewClicked(model, msg)
         is Msg.Ui.OnBottomBarSortNotesClicked -> onBottomBarSortNotesClicked(model)
         //selected bottom bar actions
-        is Msg.Ui.OnBottomBarHideSelectedNotesClicked -> onBottomBarHideSelectedClicked(model)
+        is Msg.Ui.OnBottomBarUnhideSelectedNotesClicked -> onBottomBarUnhideSelectedClicked(model)
         is Msg.Ui.OnBottomBarPinSelectedNotesClicked -> onBottomBarPinSelectedClicked(model)
-        is Msg.Ui.OnBottomBarMoveSelectedNotesClicked -> onBottomBarMoveSelectedClicked(model)
         is Msg.Ui.OnBottomBarRemoveSelectedNotesClicked -> onBottomBarRemoveSelectedClicked(model)
         //modal sheet
         is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
@@ -51,8 +54,9 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
         //other
         //snack bar
-        is Msg.Inner.HideRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
+        is Msg.Inner.HiddenRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
+        is Msg.Inner.HiddenLoadingPlaceholder -> hiddenLoadingPlaceholder(model)
     }
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
@@ -121,25 +125,29 @@ class HiddenNotesSandbox(
         )
     )
 
-    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onBottomBarUnhideSelectedClicked(model: Model): UpdateResult {
+        val unhidden = model.notes.selectedList
+        val isShowLoading = unhidden.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
+
+        return ElmUpdate(
+            model = model.copy(
+                isVisibleEditFab = true,
+                notes = model.notes.copy(
+                    state = model.notes.state.copy(isLoading = isShowLoading),
+                    selectedList = emptySet(),
+                    removedList = model.notes.selectedList,
+                    isSelection = false,
+                ),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            ),
+            commands = setOf(Cmd.UnhideSelectedNotes(unhidden.toList())),
+        )
+    }
 
     private fun onBottomBarPinSelectedClicked(model: Model): UpdateResult = ElmUpdate(
         model = model.copy(notes = model.notes.copy(selectedList = emptySet())),
         commands = setOf(Cmd.UpdatePinnedNotesInCache(model.notes.selectedList))
     )
-
-    private fun onBottomBarMoveSelectedClicked(model: Model): UpdateResult {
-        val args = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
-            model.notes.selectedList.map { it.id } else emptyList()
-
-        return ElmUpdate(
-            model.copy(
-                isVisibleEditFab = true,
-                notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
-            )
-        )
-    }
 
     private fun onBottomBarRemoveSelectedClicked(model: Model): UpdateResult {
         val isShowLoading = model.notes.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
@@ -229,4 +237,9 @@ class HiddenNotesSandbox(
             commands = setOf(Cmd.UndoRemoveNotes(restored))
         )
     }
+    private fun hiddenLoadingPlaceholder(model: Model): UpdateResult = ElmUpdate(
+            model = model.copy(
+                notes = model.notes.copy(state = model.notes.state.copy(isLoading = false))
+            )
+    )
 }

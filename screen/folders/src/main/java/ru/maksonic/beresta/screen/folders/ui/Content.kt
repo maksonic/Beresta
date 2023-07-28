@@ -10,7 +10,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,10 +17,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalView
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
@@ -42,8 +39,6 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 /**
  * @Author maksonic on 15.05.2023
  */
-internal typealias SendMessage = (Msg) -> Unit
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Content(
@@ -54,7 +49,6 @@ internal fun Content(
     model: State<Model>,
     send: SendMessage,
     listSortUiState: SortingSheetApi.Ui,
-    vibrationPerformer: VibrationPerformer,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
@@ -62,16 +56,9 @@ internal fun Content(
     val isVisibleFirstFolderOffset = remember { mutableStateOf(true) }
     val isCanScrollForward = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.isSelectionState)
-    val view = LocalView.current
-    
+
     BackHandler(model.value.isSelectionState) {
         send(Msg.Ui.CancelSelectionState)
-    }
-
-    LaunchedEffect(model.value.isSelectionState) {
-        if (model.value.isSelectionState) {
-            vibrationPerformer.keyboardTapVibration(view)
-        }
     }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {

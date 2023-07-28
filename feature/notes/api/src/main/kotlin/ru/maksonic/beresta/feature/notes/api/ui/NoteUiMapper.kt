@@ -15,6 +15,7 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         dateMovedToTrashRaw = i.dateMovedToTrash,
         dateLastUpdateRaw = i.dateLastUpdateRaw,
         isPinned = i.isPinned,
+        isHidden = i.isHidden,
         pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash,
         folderId = i.folderId
@@ -28,6 +29,7 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         dateMovedToTrash = o.dateMovedToTrashRaw,
         dateLastUpdateRaw = o.dateLastUpdateRaw,
         isPinned = o.isPinned,
+        isHidden = o.isHidden,
         pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash,
         folderId = o.folderId

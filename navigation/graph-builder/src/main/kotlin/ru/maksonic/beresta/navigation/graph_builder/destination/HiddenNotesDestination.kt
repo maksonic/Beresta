@@ -2,6 +2,8 @@ package ru.maksonic.beresta.navigation.graph_builder.destination
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.composable
 import ru.maksonic.beresta.navigation.graph_builder.navigator.NavigationAnimator
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
@@ -18,7 +20,10 @@ internal fun NavGraphBuilder.hiddenNotesScreen(
     animator: NavigationAnimator,
 ) {
     composable(
-        route = Destination.HiddenNotes.route,
+        route = Destination.HiddenNotes.routeWithArg,
+        arguments = listOf(navArgument(Destination.HiddenNotes.passedKey) {
+            type = NavType.StringType
+        }),
         enterTransition = {
             when (initialState.destination.route) {
                 Destination.Main.route -> animator.slideIntoLeft(this, velocity)

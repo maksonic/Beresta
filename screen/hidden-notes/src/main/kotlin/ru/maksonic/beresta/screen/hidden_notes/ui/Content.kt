@@ -15,9 +15,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
@@ -25,10 +23,10 @@ import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.screen.hidden_notes.core.Model
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
-import ru.maksonic.beresta.screen.hidden_notes.ui.widget.EditNoteExpandableFab
 import ru.maksonic.beresta.screen.hidden_notes.ui.widget.BottomBar
-import ru.maksonic.beresta.screen.hidden_notes.ui.widget.SearchBar
+import ru.maksonic.beresta.screen.hidden_notes.ui.widget.EditNoteExpandableFab
 import ru.maksonic.beresta.screen.hidden_notes.ui.widget.NotesList
+import ru.maksonic.beresta.screen.hidden_notes.ui.widget.SearchBar
 import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
@@ -44,10 +42,7 @@ internal fun Content(
     counterApi: TopBarCounterApi.Ui,
     sortedSheetApi: SortingSheetApi.Ui,
     listSortUiState: SortingSheetApi.Ui,
-    vibrationPerformer: VibrationPerformer
 ) {
-    val sharedNotesUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
-    val isVisibleBottomBar = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
@@ -55,21 +50,9 @@ internal fun Content(
     val selectedNotesCount = rememberUpdatedState(model.value.notes.selectedList.count())
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
-    val view = LocalView.current
 
-    LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
-        isVisibleBottomBar.value =
-            if (model.value.notes.isSelection) true else sharedNotesUiState.value.isScrollUp
-    }
     BackHandler(isSelectionState.value) {
         send(Msg.Ui.CancelNotesSelection)
-    }
-
-    LaunchedEffect(isSelectionState.value) {
-        if (isSelectionState.value) {
-            vibrationPerformer.keyboardTapVibration(view)
-        }
-        isVisibleBottomBar.value = isSelectionState.value
     }
 
     LaunchedEffect(model.value.notes.collection) {
@@ -98,7 +81,7 @@ internal fun Content(
             BottomBar(
                 send = send,
                 isSelectionState = isSelectionState,
-                isVisibleBottomBar = isVisibleBottomBar,
+                isVisibleBottomBar = isSelectionState,
                 isEnabledBar = isEnabledBottomBar,
                 isShowUnpinBtn = isShowUnpinBtn,
                 sharedNotesUiScrollState = notesListApi.sharedUiState

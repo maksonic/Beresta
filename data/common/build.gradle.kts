@@ -40,8 +40,8 @@ android {
     }
 }
 
-
 dependencies {
+    implementation(project(module.primary.core.path))
     implementation(libs.datastore)
     implementation(libs.room.runtime)
     implementation(libs.coroutinesAndroid)

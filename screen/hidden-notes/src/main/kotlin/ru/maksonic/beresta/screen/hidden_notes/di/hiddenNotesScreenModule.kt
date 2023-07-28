@@ -15,10 +15,11 @@ val hiddenNotesScreenModule = module {
     single {
         HiddenNotesDataProgram(
             notesInteractor = get(),
-            fetchNotesUseCase = get(),
+            fetchHiddenNotesUseCase = get(),
             mapper = get(),
             appLanguageEngineApi = get(),
             dateFormatter = get(),
+            navigator = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }

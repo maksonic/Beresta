@@ -72,9 +72,8 @@ sealed class Msg : ElmMessage {
         object OnBottomBarSortNotesClicked : Ui()
 
         //selected bottom bar actions
-        object OnBottomBarHideSelectedNotesClicked : Ui()
+        object OnBottomBarUnhideSelectedNotesClicked : Ui()
         object OnBottomBarPinSelectedNotesClicked : Ui()
-        object OnBottomBarMoveSelectedNotesClicked : Ui()
         object OnBottomBarRemoveSelectedNotesClicked : Ui()
 
         //search bar
@@ -95,15 +94,18 @@ sealed class Msg : ElmMessage {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
         object HiddenModalBottomSheet : Inner()
-        object HideRemovedNotesSnackBar : Inner()
+        object HiddenRemovedNotesSnackBar : Inner()
+        object HiddenLoadingPlaceholder : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchNotesListFeatureState : Cmd()
     object FetchNotesData : Cmd()
+    object FetchMovedForHideNotesData : Cmd()
+    object FetchNotesListFeatureState : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
+    data class UnhideSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
 }

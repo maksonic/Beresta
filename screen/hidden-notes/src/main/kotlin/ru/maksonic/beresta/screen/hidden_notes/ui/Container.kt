@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -33,8 +32,7 @@ internal fun Container(
     counterApi: TopBarCounterApi.Ui = koinInject(),
     sortedSheetApi: SortingSheetApi.Ui = koinInject(),
     sandbox: HiddenNotesSandbox = koinViewModel(),
-    listSortUiState: SortingSheetApi.Ui = koinInject(),
-    vibrationPerformer: VibrationPerformer = koinInject(),
+    listSortUiState: SortingSheetApi.Ui = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -52,7 +50,6 @@ internal fun Container(
         counterApi = counterApi,
         sortedSheetApi = sortedSheetApi,
         listSortUiState = listSortUiState,
-        vibrationPerformer = vibrationPerformer
     )
 }
 

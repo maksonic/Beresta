@@ -13,8 +13,6 @@ import ru.maksonic.beresta.screen.folders.core.FoldersScreenSandbox
 val foldersScreenModule = module {
     single {
         FoldersListProgram(
-            fetchFoldersUseCase = get(),
-            fetchNotesUseCase = get(),
             foldersMapper = get(),
             foldersInteractor = get(),
             notesInteractor = get(),

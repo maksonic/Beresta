@@ -109,9 +109,9 @@ dependencies {
     implementation(project(module.feature.sortingSheet.core.path))
     implementation(project(module.feature.sortingSheet.ui.path))
 
-    implementation(project(module.feature.hiddenNotes.api.path))
-    implementation(project(module.feature.hiddenNotes.core.path))
-    implementation(project(module.feature.hiddenNotes.ui.path))
+    implementation(project(module.feature.hiddenNotesDialog.api.path))
+    implementation(project(module.feature.hiddenNotesDialog.core.path))
+    implementation(project(module.feature.hiddenNotesDialog.ui.path))
 
     //screens
     implementation(project(module.screen.main.path))

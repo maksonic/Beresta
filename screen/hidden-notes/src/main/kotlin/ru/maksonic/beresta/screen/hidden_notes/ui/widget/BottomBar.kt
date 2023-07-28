@@ -18,10 +18,9 @@ import ru.maksonic.beresta.screen.hidden_notes.core.Msg
 import ru.maksonic.beresta.screen.hidden_notes.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.Lock
-import ru.maksonic.beresta.ui.theme.icons.MoveFolder
 import ru.maksonic.beresta.ui.theme.icons.MoveTrash
 import ru.maksonic.beresta.ui.theme.icons.Pin
+import ru.maksonic.beresta.ui.theme.icons.Repartition
 import ru.maksonic.beresta.ui.theme.icons.Unpin
 import ru.maksonic.beresta.ui.widget.bar.bottom.BaseBottomBarItem
 import ru.maksonic.beresta.ui.widget.bar.bottom.BottomBarOld
@@ -65,23 +64,23 @@ internal fun BottomBar(
                     .fillMaxWidth()
                     .drawBehind { drawRect(color) }
             ) {
-                SelectedBarContent(send, isEnabledBar, isShowUnpinBtn)
+                Content(send, isEnabledBar, isShowUnpinBtn)
             }
         }
     }
 }
 
 @Composable
-private fun SelectedBarContent(
+private fun Content(
     send: SendMessage,
     isEnabledBar: State<Boolean>,
     isShowUnpinBtn: State<Boolean>
 ) {
     val items = arrayOf(
         BaseBottomBarItem(
-            icon = AppIcon.Lock,
-            action = { send(Msg.Ui.OnBottomBarHideSelectedNotesClicked) },
-            label = text.shared.btnTitleHide,
+            icon = AppIcon.Repartition,
+            action = { send(Msg.Ui.OnBottomBarUnhideSelectedNotesClicked) },
+            label = text.shared.btnTitleUnhide,
         ),
         BaseBottomBarItem(
             label = if (isShowUnpinBtn.value) text.shared.btnTitleUnpin
@@ -91,11 +90,6 @@ private fun SelectedBarContent(
                 send(Msg.Ui.OnBottomBarPinSelectedNotesClicked)
                 send(Msg.Ui.CancelNotesSelection)
             }),
-        BaseBottomBarItem(
-            icon = AppIcon.MoveFolder,
-            action = { send(Msg.Ui.OnBottomBarMoveSelectedNotesClicked) },
-            label = text.shared.btnTitleReplace,
-        ),
         BaseBottomBarItem(
             icon = AppIcon.MoveTrash,
             action = { send(Msg.Ui.OnBottomBarRemoveSelectedNotesClicked) },

@@ -9,11 +9,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.VibrationPerformer
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.showForEdit
-import ru.maksonic.beresta.feature.hidden_notes.api.HiddenNotesApi
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
 import ru.maksonic.beresta.screen.folders.core.Eff
@@ -23,6 +22,8 @@ import ru.maksonic.beresta.screen.folders.core.Msg
 /**
  * @Author maksonic on 04.07.2023
  */
+internal typealias SendMessage = (Msg) -> Unit
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Container(
@@ -32,8 +33,7 @@ internal fun Container(
     sandbox: FoldersScreenSandbox = koinViewModel(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
-    listSortUiState: SortingSheetApi.Ui = koinInject(),
-    vibrationPerformer: VibrationPerformer = koinInject()
+    listSortUiState: SortingSheetApi.Ui = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -54,7 +54,6 @@ internal fun Container(
         model = model,
         send = sandbox::send,
         listSortUiState = listSortUiState,
-        vibrationPerformer = vibrationPerformer
     )
 }
 

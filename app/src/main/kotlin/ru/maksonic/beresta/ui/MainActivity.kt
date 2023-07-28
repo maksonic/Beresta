@@ -29,7 +29,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.Msg
-import ru.maksonic.beresta.core.VibrationPerformer
+import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.core.secure.ScreenCaptureManager
 import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder

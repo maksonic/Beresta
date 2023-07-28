@@ -20,6 +20,7 @@ data class NoteUi(
     val backgroundId: Int = 0,
     val isSelected: Boolean = false,
     val isPinned: Boolean,
+    val isHidden: Boolean = false,
     val pinTime: LocalDateTime?,
     val isMovedToTrash: Boolean,
     val folderId: Long = 2L

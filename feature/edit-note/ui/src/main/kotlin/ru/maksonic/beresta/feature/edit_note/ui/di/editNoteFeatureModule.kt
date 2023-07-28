@@ -14,7 +14,6 @@ val editNoteUiFeatureModule = module {
     single {
         EditNoteProgram(
             interactor = get(),
-            fetchNoteByIdUseCase = get(),
             mapper = get(),
             navigator = get(),
         )
