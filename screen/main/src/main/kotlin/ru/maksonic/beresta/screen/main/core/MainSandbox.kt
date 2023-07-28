@@ -149,7 +149,7 @@ class MainSandbox(
     private fun onBottomBarSortNotesClicked(model: Model): UpdateResult = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = true, content = CurrentMainSheetContent.SORT_NOTES
+                isVisible = true, content = CurrentSheetContent.SORT_NOTES
             )
         )
     )
@@ -205,7 +205,7 @@ class MainSandbox(
     private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = false, content = CurrentMainSheetContent.NOTHING
+                isVisible = false, content = CurrentSheetContent.NOTHING
             )
         )
     )

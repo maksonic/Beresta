@@ -13,7 +13,6 @@ import ru.maksonic.beresta.feature.sorting_sheet.api.Order
 import ru.maksonic.beresta.feature.sorting_sheet.api.Sort
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 
 /**
  * @Author maksonic on 27.06.2023
@@ -24,20 +23,45 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
         private val INITIAL_SORT_STATE = Sort.DATE_CREATION.name
         private const val INITIAL_IS_SORT_PINNED = false
         private const val INITIAL_NOTES_GRID_COUNT = 1
-        private const val BASE_ORDER_KEY = "prefs_app_key_order"
-        private const val BASE_SORT_KEY = "prefs_app_key_sort"
-        private const val BASE_SORT_PINNED_KEY = "prefs_app_key_sort_pinned"
+        private const val ORDER_KEY = "prefs_app_key_order"
+        private const val SORT_KEY = "prefs_app_key_sort"
+        private const val PINNED_KEY = "prefs_app_key_sort_pinned"
         private const val NOTES = "_notes"
+        private const val HIDDEN_NOTES = "_hidden_notes"
         private const val FOLDERS = "_folders"
     }
 
     private val gridKey = intPreferencesKey("prefs_app_note_grid_count_key")
-    private val orderNotesKey = stringPreferencesKey(BASE_ORDER_KEY + NOTES)
-    private val sortNotesKey = stringPreferencesKey(BASE_SORT_KEY + NOTES)
-    private val sortPinnedNotesKey = booleanPreferencesKey(BASE_SORT_PINNED_KEY + NOTES)
-    private val orderFoldersKey = stringPreferencesKey(BASE_ORDER_KEY + FOLDERS)
-    private val sortFoldersKey = stringPreferencesKey(BASE_SORT_KEY + FOLDERS)
-    private val sortPinnedFoldersKey = booleanPreferencesKey(BASE_SORT_PINNED_KEY + FOLDERS)
+
+    private val orderNotesKey = stringPreferencesKey(ORDER_KEY + NOTES)
+    private val sortNotesKey = stringPreferencesKey(SORT_KEY + NOTES)
+    private val sortPinnedNotesKey = booleanPreferencesKey(PINNED_KEY + NOTES)
+
+    private val orderHiddenNotesKey = stringPreferencesKey(ORDER_KEY + HIDDEN_NOTES)
+    private val sortHiddenNotesKey = stringPreferencesKey(SORT_KEY + HIDDEN_NOTES)
+    private val sortPinnedHiddenNotesKey = booleanPreferencesKey(PINNED_KEY + HIDDEN_NOTES)
+
+    private val orderFoldersKey = stringPreferencesKey(ORDER_KEY + FOLDERS)
+    private val sortFoldersKey = stringPreferencesKey(SORT_KEY + FOLDERS)
+    private val sortPinnedFoldersKey = booleanPreferencesKey(PINNED_KEY + FOLDERS)
+
+    private fun orderKey(key: SortDataKey) = when (key) {
+        SortDataKey.NOTES -> orderNotesKey
+        SortDataKey.HIDDEN_NOTES -> orderHiddenNotesKey
+        SortDataKey.FOLDERS -> orderFoldersKey
+    }
+
+    private fun sortKey(key: SortDataKey) = when (key) {
+        SortDataKey.NOTES -> sortNotesKey
+        SortDataKey.HIDDEN_NOTES -> sortHiddenNotesKey
+        SortDataKey.FOLDERS -> sortFoldersKey
+    }
+
+    private fun pinnedKey(key: SortDataKey) = when (key) {
+        SortDataKey.NOTES -> sortPinnedNotesKey
+        SortDataKey.HIDDEN_NOTES -> sortPinnedHiddenNotesKey
+        SortDataKey.FOLDERS -> sortPinnedFoldersKey
+    }
 
     override fun current(key: SortDataKey): Flow<ListSortUiState> {
         return datastore.datastore.data.map { prefs ->
@@ -49,6 +73,12 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
                 isSortPinned = prefs[sortPinnedNotesKey] ?: INITIAL_IS_SORT_PINNED
             )
 
+            val hiddenNotes = CommonSort(
+                order = Order.valueOf(prefs[orderHiddenNotesKey] ?: INITIAL_ORDER_STATE),
+                sort = Sort.valueOf(prefs[sortHiddenNotesKey] ?: INITIAL_SORT_STATE),
+                isSortPinned = prefs[sortPinnedHiddenNotesKey] ?: INITIAL_IS_SORT_PINNED
+            )
+
             val folders = CommonSort(
                 order = Order.valueOf(prefs[orderFoldersKey] ?: INITIAL_ORDER_STATE),
                 sort = Sort.valueOf(prefs[sortFoldersKey] ?: INITIAL_SORT_STATE),
@@ -56,6 +86,7 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
             )
             return@map ListSortUiState(
                 notes = notes,
+                hiddenNotes = hiddenNotes,
                 folders = folders,
                 gridCount = gridCount
             )
@@ -63,18 +94,15 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
     }
 
     override suspend fun setOrderState(value: Pair<SortDataKey, Order>) {
-        val orderKey = if (value.first.isNotes) orderNotesKey else orderFoldersKey
-        datastore.datastore.edit { prefs -> prefs[orderKey] = value.second.name }
+        datastore.datastore.edit { prefs -> prefs[orderKey(value.first)] = value.second.name }
     }
 
     override suspend fun setSortState(value: Pair<SortDataKey, Sort>) {
-        val sortKey = if (value.first.isNotes) sortNotesKey else sortFoldersKey
-        datastore.datastore.edit { prefs -> prefs[sortKey] = value.second.name }
+        datastore.datastore.edit { prefs -> prefs[sortKey(value.first)] = value.second.name }
     }
 
     override suspend fun setCheckboxState(value: Pair<SortDataKey, Boolean>) {
-        val sortPinnedKey = if (value.first.isNotes) sortPinnedNotesKey else sortPinnedFoldersKey
-        datastore.datastore.edit { prefs -> prefs[sortPinnedKey] = value.second }
+        datastore.datastore.edit { prefs -> prefs[pinnedKey(value.first)] = value.second }
     }
 
     override suspend fun setGridCount(cellCount: Int) {
@@ -82,14 +110,10 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
     }
 
     override suspend fun resetSortState(key: SortDataKey) {
-        val orderKey = if (key.isNotes) orderNotesKey else orderFoldersKey
-        val sortKey = if (key.isNotes) sortNotesKey else sortFoldersKey
-        val sortPinnedKey = if (key.isNotes) sortPinnedNotesKey else sortPinnedFoldersKey
-
         datastore.datastore.edit { prefs ->
-            prefs[orderKey] = INITIAL_ORDER_STATE
-            prefs[sortKey] = INITIAL_SORT_STATE
-            prefs[sortPinnedKey] = INITIAL_IS_SORT_PINNED
+            prefs[orderKey(key)] = INITIAL_ORDER_STATE
+            prefs[sortKey(key)] = INITIAL_SORT_STATE
+            prefs[pinnedKey(key)] = INITIAL_IS_SORT_PINNED
         }
     }
 }

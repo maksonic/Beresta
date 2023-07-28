@@ -66,6 +66,7 @@ private fun HandleUiEffects(
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
+            is Eff.NavigateBack -> router.onBack()
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {

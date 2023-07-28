@@ -20,7 +20,7 @@ import ru.maksonic.beresta.screen.main.ui.widget.bottombar.MainBottomBarState
 /**
  * @Author maksonic on 22.06.2023
  */
-enum class CurrentMainSheetContent {
+enum class CurrentSheetContent {
     NOTHING, SORT_NOTES
 }
 
@@ -29,7 +29,7 @@ enum class CurrentMainSheetContent {
 data class ModalSheet(
     val isVisible: Boolean,
     val state: SheetState,
-    val content: CurrentMainSheetContent
+    val content: CurrentSheetContent
 ) {
     companion object {
         val Initial = ModalSheet(
@@ -38,7 +38,7 @@ data class ModalSheet(
                 initialValue = SheetValue.Hidden,
                 skipPartiallyExpanded = true
             ),
-            content = CurrentMainSheetContent.NOTHING
+            content = CurrentSheetContent.NOTHING
         )
     }
 }

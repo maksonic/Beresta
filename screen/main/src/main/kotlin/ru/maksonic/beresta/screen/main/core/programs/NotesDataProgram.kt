@@ -61,29 +61,29 @@ class NotesDataProgram(
         }
     }
 
-    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) =
-        withContext(ioDispatcher) {
-            val notesUi = notes.map { note ->
-                note.copy(
-                    isMovedToTrash = true,
-                    folderId = 2L,
-                    dateMovedToTrashRaw = LocalDateTime.now()
-                )
-            }
-            val notesDomain = mapper.mapListFrom(notesUi)
-            notesInteractor.updateList(notesDomain)
-            delay(SNACK_BAR_VISIBILITY_TIME)
-            consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
-        }
+     private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) =
+         withContext(ioDispatcher) {
+             val notesUi = notes.map { note ->
+                 note.copy(
+                     isMovedToTrash = true,
+                     folderId = 2L,
+                     dateMovedToTrashRaw = LocalDateTime.now()
+                 )
+             }
+             val notesDomain = mapper.mapListFrom(notesUi)
+             notesInteractor.updateList(notesDomain)
+             delay(SNACK_BAR_VISIBILITY_TIME)
+             consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
+         }
 
-    private suspend fun undoRemovedFromTrash(
-        notes: List<NoteUi>,
-        consumer: (Msg) -> Unit
-    ) {
-        val restored = mapper.mapListFrom(notes.map { it.copy(dateMovedToTrashRaw = null) })
-        notesInteractor.updateList(restored)
-        consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
-    }
+     private suspend fun undoRemovedFromTrash(
+         notes: List<NoteUi>,
+         consumer: (Msg) -> Unit
+     ) {
+         val restored = mapper.mapListFrom(notes.map { it.copy(dateMovedToTrashRaw = null) })
+         notesInteractor.updateList(restored)
+         consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
+     }
 
     private suspend fun updatePinnedNotes(notes: Set<NoteUi>) {
         val currentDate = LocalDateTime.now()

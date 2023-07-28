@@ -19,11 +19,7 @@ class HiddenNotesSandbox(
     hiddenNotesSortProgram: HiddenNotesSortProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(
-        Cmd.FetchNotesListFeatureState,
-        Cmd.FetchNotesData,
-        Cmd.FetchMovedForHideNotesData
-    ),
+    initialCmd = setOf(Cmd.FetchNotesData, Cmd.FetchMovedForHideNotesData),
     subscriptions = listOf(hiddenNotesDataProgram, hiddenNotesSortProgram)
 ) {
     companion object {
@@ -31,6 +27,7 @@ class HiddenNotesSandbox(
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         //notes
         is Msg.Inner.FetchedNotesData -> fetchedNotesData(model, msg)
         is Msg.Inner.FetchedNotesError -> ElmUpdate(model)
@@ -38,8 +35,8 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Msg.Ui.CancelNotesSelection -> onCancelSelectionClicked(model)
         //idle bottom bar actions
-        is Msg.Ui.OnChangeGridViewClicked -> onSearchBarGridViewClicked(model, msg)
-        is Msg.Ui.OnBottomBarSortNotesClicked -> onBottomBarSortNotesClicked(model)
+        is Msg.Ui.OnTopBarGridViewClicked -> onTopBarGridViewClicked(model, msg)
+        is Msg.Ui.OnTopBarSortNotesClicked -> onTopBarSortNotesClicked(model)
         //selected bottom bar actions
         is Msg.Ui.OnBottomBarUnhideSelectedNotesClicked -> onBottomBarUnhideSelectedClicked(model)
         is Msg.Ui.OnBottomBarPinSelectedNotesClicked -> onBottomBarPinSelectedClicked(model)
@@ -52,12 +49,15 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnExpandSearchBar -> onExpandSearchBar(model)
         is Msg.Ui.OnCounterBarSelectAllClicked -> onCounterBarSelectAllClicked(model)
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
-        //other
         //snack bar
         is Msg.Inner.HiddenRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
+        //other
         is Msg.Inner.HiddenLoadingPlaceholder -> hiddenLoadingPlaceholder(model)
     }
+
+    private fun onTopBarBackPressed(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.NavigateBack))
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
         ElmUpdate(
@@ -110,17 +110,17 @@ class HiddenNotesSandbox(
         )
     )
 
-    private fun onSearchBarGridViewClicked(
+    private fun onTopBarGridViewClicked(
         model: Model,
-        msg: Msg.Ui.OnChangeGridViewClicked
+        msg: Msg.Ui.OnTopBarGridViewClicked
     ): UpdateResult = ElmUpdate(
         model, commands = setOf(Cmd.UpdateNotesGridDatastoreState(msg.count)),
     )
 
-    private fun onBottomBarSortNotesClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onTopBarSortNotesClicked(model: Model): UpdateResult = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = true, content = CurrentHiddenSheetContent.SORT_HIDDEN_NOTES
+                isVisible = true, content = CurrentSheetContent.SORT_HIDDEN_NOTES
             )
         )
     )
@@ -175,7 +175,7 @@ class HiddenNotesSandbox(
     private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = false, content = CurrentHiddenSheetContent.NOTHING
+                isVisible = false, content = CurrentSheetContent.NOTHING
             )
         )
     )

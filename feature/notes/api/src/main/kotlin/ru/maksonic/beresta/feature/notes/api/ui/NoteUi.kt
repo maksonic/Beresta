@@ -47,6 +47,9 @@ data class NoteUi(
         val Preview = Default.copy(title = "Note title preview", message = "Note message preview")
     }
 
+    fun trashWithoutFolder() =
+        this.copy(isMovedToTrash = true, folderId = 2L, dateMovedToTrashRaw = LocalDateTime.now())
+
     fun trash() = this.copy(isMovedToTrash = true, dateMovedToTrashRaw = LocalDateTime.now())
     fun restored() = this.copy(isMovedToTrash = false, dateMovedToTrashRaw = null)
 

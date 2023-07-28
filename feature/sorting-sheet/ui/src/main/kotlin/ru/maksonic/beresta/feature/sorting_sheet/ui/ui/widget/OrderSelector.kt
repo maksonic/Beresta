@@ -20,7 +20,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.sorting_sheet.api.Order
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
-import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
@@ -75,7 +74,14 @@ private fun Item(
     modifier: Modifier,
     onOrderClicked: (Order) -> Unit
 ) {
-    val value = if (key.isNotes) listUiSortState.notes else listUiSortState.folders
+    val value = with(listUiSortState) {
+        when (key) {
+            SortDataKey.NOTES -> notes
+            SortDataKey.HIDDEN_NOTES -> hiddenNotes
+            SortDataKey.FOLDERS -> folders
+        }
+    }
+
     val isSelected = rememberUpdatedState(order == value.order)
 
     BoxWithScaleInOutOnClick(

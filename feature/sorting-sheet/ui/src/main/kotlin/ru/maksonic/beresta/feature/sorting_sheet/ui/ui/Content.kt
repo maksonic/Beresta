@@ -12,7 +12,6 @@ import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.Sort
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
-import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.Msg
 import ru.maksonic.beresta.feature.sorting_sheet.ui.ui.widget.CheckboxButton
@@ -43,7 +42,13 @@ internal fun Content(
                 onOrderClicked = { send(Msg.Ui.OnOrderClicked(Pair(sortDataKey, it))) }
             )
 
-            val sort = if (sortDataKey.isNotes) listUiSortState.notes else listUiSortState.folders
+            val sort = with(listUiSortState) {
+                when (sortDataKey) {
+                    SortDataKey.NOTES -> notes
+                    SortDataKey.HIDDEN_NOTES -> hiddenNotes
+                    SortDataKey.FOLDERS -> folders
+                }
+            }
 
             sortVariants.forEach { item ->
                 SortItem(

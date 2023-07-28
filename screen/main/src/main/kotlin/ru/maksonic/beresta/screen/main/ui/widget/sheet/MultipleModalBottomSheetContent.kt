@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.screen.main.core.CurrentMainSheetContent
+import ru.maksonic.beresta.screen.main.core.CurrentSheetContent
 import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.SendMessage
@@ -29,14 +29,14 @@ internal fun MultipleModalBottomSheetContent(
 
     Box(modifier.background(secondaryContainer)) {
         when (model.value.modalSheet.content) {
-            CurrentMainSheetContent.SORT_NOTES -> {
+            CurrentSheetContent.SORT_NOTES -> {
                 sortedSheetApi.SheetContent(
                     sortDataKey = SortDataKey.NOTES,
                     hideSheet = { send(Msg.Ui.OnHideModalBottomSheet) }
                 )
             }
 
-            CurrentMainSheetContent.NOTHING -> Box(modifier.size(1.dp))
+            CurrentSheetContent.NOTHING -> Box(modifier.size(1.dp))
         }
     }
 }

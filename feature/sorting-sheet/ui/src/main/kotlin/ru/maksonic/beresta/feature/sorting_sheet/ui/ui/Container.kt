@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
-import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
+import ru.maksonic.beresta.feature.sorting_sheet.api.isFolders
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.Msg
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.SortingSheetSandbox
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -40,7 +40,7 @@ internal fun Container(
             .padding(bottom = dp16), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val title = with(text.sortSheet) {
-            if (sortDataKey.isNotes) titleSheetNotes else titleSheetFolders
+            if (sortDataKey.isFolders) titleSheetFolders else titleSheetNotes
         }
 
         Text(

@@ -17,7 +17,7 @@ import ru.maksonic.beresta.feature.search_bar.api.SearchBarUiState
 /**
  * @Author maksonic on 21.07.2023
  */
-enum class CurrentHiddenSheetContent {
+enum class CurrentSheetContent {
     NOTHING, SORT_HIDDEN_NOTES
 }
 
@@ -26,7 +26,7 @@ enum class CurrentHiddenSheetContent {
 data class ModalSheet(
     val isVisible: Boolean,
     val state: SheetState,
-    val content: CurrentHiddenSheetContent
+    val content: CurrentSheetContent
 ) {
     companion object {
         val Initial = ModalSheet(
@@ -35,7 +35,7 @@ data class ModalSheet(
                 initialValue = SheetValue.Hidden,
                 skipPartiallyExpanded = true
             ),
-            content = CurrentHiddenSheetContent.NOTHING
+            content = CurrentSheetContent.NOTHING
         )
     }
 }
@@ -64,12 +64,13 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
+        object OnTopBarBackPressed : Ui()
         //notes
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
         object CancelNotesSelection : Ui()
 
-        object OnBottomBarSortNotesClicked : Ui()
+        object OnTopBarSortNotesClicked : Ui()
 
         //selected bottom bar actions
         object OnBottomBarUnhideSelectedNotesClicked : Ui()
@@ -81,7 +82,7 @@ sealed class Msg : ElmMessage {
         object OnExpandSearchBar : Ui()
         object OnCounterBarShareClicked : Ui()
         object OnCounterBarSelectAllClicked : Ui()
-        data class OnChangeGridViewClicked(val count: Int) : Ui()
+        data class OnTopBarGridViewClicked(val count: Int) : Ui()
 
         //all
         object OnHideModalBottomSheet : Ui()
@@ -102,7 +103,7 @@ sealed class Msg : ElmMessage {
 sealed class Cmd : ElmCommand {
     object FetchNotesData : Cmd()
     object FetchMovedForHideNotesData : Cmd()
-    object FetchNotesListFeatureState : Cmd()
+    //object FetchNotesListFeatureState : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UnhideSelectedNotes(val notes: List<NoteUi>) : Cmd()
@@ -110,7 +111,8 @@ sealed class Cmd : ElmCommand {
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
 }
 
-sealed class Eff : ElmEffect {
+abstract class Eff : ElmEffect {
+    object NavigateBack : Eff()
     data class NavigateToEditNote(val id: Long) : Eff()
     object HideModalSheet : Eff()
 }

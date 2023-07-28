@@ -26,8 +26,6 @@ val foldersChipsRowUiFeatureModule = module {
     single { FolderUiMapper() }
     single {
         FolderDialogProgram(
-            fetchFolderByIdUseCase = get(),
-            fetchFoldersListUseCase = get(),
             interactor = get(),
             mapper = get(),
             chipsRowApi = get()

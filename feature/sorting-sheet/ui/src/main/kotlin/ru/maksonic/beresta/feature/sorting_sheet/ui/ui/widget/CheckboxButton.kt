@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
-import ru.maksonic.beresta.feature.sorting_sheet.api.isNotes
+import ru.maksonic.beresta.feature.sorting_sheet.api.isFolders
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
@@ -33,7 +33,13 @@ internal fun CheckboxButton(
     modifier: Modifier = Modifier,
     onCheckboxClicked: (Boolean) -> Unit
 ) {
-    val sortState = if (key.isNotes) listUiSortState.notes else listUiSortState.folders
+    val sortState = with(listUiSortState) {
+        when (key) {
+            SortDataKey.NOTES -> notes
+            SortDataKey.HIDDEN_NOTES -> hiddenNotes
+            SortDataKey.FOLDERS -> folders
+        }
+    }
     val isChecked = rememberUpdatedState(!sortState.isSortPinned)
 
     Row(
@@ -45,7 +51,7 @@ internal fun CheckboxButton(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val title = with(text.sortSheet) {
-            if (key.isNotes) hintCheckboxPinnedNotes else hintCheckboxPinnedFolders
+            if (key.isFolders) hintCheckboxPinnedFolders else hintCheckboxPinnedNotes
         }
 
         Checkbox(

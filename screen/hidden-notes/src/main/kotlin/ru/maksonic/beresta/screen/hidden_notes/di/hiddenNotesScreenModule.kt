@@ -23,14 +23,7 @@ val hiddenNotesScreenModule = module {
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }
-    single {
-        HiddenNotesSortProgram(
-            listSortStateUiApi = get(),
-            listSortStateFeatureState = get(),
-            noteCardUiState = get(),
-            noteCardFeatureState = get(),
-        )
-    }
+    single { HiddenNotesSortProgram(listSortStateUiApi = get(), listSortStateFeatureState = get()) }
 
     viewModel {
         HiddenNotesSandbox(hiddenNotesDataProgram = get(), hiddenNotesSortProgram = get())

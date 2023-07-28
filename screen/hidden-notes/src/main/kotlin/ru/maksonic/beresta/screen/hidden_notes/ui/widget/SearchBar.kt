@@ -28,8 +28,10 @@ internal fun SearchBar(
         SearchBarApi.ActionKey.OnCancelClicked to { send(Msg.Ui.CancelNotesSelection) },
         SearchBarApi.ActionKey.OnShareClicked to { send(Msg.Ui.OnCounterBarShareClicked) },
         SearchBarApi.ActionKey.OnSelectAllClicked to { send(Msg.Ui.OnCounterBarSelectAllClicked) },
+        SearchBarApi.ActionKey.OnBackClicked to { send(Msg.Ui.OnTopBarBackPressed) },
+        SearchBarApi.ActionKey.OnSortByClicked to { send(Msg.Ui.OnTopBarSortNotesClicked) },
         SearchBarApi.ActionKey.OnChangeGridClicked to {
-            send(Msg.Ui.OnChangeGridViewClicked(gridCount.value))
+            send(Msg.Ui.OnTopBarGridViewClicked(gridCount.value))
         },
     )
 

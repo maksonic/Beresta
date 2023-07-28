@@ -97,7 +97,7 @@ internal fun Content(
                     onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
                 ) {
                     sortedSheetApi.SheetContent(
-                        sortDataKey = SortDataKey.NOTES,
+                        sortDataKey = SortDataKey.HIDDEN_NOTES,
                         hideSheet = { send(Msg.Ui.OnHideModalBottomSheet) }
                     )
                 }
