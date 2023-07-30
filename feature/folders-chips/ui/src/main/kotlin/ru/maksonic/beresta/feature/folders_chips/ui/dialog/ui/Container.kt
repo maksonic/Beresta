@@ -1,14 +1,12 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.core.Eff
@@ -23,14 +21,13 @@ internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
 internal fun Container(
-    sharedUiState: SharedUiState<SharedNewFolderDialogUiState>,
-    sandbox: FolderDialogSandbox = koinViewModel()
+    uiState: State<SharedNewFolderDialogUiState>,
+    sandbox: FolderDialogSandbox = koinViewModel(),
+    hideDialog: () -> Unit
 ) {
-    val model = sandbox.model.collectAsStateWithLifecycle()
-    val uiState = sharedUiState.state.collectAsStateWithLifecycle()
 
     if (uiState.value.isVisible) {
-        HandleUiEffects(effects = sandbox.effects, sharedUiState)
+        HandleUiEffects(effects = sandbox.effects, hideDialog)
     }
 
     BaseDialog(
@@ -39,25 +36,19 @@ internal fun Container(
         onCancelClicked = { sandbox.send(Msg.Ui.OnDismissClicked) },
         onAcceptClicked = { sandbox.send(Msg.Ui.OnAcceptClicked) }
     ) {
+        val model = sandbox.model.collectAsStateWithLifecycle()
+
         Content(model, sandbox::send, uiState = uiState)
     }
 }
 
 @Composable
-private fun HandleUiEffects(
-    effects: Flow<Eff>,
-    sharedUiState: SharedUiState<SharedNewFolderDialogUiState>
-) {
+private fun HandleUiEffects(effects: Flow<Eff>, hideDialog: () -> Unit) {
     val focusManager = LocalFocusManager.current
-    val scope = rememberCoroutineScope()
+
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
-            is Eff.HideDialog -> {
-                scope.launch {
-                    focusManager.clearFocus()
-                    sharedUiState.update { it.copy(isVisible = false) }
-                }
-            }
+            is Eff.HideDialog -> focusManager.clearFocus().run { hideDialog() }
         }
     }
 }

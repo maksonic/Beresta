@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -49,14 +48,15 @@ internal fun Content(
 ) {
     val focusRequester = remember { FocusRequester() }
 
+    LaunchedEffect(Unit) {
+        if (!model.value.isFetchedFolder) {
+            send(Msg.Inner.FetchedPassedFolderId)
+        }
+    }
+
     LaunchedEffect(focusRequester) {
         awaitFrame()
         focusRequester.requestFocus()
-    }
-
-    LaunchedEffect(uiState.value.editableFolderId) {
-        Log.e("AAA", "UI ${uiState.value.editableFolderId}")
-        send(Msg.Inner.FetchedPassedFolderId(uiState.value.editableFolderId))
     }
 
     val dialogTitle = if (uiState.value.isNewFolder) text.folders.titleDialogNewFolder
@@ -83,12 +83,12 @@ private fun InputFolderName(
 ) {
     OutlinedTextField(
         value = model.value.inputFiled,
-        onValueChange = { send(Msg.Inner.UpdateNewFolderNameInput(it)) },
+        onValueChange = { send(Msg.Inner.UpdatedInputField(it)) },
         textStyle = TextDesign.bodyPrimary,
         singleLine = true,
         supportingText = {
             InputCounterHint(
-                counterValue = model.value.supportingText,
+                counterValue = model.value.hintSymbolsCount,
                 isError = model.value.isEmptyFieldError
             )
         },

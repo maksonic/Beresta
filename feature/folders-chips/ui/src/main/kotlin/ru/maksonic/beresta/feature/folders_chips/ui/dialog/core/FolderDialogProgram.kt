@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.core
 
-import android.util.Log
+import kotlinx.coroutines.flow.collectLatest
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
@@ -16,22 +16,25 @@ import java.time.LocalDateTime
 class FolderDialogProgram(
     private val interactor: FoldersInteractor,
     private val mapper: FolderUiMapper,
-    private val chipsRowApi: FoldersApi.Ui.ChipsRow
+    private val chipsRowApi: FoldersApi.Ui.ChipsRow,
+    private val addChipDialog: FoldersApi.Ui.AddChipDialog,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.SaveOrUpdateCurrentFolder -> saveOrUpdateCurrentFolder(cmd.folder)
-            is Cmd.FetchFolderById -> fetchFolderById(cmd.id, consumer)
+            is Cmd.FetchFolderById -> fetchFolderById(consumer)
         }
     }
 
-    private suspend fun fetchFolderById(id: Long, consumer: (Msg) -> Unit) = runCatching {
-        if (id == 0L) {
-            consumer(Msg.Inner.FetchFolderData(FolderUi.Empty))
-        } else {
-            interactor.fetchById(id).collect { folderDomain ->
-                val folder = mapper.mapTo(folderDomain)
-                consumer(Msg.Inner.FetchFolderData(folder))
+    private suspend fun fetchFolderById(consumer: (Msg) -> Unit) = runCatching {
+        addChipDialog.sharedUiState.state.collectLatest { state ->
+            if (state.editableFolderId == 0L) {
+                consumer(Msg.Inner.FetchFolderData(FolderUi.Empty))
+            } else {
+                interactor.fetchById(state.editableFolderId).collect { folderDomain ->
+                    val folder = mapper.mapTo(folderDomain)
+                    consumer(Msg.Inner.FetchFolderData(folder))
+                }
             }
         }
     }.onFailure {
@@ -39,9 +42,6 @@ class FolderDialogProgram(
     }
 
     private suspend fun saveOrUpdateCurrentFolder(folder: FolderUi) {
-
-        Log.e("AAA", "$folder")
-
         val folderDomain = mapper.mapFrom(folder)
         val currentRawTime = LocalDateTime.now()
 
@@ -52,15 +52,12 @@ class FolderDialogProgram(
         }
     }
 
-    private suspend fun addNewFolder(folder: FolderDomain, time: LocalDateTime) {
+    private suspend fun addNewFolder(folder: FolderDomain, time: LocalDateTime) =
         interactor.add(folder.copy(dateCreation = time)).also { id -> updateCurrentFolder(id) }
-    }
 
-    private suspend fun updateOldFolder(folder: FolderDomain, time: LocalDateTime) {
+
+    private suspend fun updateOldFolder(folder: FolderDomain, time: LocalDateTime) =
         interactor.update(folder.copy(dateCreation = folder.dateCreation, dateLastUpdateRaw = time))
-    }
 
-    private fun updateCurrentFolder(id: Long) {
-        chipsRowApi.currentSelectedId.update(id)
-    }
+    private fun updateCurrentFolder(id: Long) = chipsRowApi.currentSelectedId.update(id)
 }

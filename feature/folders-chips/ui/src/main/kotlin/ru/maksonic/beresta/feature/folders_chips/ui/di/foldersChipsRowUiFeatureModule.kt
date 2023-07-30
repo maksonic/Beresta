@@ -28,7 +28,8 @@ val foldersChipsRowUiFeatureModule = module {
         FolderDialogProgram(
             interactor = get(),
             mapper = get(),
-            chipsRowApi = get()
+            chipsRowApi = get(),
+            addChipDialog = get()
         )
     }
     viewModel { FolderDialogSandbox(program = get()) }
