@@ -29,7 +29,6 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Inner.UpdatedCurrentNoteTitle -> updatedNoteTitle(model, msg)
         is Msg.Inner.UpdatedCurrentNoteMessage -> updatedNoteMessage(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
-        is Msg.Ui.OnExpandFabClicked -> onExpandFabClicked(model)
         //BottomBar actions
         is Msg.Ui.OnAddCameraSnapshotClicked -> ElmUpdate(model)
         is Msg.Ui.OnAddImagesClicked -> ElmUpdate(model)
@@ -43,7 +42,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     private fun showedKeyboardWithFocus(model: Model): UpdateResult =
         ElmUpdate(
             model = model,
-            effects = if (model.isExpandedFab) setOf(Eff.ShowKeyboardForExpandedFab) else emptySet()
+            effects = if (!model.isEntryPoint) setOf(Eff.ShowKeyboardForExpandedFab) else emptySet()
         )
 
     private fun fetchedPassedNoteResult(
@@ -53,20 +52,14 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
     private fun onSaveNoteClicked(model: Model, msg: Msg.Ui.OnSaveNoteClicked): UpdateResult {
         //Set default id when passed id equals sticky end folder id.
-        val folderId =
-            if (msg.currentFolderId == 1L) 2L else msg.currentFolderId
-
-        val note = model.currentNote.copy(folderId = folderId)
-        val showSnackIfIsNotNewNote = if (model.currentNote.isDefaultId()) emptySet()
-        else setOf(Eff.ShowNoteUpdateSnackBar)
+        val folderId = if (msg.currentFolderId == 1L) 2L else msg.currentFolderId
+        val note = model.currentNote.copy(folderId = folderId, isHidden = msg.isHiddenNote)
+        val effect = setOf(if (note.isDefaultId()) Eff.CollapseFab else Eff.ShowNoteUpdateSnackBar)
 
         return ElmUpdate(
-            model.copy(
-                isExpandedFab = model.isEntryPoint,
-                currentNote = if (model.isEntryPoint) note else NoteUi.Default
-            ),
+            model = model.copy(currentNote = if (model.isEntryPoint) note else NoteUi.Default),
             commands = setOf(Cmd.SaveNote(note)),
-            effects = showSnackIfIsNotNewNote
+            effects = effect
         )
     }
 
@@ -93,8 +86,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         val updatedField = msg.text.take(MAX_NOTE_LENGTH)
         val maybeWarningEffect = if (msg.text.length > MAX_NOTE_LENGTH)
             setOf(Eff.ShowToastMaxLengthNoteExceed)
-        else
-            emptySet()
+        else emptySet()
 
         return ElmUpdate(
             model = model.copy(currentNote = model.currentNote.copy(message = updatedField)),
@@ -103,10 +95,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     }
 
     private fun onTopBarBackPressed(model: Model): UpdateResult {
-        val maybeNavBackEff = if (model.isEntryPoint) setOf(Eff.NavigateBack) else emptySet()
-        return ElmUpdate(model = model.copy(isExpandedFab = false), effects = maybeNavBackEff)
+        val effect = setOf(if (model.isEntryPoint) Eff.NavigateBack else Eff.CollapseFab)
+        return ElmUpdate(model = model, effects = effect)
     }
-
-    private fun onExpandFabClicked(model: Model): UpdateResult =
-        ElmUpdate(model = model.copy(isEntryPoint = false, isExpandedFab = true))
 }

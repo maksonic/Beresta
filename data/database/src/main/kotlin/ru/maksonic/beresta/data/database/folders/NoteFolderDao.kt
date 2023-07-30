@@ -2,7 +2,6 @@ package ru.maksonic.beresta.data.database.folders
 
 import androidx.room.Dao
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.data.common.BaseDao
 
 /**
@@ -12,11 +11,11 @@ import ru.maksonic.beresta.data.common.BaseDao
 abstract class NoteFolderDao : BaseDao<FolderCache>() {
 
     @Query("SELECT * FROM notes_folders WHERE isMovedToTrash == 0")
-    abstract fun fetchList(): Flow<List<FolderCache>>
+    abstract fun fetchList(): FoldersCacheList
 
     @Query("SELECT * FROM notes_folders WHERE isMovedToTrash == 1")
-    abstract fun fetchTrashList(): Flow<List<FolderCache>>
+    abstract fun fetchTrashList(): FoldersCacheList
 
     @Query("SELECT * FROM notes_folders WHERE id = :itemId")
-    abstract fun fetchItemById(itemId: Long): Flow<FolderCache>
+    abstract fun fetchItemById(itemId: Long): FolderCacheItem
 }

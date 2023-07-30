@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface Repository<T> {
     fun fetchList(): Flow<List<T>>
     fun fetchById(itemId: Long): Flow<T>
-    suspend fun add(item: T)
+    suspend fun add(item: T): Long
     suspend fun update(item: T)
     suspend fun updateList(items: List<T>)
     suspend fun delete(item: T)

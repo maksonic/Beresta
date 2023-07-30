@@ -56,18 +56,23 @@ internal fun Content(
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
-    val isVisibleEditFab = rememberUpdatedState(model.value.isVisibleEditFab)
     val selectedNotesCount = rememberUpdatedState(model.value.notes.selectedList.count())
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
+
+    BackHandler(isSelectionState.value) {
+        send(Msg.Ui.CancelNotesSelection)
+    }
+
+    BackHandler(currentSelectedChipId.value != 1L) {
+        send(Msg.Inner.ResetCurrentSelectedFolder)
+    }
+
     LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
         isVisibleBottomBar.value =
             if (model.value.notes.isSelection) true else sharedNotesUiState.value.isScrollUp
-    }
-    BackHandler(isSelectionState.value) {
-        send(Msg.Ui.CancelNotesSelection)
     }
 
     LaunchedEffect(isSelectionState.value) {
@@ -121,9 +126,10 @@ internal fun Content(
                 onAddNewChipClicked = { send(Msg.Ui.OnAddNewChipClicked) },
             )
 
-            MainSearchBar(model, send, isColoredBackplate = isCanScrollBackwardState)
+            MainSearchBar(model, send, isCanScrollBackwardState)
 
-            EditNoteExpandableFab(isVisibleEditFab, modifier)
+            EditNoteExpandableFab(model, send, modifier,)
+
 
             if (model.value.modalSheet.isVisible) {
                 ModalBottomSheetDefault(

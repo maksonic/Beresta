@@ -2,7 +2,6 @@ package ru.maksonic.beresta.data.database.notes
 
 import androidx.room.Dao
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import ru.maksonic.beresta.data.common.BaseDao
 
 /**
@@ -12,17 +11,17 @@ import ru.maksonic.beresta.data.common.BaseDao
 abstract class NoteDao : BaseDao<NoteCache>() {
 
     @Query("SELECT * FROM notes WHERE isMovedToTrash == 0 AND isHidden == 0")
-    abstract fun fetchList(): Flow<List<NoteCache>>
+    abstract fun fetchList(): NotesCacheList
 
     @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId != 2 AND isHidden == 0")
-    abstract fun fetchTrashListByFolder(): Flow<List<NoteCache>>
+    abstract fun fetchTrashListByFolder(): NotesCacheList
 
-    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId == 2 AND isHidden == 0")
-    abstract fun fetchWithoutFolderTrashList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isMovedToTrash == 1 AND folderId == 2")
+    abstract fun fetchWithoutFolderTrashList(): NotesCacheList
 
     @Query("SELECT * FROM notes WHERE id = :itemId")
-    abstract fun fetchItemById(itemId: Long): Flow<NoteCache>
+    abstract fun fetchItemById(itemId: Long): NoteCacheItem
 
-    @Query("SELECT * FROM notes WHERE isHidden == 1")
-    abstract fun fetchHiddenList(): Flow<List<NoteCache>>
+    @Query("SELECT * FROM notes WHERE isHidden == 1 AND isMovedToTrash == 0")
+    abstract fun fetchHiddenList(): NotesCacheList
 }

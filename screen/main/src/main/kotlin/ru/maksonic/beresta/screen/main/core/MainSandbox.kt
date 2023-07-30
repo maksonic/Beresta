@@ -4,6 +4,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
 import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
+import ru.maksonic.beresta.feature.edit_note.api.isExpanded
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.screen.main.core.programs.ChipsDataProgram
 import ru.maksonic.beresta.screen.main.core.programs.ChipsSortProgram
@@ -67,6 +69,8 @@ class MainSandbox(
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
+        is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
+        is Msg.Inner.ResetCurrentSelectedFolder -> resetCurrentSelectedFolder(model)
     }
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
@@ -101,22 +105,24 @@ class MainSandbox(
 
         return ElmUpdate(
             model.copy(
-                isVisibleEditFab = false,
                 notes = model.notes.copy(
                     selectedList = selectedList,
                     isSelection = true,
                     isVisibleUnpinMainBarIcon = isVisibleUnpinButton
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Selected)
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Selected),
+                editNoteFabState = model.editNoteFabState.copy(
+                    isVisible = false, state = EditNoteFabState.COLLAPSED
+                ),
             ),
         )
     }
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            isVisibleEditFab = true,
             notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+            editNoteFabState = model.editNoteFabState.copy(isVisible = true),
         )
     )
 
@@ -172,10 +178,11 @@ class MainSandbox(
 
         return ElmUpdate(
             model.copy(
-                isVisibleEditFab = true,
                 notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
-            ), effects = setOf(Eff.NavigateToFolders(args))
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
+            ),
+            effects = setOf(Eff.NavigateToFolders(args))
         )
     }
 
@@ -184,7 +191,6 @@ class MainSandbox(
 
         return ElmUpdate(
             model.copy(
-                isVisibleEditFab = true,
                 notes = model.notes.copy(
                     state = model.notes.state.copy(isLoading = isShowLoading),
                     selectedList = emptySet(),
@@ -192,7 +198,8 @@ class MainSandbox(
                     isSelection = false,
                     isVisibleRemovedSnackBar = true
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
             commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
         )
@@ -212,15 +219,19 @@ class MainSandbox(
 
     private fun onCollapseSearchBar(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            isVisibleEditFab = !model.notes.isSelection,
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+            editNoteFabState = model.editNoteFabState.copy(
+                isVisible = !model.notes.isSelection, state = EditNoteFabState.COLLAPSED
+            ),
         )
     )
 
     private fun onExpandSearchBar(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            isVisibleEditFab = false,
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Expanded)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Expanded),
+            editNoteFabState = model.editNoteFabState.copy(
+                isVisible = false, state = EditNoteFabState.COLLAPSED
+            ),
         )
     )
 
@@ -292,10 +303,32 @@ class MainSandbox(
 
         return ElmUpdate(
             model.copy(
-                isVisibleEditFab = true,
                 notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ), effects = setOf(Eff.NavigateToHiddenNotes(args))
         )
     }
+
+    private fun updatedEditNoteFabState(
+        model: Model,
+        msg: Msg.Inner.UpdatedEditNoteFabState
+    ): UpdateResult {
+
+        val searchBarState = if (msg.state.isExpanded)
+            model.searchBarState.copy(barState = SearchBarState.Collapsed)
+        else model.searchBarState
+
+        return ElmUpdate(
+            model.copy(
+                searchBarState = searchBarState,
+                editNoteFabState = model.editNoteFabState.copy(
+                    isVisible = !model.notes.isSelection, state = msg.state
+                )
+            ),
+        )
+    }
+
+    private fun resetCurrentSelectedFolder(model: Model): UpdateResult =
+        ElmUpdate(model, commands = setOf(Cmd.ResetCurrentSelectedFolder))
 }

@@ -62,6 +62,7 @@ class FolderItemWidget : FoldersApi.Ui.FolderItem {
     @Composable
     override fun Widget(
         isSelected: Boolean,
+        isCurrent: Boolean,
         folder: FolderUi,
         isTrashPlacement: Boolean,
         onFolderClicked: (id: Long) -> Unit,
@@ -70,6 +71,7 @@ class FolderItemWidget : FoldersApi.Ui.FolderItem {
     ) {
         Content(
             isSelected = isSelected,
+            isCurrent = isCurrent,
             folder = folder,
             isTrashPlacement = isTrashPlacement,
             onFolderClicked = onFolderClicked,
@@ -82,6 +84,7 @@ class FolderItemWidget : FoldersApi.Ui.FolderItem {
 private fun Content(
     modifier: Modifier = Modifier,
     isSelected: Boolean,
+    isCurrent: Boolean,
     folder: FolderUi,
     isTrashPlacement: Boolean = false,
     onFolderClicked: (id: Long) -> Unit,
@@ -118,7 +121,7 @@ private fun Content(
                     .height(Theme.widgetSize.minimumTouchTargetSize),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (folder.isCurrent) {
+                if (isCurrent) {
                     Icon(
                         imageVector = AppIcon.Done,
                         tint = tertiaryContainer,

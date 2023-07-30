@@ -18,7 +18,6 @@ data class Model(
     val inputFiled: TextFieldValue,
     val supportingText: String,
     val isEmptyFieldError: Boolean,
-    val isNewFolder: Boolean,
 ) : ElmModel {
 
     companion object {
@@ -27,7 +26,6 @@ data class Model(
             inputFiled = TextFieldValue(),
             supportingText = "",
             isEmptyFieldError = false,
-            isNewFolder = true
         )
     }
 
@@ -42,8 +40,8 @@ sealed class Msg : ElmMessage {
 
     sealed class Inner : Msg() {
         data class UpdateNewFolderNameInput(val value: TextFieldValue) : Inner()
+        data class FetchedPassedFolderId(val id: Long) : Inner()
         data class FetchFolderData(val folder: FolderUi) : Inner()
-        data class FetchedEditableFolderId(val id: Long) : Inner()
     }
 }
 

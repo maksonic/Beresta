@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -54,6 +55,7 @@ internal fun EditorBottomBar(
     send: SendMessage,
     isScrollUp: State<Boolean>,
     isBlankNote: Boolean,
+    isHiddenNote: Boolean,
     modifier: Modifier = Modifier,
     chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject()
 ) {
@@ -79,6 +81,7 @@ internal fun EditorBottomBar(
                 .compositeOver(fabUnselectedColor)
             else onTertiaryContainer, label = ""
         )
+        val fabShape = if (isHiddenNote) 50.dp else dp16
 
         SurfacePro(
             tonalElevation = Theme.tonal.Level4,
@@ -92,10 +95,11 @@ internal fun EditorBottomBar(
         }
 
         FloatingFabButton(
-            onClick = { send(Msg.Ui.OnSaveNoteClicked(currentFolderId.value)) },
+            onClick = { send(Msg.Ui.OnSaveNoteClicked(currentFolderId.value, isHiddenNote)) },
             enabled = !isBlankNote,
             fabColor = fabColor.value,
             shadowElevation = fabElevation.value,
+            shape = RoundedCornerShape(fabShape),
             modifier = Modifier.padding(top = dp12, end = dp16)
         ) {
             Icon(

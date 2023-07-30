@@ -111,6 +111,7 @@ sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
     object ShowedHiddenNotesEnterPasswordDialog : Eff()
     object NavigateToHiddenNotes : Eff()
-    data class ShowFolderDialog(val id: Long = 0L) : Eff()
+    object AddNewFolder : Eff()
+    data class UpdateFolder(val id: Long): Eff()
     object HideModalSheet : Eff()
 }

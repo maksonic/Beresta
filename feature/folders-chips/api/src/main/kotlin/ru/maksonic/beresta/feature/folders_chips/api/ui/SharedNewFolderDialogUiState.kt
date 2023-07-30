@@ -20,5 +20,8 @@ data class SharedNewFolderDialogUiState(
     }
 }
 
-fun SharedUiState<SharedNewFolderDialogUiState>.showForEdit(id: Long) =
-    this.update { it.copy(isVisible = true, editableFolderId = id) }
+fun SharedUiState<SharedNewFolderDialogUiState>.addNewFolder() =
+    this.update { it.copy(isVisible = true, isNewFolder = true, editableFolderId = 0L) }
+
+fun SharedUiState<SharedNewFolderDialogUiState>.updateFolder(id: Long) =
+    this.update { it.copy(isVisible = true, isNewFolder = false, editableFolderId = id) }

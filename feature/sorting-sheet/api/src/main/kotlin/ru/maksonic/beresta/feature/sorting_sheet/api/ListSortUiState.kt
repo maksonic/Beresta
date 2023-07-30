@@ -29,7 +29,8 @@ data class ListSortUiState(
     val notes: CommonSort,
     val hiddenNotes: CommonSort,
     val folders: CommonSort,
-    val gridCount: Int
+    val gridNotesCount: Int,
+    val gridHiddenNotesCount: Int
 
 ) {
     companion object {
@@ -37,7 +38,8 @@ data class ListSortUiState(
             notes = CommonSort.Initial,
             hiddenNotes = CommonSort.Initial,
             folders = CommonSort.Initial,
-            gridCount = 1
+            gridNotesCount = 1,
+            gridHiddenNotesCount = 1
         )
     }
 }

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.feature.sorting_sheet.api.CommonSort
+import ru.maksonic.beresta.feature.sorting_sheet.api.GridCountKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.ListSortUiState
 import ru.maksonic.beresta.feature.sorting_sheet.api.Order
 import ru.maksonic.beresta.feature.sorting_sheet.api.Sort
@@ -23,6 +24,7 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
         private val INITIAL_SORT_STATE = Sort.DATE_CREATION.name
         private const val INITIAL_IS_SORT_PINNED = false
         private const val INITIAL_NOTES_GRID_COUNT = 1
+        private const val GRID_KEY = "prefs_app_key_grid_count"
         private const val ORDER_KEY = "prefs_app_key_order"
         private const val SORT_KEY = "prefs_app_key_sort"
         private const val PINNED_KEY = "prefs_app_key_sort_pinned"
@@ -31,7 +33,8 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
         private const val FOLDERS = "_folders"
     }
 
-    private val gridKey = intPreferencesKey("prefs_app_note_grid_count_key")
+    private val gridNotesKey = intPreferencesKey(GRID_KEY + NOTES)
+    private val gridHiddenNotesKey = intPreferencesKey(GRID_KEY + HIDDEN_NOTES)
 
     private val orderNotesKey = stringPreferencesKey(ORDER_KEY + NOTES)
     private val sortNotesKey = stringPreferencesKey(SORT_KEY + NOTES)
@@ -65,7 +68,8 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
 
     override fun current(key: SortDataKey): Flow<ListSortUiState> {
         return datastore.datastore.data.map { prefs ->
-            val gridCount = prefs[gridKey] ?: INITIAL_NOTES_GRID_COUNT
+            val gridNotesCount = prefs[gridNotesKey] ?: INITIAL_NOTES_GRID_COUNT
+            val gridHiddenNotesCount = prefs[gridHiddenNotesKey] ?: INITIAL_NOTES_GRID_COUNT
 
             val notes = CommonSort(
                 order = Order.valueOf(prefs[orderNotesKey] ?: INITIAL_ORDER_STATE),
@@ -88,7 +92,8 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
                 notes = notes,
                 hiddenNotes = hiddenNotes,
                 folders = folders,
-                gridCount = gridCount
+                gridNotesCount = gridNotesCount,
+                gridHiddenNotesCount = gridHiddenNotesCount
             )
         }
     }
@@ -105,8 +110,9 @@ class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.F
         datastore.datastore.edit { prefs -> prefs[pinnedKey(value.first)] = value.second }
     }
 
-    override suspend fun setGridCount(cellCount: Int) {
-        datastore.datastore.edit { prefs -> prefs[gridKey] = cellCount }
+    override suspend fun setGridCount(value: Pair<GridCountKey, Int>) {
+        val key = if (value.first == GridCountKey.NOTES) gridNotesKey else gridHiddenNotesKey
+        datastore.datastore.edit { prefs -> prefs[key] = value.second }
     }
 
     override suspend fun resetSortState(key: SortDataKey) {

@@ -3,7 +3,6 @@ package ru.maksonic.beresta.feature.folders_chips.ui.dialog.core
 import androidx.compose.ui.text.TextRange
 import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 
 /**
  * @Author maksonic on 30.03.2023
@@ -22,7 +21,7 @@ class FolderDialogSandbox(
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.FetchedEditableFolderId -> fetchedEditableFolderId(model, msg)
+        is Msg.Inner.FetchedPassedFolderId -> fetchedEditableFolderId(model, msg)
         is Msg.Inner.UpdateNewFolderNameInput -> updatedNewFolderInputField(model, msg)
         is Msg.Ui.OnAcceptClicked -> onAcceptBtnClicked(model)
         is Msg.Ui.OnDismissClicked -> onDismissBtnClicked(model)
@@ -31,20 +30,12 @@ class FolderDialogSandbox(
 
     private fun fetchedEditableFolderId(
         model: Model,
-        msg: Msg.Inner.FetchedEditableFolderId
-    ): UpdateResult {
-        val isNewFolder = msg.id == FolderUi.Empty.id
-        val cmd = if (isNewFolder) emptySet() else setOf(Cmd.FetchFolderById(msg.id))
-
-        return ElmUpdate(
-            model.copy(
-                isNewFolder = isNewFolder,
-                inputFiled = model.resetInput(),
-                supportingText = INITIAL_SUPPORTING_TEXT
-            ),
-            commands = cmd
+        msg: Msg.Inner.FetchedPassedFolderId
+    ): UpdateResult =
+        ElmUpdate(
+            model.copy(inputFiled = model.resetInput(), supportingText = INITIAL_SUPPORTING_TEXT),
+            commands = setOf(Cmd.FetchFolderById(msg.id))
         )
-    }
 
     private fun updatedNewFolderInputField(
         model: Model,
@@ -84,9 +75,7 @@ class FolderDialogSandbox(
         val isError = model.inputFiled.text.isBlank()
         val folder = model.currentEditableFolder.copy(title = model.inputFiled.text)
         val effect = if (isError) emptySet() else setOf(Eff.HideDialog)
-        val command =
-            if (isError) emptySet()
-            else setOf(Cmd.SaveOrUpdateCurrentFolder(folder))
+        val command = if (isError) emptySet() else setOf(Cmd.SaveOrUpdateCurrentFolder(folder))
 
         return ElmUpdate(
             model = model.copy(

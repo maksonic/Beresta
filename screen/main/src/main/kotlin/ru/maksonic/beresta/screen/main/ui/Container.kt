@@ -12,7 +12,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.showForEdit
+import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -48,7 +48,7 @@ internal fun Container(
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         chipsDialogApi = chipsDialogApi,
         hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
-        )
+    )
 
     Content(
         model = model,
@@ -93,7 +93,7 @@ private fun HandleUiEffects(
             is Eff.NavigateToFolders -> router.toFoldersList(eff.ids)
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes(eff.ids)
-            is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.showForEdit(0L)
+            is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.addNewFolder()
             is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
                 hiddenNotesEnterPasswordDialog.visibility.update(true)
             }

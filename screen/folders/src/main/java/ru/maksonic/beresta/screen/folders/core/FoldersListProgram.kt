@@ -171,7 +171,6 @@ class FoldersListProgram(
                 val count = notes.count { it.folderId == folder.id }
                 folder.copy(
                     title = stickyItemsTitleFormatter.format(folder, lang),
-                    isCurrent = folder.id == chipsRowApi.currentSelectedId.state.value,
                     notesCount = if (folder.isStickyToStart) notes.count() else count
                 )
             }

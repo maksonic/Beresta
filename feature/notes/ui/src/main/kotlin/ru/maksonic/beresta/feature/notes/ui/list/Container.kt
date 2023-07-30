@@ -36,9 +36,12 @@ internal fun Container(
     contentPaddingValues: PaddingValues,
     noteCard: NotesApi.Ui.Card = koinInject(),
 ) {
+    val gridCells =
+        with(listUiSortState) { if (state.isHidden) gridHiddenNotesCount else gridNotesCount }
+
     Box {
         if (state.state.isLoading) {
-            PlaceholderContent(gridCellsCount = listUiSortState.gridCount, placeholderModifier)
+            PlaceholderContent(gridCellsCount = gridCells, placeholderModifier)
         }
         if (state.state.successAfterLoading) {
             Content(

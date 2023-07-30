@@ -33,10 +33,11 @@ import ru.maksonic.beresta.feature.notes.api.ui.isBlank
  * @Author maksonic on 26.04.2023
  */
 @Composable
-internal fun EditNoteExpandedContent(
+internal fun ExpandedContent(
     model: Model,
     send: SendMessage,
     focusRequester: FocusRequester,
+    isHiddenNote: Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -69,7 +70,14 @@ internal fun EditNoteExpandedContent(
             NoteTitleInputFieldWidget(model.currentNote.title, send, focusRequester)
             NoteMessageInputFieldWidget(model.currentNote.message, send)
         }
-        ControlPanels(send, isScrollUp, canScrollBackward, model.currentNote.isBlank())
+
+        ControlPanels(
+            send,
+            isScrollUp,
+            canScrollBackward,
+            model.currentNote.isBlank(),
+            isHiddenNote
+        )
     }
 }
 
@@ -78,7 +86,8 @@ private fun ControlPanels(
     send: SendMessage,
     isScrollUp: State<Boolean>,
     canScrollBackward: State<Boolean>,
-    isBlankNote: Boolean
+    isBlankNote: Boolean,
+    isHiddenNote: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -92,6 +101,11 @@ private fun ControlPanels(
             menuAction = {}
         )
 
-        EditorBottomBar(send = send, isScrollUp = isScrollUp, isBlankNote = isBlankNote)
+        EditorBottomBar(
+            send = send,
+            isScrollUp = isScrollUp,
+            isBlankNote = isBlankNote,
+            isHiddenNote = isHiddenNote
+        )
     }
 }

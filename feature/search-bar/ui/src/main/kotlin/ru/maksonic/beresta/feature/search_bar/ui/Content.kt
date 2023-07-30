@@ -119,9 +119,15 @@ internal fun Content(
                         }
 
                         state.isCollapsed -> {
-                            CollapsedContent {
-                                actions[SearchBarApi.ActionKey.OnExpandBar]?.invoke()
-                            }
+                            CollapsedContent(
+                                isVisibleGridViewClickableIcon = uiState.value.isVisibleGridIcon,
+                                onExpandClicked = {
+                                    actions[SearchBarApi.ActionKey.OnExpandBar]?.invoke()
+                                },
+                                onChangeGridClicked = {
+                                    actions[SearchBarApi.ActionKey.OnChangeGridClicked]?.invoke()
+                                }
+                            )
                         }
                     }
                 }

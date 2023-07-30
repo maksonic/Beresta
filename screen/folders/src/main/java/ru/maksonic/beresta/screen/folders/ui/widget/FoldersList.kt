@@ -44,6 +44,7 @@ internal fun FoldersList(
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
     model: State<Model>,
     send: SendMessage,
+    currentSelectedFolder: State<Long>,
     updateFirstVisibleFolderOffset: (Boolean) -> Unit,
     updateCanScrollForwardState: (Boolean) -> Unit,
     listSortUiState: SortingSheetApi.Ui,
@@ -57,6 +58,7 @@ internal fun FoldersList(
                     folderUiItemApi = folderUiItemApi,
                     model = model,
                     send = send,
+                    currentSelectedFolder = currentSelectedFolder,
                     updateFirstVisibleFolderOffset = updateFirstVisibleFolderOffset,
                     updateCanScrollForwardState = updateCanScrollForwardState,
                     listSortUiState = listSortUiState,
@@ -82,6 +84,7 @@ private fun FetchedSuccess(
     folderUiItemApi: FoldersApi.Ui.FolderItem,
     send: SendMessage,
     model: State<Model>,
+    currentSelectedFolder: State<Long>,
     updateFirstVisibleFolderOffset: (Boolean) -> Unit,
     updateCanScrollForwardState: (Boolean) -> Unit,
     listSortUiState: SortingSheetApi.Ui,
@@ -140,6 +143,7 @@ private fun FetchedSuccess(
                 key = { index, item -> if (index == 0) index else item.id }) { _, folder ->
                 folderUiItemApi.Widget(
                     isSelected = model.value.selectedList.contains(folder) && folder.isSelectable,
+                    isCurrent = currentSelectedFolder.value == folder.id,
                     folder = folder,
                     isTrashPlacement = false,
                     onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },

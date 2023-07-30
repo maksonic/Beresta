@@ -21,7 +21,7 @@ internal fun SearchBar(
     searchBarApi: SearchBarApi.Ui = koinInject()
 ) {
     val searchBarState = rememberUpdatedState(model.value.searchBarState)
-    val gridCount = rememberUpdatedState(if (listUiSortState.gridCount == 1) 2 else 1)
+    val gridCount = rememberUpdatedState(if (listUiSortState.gridHiddenNotesCount == 1) 2 else 1)
     val actions = mapOf(
         SearchBarApi.ActionKey.OnCollapseBar to { send(Msg.Ui.OnCollapseSearchBar) },
         SearchBarApi.ActionKey.OnExpandBar to { send(Msg.Ui.OnExpandSearchBar) },

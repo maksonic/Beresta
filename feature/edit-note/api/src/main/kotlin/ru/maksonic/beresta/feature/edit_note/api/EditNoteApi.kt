@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.feature.edit_note.api
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 
@@ -12,6 +13,8 @@ interface EditNoteApi {
         @Composable
         fun ExpandableScreen(
             router: EditNoteRouter?,
+            state: State<EditNoteFabState>,
+            updateFabState: (EditNoteFabState) -> Unit,
             isEntryPoint: Boolean,
             isHiddenNotes: Boolean,
             modifier: Modifier

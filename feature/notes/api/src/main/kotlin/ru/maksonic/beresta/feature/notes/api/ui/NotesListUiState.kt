@@ -17,6 +17,7 @@ data class NotesListUiState(
     val isSelection: Boolean,
     val isVisibleUnpinMainBarIcon: Boolean,
     val isVisibleRemovedSnackBar: Boolean,
+    val isHidden: Boolean
 ) {
     companion object {
         val Initial = NotesListUiState(
@@ -26,7 +27,18 @@ data class NotesListUiState(
             removedList = emptySet(),
             isSelection = false,
             isVisibleUnpinMainBarIcon = false,
-            isVisibleRemovedSnackBar = false
+            isVisibleRemovedSnackBar = false,
+            isHidden = false
+        )
+        val InitialHidden = NotesListUiState(
+            state = ElmBaseModel.Loading,
+            collection = NoteUi.Collection.Empty,
+            selectedList = emptySet(),
+            removedList = emptySet(),
+            isSelection = false,
+            isVisibleUnpinMainBarIcon = false,
+            isVisibleRemovedSnackBar = false,
+            isHidden = true
         )
     }
 }

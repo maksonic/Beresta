@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,17 +13,13 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.android.awaitFrame
-import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.core.Model
 import ru.maksonic.beresta.feature.folders_chips.ui.dialog.core.Msg
@@ -47,11 +44,9 @@ import ru.maksonic.beresta.ui.theme.component.dp16
 internal fun Content(
     model: State<Model>,
     send: SendMessage,
-    sharedUiState: SharedUiState<SharedNewFolderDialogUiState>,
+    uiState: State<SharedNewFolderDialogUiState>,
     modifier: Modifier = Modifier,
 ) {
-    val sharedState = sharedUiState.state.collectAsStateWithLifecycle()
-    val passedFolderId = rememberSaveable { mutableLongStateOf(sharedState.value.editableFolderId) }
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(focusRequester) {
@@ -59,11 +54,12 @@ internal fun Content(
         focusRequester.requestFocus()
     }
 
-    LaunchedEffect(passedFolderId.longValue) {
-        send(Msg.Inner.FetchedEditableFolderId(passedFolderId.longValue))
+    LaunchedEffect(uiState.value.editableFolderId) {
+        Log.e("AAA", "UI ${uiState.value.editableFolderId}")
+        send(Msg.Inner.FetchedPassedFolderId(uiState.value.editableFolderId))
     }
 
-    val dialogTitle = if (model.value.isNewFolder) text.folders.titleDialogNewFolder
+    val dialogTitle = if (uiState.value.isNewFolder) text.folders.titleDialogNewFolder
     else text.folders.titleDialogEditFolder
 
     Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {

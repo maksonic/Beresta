@@ -4,6 +4,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
 import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
+import ru.maksonic.beresta.feature.edit_note.api.isExpanded
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesDataProgram
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesSortProgram
@@ -54,6 +56,7 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         //other
         is Msg.Inner.HiddenLoadingPlaceholder -> hiddenLoadingPlaceholder(model)
+        is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
     }
 
     private fun onTopBarBackPressed(model: Model): UpdateResult =
@@ -91,22 +94,24 @@ class HiddenNotesSandbox(
 
         return ElmUpdate(
             model.copy(
-                isVisibleEditFab = false,
                 notes = model.notes.copy(
                     selectedList = selectedList,
                     isSelection = true,
                     isVisibleUnpinMainBarIcon = isVisibleUnpinButton
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Selected)
-            ),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Selected),
+                editNoteFabState = model.editNoteFabState.copy(
+                    isVisible = false, state = EditNoteFabState.COLLAPSED
+                )
+            )
         )
     }
 
     private fun onCancelSelectionClicked(model: Model): UpdateResult = ElmUpdate(
         model = model.copy(
-            isVisibleEditFab = true,
             notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+            editNoteFabState = model.editNoteFabState.copy(isVisible = true),
         )
     )
 
@@ -131,14 +136,14 @@ class HiddenNotesSandbox(
 
         return ElmUpdate(
             model = model.copy(
-                isVisibleEditFab = true,
                 notes = model.notes.copy(
                     state = model.notes.state.copy(isLoading = isShowLoading),
                     selectedList = emptySet(),
                     removedList = model.notes.selectedList,
                     isSelection = false,
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
             commands = setOf(Cmd.UnhideSelectedNotes(unhidden.toList())),
         )
@@ -154,7 +159,6 @@ class HiddenNotesSandbox(
 
         return ElmUpdate(
             model = model.copy(
-                isVisibleEditFab = true,
                 notes = model.notes.copy(
                     state = model.notes.state.copy(isLoading = isShowLoading),
                     selectedList = emptySet(),
@@ -162,7 +166,8 @@ class HiddenNotesSandbox(
                     isSelection = false,
                     isVisibleRemovedSnackBar = true
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
             commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
         )
@@ -182,15 +187,19 @@ class HiddenNotesSandbox(
 
     private fun onCollapseSearchBar(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            isVisibleEditFab = !model.notes.isSelection,
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+            editNoteFabState = model.editNoteFabState.copy(
+                isVisible = !model.notes.isSelection, state = EditNoteFabState.COLLAPSED
+            )
         )
     )
 
     private fun onExpandSearchBar(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            isVisibleEditFab = false,
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Expanded)
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Expanded),
+            editNoteFabState = model.editNoteFabState.copy(
+                isVisible = false, state = EditNoteFabState.COLLAPSED
+            ),
         )
     )
 
@@ -237,9 +246,29 @@ class HiddenNotesSandbox(
             commands = setOf(Cmd.UndoRemoveNotes(restored))
         )
     }
+
     private fun hiddenLoadingPlaceholder(model: Model): UpdateResult = ElmUpdate(
-            model = model.copy(
-                notes = model.notes.copy(state = model.notes.state.copy(isLoading = false))
-            )
+        model = model.copy(
+            notes = model.notes.copy(state = model.notes.state.copy(isLoading = false))
+        )
     )
+
+    private fun updatedEditNoteFabState(
+        model: Model,
+        msg: Msg.Inner.UpdatedEditNoteFabState
+    ): UpdateResult {
+
+        val searchBarState = if (msg.state.isExpanded)
+            model.searchBarState.copy(barState = SearchBarState.Collapsed)
+        else model.searchBarState
+
+        return ElmUpdate(
+            model.copy(
+                searchBarState = searchBarState,
+                editNoteFabState = model.editNoteFabState.copy(
+                    isVisible = !model.notes.isSelection, state = msg.state
+                )
+            ),
+        )
+    }
 }

@@ -86,9 +86,9 @@ internal fun SearchBarBackplate(
 @Composable
 private fun MainStateComponent(onUserAvatarClicked: () -> Unit, onChangeGridClicked: () -> Unit) {
     val afterSearchBarIcon = remember { mutableStateOf(AppIcon.ListView) }
-    val gridCount = rememberUpdatedState(listUiSortState.gridCount)
+    val gridCount = rememberUpdatedState(listUiSortState.gridNotesCount)
 
-    LaunchedEffect(listUiSortState.gridCount) {
+    LaunchedEffect(listUiSortState.gridNotesCount) {
         afterSearchBarIcon.value = if (gridCount.value == 1) AppIcon.ListView else AppIcon.GridView
     }
 

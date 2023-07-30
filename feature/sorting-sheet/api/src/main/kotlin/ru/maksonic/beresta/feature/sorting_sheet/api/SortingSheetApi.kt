@@ -14,7 +14,7 @@ interface SortingSheetApi {
             suspend fun setOrderState(value: Pair<SortDataKey, Order>)
             suspend fun setSortState(value: Pair<SortDataKey, Sort>)
             suspend fun setCheckboxState(value: Pair<SortDataKey, Boolean>)
-            suspend fun setGridCount(cellCount: Int)
+            suspend fun setGridCount(value: Pair<GridCountKey, Int>)
             suspend fun resetSortState(key: SortDataKey)
         }
     }

@@ -22,7 +22,7 @@ internal fun MainSearchBar(
     searchBarApi: SearchBarApi.Ui = koinInject()
 ) {
     val searchBarState = rememberUpdatedState(model.value.searchBarState)
-    val gridCount = rememberUpdatedState(if (listUiSortState.gridCount == 1) 2 else 1)
+    val gridCount = rememberUpdatedState(if (listUiSortState.gridNotesCount == 1) 2 else 1)
     val currentFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
     val actions = mapOf(
         SearchBarApi.ActionKey.OnCollapseBar to { send(Msg.Ui.OnCollapseSearchBar) },

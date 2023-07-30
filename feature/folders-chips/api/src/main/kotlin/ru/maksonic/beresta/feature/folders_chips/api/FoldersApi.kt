@@ -38,6 +38,7 @@ interface FoldersApi {
             @Composable
             fun Widget(
                 isSelected: Boolean,
+                isCurrent: Boolean,
                 folder: FolderUi,
                 isTrashPlacement: Boolean,
                 onFolderClicked: (id: Long) -> Unit,

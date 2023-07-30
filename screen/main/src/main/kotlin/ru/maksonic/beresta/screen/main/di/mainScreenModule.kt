@@ -27,6 +27,7 @@ val mainScreenModule = module {
             ioDispatcher = get(named(CoroutineDispatchers.IO)),
             appLanguageEngineApi = get(),
             stickyItemsTitleFormatter = get(),
+            chipsRowApi = get()
         )
     }
     single {

@@ -22,7 +22,7 @@ class NoteCardStateFeatureCore(private val datastore: Datastore) : NotesApi.Feat
         private const val TITLE_LINES = "prefs_note_card_ui_max_title_lines_key"
         private const val MESSAGE_LINES = "prefs_note_card_ui_max_message_lines_key"
         private const val INITIAL_TITLE_LINES_COUNT = 1
-        private const val INITIAL_MESSAGE_LINES_COUNT = 3
+        private const val INITIAL_MESSAGE_LINES_COUNT = 2
     }
 
     private val shapeKey = stringPreferencesKey(SHAPE)

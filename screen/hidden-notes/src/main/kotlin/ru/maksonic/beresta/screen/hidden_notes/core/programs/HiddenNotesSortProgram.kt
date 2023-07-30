@@ -1,6 +1,7 @@
 package ru.maksonic.beresta.screen.hidden_notes.core.programs
 
 import ru.maksonic.beresta.elm.core.ElmProgram
+import ru.maksonic.beresta.feature.sorting_sheet.api.GridCountKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.screen.hidden_notes.core.Cmd
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
@@ -20,6 +21,6 @@ class HiddenNotesSortProgram(
     }
 
     private suspend fun updateGridViewState(count: Int) = listSortStateUiApi.state
-        .update { it.copy(gridCount = count) }
-        .let { listSortStateFeatureState.setGridCount(count) }
+        .update { it.copy(gridHiddenNotesCount = count) }
+        .let { listSortStateFeatureState.setGridCount(Pair(GridCountKey.HIDDEN_NOTES, count)) }
 }

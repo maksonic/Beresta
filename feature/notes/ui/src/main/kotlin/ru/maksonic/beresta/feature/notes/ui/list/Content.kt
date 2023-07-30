@@ -16,6 +16,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -104,10 +105,14 @@ internal fun Content(
             .statusBarsPadding()
             .nestedScroll(scrollConnection)
     ) {
+        val gridCells = rememberUpdatedState(
+            with(listUiSortState) { if (state.isHidden) gridHiddenNotesCount else gridNotesCount }
+        )
+
         OverscrollBehavior {
             LazyVerticalStaggeredGrid(
                 state = scrollState,
-                columns = StaggeredGridCells.Fixed(listUiSortState.gridCount),
+                columns = StaggeredGridCells.Fixed(gridCells.value),
                 contentPadding = contentPaddingValues
             ) {
                 itemsIndexed(

@@ -27,6 +27,7 @@ import ru.maksonic.beresta.ui.theme.component.dp24
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.LockOpen
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
@@ -40,17 +41,19 @@ internal fun Content(note: NoteUi, modifier: Modifier) {
 
     val noteTitle = rememberUpdatedState(note.title.take(MAX_TEXT_LENGTH))
     val noteMessage = rememberUpdatedState(note.message.take(MAX_TEXT_LENGTH))
-    val isPinned = rememberUpdatedState(note.isPinned)
+    val isPinned = rememberUpdatedState(note.isPinned && !note.isMovedToTrash)
+    val isHiddenAndTrashed = rememberUpdatedState(note.isHidden && note.isMovedToTrash)
     val hintPrefixRemovedDate = text.trash.hintRemovedDatePrefix
-    val date =
-        if (note.isMovedToTrash) "$hintPrefixRemovedDate ${note.dateMovedToTrash}" else note.dateCreation
+    val date = if (note.isMovedToTrash) "$hintPrefixRemovedDate ${note.dateMovedToTrash}"
+    else note.dateCreation
 
     Column(
         modifier
             .fillMaxWidth()
             .padding(start = dp16)
     ) {
-        TopPanelIndication(isPinned)
+
+        TopPanelIndication(isPinned, isHiddenAndTrashed)
 
         Text(
             text = if (note.title.isBlank()) noteMessage.value else noteTitle.value,
@@ -79,7 +82,11 @@ internal fun Content(note: NoteUi, modifier: Modifier) {
 }
 
 @Composable
-private fun TopPanelIndication(isPinned: State<Boolean>, modifier: Modifier = Modifier) {
+private fun TopPanelIndication(
+    isPinned: State<Boolean>,
+    isHiddenAndTrashed: State<Boolean>,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier
             .height(dp24)
@@ -87,6 +94,16 @@ private fun TopPanelIndication(isPinned: State<Boolean>, modifier: Modifier = Mo
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        AnimateFadeInOut(visible = isHiddenAndTrashed.value) {
+            Icon(
+                imageVector = AppIcon.LockOpen,
+                modifier = modifier
+                    .padding(end = dp4)
+                    .size(dp16),
+                tint = primary,
+                contentDescription = null
+            )
+        }
         AnimateFadeInOut(visible = isPinned.value) {
             Icon(
                 imageVector = AppIcon.Pin,

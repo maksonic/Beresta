@@ -89,7 +89,6 @@ class HiddenNotesDataProgram(
             val notesUi = notes.map { note ->
                 note.copy(
                     isMovedToTrash = true,
-                    isHidden = false,
                     folderId = 2L,
                     dateMovedToTrashRaw = LocalDateTime.now()
                 )

@@ -44,9 +44,9 @@ internal fun NotesList(
         val sorter = rememberUpdatedState(
             NotesSorter(
                 list = model.value.notes.collection.data,
-                order = listUiSortState.notes.order,
-                isSortPinned = listUiSortState.notes.isSortPinned,
-                sort = listUiSortState.notes.sort,
+                order = listUiSortState.hiddenNotes.order,
+                isSortPinned = listUiSortState.hiddenNotes.isSortPinned,
+                sort = listUiSortState.hiddenNotes.sort,
                 currentFolderId = 1
             )
         )

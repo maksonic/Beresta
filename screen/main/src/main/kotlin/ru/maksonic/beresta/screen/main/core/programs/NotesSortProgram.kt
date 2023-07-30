@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.notes.api.NotesApi
+import ru.maksonic.beresta.feature.sorting_sheet.api.GridCountKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.screen.main.core.Cmd
@@ -35,6 +36,6 @@ class NotesSortProgram(
     }.collect()
 
     private suspend fun updateGridViewState(count: Int) = listSortStateUiApi.state
-        .update { it.copy(gridCount = count) }
-        .let { listSortStateFeatureState.setGridCount(count) }
+        .update { it.copy(gridNotesCount = count) }
+        .let { listSortStateFeatureState.setGridCount(Pair(GridCountKey.NOTES, count)) }
 }

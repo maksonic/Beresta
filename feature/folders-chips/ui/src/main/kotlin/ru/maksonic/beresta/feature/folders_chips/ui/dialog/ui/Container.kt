@@ -39,7 +39,7 @@ internal fun Container(
         onCancelClicked = { sandbox.send(Msg.Ui.OnDismissClicked) },
         onAcceptClicked = { sandbox.send(Msg.Ui.OnAcceptClicked) }
     ) {
-        Content(model, sandbox::send, sharedUiState = sharedUiState)
+        Content(model, sandbox::send, uiState = uiState)
     }
 }
 

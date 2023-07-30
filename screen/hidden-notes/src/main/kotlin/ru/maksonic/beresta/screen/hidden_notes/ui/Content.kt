@@ -46,7 +46,6 @@ internal fun Content(
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
-    val isVisibleEditFab = rememberUpdatedState(model.value.isVisibleEditFab)
     val selectedNotesCount = rememberUpdatedState(model.value.notes.selectedList.count())
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
@@ -89,7 +88,7 @@ internal fun Content(
 
             SearchBar(model, send, isColoredBackplate = isCanScrollBackwardState)
 
-            EditNoteExpandableFab(isVisibleEditFab, modifier)
+            EditNoteExpandableFab(model, send, modifier)
 
             if (model.value.modalSheet.isVisible) {
                 ModalBottomSheetDefault(

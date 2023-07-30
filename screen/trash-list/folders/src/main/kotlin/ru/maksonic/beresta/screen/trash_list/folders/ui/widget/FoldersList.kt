@@ -81,6 +81,7 @@ internal fun FoldersList(
                     items(model.value.folders.data) { folder ->
                         folderUiItemApi.Widget(
                             isSelected = model.value.selectedList.contains(folder),
+                            isCurrent = false,
                             folder = folder,
                             isTrashPlacement = true,
                             onFolderClicked = { send(Msg.Ui.OnFolderClicked(folder.id)) },

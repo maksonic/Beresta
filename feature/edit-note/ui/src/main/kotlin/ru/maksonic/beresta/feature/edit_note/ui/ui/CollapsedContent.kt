@@ -16,7 +16,7 @@ import ru.maksonic.beresta.ui.widget.functional.clickAction
  * @Author maksonic on 26.04.2023
  */
 @Composable
-internal fun EditNoteCollapsedContent(
+internal fun CollapsedContent(
     isBlankNote: Boolean,
     onExpandFabClicked: () -> Unit,
     modifier: Modifier = Modifier

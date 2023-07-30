@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -45,6 +46,7 @@ internal fun Content(
     foldersUiItemApi: FoldersApi.Ui.FolderItem,
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    chipsRowApi: FoldersApi.Ui.ChipsRow,
     hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     model: State<Model>,
     send: SendMessage,
@@ -56,6 +58,7 @@ internal fun Content(
     val isVisibleFirstFolderOffset = remember { mutableStateOf(true) }
     val isCanScrollForward = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.isSelectionState)
+    val currentSelectedFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
 
     BackHandler(model.value.isSelectionState) {
         send(Msg.Ui.CancelSelectionState)
@@ -73,6 +76,7 @@ internal fun Content(
                     foldersPlaceholderApi = foldersPlaceholderApi,
                     model = model,
                     send = send,
+                    currentSelectedFolder = currentSelectedFolder,
                     updateFirstVisibleFolderOffset = { isVisibleFirstFolderOffset.value = it },
                     updateCanScrollForwardState = { isCanScrollForward.value = it },
                     listSortUiState = listSortUiState

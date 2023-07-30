@@ -137,7 +137,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     }
 
     private fun onAddNewFolderClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.ShowFolderDialog()))
+        ElmUpdate(model, effects = setOf(Eff.AddNewFolder))
 
     private fun onBarPinSelectedClicked(model: Model): UpdateResult {
         return ElmUpdate(
@@ -174,12 +174,8 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         )
     }
 
-    private fun onBarEditClicked(model: Model): UpdateResult {
-        val effect = if (model.selectedList.isEmpty()) emptySet()
-        else setOf(Eff.ShowFolderDialog(model.selectedList.first().id))
-
-        return ElmUpdate(model, effects = effect)
-    }
+    private fun onBarEditClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.UpdateFolder(model.selectedList.first().id)))
 
     private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = ElmUpdate(
         model = model.copy(

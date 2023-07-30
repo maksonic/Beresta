@@ -32,7 +32,7 @@ data class NoteCardUiState(
             shape = NoteCardShape.ROUNDED,
             elevation = NoteCardElevation.DISABLED,
             maxTitleLines = 1,
-            maxMessageLines = 3,
+            maxMessageLines = 2,
         )
     }
 }

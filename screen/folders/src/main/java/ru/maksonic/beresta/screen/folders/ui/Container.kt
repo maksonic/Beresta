@@ -11,7 +11,8 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.showForEdit
+import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
+import ru.maksonic.beresta.feature.folders_chips.api.ui.updateFolder
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
@@ -32,6 +33,7 @@ internal fun Container(
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder = koinInject(),
     sandbox: FoldersScreenSandbox = koinViewModel(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
+    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
     hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
     listSortUiState: SortingSheetApi.Ui = koinInject()
 ) {
@@ -50,6 +52,7 @@ internal fun Container(
         foldersUiItemApi = foldersUiItemApi,
         foldersPlaceholderApi = foldersPlaceholderApi,
         chipsDialogApi = chipsDialogApi,
+        chipsRowApi = chipsRowApi,
         hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
         model = model,
         send = sandbox::send,
@@ -72,7 +75,8 @@ private fun HandleUiEffects(
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
-            is Eff.ShowFolderDialog -> chipsDialogApi.sharedUiState.showForEdit(eff.id)
+            is Eff.AddNewFolder -> chipsDialogApi.sharedUiState.addNewFolder()
+            is Eff.UpdateFolder -> chipsDialogApi.sharedUiState.updateFolder(eff.id)
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {

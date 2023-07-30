@@ -10,6 +10,8 @@ import ru.maksonic.beresta.elm.core.ElmCommand
 import ru.maksonic.beresta.elm.core.ElmEffect
 import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteUiFabState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarUiState
@@ -46,18 +48,16 @@ data class Model(
     val base: ElmBaseModel,
     val notes: NotesListUiState,
     val modalSheet: ModalSheet,
-    //  val bottomBarState: MainBottomBarState,
     val searchBarState: SearchBarUiState,
-    val isVisibleEditFab: Boolean,
+    val editNoteFabState: EditNoteUiFabState,
 ) : ElmModel {
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Initial,
-            notes = NotesListUiState.Initial,
+            notes = NotesListUiState.InitialHidden,
             modalSheet = ModalSheet.Initial,
-            //       bottomBarState = MainBottomBarState.IDLE,
             searchBarState = SearchBarUiState.InitialHiddenNotes,
-            isVisibleEditFab = true
+            editNoteFabState = EditNoteUiFabState.Initial,
         )
     }
 }
@@ -65,6 +65,7 @@ data class Model(
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
         object OnTopBarBackPressed : Ui()
+
         //notes
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
@@ -97,12 +98,14 @@ sealed class Msg : ElmMessage {
         object HiddenModalBottomSheet : Inner()
         object HiddenRemovedNotesSnackBar : Inner()
         object HiddenLoadingPlaceholder : Inner()
+        data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
     object FetchNotesData : Cmd()
     object FetchMovedForHideNotesData : Cmd()
+
     //object FetchNotesListFeatureState : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()

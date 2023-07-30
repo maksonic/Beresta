@@ -10,6 +10,8 @@ import ru.maksonic.beresta.elm.core.ElmCommand
 import ru.maksonic.beresta.elm.core.ElmEffect
 import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
+import ru.maksonic.beresta.feature.edit_note.api.EditNoteUiFabState
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
@@ -52,7 +54,7 @@ data class Model(
     val modalSheet: ModalSheet,
     val bottomBarState: MainBottomBarState,
     val searchBarState: SearchBarUiState,
-    val isVisibleEditFab: Boolean,
+    val editNoteFabState: EditNoteUiFabState,
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -62,7 +64,7 @@ data class Model(
             modalSheet = ModalSheet.Initial,
             bottomBarState = MainBottomBarState.IDLE,
             searchBarState = SearchBarUiState.InitialMainNotes,
-            isVisibleEditFab = true
+            editNoteFabState = EditNoteUiFabState.Initial
         )
     }
 }
@@ -73,25 +75,30 @@ sealed class Msg : ElmMessage {
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
         object CancelNotesSelection : Ui()
+
         //idle bottom bar actions
         object OnBottomBarSettingsClicked : Ui()
         object OnBottomBarTrashClicked : Ui()
         object OnBottomBarFoldersClicked : Ui()
         object OnBottomBarSortNotesClicked : Ui()
+
         //selected bottom bar actions
         object OnBottomBarHideSelectedNotesClicked : Ui()
         object OnBottomBarPinSelectedNotesClicked : Ui()
         object OnBottomBarMoveSelectedNotesClicked : Ui()
         object OnBottomBarRemoveSelectedNotesClicked : Ui()
+
         //search bar
         object OnCollapseSearchBar : Ui()
         object OnExpandSearchBar : Ui()
         object OnCounterBarShareClicked : Ui()
         data class OnCounterBarSelectAllClicked(val currentFolderId: Long) : Ui()
         data class OnChangeGridViewClicked(val count: Int) : Ui()
+
         //all
         object OnHideModalBottomSheet : Ui()
         object OnAddNewChipClicked : Ui()
+
         //snack bar
         object OnSnackUndoRemoveNotesClicked : Ui()
     }
@@ -103,6 +110,8 @@ sealed class Msg : ElmMessage {
         object HiddenModalBottomSheet : Inner()
         object HiddenRemovedNotesSnackBar : Inner()
         object NavigatedToHiddenNotes : Inner()
+        data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
+        object ResetCurrentSelectedFolder : Inner()
     }
 }
 
@@ -115,6 +124,7 @@ sealed class Cmd : ElmCommand {
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
     object FetchChipsData : Cmd()
     object FetchChipsSortState : Cmd()
+    object ResetCurrentSelectedFolder : Cmd()
 }
 
 sealed class Eff : ElmEffect {

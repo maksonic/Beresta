@@ -10,9 +10,9 @@ abstract class BaseRepository<D, T>(
     private val mapper: DataMapper<D, T>
 ) : Repository<T> {
 
-    override suspend fun add(item: T) {
+    override suspend fun add(item: T): Long {
         val cacheItem = mapper.domainToData(item)
-        cache.insertItem(cacheItem)
+        return cache.insertItem(cacheItem)
     }
 
     override suspend fun update(item: T) {
