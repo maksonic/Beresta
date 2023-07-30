@@ -128,7 +128,7 @@ internal fun Content(
 
             MainSearchBar(model, send, isCanScrollBackwardState)
 
-            EditNoteExpandableFab(model, send, modifier,)
+            EditNoteExpandableFab(model, send, modifier)
 
 
             if (model.value.modalSheet.isVisible) {

@@ -34,7 +34,7 @@ class AppNavigator : AbstractNavigator() {
         toTrash = { navigate(entry, Destination.TrashNotesList.route) },
         toNoteEditor = { passedId ->
             val noteId = passedId ?: 0L
-            navigate(entry, Destination.EditNote.passedArgs(noteId))
+            navigate(entry, Destination.EditNote.passedListArgs(listOf(false, noteId)))
         },
         toFoldersList = { ids -> navigate(entry, Destination.Folders.passedArgs(ids)) },
         toHiddenNotes = { ids -> navigate(entry, Destination.HiddenNotes.passedArgs(ids)) }
@@ -67,6 +67,11 @@ class AppNavigator : AbstractNavigator() {
     override fun trashFoldersRouter(entry: NavBackStackEntry) =
         TrashFoldersScreenRouter(onBack = ::backPressed)
 
-    override fun hiddenNotesRouter(entry: NavBackStackEntry) =
-        HiddenNotesScreenRouter(::backPressed)
+    override fun hiddenNotesRouter(entry: NavBackStackEntry) = HiddenNotesScreenRouter(
+        onBack = ::backPressed,
+        toNoteEditor = { passedId ->
+            val noteId = passedId ?: 0L
+            navigate(entry, Destination.EditNote.passedListArgs(listOf(true, noteId)))
+        }
+    )
 }

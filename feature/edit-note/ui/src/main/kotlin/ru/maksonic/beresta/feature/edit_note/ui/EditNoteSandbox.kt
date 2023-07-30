@@ -39,16 +39,21 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     private fun checkedEntryPoint(model: Model, msg: Msg.Inner.CheckedEntryPoint): UpdateResult =
         ElmUpdate(model.copy(isEntryPoint = msg.value))
 
-    private fun showedKeyboardWithFocus(model: Model): UpdateResult =
-        ElmUpdate(
-            model = model,
-            effects = if (!model.isEntryPoint) setOf(Eff.ShowKeyboardForExpandedFab) else emptySet()
-        )
+    private fun showedKeyboardWithFocus(model: Model): UpdateResult = ElmUpdate(
+        model = model,
+        effects = if (!model.isEntryPoint) setOf(Eff.ShowKeyboardForExpandedFab) else emptySet()
+    )
 
     private fun fetchedPassedNoteResult(
         model: Model,
         msg: Msg.Inner.FetchedPassedNoteResult
-    ): UpdateResult = ElmUpdate(model.copy(base = model.base.loadedSuccess, currentNote = msg.note))
+    ): UpdateResult = ElmUpdate(
+        model.copy(
+            base = model.base.loadedSuccess,
+            isHiddenNote = msg.isHidden,
+            currentNote = msg.note
+        )
+    )
 
     private fun onSaveNoteClicked(model: Model, msg: Msg.Ui.OnSaveNoteClicked): UpdateResult {
         //Set default id when passed id equals sticky end folder id.

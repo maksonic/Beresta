@@ -76,7 +76,7 @@ private fun HandleUiEffects(
             }
 
             is Eff.NavigateToEditNote -> {
-                focusManager.clearFocus().let { /*router.toNoteEditor(eff.id)*/ }
+                focusManager.clearFocus().let { router.toNoteEditor(eff.id) }
             }
         }
     }

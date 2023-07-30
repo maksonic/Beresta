@@ -57,13 +57,14 @@ internal fun Container(
     state: State<EditNoteFabState>,
     updateFabState: (EditNoteFabState) -> Unit,
     isEntryPoint: Boolean,
-    isHiddenNotes: Boolean,
+    isCircleFab: Boolean,
     modifier: Modifier,
     sandbox: EditNoteSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
     val isExpanded = rememberUpdatedState(state.value.isExpanded)
+    val isHiddenNotes = rememberUpdatedState(model.value.isHiddenNote)
 
     HandleUiEffects(sandbox.effects, router, focusRequester) { collapsed ->
         updateFabState(collapsed)
@@ -94,10 +95,10 @@ internal fun Container(
             if (isExpanded.value) surface else tertiaryContainer, tween(animSpeed)
         )
         val isFullExpanded = height.value == fullHeight
-        val fabShape = if (isFullExpanded) 0.dp else if (isHiddenNotes) 50.dp else dp16
+        val fabShape = if (isFullExpanded) 0.dp else if (isCircleFab) 50.dp else dp16
 
         if (isEntryPoint) {
-            ExpandedContent(model.value, sandbox::send, focusRequester, isHiddenNotes)
+            ExpandedContent(model.value, sandbox::send, focusRequester, isHiddenNotes.value)
         } else {
 
             LaunchedEffect(isFullExpanded) {
@@ -120,7 +121,7 @@ internal fun Container(
                             model = model.value,
                             send = sandbox::send,
                             focusRequester = focusRequester,
-                            isHiddenNote = isHiddenNotes,
+                            isHiddenNote = isHiddenNotes.value || isCircleFab,
                             modifier = Modifier.size(width = width.value, height = height.value)
                         )
                     } else {

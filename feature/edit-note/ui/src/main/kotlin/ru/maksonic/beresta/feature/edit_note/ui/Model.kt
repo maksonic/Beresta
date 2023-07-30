@@ -17,12 +17,14 @@ import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 data class Model(
     val base: ElmBaseModel,
     val isEntryPoint: Boolean,
+    val isHiddenNote: Boolean,
     val currentNote: NoteUi,
 ) : ElmModel {
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Loading,
             isEntryPoint = false,
+            isHiddenNote = false,
             currentNote = NoteUi.Default,
         )
     }
@@ -44,7 +46,7 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class CheckedEntryPoint(val value: Boolean) : Inner()
         object ShowedKeyboardForExpandedFab : Inner()
-        data class FetchedPassedNoteResult(val note: NoteUi) : Inner()
+        data class FetchedPassedNoteResult(val isHidden: Boolean, val note: NoteUi) : Inner()
         data class UpdatedCurrentNoteTitle(val text: String) : Inner()
         data class UpdatedCurrentNoteMessage(val text: String) : Inner()
     }

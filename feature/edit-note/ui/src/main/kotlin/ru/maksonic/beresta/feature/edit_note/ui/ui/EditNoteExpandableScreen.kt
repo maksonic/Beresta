@@ -29,7 +29,7 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
             state = state,
             updateFabState = updateFabState,
             isEntryPoint = isEntryPoint,
-            isHiddenNotes = isHiddenNotes,
+            isCircleFab = isHiddenNotes,
             modifier = modifier
         )
     }

@@ -26,16 +26,16 @@ class EditNoteProgram(
     }
 
     private suspend fun fetchNote(consumer: (Msg) -> Unit) {
-        val id = navigator.getLong(Destination.EditNote.passedKey)
+        val args = navigator.getNoteEditorArgs(Destination.EditNote.passedKeysList)
 
         runCatching {
-            interactor.fetchById(id).collect { noteDomain ->
+            interactor.fetchById(args.second).collect { noteDomain ->
                 val note = mapper.mapTo(noteDomain)
-                consumer(Msg.Inner.FetchedPassedNoteResult(note))
+                consumer(Msg.Inner.FetchedPassedNoteResult(args.first, note))
             }
 
         }.onFailure {
-            consumer(Msg.Inner.FetchedPassedNoteResult(NoteUi.Default))
+            consumer(Msg.Inner.FetchedPassedNoteResult(args.first, NoteUi.Default))
         }
     }
 

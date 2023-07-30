@@ -9,4 +9,5 @@ interface ArgumentReceiver {
     fun getLongArray(key: String): LongArray?
     fun getListLongFromString(key: String): List<Long>
     fun getString(key: String): String
+    fun getNoteEditorArgs(keys: List<String>): Pair<Boolean, Long>
 }

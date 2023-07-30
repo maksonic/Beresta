@@ -62,4 +62,11 @@ abstract class AbstractNavigator : ArgumentReceiver, Router {
                 .map { it.toLong() }
         } else emptyList()
     }
+
+    override fun getNoteEditorArgs(keys: List<String>): Pair<Boolean, Long> {
+        val args = navController.currentBackStackEntry?.arguments
+        val isHiddenNote = args?.getBoolean(keys.first()) ?: false
+        val passedId = args?.getLong(keys.last()) ?: 0L
+        return Pair(isHiddenNote, passedId)
+    }
 }

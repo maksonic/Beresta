@@ -8,7 +8,10 @@ object Destination : AbstractDestination(route = "root") {
     object Splash : AbstractDestination(route = "splash")
     object Onboarding : AbstractDestination(route = "onboarding")
     object Main : AbstractDestination(route = "main")
-    object EditNote : AbstractDestination(route = "edit_note", argKey = "noteId")
+    object EditNote : AbstractDestination(
+        route = "edit_note", listArgKeys = listOf("isHiddenEditNote", "noteId")
+    )
+
     object Folders : AbstractDestination(route = "folders", argKey = "passedNotesIds")
     object TrashNotesList : AbstractDestination(route = "trash_notes_list")
     object TrashFoldersList : AbstractDestination(route = "trash_folders_list")
