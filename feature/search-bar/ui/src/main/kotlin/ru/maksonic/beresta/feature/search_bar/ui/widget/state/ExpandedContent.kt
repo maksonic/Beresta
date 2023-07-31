@@ -145,7 +145,10 @@ private fun InputQueryTextFiled(
         modifier = modifier.fillMaxWidth(),
     ) {
         Box(
-            modifier.statusBarsPadding().height(Theme.widgetSize.topBarSmallHeight),
+            modifier
+                .statusBarsPadding()
+                .padding(top = dp4)
+                .height(Theme.widgetSize.topBarSmallHeight),
             contentAlignment = Alignment.TopCenter
         ) {
             Row(

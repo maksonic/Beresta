@@ -49,6 +49,8 @@ fun Container(
     updateVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     onSuccessPin: () -> Unit,
+    isBlocked: Boolean,
+    onBlockedBackPressed: () -> Unit,
     vibrationManager: VibrationManager = koinInject(),
     sandbox: HiddenNotesEnterPasswordSandbox = koinViewModel()
 ) {
@@ -62,6 +64,7 @@ fun Container(
 
         HandleUiEffects(
             effects = sandbox.effects,
+            isBlocked = isBlocked,
             vibrationManager = vibrationManager,
             updateVisibility = updateVisibility,
             onSuccessPin = onSuccessPin,
@@ -69,14 +72,14 @@ fun Container(
         )
 
         LaunchedEffect(Unit) {
-            sandbox.send(Msg.Inner.UpdatedScreenCapturePermissionState(true))
+            sandbox.send(Msg.Inner.UpdatedScreenCapturePermission(true))
         }
 
         BackHandler {
             if (model.value.dialogCurrentContent.isKeyboard) {
                 sandbox.send(Msg.Ui.UpdateDialogCurrentContent(DialogCurrentContent.INITIAL))
             } else {
-                sandbox.send(Msg.Ui.CloseDialog)
+                if (isBlocked) onBlockedBackPressed() else sandbox.send(Msg.Ui.CloseDialog)
             }
         }
 
@@ -95,7 +98,11 @@ fun Container(
                         model = model,
                         send = sandbox::send,
                         isShakeTitleEffect = isShakeTitleEffect,
-                        disableShakeEffect = { isShakeTitleEffect.value = false }
+                        disableShakeEffect = { isShakeTitleEffect.value = false },
+                        onCloseClicked = {
+                            if (isBlocked) onBlockedBackPressed()
+                            else sandbox.send(Msg.Ui.CloseDialog)
+                        }
                     )
                 }
             }
@@ -106,6 +113,7 @@ fun Container(
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
+    isBlocked: Boolean,
     vibrationManager: VibrationManager,
     updateVisibility: (Boolean) -> Unit,
     shakeKeyboardTitle: () -> Unit,
@@ -117,7 +125,7 @@ private fun HandleUiEffects(
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
-            is Eff.CloseDialog -> updateVisibility(false)
+            is Eff.CloseDialog -> if (!isBlocked) updateVisibility(false)
             is Eff.ShowWrongPinCodeMessage -> {
                 val failMessage = when (eff.fail!!) {
                     PinFailStatus.NOT_MATCHED -> failCreationMessage

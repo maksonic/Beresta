@@ -28,8 +28,8 @@ class HiddenNotesEnterPasswordProgram(
     }
 
     private fun updateScreenCapturePermission(isEnabled: Boolean) =
-        if (isEnabled) screenCaptureManager.enableScreenCapture()
-        else screenCaptureManager.disableScreenCapture()
+        if (isEnabled) screenCaptureManager.denyScreenCapture()
+        else screenCaptureManager.allowScreenCapture()
 
     private suspend fun createPinCode(code: String, cachedCode: String, consumer: (Msg) -> Unit) {
         if (cachedCode.isEmpty()) {

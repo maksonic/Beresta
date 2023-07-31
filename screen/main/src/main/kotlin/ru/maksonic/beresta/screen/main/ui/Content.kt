@@ -143,7 +143,9 @@ internal fun Content(
             chipsDialogApi.Widget()
 
             hiddenNotesEnterPasswordDialog.Widget(
-                onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) }
+                isBlocked = false,
+                onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) },
+                onBlockedBackPressed = {}
             )
         }
     }

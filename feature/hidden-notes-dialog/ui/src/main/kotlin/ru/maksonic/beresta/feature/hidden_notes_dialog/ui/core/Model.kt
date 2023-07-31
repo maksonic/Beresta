@@ -45,7 +45,7 @@ sealed class Msg : ElmMessage {
     sealed class Inner : Msg() {
         data class FetchedPinCodeStatus(val isCreated: Boolean) : Inner()
         data class UpdateInput(val value: Int) : Inner()
-        data class UpdatedScreenCapturePermissionState(val isEnabled: Boolean) : Inner()
+        data class UpdatedScreenCapturePermission(val isEnabled: Boolean) : Inner()
         data class UpdatedCacheCode(val value: String) : Inner()
         object SuccessCreatedCodeResult : Inner()
         object SuccessVerifiedCodeResult : Inner()

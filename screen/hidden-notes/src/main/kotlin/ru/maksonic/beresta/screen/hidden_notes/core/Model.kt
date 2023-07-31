@@ -50,6 +50,7 @@ data class Model(
     val modalSheet: ModalSheet,
     val searchBarState: SearchBarUiState,
     val editNoteFabState: EditNoteUiFabState,
+    val isVisibleStonewall: Boolean
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -58,6 +59,7 @@ data class Model(
             modalSheet = ModalSheet.Initial,
             searchBarState = SearchBarUiState.InitialHiddenNotes,
             editNoteFabState = EditNoteUiFabState.Initial,
+            isVisibleStonewall = false
         )
     }
 }
@@ -65,6 +67,7 @@ data class Model(
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
         object OnTopBarBackPressed : Ui()
+        object OnStonewallBackPressed : Ui()
 
         //notes
         data class OnNoteClicked(val id: Long) : Ui()
@@ -99,14 +102,14 @@ sealed class Msg : ElmMessage {
         object HiddenRemovedNotesSnackBar : Inner()
         object HiddenLoadingPlaceholder : Inner()
         data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
+        data class UpdateStonewallVisibility(val isVisible: Boolean): Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
     object FetchNotesData : Cmd()
     object FetchMovedForHideNotesData : Cmd()
-
-    //object FetchNotesListFeatureState : Cmd()
+    object AllowScreenCapture : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UnhideSelectedNotes(val notes: List<NoteUi>) : Cmd()
@@ -114,8 +117,10 @@ sealed class Cmd : ElmCommand {
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
 }
 
-abstract class Eff : ElmEffect {
+sealed class Eff : ElmEffect {
     object NavigateBack : Eff()
+    object NavigateBlockedBack : Eff()
     data class NavigateToEditNote(val id: Long) : Eff()
     object HideModalSheet : Eff()
+    data class UpdatePinDialogVisibility(val isVisible: Boolean) : Eff()
 }

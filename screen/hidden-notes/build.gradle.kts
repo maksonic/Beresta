@@ -60,6 +60,7 @@ dependencies {
     implementation(project(module.feature.sortingSheet.api.path))
     implementation(project(module.feature.topBarCounter.api.path))
     implementation(project(module.feature.editNote.api.path))
+    implementation(project(module.feature.hiddenNotesDialog.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

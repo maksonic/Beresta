@@ -6,6 +6,7 @@ import org.koin.dsl.module
 import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesDataProgram
+import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesScreenCaptureProgram
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesSortProgram
 
 /**
@@ -23,9 +24,14 @@ val hiddenNotesScreenModule = module {
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }
+    single { HiddenNotesScreenCaptureProgram(screenCaptureManager = get()) }
     single { HiddenNotesSortProgram(listSortStateUiApi = get(), listSortStateFeatureState = get()) }
 
     viewModel {
-        HiddenNotesSandbox(hiddenNotesDataProgram = get(), hiddenNotesSortProgram = get())
+        HiddenNotesSandbox(
+            hiddenNotesDataProgram = get(),
+            hiddenNotesSortProgram = get(),
+            hiddenNotesScreenCaptureProgram = get()
+        )
     }
 }

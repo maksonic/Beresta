@@ -20,7 +20,7 @@ import ru.maksonic.beresta.feature.sorting_sheet.ui.ui.widget.SortItem
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp32
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.ModalSheetBottomButtonsRow
 
 /**
@@ -37,11 +37,6 @@ internal fun Content(
 
     CompositionLocalProvider(LocalListSortState provides sortState.value) {
         Column {
-            OrderSelector(
-                key = sortDataKey,
-                onOrderClicked = { send(Msg.Ui.OnOrderClicked(Pair(sortDataKey, it))) }
-            )
-
             val sort = with(listUiSortState) {
                 when (sortDataKey) {
                     SortDataKey.NOTES -> notes
@@ -49,6 +44,18 @@ internal fun Content(
                     SortDataKey.FOLDERS -> folders
                 }
             }
+
+            OrderSelector(
+                key = sortDataKey,
+                onOrderClicked = { send(Msg.Ui.OnOrderClicked(Pair(sortDataKey, it))) }
+            )
+
+            Divider(
+                color = onSecondaryContainer,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = dp16, end = dp16, top = dp8, bottom = dp8)
+            )
 
             sortVariants.forEach { item ->
                 SortItem(
@@ -62,7 +69,7 @@ internal fun Content(
                 color = onSecondaryContainer,
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = dp32, end = dp32, top = dp16, bottom = dp16)
+                    .padding(start = dp16, end = dp16, top = dp8, bottom = dp8)
             )
 
             CheckboxButton(sortDataKey) { send(Msg.Ui.OnCheckboxClicked(Pair(sortDataKey, it))) }

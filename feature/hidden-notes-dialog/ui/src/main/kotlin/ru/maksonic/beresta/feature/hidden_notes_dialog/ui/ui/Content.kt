@@ -18,6 +18,7 @@ internal fun Content(
     send: SendMessage,
     isShakeTitleEffect: State<Boolean>,
     disableShakeEffect: () -> Unit,
+    onCloseClicked: () -> Unit
 ) {
 
     val keyboard = movableContentOf {
@@ -25,7 +26,8 @@ internal fun Content(
             model = model,
             send = send,
             isShakeTitleEffect = isShakeTitleEffect,
-            disableShakeEffect = disableShakeEffect
+            disableShakeEffect = disableShakeEffect,
+            onCloseClicked = onCloseClicked
         )
     }
 

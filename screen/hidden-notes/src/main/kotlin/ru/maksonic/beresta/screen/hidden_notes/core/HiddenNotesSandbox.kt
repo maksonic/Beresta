@@ -8,6 +8,7 @@ import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
 import ru.maksonic.beresta.feature.edit_note.api.isExpanded
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesDataProgram
+import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesScreenCaptureProgram
 import ru.maksonic.beresta.screen.hidden_notes.core.programs.HiddenNotesSortProgram
 
 /**
@@ -19,10 +20,15 @@ private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 class HiddenNotesSandbox(
     hiddenNotesDataProgram: HiddenNotesDataProgram,
     hiddenNotesSortProgram: HiddenNotesSortProgram,
+    hiddenNotesScreenCaptureProgram: HiddenNotesScreenCaptureProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
     initialCmd = setOf(Cmd.FetchNotesData, Cmd.FetchMovedForHideNotesData),
-    subscriptions = listOf(hiddenNotesDataProgram, hiddenNotesSortProgram)
+    subscriptions = listOf(
+        hiddenNotesDataProgram,
+        hiddenNotesSortProgram,
+        hiddenNotesScreenCaptureProgram
+    )
 ) {
     companion object {
         private const val MINIMAL_FOR_LOADING_ITEMS_COUNT = 2000
@@ -30,6 +36,7 @@ class HiddenNotesSandbox(
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
+        is Msg.Ui.OnStonewallBackPressed -> onStonewallBackPressed(model)
         //notes
         is Msg.Inner.FetchedNotesData -> fetchedNotesData(model, msg)
         is Msg.Inner.FetchedNotesError -> ElmUpdate(model)
@@ -57,10 +64,21 @@ class HiddenNotesSandbox(
         //other
         is Msg.Inner.HiddenLoadingPlaceholder -> hiddenLoadingPlaceholder(model)
         is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
+        is Msg.Inner.UpdateStonewallVisibility -> updateStonewallVisibility(model, msg)
     }
 
-    private fun onTopBarBackPressed(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.NavigateBack))
+    private fun onTopBarBackPressed(model: Model): UpdateResult = ElmUpdate(
+        model,
+        effects = setOf(Eff.NavigateBack),
+        commands = setOf(Cmd.AllowScreenCapture)
+    )
+
+    private fun onStonewallBackPressed(model: Model): UpdateResult =
+        ElmUpdate(
+            model,
+            effects = setOf(Eff.NavigateBlockedBack),
+            commands = setOf(Cmd.AllowScreenCapture)
+        )
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
         ElmUpdate(
@@ -127,7 +145,8 @@ class HiddenNotesSandbox(
             modalSheet = model.modalSheet.copy(
                 isVisible = true, content = CurrentSheetContent.SORT_HIDDEN_NOTES
             )
-        )
+        ),
+        commands = setOf(Cmd.AllowScreenCapture)
     )
 
     private fun onBottomBarUnhideSelectedClicked(model: Model): UpdateResult {
@@ -268,7 +287,15 @@ class HiddenNotesSandbox(
                 editNoteFabState = model.editNoteFabState.copy(
                     isVisible = !model.notes.isSelection, state = msg.state
                 )
-            ),
+            )
         )
     }
+
+    private fun updateStonewallVisibility(
+        model: Model,
+        msg: Msg.Inner.UpdateStonewallVisibility
+    ): UpdateResult = ElmUpdate(
+        model.copy(isVisibleStonewall = msg.isVisible),
+        effects = setOf(Eff.UpdatePinDialogVisibility(msg.isVisible))
+    )
 }

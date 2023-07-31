@@ -12,13 +12,19 @@ class HiddenNotesEnterPasswordDialog : HiddenNotesApi.Ui.EnterPasswordDialog {
     override val visibility: SharedUiState<Boolean> = object : SharedUiState<Boolean>(false) {}
 
     @Composable
-    override fun Widget(onSuccessPin: () -> Unit) {
+    override fun Widget(
+        onSuccessPin: () -> Unit,
+        isBlocked: Boolean,
+        onBlockedBackPressed: () -> Unit,
+    ) {
         val visibilityState = visibility.state.collectAsStateWithLifecycle()
 
         Container(
             visibilityState = visibilityState,
             updateVisibility = { visibility.update(it) },
-            onSuccessPin = onSuccessPin
+            onSuccessPin = onSuccessPin,
+            isBlocked = isBlocked,
+            onBlockedBackPressed = onBlockedBackPressed
         )
     }
 }

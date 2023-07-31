@@ -59,7 +59,7 @@ import ru.maksonic.beresta.ui.widget.functional.rippleClickable
  */
 private const val MAX_ITEMS_IN_EACH_ROW = 3
 private const val TITLE_SHAKE_REPEAT_COUNT = 3
-private const val TITLE_SHAKE_DELAY = 70L
+private const val TITLE_SHAKE_DELAY = 60L
 
 @Composable
 fun SafetyNumericKeyboard(
@@ -67,6 +67,7 @@ fun SafetyNumericKeyboard(
     send: SendMessage,
     isShakeTitleEffect: State<Boolean>,
     disableShakeEffect: () -> Unit,
+    onCloseClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -74,7 +75,7 @@ fun SafetyNumericKeyboard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TopBar(model, send)
+        TopBar(model, send, onCloseClicked)
 
         Title(model, isShakeTitleEffect, disableShakeEffect)
 
@@ -88,6 +89,7 @@ fun SafetyNumericKeyboard(
 private fun TopBar(
     model: State<Model>,
     send: SendMessage,
+    onCloseClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -103,7 +105,7 @@ private fun TopBar(
 
         Spacer(modifier.weight(1f))
 
-        ClickableIcon(icon = AppIcon.Close) { send(Msg.Ui.CloseDialog) }
+        ClickableIcon(icon = AppIcon.Close, action = onCloseClicked)
     }
 }
 

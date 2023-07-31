@@ -35,7 +35,7 @@ internal fun EditNoteTopBar(
     menuAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val panelHeight = Theme.widgetSize.topBarNormalHeight
+    val panelHeight = Theme.widgetSize.topBarSmallHeight
     val offsetValue = -panelHeight.plus(SystemStatusBarHeight)
     val panelOffset = animateDp(if (isScrollUp.value) 0.dp else offsetValue)
     val color = animateColorAsState(

@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.sorting_sheet.ui.ui.widget
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,20 +15,19 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.sorting_sheet.api.Order
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
 import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.secondaryContainer
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
+import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.widget.functional.rippleClickable
 
 /**
  * @Author maksonic on 06.07.2023
@@ -43,7 +41,7 @@ internal fun OrderSelector(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(start = dp16, end = dp16, bottom = dp16)
+            .padding(dp16, dp8, dp16, dp16)
     ) {
 
         Item(
@@ -81,25 +79,20 @@ private fun Item(
             SortDataKey.FOLDERS -> folders
         }
     }
-
     val isSelected = rememberUpdatedState(order == value.order)
+    val color = if (isSelected.value) tertiaryContainer else outline
+    val borderWidth = if (isSelected.value) 2.dp else 1.dp
 
-    BoxWithScaleInOutOnClick(
-        onClick = { onOrderClicked(order) },
-        modifier = modifier.height(Theme.widgetSize.minimumTouchTargetSize)
+    Box(
+        modifier
+            .fillMaxSize()
+            .height(48.dp)
+            .clip(Theme.shape.cornerBig)
+            .border(borderWidth, color, Theme.shape.cornerBig)
+            .rippleClickable(rippleColor = primary) { onOrderClicked(order) },
+        contentAlignment = Alignment.Center
     ) {
-        val borderColor = animateColorAsState(if (isSelected.value) primary else outline)
-        val backgroundColor =
-            animateColorAsState(if (isSelected.value) onSecondaryContainer else secondaryContainer)
-        Box(
-            Modifier
-                .fillMaxSize()
-                .clip(Theme.shape.cornerBig)
-                .drawBehind { drawRect(backgroundColor.value) }
-                .border(1.dp, borderColor.value, Theme.shape.cornerBig),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = title, style = TextDesign.bodyPrimary)
-        }
+        val style = if (isSelected.value) TextDesign.bodyPrimaryMedium else TextDesign.bodyPrimary
+        Text(text = title, style = style)
     }
 }

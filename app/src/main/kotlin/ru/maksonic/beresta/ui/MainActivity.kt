@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        screenCaptureManager.initMutablePermission(window, lifecycleScope)
+        screenCaptureManager.initPermission(window, lifecycleScope)
         updateSplashState()
         installSplashScreen()
         super.onCreate(savedInstanceState)

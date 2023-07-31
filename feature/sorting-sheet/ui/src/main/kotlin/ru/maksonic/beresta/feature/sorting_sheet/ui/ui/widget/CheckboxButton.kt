@@ -66,9 +66,6 @@ internal fun CheckboxButton(
                 disabledIndeterminateColor = outline
             )
         )
-        Text(
-            text = title,
-            style = TextDesign.captionNormal.copy(tertiaryContainer)
-        )
+        Text(text = title, style = TextDesign.captionNormal)
     }
 }

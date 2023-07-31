@@ -19,7 +19,11 @@ interface HiddenNotesApi {
             val visibility: SharedUiState<Boolean>
 
             @Composable
-            fun Widget(onSuccessPin: () -> Unit)
+            fun Widget(
+                onSuccessPin: () -> Unit,
+                isBlocked: Boolean,
+                onBlockedBackPressed: () -> Unit
+            )
         }
     }
 }

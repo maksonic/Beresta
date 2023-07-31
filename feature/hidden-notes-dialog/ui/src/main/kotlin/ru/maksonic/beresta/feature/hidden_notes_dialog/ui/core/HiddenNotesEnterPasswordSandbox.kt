@@ -22,10 +22,7 @@ class HiddenNotesEnterPasswordSandbox(
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.UpdatedScreenCapturePermissionState -> {
-            updatedScreenCapturePermissionState(model, msg)
-        }
-
+        is Msg.Inner.UpdatedScreenCapturePermission -> updatedScreenCapturePermission(model, msg)
         is Msg.Ui.CloseDialog -> closedDialog(model)
         is Msg.Inner.UpdateInput -> updatedInput(model, msg)
         is Msg.Ui.OnBackspaceClicked -> onBackspaceClicked(model)
@@ -37,9 +34,9 @@ class HiddenNotesEnterPasswordSandbox(
         is Msg.Ui.UpdateDialogCurrentContent -> updatedDialogCurrentContent(model, msg)
     }
 
-    private fun updatedScreenCapturePermissionState(
+    private fun updatedScreenCapturePermission(
         model: Model,
-        msg: Msg.Inner.UpdatedScreenCapturePermissionState
+        msg: Msg.Inner.UpdatedScreenCapturePermission
     ): UpdateResult =
         ElmUpdate(model, commands = setOf(Cmd.UpdateScreenCapturePermission(msg.isEnabled)))
 

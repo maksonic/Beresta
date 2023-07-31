@@ -1,23 +1,41 @@
 package ru.maksonic.beresta.screen.hidden_notes.ui
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
+import ru.maksonic.beresta.feature.edit_note.api.isExpanded
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
+import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
+import ru.maksonic.beresta.ui.theme.color.surface
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 
 /**
  * @Author maksonic on 18.07.2023
@@ -32,25 +50,74 @@ internal fun Container(
     counterApi: TopBarCounterApi.Ui = koinInject(),
     sortedSheetApi: SortingSheetApi.Ui = koinInject(),
     sandbox: HiddenNotesSandbox = koinViewModel(),
-    listSortUiState: SortingSheetApi.Ui = koinInject()
+    listSortUiState: SortingSheetApi.Ui = koinInject(),
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
+    val isUserAction = rememberSaveable { mutableStateOf(false) }
 
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
+        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
+        updateUserAction = { isUserAction.value = it }
     )
 
-    Content(
-        model = model,
-        send = sandbox::send,
-        notesListApi = notesListApi,
-        counterApi = counterApi,
-        sortedSheetApi = sortedSheetApi,
-        listSortUiState = listSortUiState,
-    )
+    BackHandler {
+        if (!model.value.isVisibleStonewall) {
+            sandbox.send(Msg.Ui.OnTopBarBackPressed)
+        }
+    }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP && !isUserAction.value) {
+                sandbox.send(Msg.Inner.UpdateStonewallVisibility(true))
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(model.value.editNoteFabState.state) {
+        isUserAction.value = model.value.editNoteFabState.state.isExpanded
+    }
+
+    LaunchedEffect(model.value.searchBarState.barState) {
+        isUserAction.value = model.value.searchBarState.barState.isExpanded
+    }
+
+    Box(Modifier.fillMaxSize()) {
+        AnimateContent(model.value.isVisibleStonewall) {
+            if (it) {
+                val color = surface
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = { drawRect(color) })
+
+            } else {
+                Content(
+                    model = model,
+                    send = sandbox::send,
+                    notesListApi = notesListApi,
+                    counterApi = counterApi,
+                    sortedSheetApi = sortedSheetApi,
+                    listSortUiState = listSortUiState,
+                )
+            }
+        }
+
+        hiddenNotesEnterPasswordDialog.Widget(
+            isBlocked = model.value.isVisibleStonewall,
+            onSuccessPin = { sandbox.send(Msg.Inner.UpdateStonewallVisibility(false)) },
+            onBlockedBackPressed = { sandbox.send(Msg.Ui.OnStonewallBackPressed) }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +126,9 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: HiddenNotesScreenRouter,
     modalBottomSheetState: SheetState,
-    hideSheet: () -> Unit
+    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
+    hideSheet: () -> Unit,
+    updateUserAction: (Boolean) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
@@ -67,6 +136,11 @@ private fun HandleUiEffects(
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
+            is Eff.NavigateBlockedBack -> {
+                hiddenNotesEnterPasswordDialog.visibility.update(false)
+                    .run { router.onBack() }
+            }
+
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
@@ -76,7 +150,14 @@ private fun HandleUiEffects(
             }
 
             is Eff.NavigateToEditNote -> {
-                focusManager.clearFocus().let { router.toNoteEditor(eff.id) }
+                focusManager.clearFocus().let {
+                    updateUserAction(true)
+                    router.toNoteEditor(eff.id)
+                }
+            }
+
+            is Eff.UpdatePinDialogVisibility -> {
+                hiddenNotesEnterPasswordDialog.visibility.update(eff.isVisible)
             }
         }
     }
