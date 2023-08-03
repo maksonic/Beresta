@@ -16,9 +16,9 @@ import ru.maksonic.beresta.ui.theme.component.dp8
  */
 @Composable
 fun ModalSheetBottomButtonsRow(
+    modifier: Modifier = Modifier,
     leftTitle: String = text.shared.btnTitleByDefault,
     rightTitle: String = text.shared.btnTitleSave,
-    modifier: Modifier = Modifier,
     onLeftClicked: () -> Unit,
     onRightClicked: () -> Unit
 ) {

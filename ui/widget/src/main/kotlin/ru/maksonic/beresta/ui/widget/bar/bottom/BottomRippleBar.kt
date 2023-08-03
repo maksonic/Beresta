@@ -40,7 +40,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.noRippleClick
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -61,7 +61,7 @@ fun DisabledBottomBarPlaceholder(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(Theme.widgetSize.bottomBarNormalHeight.plus(SystemNavigationBarHeight))
             .background(surface.copy(alpha = 0.5f))
-            .noRippleClickable { }
+            .noRippleClick { }
     )
 }
 

@@ -18,34 +18,8 @@ import ru.maksonic.beresta.core.system.VibrationPerformer
 /**
  * @Author maksonic on 15.11.2022
  */
-fun Modifier.clickAction(
-    rippleColor: Color = Color.Black,
-    timeOut: Long = 300,
-    onClick: () -> Unit,
-) = composed(
-    inspectorInfo = debugInspectorInfo {
-        name = "debouncedClick"
-        properties["timeOut"] = timeOut
-        properties["onClick"] = onClick
-    }
-) {
-    var isEnabled by rememberSaveable {
-        mutableStateOf(true)
-    }
-    val coroutineScope = rememberCoroutineScope()
-    val currentClickListener by rememberUpdatedState(onClick)
 
-    Modifier.rippleClickable(enabled = isEnabled, rippleColor = rippleColor) {
-        coroutineScope.launch {
-            isEnabled = false
-            currentClickListener.invoke()
-            delay(timeOut)
-            isEnabled = true
-        }
-    }
-}
-
-fun Modifier.rippleClickable(
+fun Modifier.rippledClick(
     performer: VibrationPerformer? = null,
     enabled: Boolean = true,
     onClickLabel: String? = null,
@@ -63,21 +37,20 @@ fun Modifier.rippleClickable(
     }
 ) {
     val view = LocalView.current
-
-    val indication =
-        rememberUpdatedState(if (enabled) rememberRipple(color = rippleColor) else null)
+    val indication = if (enabled) rememberRipple(color = rippleColor) else null
 
     Modifier.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
-        onClick = { onClick().let { performer?.keyboardTapVibration(view) } },
+        onClick = { onClick().run { performer?.keyboardTapVibration(view) } },
         role = role,
-        indication = indication.value,
+        indication = indication,
         interactionSource = remember { MutableInteractionSource() }
     )
 }
 
-fun Modifier.noRippleClickable(
+fun Modifier.noRippleClick(
+    performer: VibrationPerformer? = null,
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
@@ -91,10 +64,12 @@ fun Modifier.noRippleClickable(
         properties["onClick"] = onClick
     }
 ) {
+    val view = LocalView.current
+
     Modifier.clickable(
         enabled = enabled,
         onClickLabel = onClickLabel,
-        onClick = onClick,
+        onClick = { onClick().run { performer?.keyboardTapVibration(view) } },
         role = role,
         indication = null,
         interactionSource = remember { MutableInteractionSource() }

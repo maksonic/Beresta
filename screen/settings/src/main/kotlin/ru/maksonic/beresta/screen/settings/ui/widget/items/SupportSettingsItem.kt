@@ -2,7 +2,7 @@ package ru.maksonic.beresta.screen.settings.ui.widget.items
 
 import androidx.compose.runtime.Composable
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.screen.settings.Msg
+import ru.maksonic.beresta.screen.settings.core.Msg
 import ru.maksonic.beresta.screen.settings.ui.SendMessage
 import ru.maksonic.beresta.screen.settings.ui.widget.BaseSettingComponent
 import ru.maksonic.beresta.ui.theme.icons.AppIcon

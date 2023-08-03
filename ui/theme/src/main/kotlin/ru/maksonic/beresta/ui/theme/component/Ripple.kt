@@ -32,6 +32,15 @@ object PrimaryRipple : RippleTheme {
     )
 }
 
+data class Ripple(private val color: Color) : RippleTheme {
+    @Composable
+    override fun defaultColor(): Color = color
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha =
+        RippleTheme.defaultRippleAlpha(color, lightTheme = !isSystemInDarkTheme())
+}
+
 object NoRippleTheme : RippleTheme {
     @Composable
     override fun defaultColor() = Color.Unspecified

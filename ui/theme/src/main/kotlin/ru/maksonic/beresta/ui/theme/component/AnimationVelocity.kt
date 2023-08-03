@@ -8,6 +8,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 val LocalAppAnimationVelocity = staticCompositionLocalOf<AppAnimationVelocity> {
     error("No animations velocity provided")
 }
+
 data class NavigationVelocity(
     val fade: Int,
     val slide: Int
@@ -22,7 +23,8 @@ data class AppAnimationVelocity(
     val common: Int,
     val dialogVisibility: Int,
     val disabled: Int,
-    val navigationVelocity: NavigationVelocity
+    val navigationVelocity: NavigationVelocity,
+    val animateContentDelay: Int
 ) {
     enum class Key(val value: Float) {
         DISABLE(0F), SLOW(1F), NORMAL(2F), FAST(3F), VERY_FAST(4F)
@@ -44,7 +46,8 @@ data class AppAnimationVelocity(
             common = DISABLE,
             dialogVisibility = DISABLE,
             disabled = DISABLE,
-            navigationVelocity = NavigationVelocity(DISABLE, DISABLE)
+            navigationVelocity = NavigationVelocity(DISABLE, DISABLE),
+            animateContentDelay = DISABLE,
         )
         val Slow = AppAnimationVelocity(
             current = Key.SLOW,
@@ -55,7 +58,8 @@ data class AppAnimationVelocity(
             common = SLOW,
             dialogVisibility = 400,
             disabled = DISABLE,
-            navigationVelocity = NavigationVelocity(SLOW, SLOW)
+            navigationVelocity = NavigationVelocity(SLOW, SLOW),
+            animateContentDelay = 150
         )
         val Normal = AppAnimationVelocity(
             current = Key.NORMAL,
@@ -66,7 +70,8 @@ data class AppAnimationVelocity(
             common = NORMAL,
             dialogVisibility = 200,
             disabled = DISABLE,
-            navigationVelocity = NavigationVelocity(300, 300)
+            navigationVelocity = NavigationVelocity(300, 300),
+            animateContentDelay = 90
         )
         val Fast = AppAnimationVelocity(
             current = Key.FAST,
@@ -77,7 +82,8 @@ data class AppAnimationVelocity(
             common = FAST,
             dialogVisibility = 150,
             disabled = DISABLE,
-            navigationVelocity = NavigationVelocity(200, 200)
+            navigationVelocity = NavigationVelocity(200, 200),
+            animateContentDelay = 70
         )
 
         val VeryFast = AppAnimationVelocity(
@@ -89,7 +95,8 @@ data class AppAnimationVelocity(
             common = VERY_FAST,
             dialogVisibility = 90,
             disabled = DISABLE,
-            navigationVelocity = NavigationVelocity(100, 100)
+            navigationVelocity = NavigationVelocity(100, 100),
+            animateContentDelay = 50
         )
     }
 }

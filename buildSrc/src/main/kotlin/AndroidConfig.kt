@@ -4,7 +4,7 @@ import org.gradle.api.JavaVersion
  * @Author maksonic on 20.04.2023
  */
 object AndroidConfig {
-    const val kotlinCompilerExtensionVersion = "1.4.7"
+    const val kotlinCompilerExtensionVersion = "1.5.1"
     const val applicationId = "ru.maksonic.beresta"
     const val compileSdk = 34
     const val targetSdk = 34

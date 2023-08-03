@@ -30,7 +30,7 @@ import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ExpandMore
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.noRippleClick
 
 /**
  * @Author maksonic on 15.07.2023
@@ -87,7 +87,7 @@ fun QuaternaryButton(
                 Modifier
                     .fillMaxSize()
                     .background(surface.copy(alpha = 0.3f))
-                    .noRippleClickable {})
+                    .noRippleClick {})
         }
     }
 }

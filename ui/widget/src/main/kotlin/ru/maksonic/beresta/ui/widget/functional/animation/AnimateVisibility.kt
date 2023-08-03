@@ -1,8 +1,10 @@
 package ru.maksonic.beresta.ui.widget.functional.animation
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -10,6 +12,9 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.ui.theme.Theme
 
 /**
@@ -44,17 +49,29 @@ fun AnimateVisibility(isVisible: Boolean, content: @Composable () -> Unit) {
 
 @Composable
 fun <S> AnimateContent(
-    state: S,
+    targetState: S,
+    modifier: Modifier = Modifier,
+    contentAlignment: Alignment = Alignment.TopStart,
+    label: String = "AnimatedContent",
+    contentKey: (targetState: S) -> Any? = { it },
     animSpeed: Int = Theme.animVelocity.common,
-    content: @Composable (state: S) -> Unit
+    content: @Composable AnimatedContentScope.(targetState: S) -> Unit
 ) {
-    AnimatedContent(targetState = state, transitionSpec = {
-        (fadeIn(animationSpec = tween(animSpeed, delayMillis = 90)) +
-                scaleIn(
-                    initialScale = 0.92f,
-                    animationSpec = tween(animSpeed, delayMillis = 90)
-                )).togetherWith(fadeOut(animationSpec = tween(90)))
-    }, label = "") { value ->
-        content(value)
-    }
+    val delay = rememberUpdatedState(Theme.animVelocity.animateContentDelay)
+    val transition = updateTransition(targetState = targetState, label = label)
+
+    transition.AnimatedContent(
+        modifier,
+        transitionSpec = {
+            (fadeIn(animationSpec = tween(animSpeed, delayMillis = delay.value)) +
+                    scaleIn(
+                        initialScale = 0.92f,
+                        animationSpec = tween(animSpeed, delayMillis = delay.value)
+                    ))
+                .togetherWith(fadeOut(animationSpec = tween(animSpeed)))
+        },
+        contentAlignment,
+        contentKey,
+        content = content
+    )
 }

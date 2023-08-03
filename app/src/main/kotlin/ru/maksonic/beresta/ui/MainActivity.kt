@@ -3,15 +3,8 @@ package ru.maksonic.beresta.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -19,8 +12,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,31 +22,18 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.Msg
-import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.core.secure.ScreenCaptureManager
-import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
+import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.HighContrastTheme
+import ru.maksonic.beresta.ui.theme.BaseTheme
 import ru.maksonic.beresta.ui.theme.SystemComponentColor
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.PaletteStore
 import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
-import ru.maksonic.beresta.ui.theme.component.AppDarkMode
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 class MainActivity : ComponentActivity() {
-
-    private companion object {
-        private const val THEME_CHANGE_INITIAL_ALPHA = 0f
-
-        //If the value is less than .9f, then friezes are visible when changing the theme
-        private const val THEME_CHANGE_TARGET_ALPHA = .9f
-        private const val THEME_CHANGE_ANIM_DURATION = 300
-    }
 
     private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AbstractNavigator by inject()
@@ -62,17 +42,16 @@ class MainActivity : ComponentActivity() {
     private val screenCaptureManager: ScreenCaptureManager by inject()
     private val vibrationPerformer: VibrationPerformer by inject()
 
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         screenCaptureManager.initPermission(window, lifecycleScope)
         updateSplashState()
         installSplashScreen()
         super.onCreate(savedInstanceState)
-
         fixChinesVendorEmptyScreen()
         setContent {
-            navigator.navController = rememberAnimatedNavController()
+            navigator.init(rememberNavController())
+
             val model = sandbox.model.collectAsStateWithLifecycle(lifecycle)
             val isDarkTheme = isSystemInDarkTheme()
 
@@ -80,95 +59,29 @@ class MainActivity : ComponentActivity() {
                 sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkTheme))
             }
 
-            AnimatedContent(
-                modifier = Modifier.fillMaxSize(),
-                targetState = model.value.currentTheme,
-                transitionSpec = {
-                    fadeIn(
-                        initialAlpha = THEME_CHANGE_INITIAL_ALPHA,
-                        animationSpec = tween(THEME_CHANGE_ANIM_DURATION, 0)
-                    ) togetherWith fadeOut(
-                        targetAlpha = THEME_CHANGE_TARGET_ALPHA,
-                        animationSpec = tween(THEME_CHANGE_ANIM_DURATION, 0)
-                    )
-                },
-                label = "MainActivityContentAnimation",
-            ) { animatedTheme ->
-                initTheme(
-                    theme = animatedTheme,
-                    darkMode = model.value.darkMode,
-                    language = model.value.languageProvider,
-                    palette = model.value.themePalette,
-                    animVelocity = model.value.animationVelocity
-                ).invoke {
+            BaseTheme(
+                theme = model.value.currentTheme,
+                darkMode = model.value.darkMode,
+                provideLanguages = model.value.languageProvider,
+                palette = model.value.themePalette,
+                animationVelocity = model.value.animationVelocity
+            ) {
 
-                    SystemComponentColor(
-                        theme = animatedTheme,
-                        isDarkTheme = model.value.darkMode.value
-                    )
+                SystemComponentColor(model.value.currentTheme, model.value.darkMode.value)
 
-                    SurfacePro(color = surface) {
-                        val animationVelocity =
-                            rememberUpdatedState(Theme.animVelocity.navigationVelocity)
-                        AnimatedNavHost(
-                            navController = navigator.navController,
-                            startDestination = Destination.route,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        ) {
-                            graphBuilder.buildGraph(graphBuilder = this, animationVelocity.value)
-                        }
+                SurfacePro(color = surface) {
+                    val velocity = rememberUpdatedState(Theme.animVelocity.navigationVelocity)
+
+                    NavHost(
+                        navController = navigator.navController,
+                        startDestination = Destination.route,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        graphBuilder.buildGraph(graphBuilder = this, velocity.value)
                     }
                 }
             }
-        }
-    }
-
-    private fun initTheme(
-        theme: AppTheme,
-        darkMode: AppDarkMode,
-        language: BerestaLanguage,
-        palette: PaletteStore,
-        animVelocity: AppAnimationVelocity.Key
-    ): @Composable (content: @Composable () -> Unit) -> Unit = when (theme) {
-        AppTheme.SYSTEM -> { content ->
-            AppTheme(
-                darkMode = darkMode,
-                provideLanguages = language,
-                palette = palette,
-                animationVelocity = animVelocity,
-                content = content
-            )
-        }
-
-        AppTheme.LIGHT -> { content ->
-            AppTheme(
-                darkMode = AppDarkMode.Disabled,
-                provideLanguages = language,
-                palette = palette,
-                animationVelocity = animVelocity,
-                content = content
-            )
-        }
-
-        AppTheme.DARK -> { content ->
-            AppTheme(
-                darkMode = AppDarkMode.Enabled,
-                provideLanguages = language,
-                palette = palette,
-                animationVelocity = animVelocity,
-                content = content
-            )
-        }
-
-        AppTheme.HIGH_CONTRAST -> { content ->
-            HighContrastTheme(
-                darkMode = AppDarkMode.Enabled,
-                provideLanguages = language,
-                palette = palette.highContrast,
-                animationVelocity = animVelocity,
-                content = content
-            )
         }
     }
 

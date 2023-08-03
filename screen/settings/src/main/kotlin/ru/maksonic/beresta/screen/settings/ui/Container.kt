@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
-import ru.maksonic.beresta.screen.settings.Eff
-import ru.maksonic.beresta.screen.settings.Msg
-import ru.maksonic.beresta.screen.settings.SettingsSandbox
+import ru.maksonic.beresta.screen.settings.core.Eff
+import ru.maksonic.beresta.screen.settings.core.Msg
+import ru.maksonic.beresta.screen.settings.core.SettingsSandbox
 
 /**
  * @Author maksonic on 26.07.2023
@@ -48,6 +48,7 @@ private fun HandleUiEffects(
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
             is Eff.NavigateToAppearance -> router.toAppearance()
+            is Eff.NavigateToSecurity -> router.toSecurity()
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {

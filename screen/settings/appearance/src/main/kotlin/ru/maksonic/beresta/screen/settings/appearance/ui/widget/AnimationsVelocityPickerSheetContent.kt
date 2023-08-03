@@ -119,7 +119,7 @@ private fun BaseLinesPicker(
 }
 
 @Composable
-fun RotatableBox(currentVelocityState: State<AppAnimationVelocity.Key>, modifier: Modifier) {
+private fun RotatableBox(currentVelocityState: State<AppAnimationVelocity.Key>, modifier: Modifier) {
     var currentRotation by remember { mutableFloatStateOf(0f) }
     val rotation = remember { Animatable(currentRotation) }
     val animValue = rememberUpdatedState(
@@ -133,7 +133,7 @@ fun RotatableBox(currentVelocityState: State<AppAnimationVelocity.Key>, modifier
     )
     var isPlayingCornerAnimation by remember { mutableStateOf(true) }
     val targetCorner = rememberUpdatedState(if (isPlayingCornerAnimation) 50 else 1)
-    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val cornerPercent by infiniteTransition.animateValue(
         initialValue = 1,
         targetValue = targetCorner.value,
@@ -142,6 +142,7 @@ fun RotatableBox(currentVelocityState: State<AppAnimationVelocity.Key>, modifier
             animation = tween(animValue.value, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ),
+        label = "",
     )
 
     LaunchedEffect(currentVelocityState.value) {

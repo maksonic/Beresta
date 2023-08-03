@@ -12,7 +12,7 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.noRippleClick
 
 /**
  * @Author maksonic on 15.11.2022
@@ -27,7 +27,7 @@ fun TertiaryButton(
     Box(
         modifier
             .defaultMinSize(minHeight = Theme.widgetSize.minimumTouchTargetSize)
-            .noRippleClickable { action.invoke() },
+            .noRippleClick { action.invoke() },
         contentAlignment = Alignment.Center
     ) {
         Text(

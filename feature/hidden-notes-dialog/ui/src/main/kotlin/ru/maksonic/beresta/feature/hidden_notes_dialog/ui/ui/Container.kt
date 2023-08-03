@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,19 +21,18 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.system.VibrationManager
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.DialogCurrentContent
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.DialogContent
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.isKeyboard
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.isReset
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Eff
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.HiddenNotesEnterPasswordSandbox
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.HiddenNotesDialogSandbox
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Msg
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.scrim
 import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 import ru.maksonic.beresta.ui.widget.toastShortTime
 
@@ -45,66 +43,64 @@ internal typealias SendMessage = (Msg) -> Unit
 
 @Composable
 fun Container(
-    visibilityState: State<Boolean>,
-    updateVisibility: (Boolean) -> Unit,
+    hideDialog: () -> Unit,
     modifier: Modifier = Modifier,
     onSuccessPin: () -> Unit,
     isBlocked: Boolean,
     onBlockedBackPressed: () -> Unit,
     vibrationManager: VibrationManager = koinInject(),
-    sandbox: HiddenNotesEnterPasswordSandbox = koinViewModel()
+    sandbox: HiddenNotesDialogSandbox = koinViewModel()
 ) {
-    AnimateFadeInOut(
-        visible = visibilityState.value,
-        fadeInDuration = Theme.animVelocity.dialogVisibility,
-        fadeOutDuration = Theme.animVelocity.dialogVisibility
-    ) {
-        val model = sandbox.model.collectAsStateWithLifecycle()
-        val isShakeTitleEffect = remember { mutableStateOf(false) }
+    val model = sandbox.model.collectAsStateWithLifecycle()
+    val isShakeTitleEffect = remember { mutableStateOf(false) }
 
-        HandleUiEffects(
-            effects = sandbox.effects,
-            isBlocked = isBlocked,
-            vibrationManager = vibrationManager,
-            updateVisibility = updateVisibility,
-            onSuccessPin = onSuccessPin,
-            shakeKeyboardTitle = { isShakeTitleEffect.value = true }
-        )
+    HandleUiEffects(
+        effects = sandbox.effects,
+        isBlocked = isBlocked,
+        vibrationManager = vibrationManager,
+        hideDialog = hideDialog,
+        onSuccessPin = onSuccessPin,
+        shakeKeyboardTitle = { isShakeTitleEffect.value = true }
+    )
 
-        LaunchedEffect(Unit) {
-            sandbox.send(Msg.Inner.UpdatedScreenCapturePermission(true))
-        }
-
-        BackHandler {
-            if (model.value.dialogCurrentContent.isKeyboard) {
-                sandbox.send(Msg.Ui.UpdateDialogCurrentContent(DialogCurrentContent.INITIAL))
-            } else {
-                if (isBlocked) onBlockedBackPressed() else sandbox.send(Msg.Ui.CloseDialog)
+    BackHandler {
+        when {
+            model.value.dialogContent.isKeyboard && !model.value.isHasPinCode -> {
+                sandbox.send(Msg.Ui.UpdateDialogContent(DialogContent.INITIAL))
             }
+
+            model.value.dialogContent.isReset -> {
+                sandbox.send(Msg.Ui.UpdateDialogContent(DialogContent.KEYBOARD))
+            }
+
+            else -> if (isBlocked) onBlockedBackPressed() else sandbox.send(Msg.Ui.CloseDialog)
         }
+    }
 
+    LaunchedEffect(Unit) {
+        sandbox.send(Msg.Inner.UpdatedScreenCapturePermission(true))
+    }
 
-        SurfacePro(color = scrim) {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-                Box(
-                    modifier
-                        .fillMaxWidth()
-                        .systemBarsPadding()
-                        .padding(dp16)
-                        .clip(Shape.cornerExtra)
-                        .background(secondaryContainer)
-                ) {
-                    Content(
-                        model = model,
-                        send = sandbox::send,
-                        isShakeTitleEffect = isShakeTitleEffect,
-                        disableShakeEffect = { isShakeTitleEffect.value = false },
-                        onCloseClicked = {
-                            if (isBlocked) onBlockedBackPressed()
-                            else sandbox.send(Msg.Ui.CloseDialog)
-                        }
-                    )
-                }
+    SurfacePro(color = scrim) {
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            Box(
+                modifier
+                    .fillMaxWidth()
+                    .systemBarsPadding()
+                    .padding(dp16)
+                    .clip(Shape.cornerExtra)
+                    .background(secondaryContainer)
+            ) {
+                Content(
+                    model = model,
+                    send = sandbox::send,
+                    isShakeTitleEffect = isShakeTitleEffect,
+                    disableShakeEffect = { isShakeTitleEffect.value = false },
+                    onCloseClicked = {
+                        if (isBlocked) onBlockedBackPressed()
+                        else sandbox.send(Msg.Ui.CloseDialog)
+                    }
+                )
             }
         }
     }
@@ -115,7 +111,7 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     isBlocked: Boolean,
     vibrationManager: VibrationManager,
-    updateVisibility: (Boolean) -> Unit,
+    hideDialog: () -> Unit,
     shakeKeyboardTitle: () -> Unit,
     onSuccessPin: () -> Unit,
 ) {
@@ -125,7 +121,7 @@ private fun HandleUiEffects(
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
-            is Eff.CloseDialog -> if (!isBlocked) updateVisibility(false)
+            is Eff.CloseDialog -> if (!isBlocked) hideDialog()
             is Eff.ShowWrongPinCodeMessage -> {
                 val failMessage = when (eff.fail!!) {
                     PinFailStatus.NOT_MATCHED -> failCreationMessage
@@ -136,7 +132,7 @@ private fun HandleUiEffects(
                 shakeKeyboardTitle()
             }
 
-            is Eff.NavigateToHiddenNotes -> onSuccessPin().run { updateVisibility(false) }
+            is Eff.NavigateToHiddenNotes -> onSuccessPin().run { hideDialog() }
         }
     }
 }

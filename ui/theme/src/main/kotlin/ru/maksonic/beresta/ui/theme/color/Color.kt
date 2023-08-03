@@ -1,5 +1,7 @@
 package ru.maksonic.beresta.ui.theme.color
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -113,3 +115,52 @@ val transparent: Color @Composable get() = Theme.color.transparent
 val snack: Color @Composable get() = Theme.color.snack
 val onSnack: Color @Composable get() = Theme.color.onSnack
 val onSnackContainer: Color @Composable get() = Theme.color.onSnackContainer
+
+@Composable
+private fun animateColor(targetValue: Color, durationMillis: Int) =
+    animateColorAsState(targetValue, tween(durationMillis = durationMillis), label = "").value
+
+@Composable
+internal fun AppColor.animated(durationMillis: Int) = copy(
+    primary = animateColor(primary, durationMillis),
+    onPrimary = animateColor(onPrimary, durationMillis),
+    primaryContainer = animateColor(primaryContainer, durationMillis),
+    onPrimaryContainer = animateColor(onPrimaryContainer, durationMillis),
+    secondary = animateColor(secondary, durationMillis),
+    onSecondary = animateColor(onSecondary, durationMillis),
+    secondaryContainer = animateColor(secondaryContainer, durationMillis),
+    onSecondaryContainer = animateColor(onSecondaryContainer, durationMillis),
+    tertiary = animateColor(tertiary, durationMillis),
+    onTertiary = animateColor(onTertiary, durationMillis),
+    tertiaryContainer = animateColor(tertiaryContainer, durationMillis),
+    onTertiaryContainer = animateColor(onTertiaryContainer, durationMillis),
+    error = animateColor(error, durationMillis),
+    errorContainer = animateColor(errorContainer, durationMillis),
+    onError = animateColor(onError, durationMillis),
+    onErrorContainer = animateColor(onErrorContainer, durationMillis),
+    background = animateColor(background, durationMillis),
+    onBackground = animateColor(onBackground, durationMillis),
+    surface = animateColor(surface, durationMillis),
+    onSurface = animateColor(onSurface, durationMillis),
+    surfaceVariant = animateColor(surfaceVariant, durationMillis),
+    onSurfaceVariant = animateColor(onSurfaceVariant, durationMillis),
+    outline = animateColor(outline, durationMillis),
+    inverseOnSurface = animateColor(inverseOnSurface, durationMillis),
+    inverseSurface = animateColor(inverseSurface, durationMillis),
+    inversePrimary = animateColor(inversePrimary, durationMillis),
+    surfaceTint = animateColor(surfaceTint, durationMillis),
+    outlineVariant = animateColor(outlineVariant, durationMillis),
+    scrim = animateColor(scrim, durationMillis),
+    snack = animateColor(snack, durationMillis),
+    onSnack = animateColor(onSnack, durationMillis),
+    onSnackContainer = animateColor(onSnackContainer, durationMillis),
+    transparent = animateColor(transparent, durationMillis),
+    idle = animateColor(idle, durationMillis),
+    black = animateColor(black, durationMillis),
+    blue = animateColor(blue, durationMillis),
+    green = animateColor(green, durationMillis),
+    purple = animateColor(purple, durationMillis),
+    red = animateColor(red, durationMillis),
+    orange = animateColor(orange, durationMillis),
+    yellow = animateColor(yellow, durationMillis)
+)

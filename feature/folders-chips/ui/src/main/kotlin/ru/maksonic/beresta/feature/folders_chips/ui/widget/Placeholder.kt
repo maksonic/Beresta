@@ -32,7 +32,7 @@ internal fun Placeholder(modifier: Modifier = Modifier) {
     Box(
         modifier
             .fillMaxWidth()
-            .padding(top = Theme.widgetSize.topBarNormalHeight)
+            .padding(top = Theme.widgetSize.topBarSmallHeight)
             .height(Theme.widgetSize.noteChipsContainerHeight),
         contentAlignment = Alignment.Center
     ) {

@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
 import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
-import ru.maksonic.beresta.ui.widget.functional.clickAction
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 /**
@@ -35,9 +34,6 @@ fun FloatingFabButton(
     fabContent: @Composable () -> Unit
 ) {
 
-    val isEnabled = if (enabled) Modifier.clickAction(rippleColor) { onClick() }
-    else Modifier.noRippleClickable { }
-
     SurfacePro(color = fabColor,
         shape = shape,
         shadowElevation = shadowElevation,
@@ -47,7 +43,7 @@ fun FloatingFabButton(
         Box(
             Modifier
                 .defaultMinSize(Theme.widgetSize.btnFabSize, Theme.widgetSize.btnFabSize)
-                .then(isEnabled),
+                .rippledClick(enabled = enabled, rippleColor = rippleColor, onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
             fabContent()

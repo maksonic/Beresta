@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.screen.settings
+package ru.maksonic.beresta.screen.settings.core
 
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi

@@ -2,11 +2,11 @@ package ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.movableContentOf
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.isKeyboard
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.DialogContent
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Model
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.widget.HiddenNotesInformation
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.widget.SafetyNumericKeyboard
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.widget.NumericKeyboardContent
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.widget.PinInformationContent
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.widget.ResetPinCodeContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 
 /**
@@ -20,25 +20,18 @@ internal fun Content(
     disableShakeEffect: () -> Unit,
     onCloseClicked: () -> Unit
 ) {
-
-    val keyboard = movableContentOf {
-        SafetyNumericKeyboard(
-            model = model,
-            send = send,
-            isShakeTitleEffect = isShakeTitleEffect,
-            disableShakeEffect = disableShakeEffect,
-            onCloseClicked = onCloseClicked
-        )
-    }
-
-    if (model.value.isHasPinCode) {
-        keyboard()
-    } else {
-        AnimateContent(model.value.dialogCurrentContent.isKeyboard) {
-            if (it) {
-                keyboard()
-            } else {
-                HiddenNotesInformation(send)
+    AnimateContent(model.value.dialogContent) {
+        when (it) {
+            DialogContent.INITIAL -> PinInformationContent(send)
+            DialogContent.RESET_PIN -> ResetPinCodeContent(send)
+            DialogContent.KEYBOARD -> {
+                NumericKeyboardContent(
+                    model = model,
+                    send = send,
+                    isShakeTitleEffect = isShakeTitleEffect,
+                    disableShakeEffect = disableShakeEffect,
+                    onCloseClicked = onCloseClicked,
+                )
             }
         }
     }

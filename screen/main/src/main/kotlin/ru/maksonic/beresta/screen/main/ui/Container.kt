@@ -13,7 +13,6 @@ import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
@@ -37,7 +36,6 @@ internal fun Container(
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     sandbox: MainSandbox = koinViewModel(),
     listSortUiState: SortingSheetApi.Ui = koinInject(),
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -47,7 +45,6 @@ internal fun Container(
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         chipsDialogApi = chipsDialogApi,
-        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
     )
 
     Content(
@@ -58,7 +55,6 @@ internal fun Container(
         chipsRowApi = chipsRowApi,
         chipsDialogApi = chipsDialogApi,
         listSortUiState = listSortUiState,
-        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
     )
 }
 
@@ -69,7 +65,6 @@ private fun HandleUiEffects(
     router: MainScreenRouter,
     modalBottomSheetState: SheetState,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     hideSheet: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -95,7 +90,7 @@ private fun HandleUiEffects(
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes(eff.ids)
             is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.addNewFolder()
             is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
-                hiddenNotesEnterPasswordDialog.visibility.update(true)
+
             }
         }
     }

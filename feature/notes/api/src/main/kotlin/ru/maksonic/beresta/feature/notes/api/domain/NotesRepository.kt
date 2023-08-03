@@ -9,4 +9,5 @@ interface NotesRepository : Repository<NoteDomain> {
     suspend fun fetchNotesWithoutFolderTrashList(): NotesDomainList
     suspend fun fetchNotesByFolderTrashList(): NotesDomainList
     suspend fun fetchHiddenNotes(): NotesDomainList
+    suspend fun deleteHiddenNotes()
 }

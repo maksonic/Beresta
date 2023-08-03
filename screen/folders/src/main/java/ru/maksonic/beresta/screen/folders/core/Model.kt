@@ -50,6 +50,7 @@ data class Model(
     val isVisibleUnpinBottomBarIcon: Boolean,
     val isVisibleRemovedSnackBar: Boolean,
     val isMoveNotesToFolder: Boolean,
+    val isVisibleHiddenNotesDialog: Boolean
 ) : ElmModel {
 
     companion object {
@@ -62,26 +63,28 @@ data class Model(
             isVisibleUnpinBottomBarIcon = false,
             isVisibleRemovedSnackBar = false,
             isMoveNotesToFolder = false,
+            isVisibleHiddenNotesDialog = false
         )
     }
 }
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object RetryFetchData : Ui()
-        object OnTopBarBackPressed : Ui()
-        object OnTopBarSortFolderClicked : Ui()
+        data object RetryFetchData : Ui()
+        data object OnTopBarBackPressed : Ui()
+        data object OnTopBarSortFolderClicked : Ui()
         data class OnFolderClicked(val id: Long) : Ui()
         data class OnFolderLongPressed(val id: Long) : Ui()
-        object CancelSelectionState : Ui()
-        object OnTopBarSelectAllClicked : Ui()
-        object OnAddNewFolderClicked : Ui()
-        object OnBottomBarPinSelectedClicked : Ui()
+        data object CancelSelectionState : Ui()
+        data object OnTopBarSelectAllClicked : Ui()
+        data object OnAddNewFolderClicked : Ui()
+        data object OnBottomBarPinSelectedClicked : Ui()
         data class OnBottomBarRemoveSelectedClicked(val currentSelectedFolderId: Long) : Ui()
-        object OnBottomBarEditSelectedClicked : Ui()
-        object OnSnackUndoRemoveFoldersClicked : Ui()
-        object OnHideModalBottomSheet : Ui()
-        object OnToHiddenNotesClicked : Ui()
+        data object OnBottomBarEditSelectedClicked : Ui()
+        data object OnSnackUndoRemoveFoldersClicked : Ui()
+        data object OnHideModalBottomSheet : Ui()
+        data object OnToHiddenNotesClicked : Ui()
+        data object OnHideHiddenNotesDialogClicked : Ui()
     }
 
     sealed class Inner : Msg() {
@@ -91,15 +94,15 @@ sealed class Msg : ElmMessage {
         ) : Inner()
 
         data class FetchedDataError(val errorMsg: String = "") : Inner()
-        object HideRemovedFoldersSnackBar : Inner()
-        object HiddenModalBottomSheet : Inner()
-        object NavigatedToHiddenNotes : Inner()
+        data object HideRemovedFoldersSnackBar : Inner()
+        data object HiddenModalBottomSheet : Inner()
+        data object NavigatedToHiddenNotes : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchFoldersWithNotes : Cmd()
-    object RetryFetchFoldersWithNotes : Cmd()
+    data object FetchFoldersWithNotes : Cmd()
+    data object RetryFetchFoldersWithNotes : Cmd()
     data class RemoveSelected(val removed: List<FolderUi>) : Cmd()
     data class UndoRemovedFolders(val removed: List<FolderUi>) : Cmd()
     data class UpdatePinnedFoldersInCache(val pinned: Set<FolderUi>) : Cmd()
@@ -108,10 +111,9 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
-    object NavigateBack : Eff()
-    object ShowedHiddenNotesEnterPasswordDialog : Eff()
-    object NavigateToHiddenNotes : Eff()
-    object AddNewFolder : Eff()
+    data object NavigateBack : Eff()
+    data object NavigateToHiddenNotes : Eff()
+    data object AddNewFolder : Eff()
     data class UpdateFolder(val id: Long): Eff()
-    object HideModalSheet : Eff()
+    data object HideModalSheet : Eff()
 }

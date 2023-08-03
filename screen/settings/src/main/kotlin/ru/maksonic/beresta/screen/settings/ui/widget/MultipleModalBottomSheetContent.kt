@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.language_picker.api.LanguagePickerApi
 import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi
-import ru.maksonic.beresta.screen.settings.Msg
+import ru.maksonic.beresta.screen.settings.core.Msg
 import ru.maksonic.beresta.screen.settings.ui.SendMessage
 
 /**

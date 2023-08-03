@@ -24,7 +24,7 @@ import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.PrimaryToggle
-import ru.maksonic.beresta.ui.widget.functional.rippleClickable
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 07.07.2023
@@ -62,14 +62,13 @@ fun SettingClickableItem(
         modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = Theme.widgetSize.minimumTouchTargetSize)
-            .rippleClickable(rippleColor = primary) {
+            .rippledClick(rippleColor = primary) {
                 setting
                     .onClick()
                     .let {
                         if (setting.rightPart == RightPart.TOGGLE) {
                             vibrationPerformer.toggleTapVibration(
-                                view,
-                                isEnabled = setting.isEnabledToggle
+                                view, isEnabled = setting.isEnabledToggle
                             )
                         }
                     }
@@ -99,7 +98,7 @@ fun SettingClickableItem(
             if (setting.descriptionHint.isNotBlank()) {
                 Text(
                     text = setting.descriptionHint,
-                    style = TextDesign.captionNormal.copy(color = outline),
+                    style = TextDesign.captionRegular.copy(color = outline),
                     maxLines = SETTING_DESCRIPTION_MAX_LINES,
                     overflow = TextOverflow.Ellipsis,
                     modifier = modifier.padding(top = dp8)

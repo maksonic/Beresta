@@ -28,4 +28,6 @@ class NotesDataDataSource(
         noteDao.fetchItemById(itemId).flowOn(dispatcher)
 
     fun fetchCacheHiddenNotesList(): NotesCacheList = noteDao.fetchHiddenList().flowOn(dispatcher)
+
+    suspend fun deleteCacheHiddenNotesList() = noteDao.deleteHiddenList()
 }

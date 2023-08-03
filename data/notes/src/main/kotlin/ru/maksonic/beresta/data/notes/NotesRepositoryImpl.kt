@@ -34,4 +34,6 @@ class NotesRepositoryImpl(
 
     override suspend fun fetchHiddenNotes(): NotesDomainList = cache.fetchCacheHiddenNotesList()
         .transform { cacheNoteItem -> emit(mapper.listDataToDomain(cacheNoteItem)) }
+
+    override suspend fun deleteHiddenNotes(): Unit = cache.deleteCacheHiddenNotesList()
 }

@@ -2,6 +2,10 @@ package ru.maksonic.beresta.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.coroutines.delay
 import ru.maksonic.beresta.language_engine.shell.provider.BerestaLanguage
 import ru.maksonic.beresta.ui.theme.color.AppColor
 import ru.maksonic.beresta.ui.theme.color.AppThemePalette
@@ -40,6 +44,7 @@ import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightOrangePalette
 import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightPurplePalette
 import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightRedPalette
 import ru.maksonic.beresta.ui.theme.color.app_palette.outlinedLightYellowPalette
+import ru.maksonic.beresta.ui.theme.color.animated
 import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
 import ru.maksonic.beresta.ui.theme.component.AppDarkMode
 import ru.maksonic.beresta.ui.theme.component.AppImage
@@ -47,16 +52,37 @@ import ru.maksonic.beresta.ui.theme.component.AppImage
 /**
  * @Author maksonic on 08.11.2022
  */
+private const val DELAY_FOR_APPLY_ANIMATED_COLORS = 1000L
+
 @Composable
 fun BerestaTheme(
+    theme: AppTheme = AppTheme.SYSTEM,
     darkMode: AppDarkMode = AppDarkMode(isSystemInDarkTheme()),
     lightPalette: AppColor = baseLightPalette,
     darkPalette: AppColor = baseDarkPalette,
+    contrastPalette: AppColor = highContrastPalette,
     provideLanguages: BerestaLanguage = BerestaLanguage(),
     animationVelocity: AppAnimationVelocity.Key = AppAnimationVelocity.Key.NORMAL,
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkMode.value) darkPalette else lightPalette
+    val isFirstLaunch = rememberSaveable { mutableStateOf(true) }
+
+    val themeSwitchVelocity = when (animationVelocity) {
+        AppAnimationVelocity.Key.DISABLE -> 0
+        AppAnimationVelocity.Key.SLOW -> 900
+        AppAnimationVelocity.Key.NORMAL -> 400
+        AppAnimationVelocity.Key.FAST -> 250
+        AppAnimationVelocity.Key.VERY_FAST -> 200
+    }
+
+    val colors = when (theme) {
+        AppTheme.SYSTEM -> if (darkMode.value) darkPalette else lightPalette
+        AppTheme.LIGHT -> lightPalette
+        AppTheme.DARK -> darkPalette
+        AppTheme.HIGH_CONTRAST -> contrastPalette
+    }
+
+    val colorsProvider = if (isFirstLaunch.value) colors else colors.animated(themeSwitchVelocity)
 
     val animations = when (animationVelocity) {
         AppAnimationVelocity.Key.DISABLE -> AppAnimationVelocity.Disabled
@@ -66,9 +92,16 @@ fun BerestaTheme(
         AppAnimationVelocity.Key.VERY_FAST -> AppAnimationVelocity.VeryFast
     }
 
+    LaunchedEffect(isFirstLaunch.value) {
+        if (isFirstLaunch.value) {
+            delay(DELAY_FOR_APPLY_ANIMATED_COLORS)
+            isFirstLaunch.value = false
+        }
+    }
+
     AppLocalProvider(
         darkMode = darkMode,
-        colors = colors,
+        colors = colorsProvider,
         images = provideImages(darkMode.value),
         languages = provideLanguages,
         animations = animations,
@@ -77,7 +110,8 @@ fun BerestaTheme(
 }
 
 @Composable
-fun AppTheme(
+fun BaseTheme(
+    theme: AppTheme,
     darkMode: AppDarkMode,
     provideLanguages: BerestaLanguage,
     palette: PaletteStore,
@@ -115,25 +149,8 @@ fun AppTheme(
         AppThemePalette.ORANGE_OUT -> outlinedDarkOrangePalette
         AppThemePalette.YELLOW_OUT -> outlinedDarkYellowPalette
     }
-    BerestaTheme(
-        darkMode = darkMode,
-        lightPalette = lightPalette,
-        darkPalette = darkPalette,
-        provideLanguages = provideLanguages,
-        animationVelocity = animationVelocity,
-        content = content
-    )
-}
 
-@Composable
-fun HighContrastTheme(
-    darkMode: AppDarkMode,
-    provideLanguages: BerestaLanguage,
-    palette: AppThemePalette = AppThemePalette.BLUE,
-    animationVelocity: AppAnimationVelocity.Key,
-    content: @Composable () -> Unit
-) {
-    val contrastPalette = when (palette) {
+    val contrastPalette = when (palette.highContrast) {
         AppThemePalette.BLUE -> highContrastBluePalette
         AppThemePalette.GREEN -> highContrastGreenPalette
         AppThemePalette.PURPLE -> highContrastPurplePalette
@@ -144,8 +161,11 @@ fun HighContrastTheme(
     }
 
     BerestaTheme(
+        theme = theme,
         darkMode = darkMode,
-        darkPalette = contrastPalette,
+        lightPalette = lightPalette,
+        darkPalette = darkPalette,
+        contrastPalette = contrastPalette,
         provideLanguages = provideLanguages,
         animationVelocity = animationVelocity,
         content = content

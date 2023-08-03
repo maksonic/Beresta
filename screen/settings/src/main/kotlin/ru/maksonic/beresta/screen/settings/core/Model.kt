@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.screen.settings
+package ru.maksonic.beresta.screen.settings.core
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
@@ -44,30 +44,32 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object OnTopBarBackPressed : Ui()
-        object OnHideModalSheetClicked : Ui()
-        object OnPickLanguageClicked : Ui()
-        object OnPickThemeClicked : Ui()
-        object OnAppearanceClicked : Ui()
-        object OnUserAccountClicked : Ui()
-        object OnWriteEmailClicked : Ui()
-        object OnPrivacyPolicyClicked : Ui()
-        object OnUserAgreementClicked : Ui()
-        object OnAboutAppClicked : Ui()
+        data object OnTopBarBackPressed : Ui()
+        data object OnHideModalSheetClicked : Ui()
+        data object OnPickLanguageClicked : Ui()
+        data object OnPickThemeClicked : Ui()
+        data object OnAppearanceClicked : Ui()
+        data object OnSecurityClicked : Ui()
+        data object OnUserAccountClicked : Ui()
+        data object OnWriteEmailClicked : Ui()
+        data object OnPrivacyPolicyClicked : Ui()
+        data object OnUserAgreementClicked : Ui()
+        data object OnAboutAppClicked : Ui()
     }
 
     sealed class Inner : Msg() {
         data class FetchedTheme(val theme: AppTheme, val isDark: Boolean) : Inner()
-        object HiddenModalBottomSheet : Inner()
+        data object HiddenModalBottomSheet : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchCurrentTheme : Cmd()
+    data object FetchCurrentTheme : Cmd()
 }
 
 sealed class Eff : ElmEffect {
-    object NavigateBack : Eff()
-    object NavigateToAppearance : Eff()
-    object HideModalSheet : Eff()
+    data object NavigateBack : Eff()
+    data object NavigateToAppearance : Eff()
+    data object NavigateToSecurity : Eff()
+    data object HideModalSheet : Eff()
 }

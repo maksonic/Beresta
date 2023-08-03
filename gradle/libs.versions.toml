@@ -1,27 +1,28 @@
 [versions]
 #core
-agp = "8.0.2"
+agp = "8.1.0"
 core-ktx = "1.10.1"
 datastore = "1.0.0"
 gson = "2.10.1"
-kotlin = "1.8.21"
+kotlin = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
-ksp = "1.8.21-1.0.11"
+ksp = "1.9.0-1.0.12"
 splash-screen = "1.0.1"
 #compose
 activity-compose = "1.7.2"
 compose-bom = "2023.06.01"
-compose-material = "1.6.0-alpha01"
-material3 = "1.2.0-alpha03"
+compose-material = "1.6.0-alpha02"
+material3 = "1.2.0-alpha04"
+navigation = "2.7.0-rc01"
 #db
-room = "2.5.1"
+room = "2.5.2"
 #jetBrains
-coroutines = "1.7.1"
-json = "1.5.0"
+coroutines = "1.7.3"
+json = "1.5.1"
 #sl
 koin = "3.4.5"
 #other
-accompanist = "0.31.3-beta"
+accompanist = "0.31.5-beta"
 coil = "2.2.2"
 glide = "1.0.0-alpha.1"
 #test
@@ -45,6 +46,7 @@ splash-screen = { group = "androidx.core", name = "core-splashscreen", version.r
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-material" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }

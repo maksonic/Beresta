@@ -24,4 +24,7 @@ abstract class NoteDao : BaseDao<NoteCache>() {
 
     @Query("SELECT * FROM notes WHERE isHidden == 1 AND isMovedToTrash == 0")
     abstract fun fetchHiddenList(): NotesCacheList
+
+    @Query("DELETE FROM notes WHERE isHidden == 1 AND isMovedToTrash == 0")
+    abstract suspend fun deleteHiddenList()
 }

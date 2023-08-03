@@ -27,7 +27,7 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.widget.functional.rippleClickable
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 06.07.2023
@@ -89,7 +89,7 @@ private fun Item(
             .height(48.dp)
             .clip(Theme.shape.cornerBig)
             .border(borderWidth, color, Theme.shape.cornerBig)
-            .rippleClickable(rippleColor = primary) { onOrderClicked(order) },
+            .rippledClick(rippleColor = primary) { onOrderClicked(order) },
         contentAlignment = Alignment.Center
     ) {
         val style = if (isSelected.value) TextDesign.bodyPrimaryMedium else TextDesign.bodyPrimary

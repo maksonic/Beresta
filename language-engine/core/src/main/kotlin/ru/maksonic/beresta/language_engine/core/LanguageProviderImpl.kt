@@ -23,6 +23,7 @@ class LanguageProviderImpl(
                     shared = shared(currentLanguage, data),
                     settings = settingsText(currentLanguage, data),
                     settingsAppearance = settingsAppearanceText(currentLanguage, data),
+                    settingsSecurity = settingsSecurityText(currentLanguage, data),
                     editNote = editNotesText(currentLanguage, data),
                     folders = folders(currentLanguage, data),
                     trash = trash(currentLanguage, data),
@@ -78,6 +79,14 @@ class LanguageProviderImpl(
             AppLanguage.ENGLISH -> data.english.settingsAppearance
             AppLanguage.CHINESE -> data.chinese.settingsAppearance
             AppLanguage.CHINESE_TR -> data.chineseTr.settingsAppearance
+        }
+
+    private fun settingsSecurityText(language: AppLanguage, data: LanguageStore) =
+        when (language) {
+            AppLanguage.RUSSIAN -> data.russian.settingsSecurity
+            AppLanguage.ENGLISH -> data.english.settingsSecurity
+            AppLanguage.CHINESE -> data.chinese.settingsSecurity
+            AppLanguage.CHINESE_TR -> data.chineseTr.settingsSecurity
         }
 
     private fun shared(language: AppLanguage, data: LanguageStore) = when (language) {

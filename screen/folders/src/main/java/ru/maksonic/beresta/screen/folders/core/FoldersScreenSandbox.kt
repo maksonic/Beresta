@@ -45,6 +45,7 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         //hidden notes
         is Msg.Ui.OnToHiddenNotesClicked -> onToHiddenNotesClicked(model)
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
+        is Msg.Ui.OnHideHiddenNotesDialogClicked -> onHideHiddenNotesDialogClicked(model)
     }
 
     private fun retryFetchData(model: Model): UpdateResult = ElmUpdate(
@@ -208,7 +209,10 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
     )
 
     private fun onToHiddenNotesClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.ShowedHiddenNotesEnterPasswordDialog))
+        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = true))
+
+    private fun onHideHiddenNotesDialogClicked(model: Model): UpdateResult =
+        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = false))
 
     private fun navigatedToHiddenNotes(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToHiddenNotes))

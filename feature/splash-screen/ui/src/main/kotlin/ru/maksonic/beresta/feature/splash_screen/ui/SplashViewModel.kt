@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.splash_screen.ui
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
@@ -52,7 +51,6 @@ class SplashViewModel(
         viewModelScope.launch {
             onboardingVisibility.currentState.collect { isVisible ->
                 val destination = if (isVisible) Destination.Onboarding else Destination.Main
-
                 _state.update { splashState ->
                     splashState.copy(route = destination.route, isRunNavigationAction = true)
                 }

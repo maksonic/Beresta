@@ -54,6 +54,8 @@ dependencies {
     implementation(project(module.primary.navigation.router.path))
     implementation(project(module.primary.ui.theme.path))
     implementation(project(module.primary.ui.widget.path))
+    implementation(project(module.common.coroutineDispatchers.path))
+    implementation(project(module.feature.notes.api.path))
     implementation(project(module.feature.hiddenNotesDialog.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)

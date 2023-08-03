@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * @Author maksonic on 07.07.2023
  */
 @Serializable
-data class LangSettingsAppearanceScreenData(
+data class LangSettingsAppearanceData(
     @SerializedName("top_bar_title") val topBarTitle: String = "",
     @SerializedName("title_note_card") val titleNoteCard: String = "",
     @SerializedName("item_note_card_shape") val itemNoteCardShape: String = "",

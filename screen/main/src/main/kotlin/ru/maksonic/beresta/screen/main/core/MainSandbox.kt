@@ -71,6 +71,7 @@ class MainSandbox(
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
         is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
         is Msg.Inner.ResetCurrentSelectedFolder -> resetCurrentSelectedFolder(model)
+        is Msg.Ui.OnHideHiddenNotesDialogClicked -> onHideHiddenNotesDialogClicked(model)
     }
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
@@ -163,9 +164,11 @@ class MainSandbox(
     private fun onBottomBarTrashClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToTrash))
 
-    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult = ElmUpdate(
-        model, effects = setOf(Eff.ShowedHiddenNotesEnterPasswordDialog)
-    )
+    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult =
+        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = true))
+
+    private fun onHideHiddenNotesDialogClicked(model: Model): UpdateResult =
+        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = false))
 
     private fun onBottomBarPinSelectedClicked(model: Model): UpdateResult = ElmUpdate(
         model.copy(notes = model.notes.copy(selectedList = emptySet())),

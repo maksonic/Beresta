@@ -26,7 +26,7 @@ import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 25.02.2023
@@ -71,7 +71,7 @@ private fun ThemeItem(
             .fillMaxWidth()
             .height(Theme.widgetSize.modalSheetItemHeight)
             .clip(Theme.shape.cornerNormal)
-            .clickAction(rippleColor = primary) { onChangeTheme() }
+            .rippledClick(rippleColor = primary) { onChangeTheme() }
             .drawBehind { drawRect(backgroundColor) },
         verticalAlignment = Alignment.CenterVertically
     ) {

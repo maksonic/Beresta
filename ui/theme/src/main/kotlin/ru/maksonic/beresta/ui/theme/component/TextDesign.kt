@@ -10,6 +10,13 @@ import ru.maksonic.beresta.ui.theme.Theme
  * @Author maksonic on 08.11.2022
  */
 object TextDesign {
+    val displaySmall: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Normal,
+            color = Theme.color.onBackground
+        )
     val header: TextStyle
         @Composable
         get() = TextStyle(
@@ -76,6 +83,14 @@ object TextDesign {
         get() = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
+            color = Theme.color.onBackground
+        )
+
+    val captionRegular: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
             color = Theme.color.onBackground
         )
 }

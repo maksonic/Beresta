@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.screen.settings
+package ru.maksonic.beresta.screen.settings.core
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import ru.maksonic.beresta.elm.core.ElmUpdate
@@ -25,6 +25,7 @@ class SettingsSandbox(
         is Msg.Ui.OnPickLanguageClicked -> onShowLanguageSheetClicked(model)
         is Msg.Ui.OnPickThemeClicked -> onShowThemeSheetClicked(model)
         is Msg.Ui.OnAppearanceClicked -> onAppearanceClicked(model)
+        is Msg.Ui.OnSecurityClicked -> onSecurityClicked(model)
         is Msg.Inner.FetchedTheme -> fetchedTheme(model, msg)
         is Msg.Ui.OnAboutAppClicked -> onAboutAppClicked(model)
         is Msg.Ui.OnPrivacyPolicyClicked -> onPrivacyPolicyClicked(model)
@@ -59,6 +60,9 @@ class SettingsSandbox(
 
     private fun onAppearanceClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToAppearance))
+
+    private fun onSecurityClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.NavigateToSecurity))
 
     private fun onAboutAppClicked(model: Model): UpdateResult = ElmUpdate(model)
 

@@ -11,7 +11,7 @@ import ru.maksonic.beresta.ui.theme.color.snack
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.widget.functional.noRippleClickable
+import ru.maksonic.beresta.ui.widget.functional.noRippleClick
 
 /**
  * @Author maksonic on 10.04.2023
@@ -32,7 +32,7 @@ fun SnackBarAction(
                 style = TextDesign.captionNormal.copy(color = onSnackContainer),
                 modifier = Modifier
                     .padding(dp4)
-                    .noRippleClickable { onClick() }
+                    .noRippleClick { onClick() }
             )
         }) {
         Text(text = message, style = TextDesign.bodyPrimary.copy(color = onSnack))

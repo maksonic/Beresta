@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -27,6 +26,7 @@ import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.widget.ChipsRow
 import ru.maksonic.beresta.screen.main.ui.widget.EditNoteExpandableFab
+import ru.maksonic.beresta.screen.main.ui.widget.HiddenNotesDialog
 import ru.maksonic.beresta.screen.main.ui.widget.MainSearchBar
 import ru.maksonic.beresta.screen.main.ui.widget.NotesList
 import ru.maksonic.beresta.screen.main.ui.widget.bottombar.MainBottomBar
@@ -48,7 +48,6 @@ internal fun Content(
     chipsRowApi: FoldersApi.Ui.ChipsRow,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     listSortUiState: SortingSheetApi.Ui,
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
 ) {
     val sharedNotesUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
@@ -142,11 +141,7 @@ internal fun Content(
 
             chipsDialogApi.Widget()
 
-            hiddenNotesEnterPasswordDialog.Widget(
-                isBlocked = false,
-                onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) },
-                onBlockedBackPressed = {}
-            )
+            HiddenNotesDialog(isVisible = model.value.isVisibleHiddenNotesDialog, send)
         }
     }
 }

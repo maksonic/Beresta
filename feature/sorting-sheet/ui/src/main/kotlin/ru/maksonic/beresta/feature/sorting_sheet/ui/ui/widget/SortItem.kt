@@ -19,7 +19,7 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 06.07.2023
@@ -37,7 +37,7 @@ internal fun SortItem(
             .height(Theme.widgetSize.minimumTouchTargetSize)
             .padding(start = dp16, end = dp16)
             .clip(Shape.cornerSmall)
-            .clickAction(primary) { onSelect(item.second) },
+            .rippledClick(rippleColor = primary) { onSelect(item.second) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(

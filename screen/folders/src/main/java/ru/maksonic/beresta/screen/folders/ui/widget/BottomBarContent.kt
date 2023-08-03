@@ -42,7 +42,7 @@ import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 /**
@@ -111,7 +111,7 @@ internal fun BottomBarContent(
                     modifier
                         .fillMaxWidth()
                         .height(Theme.widgetSize.btnPrimaryHeight)
-                        .clickAction(onTertiaryContainer) {
+                        .rippledClick(rippleColor = onTertiaryContainer) {
                             send(Msg.Ui.OnAddNewFolderClicked)
                         },
                     contentAlignment = Alignment.Center

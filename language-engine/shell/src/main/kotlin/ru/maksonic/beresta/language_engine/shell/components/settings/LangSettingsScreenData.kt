@@ -14,7 +14,6 @@ data class LangSettingsScreenData(
     @SerializedName("title_support") val titleSupport: String = "",
     @SerializedName("item_switch_language") val itemSwitchLanguage: String = "",
     @SerializedName("item_switch_theme") val itemSwitchTheme: String = "",
-    @SerializedName("item_appearance") val itemAppearance: String = "",
     @SerializedName("item_change_account") val itemChangeAccount: String = "",
     @SerializedName("item_write_message") val itemWriteMessage: String = "",
     @SerializedName("item_privacy") val itemPrivacy: String = "",

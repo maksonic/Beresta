@@ -22,7 +22,7 @@ import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.Shape
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 06.07.2023
@@ -47,7 +47,7 @@ internal fun CheckboxButton(
             .fillMaxWidth()
             .padding(start = dp16, end = dp16)
             .clip(Shape.cornerSmall)
-            .clickAction(primary) { onCheckboxClicked(isChecked.value) },
+            .rippledClick(rippleColor = primary) { onCheckboxClicked(isChecked.value) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val title = with(text.sortSheet) {

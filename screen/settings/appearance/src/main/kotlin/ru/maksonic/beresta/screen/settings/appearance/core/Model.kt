@@ -60,19 +60,19 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object OnTopBarBackPressed : Ui()
+        data object OnTopBarBackPressed : Ui()
         data class OnNoteCardShapeClicked(val shape: NoteCardShape) : Ui()
         data class OnNoteCardElevationClicked(val isEnabled: Boolean) : Ui()
-        object OnModalSheetAcceptClicked : Ui()
-        object OnNoteLinesCountClicked : Ui()
-        object OnModalSheetLinesPickerDefaultClicked : Ui()
-        object OnAnimationsVelocityClicked : Ui()
-        object OnModalSheetAnimationsVelocityDefaultClicked : Ui()
+        data object OnModalSheetAcceptClicked : Ui()
+        data object OnNoteLinesCountClicked : Ui()
+        data object OnModalSheetLinesPickerDefaultClicked : Ui()
+        data object OnAnimationsVelocityClicked : Ui()
+        data object OnModalSheetAnimationsVelocityDefaultClicked : Ui()
 
     }
 
     sealed class Inner : Msg() {
-        object HiddenModalBottomSheet : Inner()
+        data object HiddenModalBottomSheet : Inner()
         data class UpdatedNoteTitleMaxLines(val value: Int) : Inner()
         data class UpdatedNoteMessageMaxLines(val value: Int) : Inner()
         data class UpdatedAnimationsVelocity(val key: AppAnimationVelocity.Key) : Inner()
@@ -86,12 +86,12 @@ sealed class Cmd : ElmCommand {
     data class UpdatedNoteCardTitleMaxLines(val value: Int) : Cmd()
     data class UpdatedNoteCardMessageMaxLines(val value: Int) : Cmd()
     data class UpdateAnimationsVelocity(val key: AppAnimationVelocity.Key) : Cmd()
-    object ResetNoteCardLinesByDefault : Cmd()
-    object FetchCurrentAppLang : Cmd()
+    data object ResetNoteCardLinesByDefault : Cmd()
+    data object FetchCurrentAppLang : Cmd()
 
 }
 
 sealed class Eff : ElmEffect {
-    object NavigateBack : Eff()
-    object HideModalSheet : Eff()
+    data object NavigateBack : Eff()
+    data object HideModalSheet : Eff()
 }

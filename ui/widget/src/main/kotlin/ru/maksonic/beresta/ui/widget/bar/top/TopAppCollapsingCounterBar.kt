@@ -87,7 +87,7 @@ private fun Title(isSelectionState: State<Boolean>, idleTitle: String, counterVa
 
 @Composable
 private fun NavigationIcon(isSelectionState: State<Boolean>, onBackClicked: () -> Unit) {
-    Crossfade(isSelectionState.value) {
+    Crossfade(isSelectionState.value, label = "") {
         ClickableIcon(
             icon = if (it) AppIcon.Close else AppIcon.ArrowBack,
             action = onBackClicked

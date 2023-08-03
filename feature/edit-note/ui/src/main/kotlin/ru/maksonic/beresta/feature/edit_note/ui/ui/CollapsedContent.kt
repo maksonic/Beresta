@@ -10,7 +10,7 @@ import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.DriveFile
 import ru.maksonic.beresta.ui.theme.icons.Edit
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 26.04.2023
@@ -24,7 +24,7 @@ internal fun CollapsedContent(
     Box(
         modifier
             .fillMaxSize()
-            .clickAction(onTertiaryContainer) { onExpandFabClicked() },
+            .rippledClick(rippleColor = onTertiaryContainer) { onExpandFabClicked() },
         contentAlignment = Alignment.Center
     ) {
         val icon = if (isBlankNote) AppIcon.Edit else AppIcon.DriveFile

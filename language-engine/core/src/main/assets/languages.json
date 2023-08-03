@@ -69,7 +69,6 @@
       "title_support": "Помощь",
       "item_switch_language": "Язык",
       "item_switch_theme": "Тема",
-      "item_appearance": "Внешний вид",
       "item_change_account": "Редактировать профиль",
       "item_write_message": "Написать разработчикам",
       "item_privacy": "Политика конфиденциальности",
@@ -95,6 +94,13 @@
       "hint_animation_velocity_normal": "Нормально",
       "hint_animation_velocity_fast": "Быстро",
       "hint_animation_velocity_very_fast": "Очень быстро"
+    },
+    "settings_security": {
+      "top_bar_title": "Безопасность",
+      "hint_pin_code": "ПИН-код",
+      "item_pin_code_visibility": "Показывать при вводе",
+      "item_key_tap_visibility": "Эффект нажатия на кнопку",
+      "description_key_tap_visibility": "Используется для цифровой клавиатуры при вводе ПИН-кода."
     },
     "editor": {
       "hint_input_title": "Заголовок",
@@ -150,12 +156,15 @@
     "hidden_notes": {
       "top_bar_title": "Скрытые заметки",
       "dialog_title": "Установить ПИН-код",
-      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно изменить или восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
+      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
       "hint_create_code": "Введите 6-значный код",
       "hint_create_repeat_code": "Повторите код ещё раз",
       "hint_verify_code": "Введите ПИН-код",
       "hint_fail_creation": "Ошибка. ПИН-коды не совпали.",
-      "hint_fail_verification": "Ошибка. Неверный ПИН-код."
+      "hint_fail_verification": "Ошибка. Неверный ПИН-код.",
+      "hint_forget_pin_code": "Забыли ПИН-код?",
+      "dialog_title_reset_pin": "Вы действительно хотите создать новый ПИН-код?",
+      "dialog_message_reset_pin": "Внимание! Все текущие скрытые заметки будут безвозвратно удалены."
     }
   },
   "english": {
@@ -228,7 +237,6 @@
       "title_support": "Support",
       "item_switch_language": "Language",
       "item_switch_theme": "Theme",
-      "item_appearance": "Appearance",
       "item_change_account": "Edit Profile",
       "item_write_message": "Write to developers",
       "item_privacy": "Privacy Policy",
@@ -254,6 +262,13 @@
       "hint_animation_velocity_normal": "Normal",
       "hint_animation_velocity_fast": "Fast",
       "hint_animation_velocity_very_fast": "Very fast"
+    },
+    "settings_security": {
+      "top_bar_title": "Safety",
+      "hint_pin_code": "PIN code",
+      "item_pin_code_visibility": "Show as you type",
+      "item_key_tap_visibility": "Button click effect",
+      "description_key_tap_visibility": "Used for the numeric keypad when entering a PIN."
     },
     "editor": {
       "hint_input_title": "Title",
@@ -309,12 +324,15 @@
     "hidden_notes": {
       "top_bar_title": "Hidden notes",
       "dialog_title": "Set PIN",
-      "dialog_message": "The PIN code is used to access the hidden notes folder.\n\nThe PIN cannot be changed or restored.\n\nIf you have forgotten your PIN, you can set a new one, but all hidden notes will be permanently deleted.",
+      "dialog_message": "The PIN code is used to access the hidden notes folder.\n\nThe PIN cannot be restored.\n\nIf you have forgotten your PIN, you can set a new one, but all hidden notes will be permanently deleted.",
       "hint_create_code": "Enter 6 digit code",
       "hint_create_repeat_code": "Repeat the code again",
       "hint_verify_code": "Enter your PIN",
       "hint_fail_creation": "Error. PIN codes did not match.",
-      "hint_fail_verification": "Error. Invalid PIN."
+      "hint_fail_verification": "Error. Invalid PIN.",
+      "hint_forget_pin_code": "Forgot your PIN?",
+      "dialog_title_reset_pin": "Are you sure you want to create a new PIN?",
+      "dialog_message_reset_pin": "Attention! All current hidden notes will be permanently deleted."
     }
   },
   "chinese": {
@@ -387,7 +405,6 @@
       "title_support": "帮助",
       "item_switch_language": "语言",
       "item_switch_theme": "主题",
-      "item_appearance": "外貌",
       "item_change_account": "编辑个人资料",
       "item_write_message": "写给开发者",
       "item_privacy": "隐私政策",
@@ -413,6 +430,13 @@
       "hint_animation_velocity_normal": "普通的",
       "hint_animation_velocity_fast": "快速地",
       "hint_animation_velocity_very_fast": "非常快"
+    },
+    "settings_security": {
+      "top_bar_title": "安全",
+      "hint_pin_code": "PIN码",
+      "item_pin_code_visibility": "显示您的打字方式",
+      "item_key_tap_visibility": "按钮点击效果",
+      "description_key_tap_visibility": "输入 PIN 码时用于数字键盘。"
     },
     "editor": {
       "hint_input_title": "标题",
@@ -468,12 +492,15 @@
     "hidden_notes": {
       "top_bar_title": "隐藏笔记",
       "dialog_title": "设置密码",
-      "dialog_message": "PIN 码用于访问包含隐藏笔记的文件夹。\n\nPIN 码无法更改或恢复。\n\n如果您忘记了 PIN 码，可以设置新的 PIN 码，但所有隐藏的笔记将被永久删除。",
+      "dialog_message": "PIN 码用于访问包含隐藏笔记的文件夹。\n\nPIN 码无法恢复。\n\n如果您忘记了 PIN 码，可以设置新的 PIN 码，但所有隐藏的笔记将被永久删除。",
       "hint_create_code": "输入6位数字代码",
       "hint_create_repeat_code": "再次重复代码",
       "hint_verify_code": "输入您的 PIN 码",
       "hint_fail_creation": "错误。 PIN 码不匹配。",
-      "hint_fail_verification": "错误。 PIN 码无效。"
+      "hint_fail_verification": "错误。 PIN 码无效。",
+      "hint_forget_pin_code": "忘记了您的 PIN 码？",
+      "dialog_title_reset_pin": "您确定要创建新的 PIN 码吗？",
+      "dialog_message_reset_pin": "注意力！ 所有当前隐藏的笔记将被永久删除。"
     }
   },
   "chinese_tr": {
@@ -546,7 +573,6 @@
       "title_support": "幫助",
       "item_switch_language": "語言",
       "item_switch_theme": "主題",
-      "item_appearance": "外貌",
       "item_change_account": "編輯個人資料",
       "item_write_message": "寫給開發者",
       "item_privacy": "隱私政策",
@@ -572,6 +598,13 @@
       "hint_animation_velocity_normal": "普通的",
       "hint_animation_velocity_fast": "快速地",
       "hint_animation_velocity_very_fast": "非常快"
+    },
+    "settings_security": {
+      "top_bar_title": "安全",
+      "hint_pin_code": "PIN碼",
+      "item_pin_code_visibility": "鍵入時顯示",
+      "item_key_tap_visibility": "按鈕點擊效果",
+      "description_key_tap_visibility": "用於輸入 PIN 碼的數字鍵盤。"
     },
     "editor": {
       "hint_input_title": "標題",
@@ -627,12 +660,15 @@
     "hidden_notes": {
       "top_bar_title": "隱藏筆記",
       "dialog_title": "設置密碼",
-      "dialog_message": "PIN 碼用於訪問包含隱藏筆記的文件夾。\n\nPIN 碼無法更改或恢復。\n\n如果您忘記了 PIN 碼，可以設置新的 PIN 碼，但所有隱藏的筆記將被永久刪除。",
+      "dialog_message": "PIN 碼用於訪問包含隱藏筆記的文件夾。\n\nPIN 碼無法恢復。\n\n如果您忘記了 PIN 碼，可以設置新的 PIN 碼，但所有隱藏的筆記將被永久刪除。",
       "hint_create_code": "輸入6位數字代碼",
       "hint_create_repeat_code": "再次重複代碼",
       "hint_verify_code": "輸入您的 PIN 碼",
       "hint_fail_creation": "錯誤。 PIN 碼不匹配。",
-      "hint_fail_verification": "錯誤。 PIN 碼無效。"
+      "hint_fail_verification": "錯誤。 PIN 碼無效。",
+      "hint_forget_pin_code": "忘記了您的 PIN 碼？",
+      "dialog_title_reset_pin": "您確定要創建新的 PIN 碼嗎？",
+      "dialog_message_reset_pin": "注意力！ 所有當前隱藏的筆記將被永久刪除。"
     }
   }
 }

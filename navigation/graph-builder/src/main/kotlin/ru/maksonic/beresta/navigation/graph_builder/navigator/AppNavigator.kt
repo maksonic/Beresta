@@ -11,6 +11,7 @@ import ru.maksonic.beresta.navigation.router.router.OnboardingRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsScreenRouter
 import ru.maksonic.beresta.navigation.router.router.SplashScreenRouter
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsAppearanceScreenRouter
+import ru.maksonic.beresta.navigation.router.router.settings.SettingsSecurityScreenRouter
 import ru.maksonic.beresta.navigation.router.router.trash.TrashFoldersScreenRouter
 import ru.maksonic.beresta.navigation.router.router.trash.TrashNotesScreenRouter
 
@@ -43,11 +44,15 @@ class AppNavigator : AbstractNavigator() {
     override fun settingsRouter(entry: NavBackStackEntry) =
         SettingsScreenRouter(
             onBack = ::backPressed,
-            toAppearance = { navigate(entry, Destination.Settings.Appearance.route) }
+            toAppearance = { navigate(entry, Destination.Settings.Appearance.route) },
+            toSecurity = { navigate(entry, Destination.Settings.Security.route) }
         )
 
     override fun settingsAppearanceRouter(entry: NavBackStackEntry) =
         SettingsAppearanceScreenRouter(onBack = ::backPressed)
+
+    override fun settingsSecurityRouter(entry: NavBackStackEntry) =
+        SettingsSecurityScreenRouter(onBack = ::backPressed)
 
     override fun editNoteRouter(entry: NavBackStackEntry) =
         EditNoteRouter(onBack = ::backPressed)

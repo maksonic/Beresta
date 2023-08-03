@@ -11,6 +11,10 @@ import androidx.navigation.NavOptionsBuilder
 abstract class AbstractNavigator : ArgumentReceiver, Router {
     lateinit var navController: NavHostController
 
+    fun init(controller: NavHostController) {
+        navController = controller
+    }
+
     fun navigate(
         from: NavBackStackEntry,
         destination: String,

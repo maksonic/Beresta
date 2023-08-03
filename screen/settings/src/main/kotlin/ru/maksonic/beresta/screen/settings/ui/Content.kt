@@ -17,8 +17,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.screen.settings.Model
-import ru.maksonic.beresta.screen.settings.Msg
+import ru.maksonic.beresta.screen.settings.core.Model
+import ru.maksonic.beresta.screen.settings.core.Msg
 import ru.maksonic.beresta.screen.settings.ui.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.screen.settings.ui.widget.items.AccountSettingsItem
 import ru.maksonic.beresta.screen.settings.ui.widget.items.GeneralSettingsItem

@@ -13,6 +13,7 @@ import ru.maksonic.beresta.navigation.graph_builder.destination.mainScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsAppearanceScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsSecurityScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.splashScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashFoldersScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashNotesScreen
@@ -44,7 +45,7 @@ interface GraphBuilder {
                 route = Destination.route,
                 startDestination = Destination.Splash.route,
                 enterTransition = { fadeIn(animationSpec = tween(fade)) },
-                exitTransition = { fadeOut(animationSpec = tween(fade)) }
+                exitTransition = { fadeOut(animationSpec = tween(fade)) },
             ) {
                 with(navigator) {
                     splashScreen(apiStore.splash, this)
@@ -52,6 +53,7 @@ interface GraphBuilder {
                     mainScreen(this)
                     settingsScreen(this, slide, animator)
                     settingsAppearanceScreen(this, slide)
+                    settingsSecurityScreen(this, slide)
                     editNoteScreen(apiStore.editNote, this)
                     foldersScreen(this, slide, animator)
                     trashNotesScreen(this, slide, animator)

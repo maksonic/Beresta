@@ -29,7 +29,7 @@ import ru.maksonic.beresta.ui.theme.icons.GridView
 import ru.maksonic.beresta.ui.theme.icons.ListView
 import ru.maksonic.beresta.ui.theme.icons.Search
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 25.07.2023
@@ -46,7 +46,7 @@ internal fun CollapsedContent(
             .fillMaxWidth()
             .height(Theme.widgetSize.searchBarCollapsedHeight)
             .clip(CircleShape)
-            .clickAction(primary) { onExpandClicked() },
+            .rippledClick(rippleColor = primary) { onExpandClicked() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

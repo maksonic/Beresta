@@ -18,5 +18,6 @@ object Destination : AbstractDestination(route = "root") {
     object HiddenNotes : AbstractDestination(route = "hidden_notes", argKey = "passedForHideIds")
     object Settings : AbstractDestination(route = "settings") {
         object Appearance : AbstractDestination(route = "settings.appearance")
+        object Security : AbstractDestination(route = "settings.security")
     }
 }

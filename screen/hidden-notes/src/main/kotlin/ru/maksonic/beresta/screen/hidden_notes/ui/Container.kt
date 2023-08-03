@@ -112,11 +112,11 @@ internal fun Container(
             }
         }
 
-        hiddenNotesEnterPasswordDialog.Widget(
+        /*hiddenNotesEnterPasswordDialog.Widget(
             isBlocked = model.value.isVisibleStonewall,
             onSuccessPin = { sandbox.send(Msg.Inner.UpdateStonewallVisibility(false)) },
             onBlockedBackPressed = { sandbox.send(Msg.Ui.OnStonewallBackPressed) }
-        )
+        )*/
     }
 }
 
@@ -137,8 +137,8 @@ private fun HandleUiEffects(
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
             is Eff.NavigateBlockedBack -> {
-                hiddenNotesEnterPasswordDialog.visibility.update(false)
-                    .run { router.onBack() }
+               // hiddenNotesEnterPasswordDialog.visibility.update(false)
+              //      .run { router.onBack() }
             }
 
             is Eff.HideModalSheet -> {
@@ -157,7 +157,7 @@ private fun HandleUiEffects(
             }
 
             is Eff.UpdatePinDialogVisibility -> {
-                hiddenNotesEnterPasswordDialog.visibility.update(eff.isVisible)
+               // hiddenNotesEnterPasswordDialog.visibility.update(eff.isVisible)
             }
         }
     }

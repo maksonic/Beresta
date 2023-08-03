@@ -30,7 +30,7 @@ import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.button.PrimaryButton
-import ru.maksonic.beresta.ui.widget.functional.clickAction
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 20.06.2023
@@ -102,7 +102,7 @@ private fun LanguageItem(
             .fillMaxWidth()
             .height(Theme.widgetSize.modalSheetItemHeight)
             .clip(Theme.shape.cornerNormal)
-            .clickAction(rippleColor = primary) { onChangeLang() }
+            .rippledClick(rippleColor = primary) { onChangeLang() }
             .drawBehind { drawRect(backgroundColor) },
         verticalAlignment = Alignment.CenterVertically
     ) {

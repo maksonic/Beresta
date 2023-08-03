@@ -12,7 +12,8 @@ import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.OnboardingDataItem
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceScreenData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
 
 /**
  * @Author maksonic on 16.02.2023
@@ -38,7 +39,8 @@ data class BerestaLanguage(
     ),
     val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData(),
-    val settingsAppearance: LangSettingsAppearanceScreenData = LangSettingsAppearanceScreenData(),
+    val settingsAppearance: LangSettingsAppearanceData = LangSettingsAppearanceData(),
+    val settingsSecurity: LangSettingsSecurityData = LangSettingsSecurityData(),
     val editNote: LangEditorData = LangEditorData(),
     val folders: LangFoldersListData = LangFoldersListData(),
     val trash: LangTrashData = LangTrashData(),
@@ -52,7 +54,8 @@ data class BerestaLanguage(
             onboarding = LangOnboardingData(Array(ONBOARDINGS_COUNT) { OnboardingDataItem() }),
             shared = LangSharedData(),
             settings = LangSettingsScreenData(),
-            settingsAppearance = LangSettingsAppearanceScreenData(),
+            settingsAppearance = LangSettingsAppearanceData(),
+            settingsSecurity = LangSettingsSecurityData(),
             editNote = LangEditorData(),
             folders = LangFoldersListData(),
             trash = LangTrashData(),

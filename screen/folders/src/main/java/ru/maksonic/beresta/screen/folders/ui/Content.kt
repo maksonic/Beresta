@@ -19,13 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.widget.BottomBarContent
 import ru.maksonic.beresta.screen.folders.ui.widget.FoldersList
+import ru.maksonic.beresta.screen.folders.ui.widget.HiddenNotesDialog
 import ru.maksonic.beresta.screen.folders.ui.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.screen.folders.ui.widget.TopBar
 import ru.maksonic.beresta.ui.theme.Theme
@@ -47,7 +47,6 @@ internal fun Content(
     foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     chipsRowApi: FoldersApi.Ui.ChipsRow,
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     model: State<Model>,
     send: SendMessage,
     listSortUiState: SortingSheetApi.Ui,
@@ -117,10 +116,6 @@ internal fun Content(
 
         chipsDialogApi.Widget()
 
-        hiddenNotesEnterPasswordDialog.Widget(
-            isBlocked = false,
-            onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) },
-            onBlockedBackPressed = {}
-        )
+        HiddenNotesDialog(isVisible = model.value.isVisibleHiddenNotesDialog, send)
     }
 }

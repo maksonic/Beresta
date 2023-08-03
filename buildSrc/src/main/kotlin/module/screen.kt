@@ -19,6 +19,11 @@ object screen {
         namespace = "ru.maksonic.beresta.screen.settings.appearance"
     )
 
+    object settingsSecurity : base(
+        path = ":screen:settings:security",
+        namespace = "ru.maksonic.beresta.screen.settings.security"
+    )
+
     object editNote : base(
         path = ":screen:edit-note",
         namespace = "ru.maksonic.beresta.screen.edit_note"

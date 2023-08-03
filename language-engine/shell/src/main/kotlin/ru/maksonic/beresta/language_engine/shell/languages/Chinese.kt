@@ -11,7 +11,8 @@ import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
 import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceScreenData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
 
 /**
  * @Author maksonic on 17.02.2023
@@ -23,7 +24,8 @@ data class Chinese(
     @SerializedName("onboarding") val langOnboardingData: LangOnboardingData,
     @SerializedName("shared") val shared: LangSharedData,
     @SerializedName("settings") val settings: LangSettingsScreenData,
-    @SerializedName("settings_appearance") val settingsAppearance: LangSettingsAppearanceScreenData,
+    @SerializedName("settings_appearance") val settingsAppearance: LangSettingsAppearanceData,
+    @SerializedName("settings_security") val settingsSecurity: LangSettingsSecurityData,
     @SerializedName("editor") val editor: LangEditorData,
     @SerializedName("folders") val folders: LangFoldersListData,
     @SerializedName("trash") val trash: LangTrashData,

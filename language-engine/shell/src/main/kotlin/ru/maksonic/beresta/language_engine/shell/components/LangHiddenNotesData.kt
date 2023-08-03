@@ -15,5 +15,8 @@ data class LangHiddenNotesData(
     @SerializedName("hint_create_repeat_code") val hintRepeatCode: String = "",
     @SerializedName("hint_verify_code") val hintVerifyCode: String = "",
     @SerializedName("hint_fail_creation") val hintFailCreationCode: String = "",
-    @SerializedName("hint_fail_verification") val hintFailVerificationCode: String = ""
+    @SerializedName("hint_fail_verification") val hintFailVerificationCode: String = "",
+    @SerializedName("hint_forget_pin_code") val hintForgetPinCode: String = "",
+    @SerializedName("dialog_title_reset_pin") val dialogTitleResetPin: String = "",
+    @SerializedName("dialog_message_reset_pin") val dialogMessageResetPin: String = ""
 )

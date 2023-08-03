@@ -2,7 +2,7 @@ package ru.maksonic.beresta.navigation.graph_builder.destination.settings
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
-import com.google.accompanist.navigation.animation.composable
+import androidx.navigation.compose.composable
 import ru.maksonic.beresta.navigation.graph_builder.navigator.NavigationAnimator
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination

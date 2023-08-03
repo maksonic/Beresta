@@ -3,13 +3,14 @@ package ru.maksonic.beresta.screen.settings.ui.widget.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.screen.settings.Msg
+import ru.maksonic.beresta.screen.settings.core.Msg
 import ru.maksonic.beresta.screen.settings.ui.SendMessage
 import ru.maksonic.beresta.screen.settings.ui.widget.BaseSettingComponent
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Appearance
 import ru.maksonic.beresta.ui.theme.icons.Language
+import ru.maksonic.beresta.ui.theme.icons.Security
 import ru.maksonic.beresta.ui.theme.icons.ThemeContrast
 import ru.maksonic.beresta.ui.theme.icons.ThemeLight
 import ru.maksonic.beresta.ui.theme.icons.ThemeNight
@@ -56,9 +57,14 @@ internal fun GeneralSettingsItem(send: SendMessage, theme: AppTheme, isDarkTheme
             onClick = { send(Msg.Ui.OnPickThemeClicked) }
         ),
         SettingItem(
-            title = text.settings.itemAppearance,
+            title = text.settingsAppearance.topBarTitle,
             prefixIcon = AppIcon.Appearance,
             onClick = { send(Msg.Ui.OnAppearanceClicked) }
+        ),
+        SettingItem(
+            title = text.settingsSecurity.topBarTitle,
+            prefixIcon = AppIcon.Security,
+            onClick = { send(Msg.Ui.OnSecurityClicked) }
         )
     )
 

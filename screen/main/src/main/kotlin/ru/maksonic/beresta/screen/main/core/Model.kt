@@ -55,6 +55,7 @@ data class Model(
     val bottomBarState: MainBottomBarState,
     val searchBarState: SearchBarUiState,
     val editNoteFabState: EditNoteUiFabState,
+    val isVisibleHiddenNotesDialog: Boolean,
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -64,7 +65,8 @@ data class Model(
             modalSheet = ModalSheet.Initial,
             bottomBarState = MainBottomBarState.IDLE,
             searchBarState = SearchBarUiState.InitialMainNotes,
-            editNoteFabState = EditNoteUiFabState.Initial
+            editNoteFabState = EditNoteUiFabState.Initial,
+            isVisibleHiddenNotesDialog = false
         )
     }
 }
@@ -74,66 +76,67 @@ sealed class Msg : ElmMessage {
         //notes
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
-        object CancelNotesSelection : Ui()
+        data object CancelNotesSelection : Ui()
 
         //idle bottom bar actions
-        object OnBottomBarSettingsClicked : Ui()
-        object OnBottomBarTrashClicked : Ui()
-        object OnBottomBarFoldersClicked : Ui()
-        object OnBottomBarSortNotesClicked : Ui()
+        data object OnBottomBarSettingsClicked : Ui()
+        data object OnBottomBarTrashClicked : Ui()
+        data object OnBottomBarFoldersClicked : Ui()
+        data object OnBottomBarSortNotesClicked : Ui()
 
         //selected bottom bar actions
-        object OnBottomBarHideSelectedNotesClicked : Ui()
-        object OnBottomBarPinSelectedNotesClicked : Ui()
-        object OnBottomBarMoveSelectedNotesClicked : Ui()
-        object OnBottomBarRemoveSelectedNotesClicked : Ui()
+        data object OnBottomBarHideSelectedNotesClicked : Ui()
+        data object OnBottomBarPinSelectedNotesClicked : Ui()
+        data object OnBottomBarMoveSelectedNotesClicked : Ui()
+        data object OnBottomBarRemoveSelectedNotesClicked : Ui()
 
         //search bar
-        object OnCollapseSearchBar : Ui()
-        object OnExpandSearchBar : Ui()
-        object OnCounterBarShareClicked : Ui()
+        data object OnCollapseSearchBar : Ui()
+        data object OnExpandSearchBar : Ui()
+        data object OnCounterBarShareClicked : Ui()
         data class OnCounterBarSelectAllClicked(val currentFolderId: Long) : Ui()
         data class OnChangeGridViewClicked(val count: Int) : Ui()
 
         //all
-        object OnHideModalBottomSheet : Ui()
-        object OnAddNewChipClicked : Ui()
+        data object OnHideModalBottomSheet : Ui()
+        data object OnAddNewChipClicked : Ui()
+        data object OnHideHiddenNotesDialogClicked : Ui()
 
         //snack bar
-        object OnSnackUndoRemoveNotesClicked : Ui()
+        data object OnSnackUndoRemoveNotesClicked : Ui()
     }
 
     sealed class Inner : Msg() {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
         data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
-        object HiddenModalBottomSheet : Inner()
-        object HiddenRemovedNotesSnackBar : Inner()
-        object NavigatedToHiddenNotes : Inner()
+        data object HiddenModalBottomSheet : Inner()
+        data object HiddenRemovedNotesSnackBar : Inner()
+        data object NavigatedToHiddenNotes : Inner()
         data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
-        object ResetCurrentSelectedFolder : Inner()
+        data object ResetCurrentSelectedFolder : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchNotesListFeatureState : Cmd()
-    object FetchNotesData : Cmd()
+    data object FetchNotesListFeatureState : Cmd()
+    data object FetchNotesData : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
-    object FetchChipsData : Cmd()
-    object FetchChipsSortState : Cmd()
-    object ResetCurrentSelectedFolder : Cmd()
+    data object FetchChipsData : Cmd()
+    data object FetchChipsSortState : Cmd()
+    data object ResetCurrentSelectedFolder : Cmd()
 }
 
 sealed class Eff : ElmEffect {
     data class NavigateToEditNote(val id: Long) : Eff()
-    object HideModalSheet : Eff()
-    object NavigateToSettings : Eff()
+    data object HideModalSheet : Eff()
+    data object NavigateToSettings : Eff()
     data class NavigateToFolders(val ids: List<Long>) : Eff()
-    object NavigateToTrash : Eff()
+    data object NavigateToTrash : Eff()
     data class NavigateToHiddenNotes(val ids: List<Long>) : Eff()
-    object ShowAddNewChipDialog : Eff()
-    object ShowedHiddenNotesEnterPasswordDialog : Eff()
+    data object ShowAddNewChipDialog : Eff()
+    data object ShowedHiddenNotesEnterPasswordDialog : Eff()
 }

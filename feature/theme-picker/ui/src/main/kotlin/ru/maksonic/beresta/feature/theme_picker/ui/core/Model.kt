@@ -6,7 +6,6 @@ import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
 import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.color.AppThemePalette
-import ru.maksonic.beresta.ui.theme.color.PaletteStore
 
 /**
  * @Author maksonic on 19.06.2023

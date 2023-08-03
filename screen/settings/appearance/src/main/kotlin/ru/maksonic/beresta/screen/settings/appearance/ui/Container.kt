@@ -19,6 +19,8 @@ import ru.maksonic.beresta.screen.settings.appearance.core.SettingsAppearanceSan
 /**
  * @Author maksonic on 07.07.2023
  */
+internal typealias SendMessage = (Msg) -> Unit
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Container(

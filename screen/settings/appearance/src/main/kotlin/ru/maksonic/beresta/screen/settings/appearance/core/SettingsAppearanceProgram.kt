@@ -23,7 +23,7 @@ class SettingsAppearanceProgram(
 
     companion object {
         private const val INITIAL_TITLE_LINES_COUNT = 1
-        private const val INITIAL_MESSAGE_LINES_COUNT = 3
+        private const val INITIAL_MESSAGE_LINES_COUNT = 2
     }
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {

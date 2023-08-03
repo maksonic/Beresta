@@ -68,10 +68,7 @@ class MainActivitySandbox(mainActivityProgram: MainActivityProgram) : Sandbox<Mo
             AppTheme.HIGH_CONTRAST -> highContrast
         }
         return ElmUpdate(
-            model = model.copy(
-                currentPalette = palette,
-                darkMode = model.darkMode.copy(msg.isDark)
-            ),
+            model.copy(currentPalette = palette, darkMode = model.darkMode.copy(msg.isDark)),
             commands = setOf(Cmd.UpdateDarkModeInDatastore(msg.isDark))
         )
     }

@@ -13,7 +13,6 @@ import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.folders_chips.api.ui.updateFolder
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
 import ru.maksonic.beresta.screen.folders.core.Eff
@@ -34,7 +33,6 @@ internal fun Container(
     sandbox: FoldersScreenSandbox = koinViewModel(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
     listSortUiState: SortingSheetApi.Ui = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
@@ -43,7 +41,6 @@ internal fun Container(
         effects = sandbox.effects,
         router = router,
         chipsDialogApi = chipsDialogApi,
-        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
     )
@@ -53,7 +50,6 @@ internal fun Container(
         foldersPlaceholderApi = foldersPlaceholderApi,
         chipsDialogApi = chipsDialogApi,
         chipsRowApi = chipsRowApi,
-        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
         model = model,
         send = sandbox::send,
         listSortUiState = listSortUiState,
@@ -66,7 +62,6 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: FoldersScreenRouter,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     modalBottomSheetState: SheetState,
     hideSheet: () -> Unit,
 ) {
@@ -86,9 +81,6 @@ private fun HandleUiEffects(
             }
 
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
-            is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
-                hiddenNotesEnterPasswordDialog.visibility.update(true)
-            }
         }
     }
 }
