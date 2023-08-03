@@ -23,10 +23,10 @@ internal fun HiddenNotesDialog(
         fadeOutDuration = Theme.animVelocity.dialogVisibility
     ) {
         hiddenNotesEnterPasswordDialog.Widget(
-            isBlocked = false,
             onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) },
-            onBlockedBackPressed = {},
-            hideDialog = { send(Msg.Ui.OnHideHiddenNotesDialogClicked) }
+            hideDialog = { send(Msg.Ui.OnHideHiddenNotesDialogClicked) },
+            isBlocked = false,
+            onBlockedBackPressed = {}
         )
     }
 }

@@ -44,10 +44,10 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 fun Container(
     hideDialog: () -> Unit,
-    modifier: Modifier = Modifier,
     onSuccessPin: () -> Unit,
     isBlocked: Boolean,
     onBlockedBackPressed: () -> Unit,
+    modifier: Modifier = Modifier,
     vibrationManager: VibrationManager = koinInject(),
     sandbox: HiddenNotesDialogSandbox = koinViewModel()
 ) {
@@ -56,7 +56,6 @@ fun Container(
 
     HandleUiEffects(
         effects = sandbox.effects,
-        isBlocked = isBlocked,
         vibrationManager = vibrationManager,
         hideDialog = hideDialog,
         onSuccessPin = onSuccessPin,
@@ -109,7 +108,6 @@ fun Container(
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
-    isBlocked: Boolean,
     vibrationManager: VibrationManager,
     hideDialog: () -> Unit,
     shakeKeyboardTitle: () -> Unit,
@@ -121,7 +119,7 @@ private fun HandleUiEffects(
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
-            is Eff.CloseDialog -> if (!isBlocked) hideDialog()
+            is Eff.CloseDialog -> hideDialog()
             is Eff.ShowWrongPinCodeMessage -> {
                 val failMessage = when (eff.fail!!) {
                     PinFailStatus.NOT_MATCHED -> failCreationMessage

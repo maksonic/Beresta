@@ -36,7 +36,6 @@ class HiddenNotesSandbox(
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
-        is Msg.Ui.OnStonewallBackPressed -> onStonewallBackPressed(model)
         //notes
         is Msg.Inner.FetchedNotesData -> fetchedNotesData(model, msg)
         is Msg.Inner.FetchedNotesError -> ElmUpdate(model)
@@ -72,13 +71,6 @@ class HiddenNotesSandbox(
         effects = setOf(Eff.NavigateBack),
         commands = setOf(Cmd.AllowScreenCapture)
     )
-
-    private fun onStonewallBackPressed(model: Model): UpdateResult =
-        ElmUpdate(
-            model,
-            effects = setOf(Eff.NavigateBlockedBack),
-            commands = setOf(Cmd.AllowScreenCapture)
-        )
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
         ElmUpdate(
@@ -294,8 +286,5 @@ class HiddenNotesSandbox(
     private fun updateStonewallVisibility(
         model: Model,
         msg: Msg.Inner.UpdateStonewallVisibility
-    ): UpdateResult = ElmUpdate(
-        model.copy(isVisibleStonewall = msg.isVisible),
-        effects = setOf(Eff.UpdatePinDialogVisibility(msg.isVisible))
-    )
+    ): UpdateResult = ElmUpdate(model.copy(isVisibleStonewall = msg.isVisible))
 }

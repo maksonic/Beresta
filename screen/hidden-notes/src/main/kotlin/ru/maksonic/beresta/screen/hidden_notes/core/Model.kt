@@ -66,50 +66,48 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object OnTopBarBackPressed : Ui()
-        object OnStonewallBackPressed : Ui()
-
+        data object OnTopBarBackPressed : Ui()
         //notes
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
-        object CancelNotesSelection : Ui()
+        data object CancelNotesSelection : Ui()
 
-        object OnTopBarSortNotesClicked : Ui()
+        data object OnTopBarSortNotesClicked : Ui()
 
         //selected bottom bar actions
-        object OnBottomBarUnhideSelectedNotesClicked : Ui()
-        object OnBottomBarPinSelectedNotesClicked : Ui()
-        object OnBottomBarRemoveSelectedNotesClicked : Ui()
+        data object OnBottomBarUnhideSelectedNotesClicked : Ui()
+        data object OnBottomBarPinSelectedNotesClicked : Ui()
+        data object OnBottomBarRemoveSelectedNotesClicked : Ui()
 
         //search bar
-        object OnCollapseSearchBar : Ui()
-        object OnExpandSearchBar : Ui()
-        object OnCounterBarShareClicked : Ui()
-        object OnCounterBarSelectAllClicked : Ui()
+        data object OnCollapseSearchBar : Ui()
+        data object OnExpandSearchBar : Ui()
+        data object OnCounterBarShareClicked : Ui()
+        data object OnCounterBarSelectAllClicked : Ui()
         data class OnTopBarGridViewClicked(val count: Int) : Ui()
 
         //all
-        object OnHideModalBottomSheet : Ui()
+        data object OnHideModalBottomSheet : Ui()
 
         //snack bar
-        object OnSnackUndoRemoveNotesClicked : Ui()
+        data object OnSnackUndoRemoveNotesClicked : Ui()
     }
 
     sealed class Inner : Msg() {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
-        object HiddenModalBottomSheet : Inner()
-        object HiddenRemovedNotesSnackBar : Inner()
-        object HiddenLoadingPlaceholder : Inner()
+        data object HiddenModalBottomSheet : Inner()
+        data object HiddenRemovedNotesSnackBar : Inner()
+        data object HiddenLoadingPlaceholder : Inner()
         data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
         data class UpdateStonewallVisibility(val isVisible: Boolean): Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchNotesData : Cmd()
-    object FetchMovedForHideNotesData : Cmd()
-    object AllowScreenCapture : Cmd()
+    data object FetchNotesData : Cmd()
+    data object FetchMovedForHideNotesData : Cmd()
+    data object AllowScreenCapture : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UnhideSelectedNotes(val notes: List<NoteUi>) : Cmd()
@@ -118,9 +116,7 @@ sealed class Cmd : ElmCommand {
 }
 
 sealed class Eff : ElmEffect {
-    object NavigateBack : Eff()
-    object NavigateBlockedBack : Eff()
+    data object NavigateBack : Eff()
     data class NavigateToEditNote(val id: Long) : Eff()
-    object HideModalSheet : Eff()
-    data class UpdatePinDialogVisibility(val isVisible: Boolean) : Eff()
+    data object HideModalSheet : Eff()
 }

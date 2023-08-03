@@ -25,7 +25,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.edit_note.api.isExpanded
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
@@ -34,6 +33,7 @@ import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
+import ru.maksonic.beresta.screen.hidden_notes.ui.widget.HiddenNotesDialog
 import ru.maksonic.beresta.ui.theme.color.surface
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 
@@ -51,7 +51,6 @@ internal fun Container(
     sortedSheetApi: SortingSheetApi.Ui = koinInject(),
     sandbox: HiddenNotesSandbox = koinViewModel(),
     listSortUiState: SortingSheetApi.Ui = koinInject(),
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog = koinInject(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
@@ -62,7 +61,6 @@ internal fun Container(
         router = router,
         modalBottomSheetState = model.value.modalSheet.state,
         hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
-        hiddenNotesEnterPasswordDialog = hiddenNotesEnterPasswordDialog,
         updateUserAction = { isUserAction.value = it }
     )
 
@@ -112,11 +110,7 @@ internal fun Container(
             }
         }
 
-        /*hiddenNotesEnterPasswordDialog.Widget(
-            isBlocked = model.value.isVisibleStonewall,
-            onSuccessPin = { sandbox.send(Msg.Inner.UpdateStonewallVisibility(false)) },
-            onBlockedBackPressed = { sandbox.send(Msg.Ui.OnStonewallBackPressed) }
-        )*/
+        HiddenNotesDialog(isVisible = model.value.isVisibleStonewall, sandbox::send)
     }
 }
 
@@ -126,7 +120,6 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: HiddenNotesScreenRouter,
     modalBottomSheetState: SheetState,
-    hiddenNotesEnterPasswordDialog: HiddenNotesApi.Ui.EnterPasswordDialog,
     hideSheet: () -> Unit,
     updateUserAction: (Boolean) -> Unit
 ) {
@@ -136,11 +129,6 @@ private fun HandleUiEffects(
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
-            is Eff.NavigateBlockedBack -> {
-               // hiddenNotesEnterPasswordDialog.visibility.update(false)
-              //      .run { router.onBack() }
-            }
-
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
@@ -154,10 +142,6 @@ private fun HandleUiEffects(
                     updateUserAction(true)
                     router.toNoteEditor(eff.id)
                 }
-            }
-
-            is Eff.UpdatePinDialogVisibility -> {
-               // hiddenNotesEnterPasswordDialog.visibility.update(eff.isVisible)
             }
         }
     }

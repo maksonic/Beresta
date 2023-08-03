@@ -1,10 +1,10 @@
-package ru.maksonic.beresta.screen.folders.ui.widget
+package ru.maksonic.beresta.screen.hidden_notes.ui.widget
 
 import androidx.compose.runtime.Composable
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
-import ru.maksonic.beresta.screen.folders.core.Msg
-import ru.maksonic.beresta.screen.folders.ui.SendMessage
+import ru.maksonic.beresta.screen.hidden_notes.core.Msg
+import ru.maksonic.beresta.screen.hidden_notes.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
@@ -23,10 +23,10 @@ internal fun HiddenNotesDialog(
         fadeOutDuration = Theme.animVelocity.dialogVisibility
     ) {
         hiddenNotesEnterPasswordDialog.Widget(
-            onSuccessPin = { send(Msg.Inner.NavigatedToHiddenNotes) },
-            hideDialog = { send(Msg.Ui.OnHideHiddenNotesDialogClicked) },
-            isBlocked = false,
-            onBlockedBackPressed = {}
+            onSuccessPin = { send(Msg.Inner.UpdateStonewallVisibility(false)) },
+            hideDialog = { },
+            isBlocked = isVisible,
+            onBlockedBackPressed = { send(Msg.Ui.OnTopBarBackPressed) }
         )
     }
 }
