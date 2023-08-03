@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.edit_note.ui.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -92,11 +94,11 @@ internal fun Container(
         val endPadding = animateDp(if (isExpanded.value) dp0 else dp16, animSpeed)
         val bottomPadding = animateDp(if (isExpanded.value) dp0 else initBottomPadding, animSpeed)
         val color = animateColorAsState(
-            if (isExpanded.value) surface else tertiaryContainer, tween(animSpeed)
+            if (isExpanded.value) surface else tertiaryContainer, tween(animSpeed), label = ""
         )
         val isFullExpanded = height.value == fullHeight
         val fabShape = if (isFullExpanded) 0.dp else if (isCircleFab) 50.dp else dp16
-
+        val expandedContentAlpha = animateFloatAsState(if (isExpanded.value) 1f else 0f, label = "")
         if (isEntryPoint) {
             ExpandedContent(model.value, sandbox::send, focusRequester, isHiddenNotes.value)
         } else {
@@ -122,7 +124,9 @@ internal fun Container(
                             send = sandbox::send,
                             focusRequester = focusRequester,
                             isHiddenNote = isHiddenNotes.value || isCircleFab,
-                            modifier = Modifier.size(width = width.value, height = height.value)
+                            modifier = Modifier
+                                .size(width = width.value, height = height.value)
+                                .alpha(expandedContentAlpha.value)
                         )
                     } else {
                         CollapsedContent(
