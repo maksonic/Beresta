@@ -2,12 +2,13 @@
 #core
 agp = "8.1.0"
 core-ktx = "1.10.1"
-datastore = "1.0.0"
+datastore = "1.1.0-alpha04"
 gson = "2.10.1"
 kotlin = "1.9.0"
 lifecycle-runtime-ktx = "2.6.1"
 ksp = "1.9.0-1.0.12"
 splash-screen = "1.0.1"
+work-manager = "2.8.1"
 #compose
 activity-compose = "1.7.2"
 compose-bom = "2023.06.01"
@@ -41,6 +42,7 @@ datastore = { group = "androidx.datastore", name = "datastore-preferences", vers
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
+workmanager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-manager" }
 
 #COMPOSE
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }

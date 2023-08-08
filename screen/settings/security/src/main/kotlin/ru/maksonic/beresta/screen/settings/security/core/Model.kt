@@ -6,7 +6,7 @@ import ru.maksonic.beresta.elm.core.ElmCommand
 import ru.maksonic.beresta.elm.core.ElmEffect
 import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinSecureUiState
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinVisibilityUiState
 
 /**
  * @Author maksonic on 03.08.2023
@@ -14,11 +14,11 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinSecureUiState
 @Stable
 @Immutable
 data class Model(
-    val pinSecure: PinSecureUiState,
+    val pinSecure: PinVisibilityUiState,
     ) : ElmModel {
     companion object {
         val Initial = Model(
-            pinSecure = PinSecureUiState.INITIAL
+            pinSecure = PinVisibilityUiState.INITIAL
         )
     }
 
@@ -39,7 +39,7 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class FetchedPinSecurePrefs(val pinSecureUiState: PinSecureUiState) : Inner()
+        data class FetchedPinSecurePrefs(val pinVisibilityUiState: PinVisibilityUiState) : Inner()
     }
 }
 

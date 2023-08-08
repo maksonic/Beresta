@@ -91,7 +91,7 @@ internal fun NumericKeyboardContent(
 
         Keyboard(send, model.value.pinSecure.isVisibleKeyboardTap)
 
-        if (model.value.isHasPinCode) {
+        if (model.value.pinInfo.isCreated) {
             ForgotPinButton { send(Msg.Ui.UpdateDialogContent(DialogContent.RESET_PIN)) }
         }
     }
@@ -110,7 +110,7 @@ private fun TopBar(
             .padding(top = dp8, start = dp8, end = dp8)
     ) {
 
-        AnimateFadeInOut(!model.value.isHasPinCode) {
+        AnimateFadeInOut(!model.value.pinInfo.isCreated) {
             ClickableIcon(icon = AppIcon.ArrowBack) {
                 send(Msg.Ui.UpdateDialogContent(DialogContent.INITIAL))
             }
@@ -142,7 +142,7 @@ private fun Title(
     disableShakeEffect: () -> Unit
 ) {
     val hint = rememberUpdatedState(with(text.hiddenNotes) {
-        if (!model.value.isHasPinCode) {
+        if (!model.value.pinInfo.isCreated) {
             if (model.value.cachedInput.isEmpty()) hintCreateCode else hintRepeatCode
         } else {
             hintVerifyCode

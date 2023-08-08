@@ -16,6 +16,7 @@ import ru.maksonic.beresta.feature.edit_note.ui.di.editNoteUiFeatureModule
 import ru.maksonic.beresta.feature.folders_chips.core.di.foldersChipsRowCoreFeatureModule
 import ru.maksonic.beresta.feature.folders_chips.ui.di.foldersChipsRowUiFeatureModule
 import ru.maksonic.beresta.feature.hidden_notes_dialog.core.di.hiddenNotesCoreFeatureModule
+import ru.maksonic.beresta.feature.hidden_notes_dialog.core.di.hiddenNotesCoreFeaturePinFail
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.di.hiddenNotesUiFeatureModule
 import ru.maksonic.beresta.feature.language_picker.core.di.languagePickerCoreFeatureModule
 import ru.maksonic.beresta.feature.language_picker.ui.di.languagePickerUiFeatureModule
@@ -85,6 +86,7 @@ class BerestaApplication : Application() {
         sortingSheetUiFeatureModule,
         listSortCoreFeatureModule,
         hiddenNotesCoreFeatureModule,
+        hiddenNotesCoreFeaturePinFail,
         hiddenNotesUiFeatureModule
     )
 

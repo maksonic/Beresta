@@ -86,7 +86,12 @@ class MainSandbox(
 
     private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
         if (model.notes.isSelection) baseOnNoteAction(model, msg.id)
-        else ElmUpdate(model, effects = setOf(Eff.NavigateToEditNote(msg.id)))
+        else ElmUpdate(
+            model.copy(
+                editNoteFabState = model.editNoteFabState.copy(state = EditNoteFabState.COLLAPSED)
+            ),
+            effects = setOf(Eff.NavigateToEditNote(msg.id))
+        )
 
     private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult =
         baseOnNoteAction(model, msg.id)

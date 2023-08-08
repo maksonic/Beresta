@@ -41,5 +41,5 @@ class SettingsSecuritySandbox(
         model: Model,
         msg: Msg.Inner.FetchedPinSecurePrefs
     ): UpdateResult =
-        ElmUpdate(model.copy(pinSecure = msg.pinSecureUiState))
+        ElmUpdate(model.copy(pinSecure = msg.pinVisibilityUiState))
 }

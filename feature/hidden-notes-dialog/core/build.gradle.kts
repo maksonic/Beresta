@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinPluginSerialization)
 }
 
 android {
@@ -49,4 +50,5 @@ dependencies {
     implementation(project(module.feature.hiddenNotesDialog.api.path))
     implementation(libs.datastore)
     implementation(libs.koin.android)
+    implementation(libs.json)
 }

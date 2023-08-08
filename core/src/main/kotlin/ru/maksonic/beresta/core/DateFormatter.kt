@@ -12,6 +12,8 @@ import java.util.Locale
 interface DateFormatter {
 
     fun fetchFormattedUiDate(date: LocalDateTime, currentLang: AppLanguage): String
+    fun formatDefaultPatternDateToString(date: LocalDateTime): String
+    fun formatStringToDefaultPatternDate(rawDate: String): LocalDateTime
 
     class Core : DateFormatter {
         private companion object {
@@ -30,6 +32,7 @@ interface DateFormatter {
                 const val YESTERDAY = "昨天"
             }
 
+            private const val DEFAULT_PATTERN = "yyyy-MM-dd HH:mm"
             private const val TIME_PATTERN = " - HH:mm"
             private const val YEAR_PATTERN = "yyyy"
             private const val NOT_SHOW_YEAR = ""
@@ -39,6 +42,7 @@ interface DateFormatter {
         private val currentCalendarDay = currentTime.dayOfWeek
         private val yesterday = currentTime.dayOfWeek.minus(1)
         private val currentYear = currentTime.year
+        private val dateTimeFormatterBuilder = DateTimeFormatterBuilder()
 
         private fun getLiteralForLang(isToday: Boolean, lang: AppLanguage): String = when (lang) {
             AppLanguage.RUSSIAN -> if (isToday) RU.TODAY else RU.YESTERDAY
@@ -61,7 +65,7 @@ interface DateFormatter {
                 else -> Locale.ENGLISH
             }
 
-            return DateTimeFormatterBuilder()
+            return dateTimeFormatterBuilder
                 .appendLiteral(literal)
                 .appendPattern(pattern)
                 .toFormatter()
@@ -81,5 +85,11 @@ interface DateFormatter {
                 else -> buildUiDate("d MMMM $yearPattern - HH:mm", date, currentLang)
             }
         }
+
+        override fun formatDefaultPatternDateToString(date: LocalDateTime): String =
+            dateTimeFormatterBuilder.appendPattern(DEFAULT_PATTERN).toFormatter().format(date)
+
+        override fun formatStringToDefaultPatternDate(rawDate: String): LocalDateTime =
+            LocalDateTime.parse(rawDate, dateTimeFormatterBuilder.toFormatter())
     }
 }

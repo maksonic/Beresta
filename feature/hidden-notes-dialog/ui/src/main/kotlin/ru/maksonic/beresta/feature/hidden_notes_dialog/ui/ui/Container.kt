@@ -64,7 +64,7 @@ fun Container(
 
     BackHandler {
         when {
-            model.value.dialogContent.isKeyboard && !model.value.isHasPinCode -> {
+            model.value.dialogContent.isKeyboard && !model.value.pinInfo.isCreated -> {
                 sandbox.send(Msg.Ui.UpdateDialogContent(DialogContent.INITIAL))
             }
 
