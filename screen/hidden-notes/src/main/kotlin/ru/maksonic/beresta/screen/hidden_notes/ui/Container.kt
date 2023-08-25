@@ -28,7 +28,6 @@ import ru.maksonic.beresta.feature.edit_note.api.isExpanded
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
@@ -47,7 +46,6 @@ internal typealias SendMessage = (Msg) -> Unit
 internal fun Container(
     router: HiddenNotesScreenRouter,
     notesListApi: NotesApi.Ui.List = koinInject(),
-    counterApi: TopBarCounterApi.Ui = koinInject(),
     sortedSheetApi: SortingSheetApi.Ui = koinInject(),
     sandbox: HiddenNotesSandbox = koinViewModel(),
     listSortUiState: SortingSheetApi.Ui = koinInject(),
@@ -103,7 +101,6 @@ internal fun Container(
                     model = model,
                     send = sandbox::send,
                     notesListApi = notesListApi,
-                    counterApi = counterApi,
                     sortedSheetApi = sortedSheetApi,
                     listSortUiState = listSortUiState,
                 )

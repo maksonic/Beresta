@@ -9,7 +9,6 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.HiddenNotesDialogSandbox
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesPasswordProgram
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesScreenCaptureProgram
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.service.AlarmReceiver
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.service.AndroidAlarmScheduler
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.HiddenNotesEnterPasswordDialog
 
@@ -19,7 +18,6 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.ui.HiddenNotesEnterPas
 val hiddenNotesUiFeatureModule = module {
     single { HiddenNotesScreenCaptureProgram(screenCaptureManager = get()) }
     single { AndroidAlarmScheduler(context = androidContext()) }
-    //single { AlarmReceiver(pinFailCounter = get()) }
     single {
         HiddenNotesPasswordProgram(
             deleteHiddenNotesUseCase = get(),

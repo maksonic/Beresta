@@ -56,7 +56,6 @@ dependencies {
     implementation(project(module.primary.ui.widget.path))
     implementation(project(module.feature.notes.api.path))
     implementation(project(module.feature.foldersChipsRow.api.path))
-    implementation(project(module.feature.topBarCounter.api.path))
     implementation(project(module.feature.sortingSheet.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.accompanist.navigation)

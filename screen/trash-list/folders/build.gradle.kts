@@ -57,7 +57,6 @@ dependencies {
     implementation(project(module.common.coroutineDispatchers.path))
     implementation(project(module.feature.notes.api.path))
     implementation(project(module.feature.foldersChipsRow.api.path))
-    implementation(project(module.feature.topBarCounter.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

@@ -1,14 +1,11 @@
-package ru.maksonic.beresta.feature.search_bar.ui.widget.state
+package ru.maksonic.beresta.feature.search_bar.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -47,7 +44,6 @@ import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
 import ru.maksonic.beresta.feature.search_bar.api.SearchBarUiState
 import ru.maksonic.beresta.feature.search_bar.api.isCollapsed
-import ru.maksonic.beresta.feature.search_bar.ui.SearchBarViewModel
 import ru.maksonic.beresta.feature.search_bar.ui.widget.EmptySearchResult
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
@@ -61,8 +57,8 @@ import ru.maksonic.beresta.ui.theme.component.dp10
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp6
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Close
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
@@ -79,6 +75,7 @@ internal fun ExpandedContent(
     onSearchResultNoteClicked: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchBarViewModel = koinViewModel(),
+    queryModifier: Modifier,
     notesListFeatureApi: NotesApi.Ui.Card = koinInject()
 ) {
     val searchQuery = viewModel.textFiledValue.collectAsStateWithLifecycle()
@@ -109,9 +106,9 @@ internal fun ExpandedContent(
     Column(modifier.fillMaxSize()) {
         InputQueryTextFiled(
             searchQuery = searchQuery,
-            actions = actions,
             updateQuery = viewModel::updateQuery,
-            isColoredBar = isColoredStatusBar
+            isColoredBar = isColoredStatusBar,
+            modifier = queryModifier
         )
         SearchListResult(
             notes = searchList.value,
@@ -126,10 +123,9 @@ internal fun ExpandedContent(
 @Composable
 private fun InputQueryTextFiled(
     searchQuery: State<TextFieldValue>,
-    actions: Map<SearchBarApi.ActionKey, () -> Unit>,
     updateQuery: (TextFieldValue) -> Unit,
     isColoredBar: State<Boolean>,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -142,76 +138,58 @@ private fun InputQueryTextFiled(
 
     SurfacePro(
         tonalElevation = tonal.value,
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
     ) {
-        Box(
-            modifier
+
+        var inputFieldHaveFocus by remember { mutableStateOf(false) }
+
+        TextField(
+            value = searchQuery.value,
+            onValueChange = { updateQuery(it) },
+            singleLine = true,
+            textStyle = TextDesign.bodyPrimary,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = onBackground,
+                disabledTextColor = onBackground,
+                focusedContainerColor = transparent,
+                unfocusedContainerColor = transparent,
+                errorContainerColor = transparent,
+                disabledContainerColor = transparent,
+                cursorColor = primary,
+                unfocusedTextColor = outline,
+                focusedTrailingIconColor = onBackground,
+                unfocusedTrailingIconColor = outline,
+                focusedIndicatorColor = outline,
+                unfocusedIndicatorColor = outline,
+                disabledIndicatorColor = outline,
+                selectionColors = TextSelectionColors(
+                    handleColor = primary,
+                    onSurfaceVariant
+                ),
+            ),
+            placeholder = {
+                if (!inputFieldHaveFocus) {
+                    Text(
+                        text = text.shared.hintFindNote,
+                        style = TextDesign.bodyPrimary.copy(outline)
+                    )
+                }
+            },
+            trailingIcon = {
+                AnimateFadeInOut(searchQuery.value.text.isNotEmpty()) {
+                    ClickableIcon(icon = AppIcon.Close) { updateQuery(TextFieldValue()) }
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            modifier = modifier
                 .statusBarsPadding()
-                .padding(top = dp4)
-                .height(Theme.widgetSize.topBarSmallHeight),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Row(
-                modifier
-                    .fillMaxWidth()
-                    .padding(start = dp4, end = dp16),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                var inputFieldHaveFocus by remember { mutableStateOf(false) }
-
-                ClickableIcon(
-                    icon = AppIcon.ArrowBack,
-                    action = { actions[SearchBarApi.ActionKey.OnCollapseBar]?.invoke() },
-                )
-
-                TextField(
-                    value = searchQuery.value,
-                    onValueChange = { updateQuery(it) },
-                    singleLine = true,
-                    textStyle = TextDesign.bodyPrimary,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = onBackground,
-                        disabledTextColor = onBackground,
-                        focusedContainerColor = transparent,
-                        unfocusedContainerColor = transparent,
-                        errorContainerColor = transparent,
-                        disabledContainerColor = transparent,
-                        cursorColor = primary,
-                        unfocusedTextColor = outline,
-                        focusedTrailingIconColor = onBackground,
-                        unfocusedTrailingIconColor = outline,
-                        focusedIndicatorColor = outline,
-                        unfocusedIndicatorColor = outline,
-                        disabledIndicatorColor = outline,
-                        selectionColors = TextSelectionColors(
-                            handleColor = primary,
-                            onSurfaceVariant
-                        ),
-                    ),
-                    placeholder = {
-                        if (!inputFieldHaveFocus) {
-                            Text(
-                                text = text.shared.hintFindNote,
-                                style = TextDesign.bodyPrimary.copy(outline)
-                            )
-                        }
-                    },
-                    trailingIcon = {
-                        AnimateFadeInOut(searchQuery.value.text.isNotEmpty()) {
-                            ClickableIcon(icon = AppIcon.Close) { updateQuery(TextFieldValue()) }
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    modifier = modifier
-                        .weight(1f)
-                        .focusRequester(focusRequester)
-                        .onFocusEvent {
-                            inputFieldHaveFocus = it.isFocused
-                        }
-                )
-            }
-        }
+                .padding(top = dp4, bottom = dp6)
+                .focusRequester(focusRequester)
+                .onFocusEvent {
+                    inputFieldHaveFocus = it.isFocused
+                }
+        )
     }
 }
 

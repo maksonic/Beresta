@@ -15,7 +15,6 @@ import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.core.Eff
 import ru.maksonic.beresta.screen.main.core.MainSandbox
@@ -31,7 +30,6 @@ internal typealias SendMessage = (Msg) -> Unit
 internal fun Container(
     router: MainScreenRouter,
     notesListApi: NotesApi.Ui.List = koinInject(),
-    counterApi: TopBarCounterApi.Ui = koinInject(),
     chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
     chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     sandbox: MainSandbox = koinViewModel(),
@@ -51,7 +49,6 @@ internal fun Container(
         model = model,
         send = sandbox::send,
         notesListApi = notesListApi,
-        counterApi = counterApi,
         chipsRowApi = chipsRowApi,
         chipsDialogApi = chipsDialogApi,
         listSortUiState = listSortUiState,

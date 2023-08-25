@@ -103,9 +103,6 @@ dependencies {
     implementation(project(module.feature.searchBar.api.path))
     implementation(project(module.feature.searchBar.ui.path))
 
-    implementation(project(module.feature.topBarCounter.api.path))
-    implementation(project(module.feature.topBarCounter.ui.path))
-
     implementation(project(module.feature.sortingSheet.api.path))
     implementation(project(module.feature.sortingSheet.core.path))
     implementation(project(module.feature.sortingSheet.ui.path))

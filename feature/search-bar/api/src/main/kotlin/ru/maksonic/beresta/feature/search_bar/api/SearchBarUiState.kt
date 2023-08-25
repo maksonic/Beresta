@@ -15,6 +15,7 @@ data class SearchBarUiState(
     val barState: SearchBarState,
     val backplateState: SearchBackplateState,
     val isVisibleGridIcon: Boolean,
+    val counterValue: Int
 ) {
     companion object {
         val InitialMainNotes = SearchBarUiState(
@@ -23,7 +24,8 @@ data class SearchBarUiState(
             searchList = NoteUi.Collection.Empty,
             barState = SearchBarState.Collapsed,
             backplateState = SearchBackplateState.MainNotes,
-            isVisibleGridIcon = false
+            isVisibleGridIcon = false,
+            counterValue = 0
         )
         val InitialHiddenNotes = SearchBarUiState(
             state = ElmBaseModel.Initial,
@@ -31,7 +33,8 @@ data class SearchBarUiState(
             searchList = NoteUi.Collection.Empty,
             barState = SearchBarState.Collapsed,
             backplateState = SearchBackplateState.HiddenNotes,
-            isVisibleGridIcon = true
+            isVisibleGridIcon = true,
+            counterValue = 0
         )
     }
 }

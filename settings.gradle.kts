@@ -70,9 +70,6 @@ include(":feature:edit-note:ui")
 include(":feature:search-bar:api")
 include(":feature:search-bar:ui")
 
-include(":feature:top-bar-counter:api")
-include(":feature:top-bar-counter:ui")
-
 include(":feature:sorting-sheet:api")
 include(":feature:sorting-sheet:core")
 include(":feature:sorting-sheet:ui")

@@ -116,7 +116,10 @@ class MainSandbox(
                     isSelection = true,
                     isVisibleUnpinMainBarIcon = isVisibleUnpinButton
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Selected),
+                searchBarState = model.searchBarState.copy(
+                    barState = SearchBarState.Selected,
+                    counterValue = selectedList.count()
+                ),
                 editNoteFabState = model.editNoteFabState.copy(
                     isVisible = false, state = EditNoteFabState.COLLAPSED
                 ),
@@ -275,7 +278,8 @@ class MainSandbox(
             model.copy(
                 notes = model.notes.copy(
                     isVisibleUnpinMainBarIcon = isVisibleUnpinButton, selectedList = selectedList
-                )
+                ),
+                searchBarState = model.searchBarState.copy(counterValue = selectedList.count())
             )
         )
     }

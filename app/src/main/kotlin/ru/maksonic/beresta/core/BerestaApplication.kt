@@ -30,7 +30,6 @@ import ru.maksonic.beresta.feature.sorting_sheet.ui.di.sortingSheetUiFeatureModu
 import ru.maksonic.beresta.feature.splash_screen.ui.di.splashScreenCoreFeatureModule
 import ru.maksonic.beresta.feature.theme_picker.core.di.themePickerCoreFeatureModule
 import ru.maksonic.beresta.feature.theme_picker.ui.di.themePickerUiFeatureModule
-import ru.maksonic.beresta.feature.top_bar_counter.core.di.topBarCounterUiFeatureModule
 import ru.maksonic.beresta.language_engine.core.di.languageEngineModule
 import ru.maksonic.beresta.navigation.graph_builder.di.navigationModule
 import ru.maksonic.beresta.screen.folders.di.foldersScreenModule
@@ -80,7 +79,6 @@ class BerestaApplication : Application() {
         notesCoreFeatureModule,
         editNoteUiFeatureModule,
         topSearchBarUiFeatureModule,
-        topBarCounterUiFeatureModule,
         foldersChipsRowUiFeatureModule,
         foldersChipsRowCoreFeatureModule,
         sortingSheetUiFeatureModule,

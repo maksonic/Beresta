@@ -60,7 +60,6 @@ dependencies {
     implementation(project(module.feature.notes.api.path))
     implementation(project(module.feature.editNote.api.path))
     implementation(project(module.feature.searchBar.api.path))
-    implementation(project(module.feature.topBarCounter.api.path))
     implementation(project(module.feature.foldersChipsRow.api.path))
     implementation(project(module.feature.sortingSheet.api.path))
     implementation(project(module.feature.hiddenNotesDialog.api.path))

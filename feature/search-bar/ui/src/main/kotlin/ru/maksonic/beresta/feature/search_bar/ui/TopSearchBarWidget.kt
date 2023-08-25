@@ -20,3 +20,4 @@ class TopSearchBarWidget : SearchBarApi.Ui {
         Container(state, isColoredBackplate, actions, onSearchResultNoteClicked)
     }
 }
+

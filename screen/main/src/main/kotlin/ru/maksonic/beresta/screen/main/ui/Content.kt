@@ -21,7 +21,6 @@ import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFold
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.feature.top_bar_counter.api.TopBarCounterApi
 import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.widget.ChipsRow
@@ -44,7 +43,6 @@ internal fun Content(
     send: SendMessage,
     modifier: Modifier = Modifier,
     notesListApi: NotesApi.Ui.List,
-    counterApi: TopBarCounterApi.Ui,
     chipsRowApi: FoldersApi.Ui.ChipsRow,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     listSortUiState: SortingSheetApi.Ui,
@@ -55,7 +53,6 @@ internal fun Content(
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
-    val selectedNotesCount = rememberUpdatedState(model.value.notes.selectedList.count())
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
     val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
@@ -85,10 +82,6 @@ internal fun Content(
         if (model.value.notes.collection.data.isEmpty()) {
             chipsRowOffsetHeightPx.floatValue = 0f
         }
-    }
-
-    LaunchedEffect(selectedNotesCount.value) {
-        counterApi.counterState.value = selectedNotesCount.value
     }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
