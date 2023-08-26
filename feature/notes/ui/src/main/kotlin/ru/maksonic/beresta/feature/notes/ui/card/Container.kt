@@ -44,7 +44,7 @@ fun Container(
     val isSelectedColors = if (isFocusedItem.value) tertiary else secondary
     val colors = if (isFocusedItem.value) outlineVariant else primaryContainer
     val backgroundColor =
-        animateColorAsState(if (isSelected) isSelectedColors else colors)
+        animateColorAsState(if (isSelected) isSelectedColors else colors, label = "")
 
     CompositionLocalProvider(LocalNoteCardState provides cardUiState.value) {
 

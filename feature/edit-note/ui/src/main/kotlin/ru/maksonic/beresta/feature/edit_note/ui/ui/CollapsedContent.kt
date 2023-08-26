@@ -24,7 +24,7 @@ internal fun CollapsedContent(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier
+        Modifier
             .fillMaxSize()
             .background(tertiaryContainer)
             .rippledClick(rippleColor = onTertiaryContainer) { onExpandFabClicked() },
@@ -36,6 +36,7 @@ internal fun CollapsedContent(
             imageVector = icon,
             tint = onTertiaryContainer,
             contentDescription = "",
+            modifier = modifier
         )
     }
 }

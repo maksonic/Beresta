@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,23 +58,17 @@ internal fun Content(
                 ) {
                     val coolDown = remember { mutableIntStateOf(model.value.pinInfo.coolDownDelay) }
 
-                    LaunchedEffect(model.value.pinInfo.coolDownDelay) {
-
-                        repeat(model.value.pinInfo.coolDownDelay) {
-                            delay(1000)
-                            coolDown.intValue = coolDown.intValue - 1
-                            Log.e("AAA", "UI ${coolDown.value}")
-                        }.let {
-                            send(Msg.Inner.CancelCoolDown)
+                    LaunchedEffect(model.value.pinInfo.isCoolDown) {
+                        if (model.value.pinInfo.isCoolDown) {
+                            repeat(model.value.pinInfo.coolDownDelay) {
+                                delay(1000)
+                                coolDown.intValue = coolDown.intValue - 1
+                                Log.e("AAA", "UI ${coolDown.value}")
+                            }.let {
+                                send(Msg.Inner.CancelCoolDown)
+                            }
                         }
                     }
-                    /*LaunchedEffect(model.value.pinInfo.coolDownDelay) {
-                        do {
-                            coolDown.intValue = coolDown.intValue - 1
-                        } while (coolDown.intValue == 0)
-
-                        send(Msg.Inner.CancelCoolDown)
-                    }*/
 
                     Text(text = coolDown.intValue.toString(), style = TextDesign.header)
                 }

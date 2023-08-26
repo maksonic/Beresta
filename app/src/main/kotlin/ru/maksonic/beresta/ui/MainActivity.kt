@@ -1,9 +1,6 @@
 package ru.maksonic.beresta.ui
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -27,8 +24,6 @@ import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.Msg
 import ru.maksonic.beresta.core.secure.ScreenCaptureManager
 import ru.maksonic.beresta.core.system.VibrationPerformer
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.service.CounterService
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
 import ru.maksonic.beresta.navigation.router.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.Destination
@@ -46,7 +41,6 @@ class MainActivity : ComponentActivity() {
     private val splashVisibility = MutableStateFlow(true)
     private val screenCaptureManager: ScreenCaptureManager by inject()
     private val vibrationPerformer: VibrationPerformer by inject()
-    private val pinFailCounter: HiddenNotesApi.Feature.PinFailCounter by inject()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,10 +50,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         fixChinesVendorEmptyScreen()
-
-       /* lifecycleScope.launch {
-            checkCounter(this@MainActivity)
-        }*/
 
         setContent {
             navigator.init(rememberNavController())
@@ -111,21 +101,5 @@ class MainActivity : ComponentActivity() {
             delay(50)
             window.setBackgroundDrawableResource(android.R.color.transparent)
         }
-    }
-
-    private suspend fun checkCounter(context: Context) {
-        Log.e("AAA", "ACTIVITY SETVICE IS - ${CounterService.isRunning}")
-        pinFailCounter.state.collect { info ->
-            Log.e("AAA", "ACTIVITY data - ${info}")
-            if (!CounterService.isRunning && info.timestamp != null && info.failCount >= 1) {
-                context.startService(Intent(context, CounterService::class.java))
-            }
-        }
-
-    /*pinFailCounter.state.collect { info ->
-            if (info.tick > 0 && !CounterService.isRunning) {
-                context.startService(Intent(context, CounterService::class.java))
-            }
-        }*/
     }
 }

@@ -42,7 +42,6 @@ interface DateFormatter {
         private val currentCalendarDay = currentTime.dayOfWeek
         private val yesterday = currentTime.dayOfWeek.minus(1)
         private val currentYear = currentTime.year
-        private val dateTimeFormatterBuilder = DateTimeFormatterBuilder()
 
         private fun getLiteralForLang(isToday: Boolean, lang: AppLanguage): String = when (lang) {
             AppLanguage.RUSSIAN -> if (isToday) RU.TODAY else RU.YESTERDAY
@@ -65,7 +64,7 @@ interface DateFormatter {
                 else -> Locale.ENGLISH
             }
 
-            return dateTimeFormatterBuilder
+            return DateTimeFormatterBuilder()
                 .appendLiteral(literal)
                 .appendPattern(pattern)
                 .toFormatter()
@@ -87,9 +86,9 @@ interface DateFormatter {
         }
 
         override fun formatDefaultPatternDateToString(date: LocalDateTime): String =
-            dateTimeFormatterBuilder.appendPattern(DEFAULT_PATTERN).toFormatter().format(date)
+            DateTimeFormatterBuilder().appendPattern(DEFAULT_PATTERN).toFormatter().format(date)
 
         override fun formatStringToDefaultPatternDate(rawDate: String): LocalDateTime =
-            LocalDateTime.parse(rawDate, dateTimeFormatterBuilder.toFormatter())
+            LocalDateTime.parse(rawDate, DateTimeFormatterBuilder().toFormatter())
     }
 }

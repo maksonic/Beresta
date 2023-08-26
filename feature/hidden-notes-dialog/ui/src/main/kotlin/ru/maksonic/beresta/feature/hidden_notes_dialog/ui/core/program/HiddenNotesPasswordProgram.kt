@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -9,17 +8,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import ru.maksonic.beresta.core.DateFormatter
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Cmd
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Msg
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.PinCodeInfo
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.service.AndroidAlarmScheduler
 import ru.maksonic.beresta.feature.notes.api.domain.usecase.DeleteHiddenNotesUseCase
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
@@ -33,7 +29,6 @@ class HiddenNotesPasswordProgram(
     private val passwordStore: HiddenNotesApi.Feature,
     private val pinSecurePrefs: HiddenNotesApi.Feature.SecurePrefs,
     private val pinFailCounter: HiddenNotesApi.Feature.PinFailCounter,
-    private val alarmScheduler: AndroidAlarmScheduler,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
 

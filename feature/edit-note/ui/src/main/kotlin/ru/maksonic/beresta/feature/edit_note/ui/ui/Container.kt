@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -126,9 +127,12 @@ internal fun Container(
                     fadeInDuration = animSpeed,
                     fadeOutDuration = animSpeed
                 ) {
+                    val alpha = if (state.value.isExpanded) 0f else 1f
+
                     CollapsedContent(
                         isBlankNote = model.value.currentNote.isBlank(),
                         onExpandFabClicked = { updateFabState(EditNoteFabState.EXPANDED) },
+                        modifier = modifier.alpha(alpha)
                     )
                 }
             }

@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.screen.main.core.programs
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -52,6 +53,10 @@ class NotesDataProgram(
                             note.dateCreationRaw, lang
                         )
                     )
+                }
+                notes.forEach {
+                    Log.e("AAA", "date -> ${it.dateCreation}")
+                    Log.e("AAA", "date raw-> ${it.dateCreationRaw}")
                 }
                 consumer(Msg.Inner.FetchedNotesData(NoteUi.Collection(notes)))
             }.collect()
