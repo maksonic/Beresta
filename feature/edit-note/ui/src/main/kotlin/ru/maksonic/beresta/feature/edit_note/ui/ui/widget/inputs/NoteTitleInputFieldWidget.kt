@@ -45,7 +45,7 @@ internal fun NoteTitleInputFieldWidget(
             )
         },
         colors = NoteInputDefaultColors,
-        maxLines = 500,
+        maxLines = 1000,
         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         modifier = modifier

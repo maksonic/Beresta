@@ -18,7 +18,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     subscriptions = listOf(program)
 ) {
     companion object {
-        private const val MAX_NOTE_LENGTH = 15000
+        private const val MAX_NOTE_LENGTH = 35000
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {

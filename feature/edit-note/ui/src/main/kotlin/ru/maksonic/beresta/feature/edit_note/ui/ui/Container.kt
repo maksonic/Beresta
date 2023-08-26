@@ -1,8 +1,7 @@
 package ru.maksonic.beresta.feature.edit_note.ui.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -40,12 +38,11 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.dp0
 import ru.maksonic.beresta.ui.theme.component.dp12
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 import ru.maksonic.beresta.ui.widget.toastLongTime
@@ -68,9 +65,7 @@ internal fun Container(
     val isExpanded = rememberUpdatedState(state.value.isExpanded)
     val isHiddenNotes = rememberUpdatedState(model.value.isHiddenNote)
 
-    HandleUiEffects(sandbox.effects, router, focusRequester) { collapsed ->
-        updateFabState(collapsed)
-    }
+    HandleUiEffects(sandbox.effects, router, focusRequester, collapseFab = updateFabState)
 
     BackHandler(isExpanded.value) {
         sandbox.send(Msg.Ui.OnTopBarBackPressed)
@@ -93,12 +88,9 @@ internal fun Container(
         val width = animateDp(if (isExpanded.value) fullWidth else fabSize, animSpeed)
         val endPadding = animateDp(if (isExpanded.value) dp0 else dp16, animSpeed)
         val bottomPadding = animateDp(if (isExpanded.value) dp0 else initBottomPadding, animSpeed)
-        val color = animateColorAsState(
-            if (isExpanded.value) surface else tertiaryContainer, tween(animSpeed), label = ""
-        )
         val isFullExpanded = height.value == fullHeight
         val fabShape = if (isFullExpanded) 0.dp else if (isCircleFab) 50.dp else dp16
-        val expandedContentAlpha = animateFloatAsState(if (isExpanded.value) 1f else 0f, label = "")
+
         if (isEntryPoint) {
             ExpandedContent(model.value, sandbox::send, focusRequester, isHiddenNotes.value)
         } else {
@@ -110,30 +102,34 @@ internal fun Container(
             }
 
             SurfacePro(
-                color = color.value,
+                color = surface,
                 shape = RoundedCornerShape(fabShape),
                 modifier = modifier
                     .padding(bottom = bottomPadding.value, end = endPadding.value)
                     .height(height.value)
-                    .width(width.value),
+                    .width(width.value)
+                    .animateContentSize(tween(animSpeed)),
             ) {
-                AnimateContent(isExpanded.value, animSpeed = animSpeed) { isExpanded ->
-                    if (isExpanded) {
-                        ExpandedContent(
-                            model = model.value,
-                            send = sandbox::send,
-                            focusRequester = focusRequester,
-                            isHiddenNote = isHiddenNotes.value || isCircleFab,
-                            modifier = Modifier
-                                .size(width = width.value, height = height.value)
-                                .alpha(expandedContentAlpha.value)
-                        )
-                    } else {
-                        CollapsedContent(
-                            isBlankNote = model.value.currentNote.isBlank(),
-                            onExpandFabClicked = { updateFabState(EditNoteFabState.EXPANDED) }
-                        )
-                    }
+
+                if (state.value.isExpanded) {
+                    ExpandedContent(
+                        model = model.value,
+                        send = sandbox::send,
+                        focusRequester = focusRequester,
+                        isHiddenNote = isHiddenNotes.value || isCircleFab,
+                        modifier = Modifier.size(width = width.value, height = height.value)
+                    )
+                }
+
+                AnimateFadeInOut(
+                    !state.value.isExpanded,
+                    fadeInDuration = animSpeed,
+                    fadeOutDuration = animSpeed
+                ) {
+                    CollapsedContent(
+                        isBlankNote = model.value.currentNote.isBlank(),
+                        onExpandFabClicked = { updateFabState(EditNoteFabState.EXPANDED) },
+                    )
                 }
             }
         }
@@ -157,7 +153,7 @@ private fun HandleUiEffects(
             is Eff.NavigateBack -> router?.let { it.onBack() }
             is Eff.ShowToastMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning.value)
             is Eff.ShowNoteUpdateSnackBar -> context.toastLongTime("Bye")
-            is Eff.ShowKeyboardForExpandedFab -> focusRequester.requestFocus()
+            is Eff.ShowKeyboardForExpandedFab ->  focusRequester.requestFocus()
             is Eff.CollapseFab -> focusManager.clearFocus().run {
                 scope.launch {
                     delay(100)

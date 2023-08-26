@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.edit_note.ui.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.EditorBottomBar
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteMessageInputFieldWidget
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteTitleInputFieldWidget
 import ru.maksonic.beresta.feature.notes.api.ui.isBlank
+import ru.maksonic.beresta.ui.theme.color.surface
 
 /**
  * @Author maksonic on 26.04.2023
@@ -44,6 +46,7 @@ internal fun ExpandedContent(
         modifier
             .fillMaxSize()
             .statusBarsPadding()
+            .background(surface)
             .imePadding()
     ) {
         val scrollState = rememberScrollState()

@@ -42,7 +42,7 @@ internal fun NoteMessageInputFieldWidget(
         colors = NoteInputDefaultColors,
         keyboardActions = KeyboardActions.Default,
         keyboardOptions = KeyboardOptions.Default,
-        maxLines = 500,
+        maxLines = 1000,
         modifier = modifier
             .fillMaxWidth()
             .padding(start = dp8, end = dp8, bottom = bottomPadding)
