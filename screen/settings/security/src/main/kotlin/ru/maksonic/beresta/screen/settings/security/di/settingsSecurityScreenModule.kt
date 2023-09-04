@@ -9,6 +9,6 @@ import ru.maksonic.beresta.screen.settings.security.core.SettingsSecuritySandbox
  * @Author maksonic on 03.08.2023
  */
 val settingsSecurityScreenModule = module {
-    single { SettingsSecurityProgram(pinSecurePrefs = get()) }
+    single { SettingsSecurityProgram(pinPinPrivacyState = get()) }
     viewModel { SettingsSecuritySandbox(program = get()) }
 }

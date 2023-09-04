@@ -189,6 +189,7 @@ private fun Content(
                     }
                 }
             }
+
             if (isTrashPlacement) {
                 Text(
                     text = "${text.trash.hintRemovedDatePrefix} ${folder.dateMovedToTrash}",

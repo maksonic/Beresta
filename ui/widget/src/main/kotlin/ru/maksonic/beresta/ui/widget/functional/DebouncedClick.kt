@@ -3,16 +3,13 @@ package ru.maksonic.beresta.ui.widget.functional
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.semantics.Role
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ru.maksonic.beresta.core.system.VibrationPerformer
 
 /**
@@ -28,12 +25,12 @@ fun Modifier.rippledClick(
     onClick: () -> Unit,
 ) = composed(
     inspectorInfo = debugInspectorInfo {
-        name = "clickable"
-        properties["enabled"] = enabled
-        properties["onClickLabel"] = onClickLabel
-        properties["role"] = role
-        properties["rippleColor"] = rippleColor
-        properties["onClick"] = onClick
+        name = "rippledClick"
+        properties["rippledClickEnabled"] = enabled
+        properties["rippledClickOnClickLabel"] = onClickLabel
+        properties["rippledClickRole"] = role
+        properties["rippledClickRippleColor"] = rippleColor
+        properties["rippledClickOnClick"] = onClick
     }
 ) {
     val view = LocalView.current
@@ -57,11 +54,11 @@ fun Modifier.noRippleClick(
     onClick: () -> Unit,
 ) = composed(
     inspectorInfo = debugInspectorInfo {
-        name = "clickable"
-        properties["enabled"] = enabled
-        properties["onClickLabel"] = onClickLabel
-        properties["role"] = role
-        properties["onClick"] = onClick
+        name = "noRippleClick"
+        properties["noRippleClickEnabled"] = enabled
+        properties["noRippleClickOnClickLabel"] = onClickLabel
+        properties["noRippleClickRole"] = role
+        properties["noRippleClickOnClick"] = onClick
     }
 ) {
     val view = LocalView.current

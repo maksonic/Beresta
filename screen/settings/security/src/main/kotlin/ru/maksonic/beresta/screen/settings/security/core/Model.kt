@@ -6,7 +6,7 @@ import ru.maksonic.beresta.elm.core.ElmCommand
 import ru.maksonic.beresta.elm.core.ElmEffect
 import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinVisibilityUiState
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinInputVisibility
 
 /**
  * @Author maksonic on 03.08.2023
@@ -14,20 +14,20 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinVisibilityUiSta
 @Stable
 @Immutable
 data class Model(
-    val pinSecure: PinVisibilityUiState,
+    val pinSecure: PinInputVisibility,
     ) : ElmModel {
     companion object {
         val Initial = Model(
-            pinSecure = PinVisibilityUiState.INITIAL
+            pinSecure = PinInputVisibility.INITIAL
         )
     }
 
     fun updatedPinVisibility() = this.copy(
-        pinSecure = this.pinSecure.copy(isVisible = !this.pinSecure.isVisible)
+        pinSecure = this.pinSecure.copy(isVisiblePin = !this.pinSecure.isVisiblePin)
     )
 
     fun updatedKeyTapVisibility() = this.copy(
-        pinSecure = this.pinSecure.copy(isVisibleKeyboardTap = !this.pinSecure.isVisibleKeyboardTap)
+        pinSecure = this.pinSecure.copy(isVisibleOnKeyboardTap = !this.pinSecure.isVisibleOnKeyboardTap)
     )
 }
 
@@ -39,7 +39,7 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class FetchedPinSecurePrefs(val pinVisibilityUiState: PinVisibilityUiState) : Inner()
+        data class FetchedPinSecurePrefs(val pinInputVisibility: PinInputVisibility) : Inner()
     }
 }
 

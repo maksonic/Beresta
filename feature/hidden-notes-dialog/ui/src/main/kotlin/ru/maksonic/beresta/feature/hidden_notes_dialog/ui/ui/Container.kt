@@ -72,12 +72,16 @@ fun Container(
                 sandbox.send(Msg.Ui.UpdateDialogContent(DialogContent.KEYBOARD))
             }
 
-            else -> if (isBlocked) onBlockedBackPressed() else sandbox.send(Msg.Ui.CloseDialog)
+            else -> if (isBlocked) onBlockedBackPressed() else sandbox.send(Msg.Ui.ClosedDialog)
         }
     }
 
     LaunchedEffect(Unit) {
         sandbox.send(Msg.Inner.UpdatedScreenCapturePermission(true))
+
+        if (!model.value.isFetchedPinInfo) {
+            sandbox.send(Msg.Inner.FetchedPinStatusRequest)
+        }
     }
 
     SurfacePro(color = scrim) {
@@ -97,7 +101,7 @@ fun Container(
                     disableShakeEffect = { isShakeTitleEffect.value = false },
                     onCloseClicked = {
                         if (isBlocked) onBlockedBackPressed()
-                        else sandbox.send(Msg.Ui.CloseDialog)
+                        else sandbox.send(Msg.Ui.ClosedDialog)
                     }
                 )
             }
@@ -114,8 +118,8 @@ private fun HandleUiEffects(
     onSuccessPin: () -> Unit,
 ) {
     val context = LocalContext.current
-    val failCreationMessage = text.hiddenNotes.hintFailCreationCode
-    val failVerificationMessage = text.hiddenNotes.hintFailVerificationCode
+    val failCreationMessage = text.errorUi.failCreationCode
+    val failVerificationMessage = text.errorUi.failVerificationCode
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {

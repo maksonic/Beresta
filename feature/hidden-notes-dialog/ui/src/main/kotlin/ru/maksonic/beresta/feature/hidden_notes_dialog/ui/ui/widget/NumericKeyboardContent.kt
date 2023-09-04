@@ -89,7 +89,7 @@ internal fun NumericKeyboardContent(
 
         PinInput(model, send)
 
-        Keyboard(send, model.value.pinSecure.isVisibleKeyboardTap)
+        Keyboard(send, model.value.pinSecure.isVisibleOnKeyboardTap)
 
         if (model.value.pinInfo.isCreated) {
             ForgotPinButton { send(Msg.Ui.UpdateDialogContent(DialogContent.RESET_PIN)) }
@@ -118,13 +118,13 @@ private fun TopBar(
 
         Spacer(modifier.weight(1f))
 
-        Crossfade(model.value.pinSecure.isVisible, label = "") {
+        Crossfade(model.value.pinSecure.isVisiblePin, label = "") {
             ClickableIcon(
                 icon = if (it) AppIcon.VisibilityOn else AppIcon.VisibilityOff,
                 action = { send(Msg.Ui.OnPinVisibilityClicked) })
         }
 
-        Crossfade(model.value.pinSecure.isVisibleKeyboardTap, label = "") {
+        Crossfade(model.value.pinSecure.isVisibleOnKeyboardTap, label = "") {
             ClickableIcon(
                 icon = if (it) AppIcon.PreviewOn else AppIcon.PreviewOff,
                 action = { send(Msg.Ui.OnKeyTapVisibilityClicked) })
@@ -209,7 +209,7 @@ private fun Keyboard(
                 else -> {
                     NumericButton(
                         value = value,
-                        onClick = { send(Msg.Inner.UpdateInput(value)) },
+                        onClick = { send(Msg.Inner.UpdatedInput(value)) },
                         modifier = modifier.weight(1f),
                         vibrationPerformer = vibrationPerformer,
                         isVisibleTouch = isVisibleTouch

@@ -10,6 +10,7 @@ import ru.maksonic.beresta.language_engine.shell.components.settings.LangSetting
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
 import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
+import ru.maksonic.beresta.language_engine.shell.components.LangUiErrorData
 import ru.maksonic.beresta.language_engine.shell.components.OnboardingDataItem
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
@@ -45,7 +46,8 @@ data class BerestaLanguage(
     val folders: LangFoldersListData = LangFoldersListData(),
     val trash: LangTrashData = LangTrashData(),
     val sortSheet: LangSortSheetData = LangSortSheetData(),
-    val hiddenNotes: LangHiddenNotesData = LangHiddenNotesData()
+    val hiddenNotes: LangHiddenNotesData = LangHiddenNotesData(),
+    val errorUi: LangUiErrorData = LangUiErrorData()
 ) {
     companion object {
         val Empty = BerestaLanguage(
@@ -60,7 +62,8 @@ data class BerestaLanguage(
             folders = LangFoldersListData(),
             trash = LangTrashData(),
             sortSheet = LangSortSheetData(),
-            hiddenNotes = LangHiddenNotesData()
+            hiddenNotes = LangHiddenNotesData(),
+            errorUi = LangUiErrorData()
         )
     }
 }

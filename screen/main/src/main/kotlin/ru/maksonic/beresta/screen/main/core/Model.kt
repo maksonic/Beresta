@@ -37,8 +37,8 @@ data class ModalSheet(
         val Initial = ModalSheet(
             isVisible = false,
             state = SheetState(
-                initialValue = SheetValue.Hidden,
-                skipPartiallyExpanded = true
+                skipPartiallyExpanded = true,
+                initialValue = SheetValue.Hidden
             ),
             content = CurrentSheetContent.NOTHING
         )
@@ -77,6 +77,8 @@ sealed class Msg : ElmMessage {
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
         data object CancelNotesSelection : Ui()
+        //chips
+        data object OnRetryFetchChipsClicked : Ui()
 
         //idle bottom bar actions
         data object OnBottomBarSettingsClicked : Ui()
@@ -110,6 +112,7 @@ sealed class Msg : ElmMessage {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
         data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
+        data object FetchedChipsError : Inner()
         data object HiddenModalBottomSheet : Inner()
         data object HiddenRemovedNotesSnackBar : Inner()
         data object NavigatedToHiddenNotes : Inner()

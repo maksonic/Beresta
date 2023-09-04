@@ -10,6 +10,7 @@ import ru.maksonic.beresta.language_engine.shell.components.settings.LangSetting
 import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
 import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
 import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
+import ru.maksonic.beresta.language_engine.shell.components.LangUiErrorData
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
@@ -30,5 +31,6 @@ data class English(
     @SerializedName("folders") val folders: LangFoldersListData,
     @SerializedName("trash") val trash: LangTrashData,
     @SerializedName("sort_notes_sheet") val sortNotesSheet: LangSortSheetData,
-    @SerializedName("hidden_notes") val hiddenNotes: LangHiddenNotesData
+    @SerializedName("hidden_notes") val hiddenNotes: LangHiddenNotesData,
+    @SerializedName("error_ui") val errorUi: LangUiErrorData
 )

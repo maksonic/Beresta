@@ -13,8 +13,7 @@ import kotlinx.coroutines.launch
  */
 interface ScreenCaptureManager {
     fun initPermission(window: Window, lifecycleScope: LifecycleCoroutineScope)
-    fun allowScreenCapture()
-    fun denyScreenCapture()
+    fun update(isEnabled: Boolean)
 
     class Core : ScreenCaptureManager {
         private val mutablePermission = MutableStateFlow(false)
@@ -35,12 +34,6 @@ interface ScreenCaptureManager {
             }
         }
 
-        override fun allowScreenCapture() {
-            mutablePermission.update { false }
-        }
-
-        override fun denyScreenCapture() {
-            mutablePermission.update { true }
-        }
+        override fun update(isEnabled: Boolean) = mutablePermission.update { isEnabled }
     }
 }

@@ -61,6 +61,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)
+    implementation (libs.compose.constraint.layout)
     implementation(libs.material3)
     implementation(libs.ui)
     implementation(libs.ui.tooling.preview)

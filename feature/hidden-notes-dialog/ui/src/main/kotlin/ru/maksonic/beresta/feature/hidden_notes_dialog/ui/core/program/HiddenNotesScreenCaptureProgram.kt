@@ -20,6 +20,5 @@ class HiddenNotesScreenCaptureProgram(
     }
 
     private fun updateScreenCapturePermission(isEnabled: Boolean) =
-        if (isEnabled) screenCaptureManager.denyScreenCapture()
-        else screenCaptureManager.allowScreenCapture()
+        screenCaptureManager.update(isEnabled)
 }

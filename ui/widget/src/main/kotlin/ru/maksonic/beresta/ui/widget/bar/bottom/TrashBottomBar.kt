@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.ui.widget.bar.bottom
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
@@ -23,7 +22,6 @@ fun TrashBottomBar(
     onRestoreClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     isSelectionState: Boolean,
-    isVisibleFirstItemOffset: State<Boolean>,
     isDisabledBottomBar: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -42,12 +40,9 @@ fun TrashBottomBar(
             action = onDeleteClicked
         )
     )
-    val tonal = animateDp(
-        if (isVisibleFirstItemOffset.value) Theme.tonal.Level0 else Theme.tonal.Level4
-    )
 
     SurfacePro(
-        tonalElevation = tonal.value,
+        tonalElevation = Theme.tonal.Level4,
         modifier = modifier.graphicsLayer { translationY = panelOffset.value.toPx() }
     ) {
         BottomBarOld(items)

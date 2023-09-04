@@ -1,6 +1,8 @@
 package ru.maksonic.beresta.screen.main.core
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.Loading
+import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedFailure
 import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
 import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
@@ -44,6 +46,8 @@ class MainSandbox(
         is Msg.Ui.CancelNotesSelection -> onCancelSelectionClicked(model)
         //chips
         is Msg.Inner.FetchedChipsData -> fetchedChipsData(model, msg)
+        is Msg.Inner.FetchedChipsError -> fetchedChipsError(model)
+        is Msg.Ui.OnRetryFetchChipsClicked -> onRetryFetchChipsClicked(model)
         //idle bottom bar actions
         is Msg.Ui.OnBottomBarSettingsClicked -> onBottomBarSettingsClicked(model)
         is Msg.Ui.OnBottomBarFoldersClicked -> onBottomBarFoldersClicked(model)
@@ -143,6 +147,20 @@ class MainSandbox(
                 ),
             ),
         )
+
+    private fun fetchedChipsError(model: Model): UpdateResult = ElmUpdate(
+        model.copy(
+            chips = model.chips.copy(
+                state = model.chips.state.loadedFailure(""),
+                collection = model.chips.collection.copy(emptyList())
+            )
+        )
+    )
+
+    private fun onRetryFetchChipsClicked(model: Model): UpdateResult = ElmUpdate(
+        model.copy(chips = model.chips.copy(state = model.chips.state.Loading)),
+        commands = setOf(Cmd.FetchChipsData)
+    )
 
     private fun onBottomBarSettingsClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSettings))

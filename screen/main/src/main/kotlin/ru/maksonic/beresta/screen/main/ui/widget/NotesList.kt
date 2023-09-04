@@ -22,7 +22,7 @@ import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp10
-import ru.maksonic.beresta.ui.theme.component.dp4
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
 import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
@@ -62,7 +62,7 @@ internal fun NotesList(
             modifier = modifier.padding(top = Theme.widgetSize.topBarSmallHeight),
             placeholderModifier = Modifier
                 .systemBarsPadding()
-                .padding(top = padding.plus(dp4), start = dp10, end = dp10),
+                .padding(top = padding.plus(dp8), start = dp10, end = dp10),
             state = model.value.notes,
             sorter = sorter,
             onNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },
@@ -71,7 +71,7 @@ internal fun NotesList(
             updateChipsRowOffsetHeight = updateChipsRowOffsetHeight,
             updatedCanScrollBackwardValue = updatedCanScrollBackwardValue,
             contentPaddingValues = PaddingValues(
-                top = Theme.widgetSize.noteChipsContainerHeight.plus(dp4),
+                top = Theme.widgetSize.noteChipsContainerHeight.plus(dp8),
                 start = dp10,
                 end = dp10,
                 bottom = bottomContentPadding.value

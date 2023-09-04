@@ -7,7 +7,7 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.api.HiddenNotesApi
  * @Author maksonic on 03.08.2023
  */
 class SettingsSecurityProgram(
-    private val pinSecurePrefs: HiddenNotesApi.Feature.SecurePrefs
+    private val pinPinPrivacyState: HiddenNotesApi.Feature.PinPrivacyState
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
@@ -19,14 +19,14 @@ class SettingsSecurityProgram(
     }
 
     private suspend fun fetchPinSecurePrefs(consumer: (Msg) -> Unit) {
-        pinSecurePrefs.state.collect { state ->
+        pinPinPrivacyState.state.collect { state ->
             consumer(Msg.Inner.FetchedPinSecurePrefs(state))
         }
     }
 
     private suspend fun updatePinVisibility(isVisible: Boolean) =
-        pinSecurePrefs.updatePinVisibility(isVisible)
+        pinPinPrivacyState.updatePinVisibility(isVisible)
 
     private suspend fun updateKeyTapVisibility(isVisible: Boolean) =
-        pinSecurePrefs.updateKeyTapVisibility(isVisible)
+        pinPinPrivacyState.updateKeyTapVisibility(isVisible)
 }

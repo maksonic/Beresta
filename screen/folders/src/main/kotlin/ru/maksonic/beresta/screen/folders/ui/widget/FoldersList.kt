@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -32,7 +31,6 @@ import ru.maksonic.beresta.ui.theme.images.AppImage
 import ru.maksonic.beresta.ui.theme.images.ErrorFolderPlaceholder
 import ru.maksonic.beresta.ui.widget.button.QuaternaryButton
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
-import ru.maksonic.beresta.ui.widget.functional.isVisibleFirstItemOffset
 import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 
 /**
@@ -45,8 +43,6 @@ internal fun FoldersList(
     model: State<Model>,
     send: SendMessage,
     currentSelectedFolder: State<Long>,
-    updateFirstVisibleFolderOffset: (Boolean) -> Unit,
-    updateCanScrollForwardState: (Boolean) -> Unit,
     listSortUiState: SortingSheetApi.Ui,
     modifier: Modifier = Modifier
 ) {
@@ -59,8 +55,6 @@ internal fun FoldersList(
                     model = model,
                     send = send,
                     currentSelectedFolder = currentSelectedFolder,
-                    updateFirstVisibleFolderOffset = updateFirstVisibleFolderOffset,
-                    updateCanScrollForwardState = updateCanScrollForwardState,
                     listSortUiState = listSortUiState,
                     modifier = modifier
                 )
@@ -85,26 +79,15 @@ private fun FetchedSuccess(
     send: SendMessage,
     model: State<Model>,
     currentSelectedFolder: State<Long>,
-    updateFirstVisibleFolderOffset: (Boolean) -> Unit,
-    updateCanScrollForwardState: (Boolean) -> Unit,
     listSortUiState: SortingSheetApi.Ui,
     modifier: Modifier
 ) {
     val foldersSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
     val scrollState = rememberLazyListState()
-    val isVisibleFirstFolderOffset = scrollState.isVisibleFirstItemOffset()
     val defaultPadding = Theme.widgetSize.bottomBarNormalHeight.plus(dp6)
     val bottomContentPadding = animateDp(
         if (model.value.isSelectionState) defaultPadding else defaultPadding.plus(dp16)
     )
-
-    LaunchedEffect(isVisibleFirstFolderOffset.value) {
-        updateFirstVisibleFolderOffset(isVisibleFirstFolderOffset.value)
-    }
-
-    LaunchedEffect(scrollState.canScrollForward) {
-        updateCanScrollForwardState(scrollState.canScrollForward)
-    }
 
     CompositionLocalProvider(LocalListSortState provides foldersSortState.value) {
         val foldersSorter = rememberUpdatedState(

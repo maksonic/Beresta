@@ -61,7 +61,6 @@ internal fun Content(
             onRestoreClicked = { send(Msg.Ui.OnBottomBarRestoreSelectedFoldersClicked) },
             onDeleteClicked = { send(Msg.Ui.OnBottomBarDeleteSelectedFoldersClicked) },
             isSelectionState = model.value.isSelectionState,
-            isVisibleFirstItemOffset = isVisibleFirstItemOffset,
             isDisabledBottomBar = model.value.selectedList.isEmpty() && model.value.isSelectionState,
         )
     }

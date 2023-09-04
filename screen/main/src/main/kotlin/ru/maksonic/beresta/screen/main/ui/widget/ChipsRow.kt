@@ -2,28 +2,28 @@ package ru.maksonic.beresta.screen.main.ui.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.screen.main.core.Model
+import ru.maksonic.beresta.screen.main.core.Msg
+import ru.maksonic.beresta.screen.main.ui.SendMessage
 
 /**
  * @Author maksonic on 03.07.2023
  */
 @Composable
 internal fun ChipsRow(
+    model: State<Model>,
+    send: SendMessage,
     api: FoldersApi.Ui.ChipsRow,
     isColoredBackground: State<Boolean>,
-    model: State<Model>,
     chipsRowOffsetHeightPx: State<Float>,
-    onAddNewChipClicked: () -> Unit,
 ) {
-    val isLoading = rememberUpdatedState(model.value.chips.state.isLoading)
-
     api.Widget(
-        isLoading = isLoading,
+        state = model.value.chips.state,
         isColoredBackground = isColoredBackground,
         chips = model.value.chips.collection,
         chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
-        onAddNewChipClicked = onAddNewChipClicked,
+        onAddNewChipClicked = { send(Msg.Ui.OnAddNewChipClicked) },
+        onRetryFetchClicked = { send(Msg.Ui.OnRetryFetchChipsClicked)}
     )
 }

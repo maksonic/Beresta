@@ -24,11 +24,11 @@ import ru.maksonic.beresta.ui.widget.text.SettingTitle
 @Composable
 internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
     val pinIcon = rememberUpdatedState(
-        if (model.value.pinSecure.isVisible) AppIcon.VisibilityOn else AppIcon.VisibilityOff
+        if (model.value.pinSecure.isVisiblePin) AppIcon.VisibilityOn else AppIcon.VisibilityOff
     )
 
     val keyTapIcon = rememberUpdatedState(
-        if (model.value.pinSecure.isVisibleKeyboardTap) AppIcon.PreviewOn else AppIcon.PreviewOff
+        if (model.value.pinSecure.isVisibleOnKeyboardTap) AppIcon.PreviewOn else AppIcon.PreviewOff
     )
 
     val settings = listOf(
@@ -36,7 +36,7 @@ internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
             title = text.settingsSecurity.itemPinVisibility,
             prefixIcon = pinIcon.value,
             rightPart = RightPart.TOGGLE,
-            isEnabledToggle = model.value.pinSecure.isVisible,
+            isEnabledToggle = model.value.pinSecure.isVisiblePin,
             onClick = { send(Msg.Ui.OnPinVisibilityClicked) }
         ),
         SettingItem(
@@ -44,7 +44,7 @@ internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
             descriptionHint = text.settingsSecurity.descriptionKeyTapVisibility,
             prefixIcon = keyTapIcon.value,
             rightPart = RightPart.TOGGLE,
-            isEnabledToggle = model.value.pinSecure.isVisibleKeyboardTap,
+            isEnabledToggle = model.value.pinSecure.isVisibleOnKeyboardTap,
             onClick = { send(Msg.Ui.OnKeyTapVisibilityClicked) }
         ),
     )

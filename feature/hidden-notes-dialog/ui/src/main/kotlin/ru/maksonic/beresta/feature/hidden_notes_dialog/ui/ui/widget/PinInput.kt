@@ -31,7 +31,7 @@ internal fun PinInput(model: State<Model>, send: SendMessage, modifier: Modifier
         value = model.value.input,
         enabled = false,
         readOnly = true,
-        onValueChange = { send(Msg.Inner.UpdateInput(it.toInt())) },
+        onValueChange = { send(Msg.Inner.UpdatedInput(it.toInt())) },
         singleLine = true,
         modifier = modifier
             .padding(dp16)
@@ -49,7 +49,7 @@ internal fun PinInput(model: State<Model>, send: SendMessage, modifier: Modifier
 
 @Composable
 private fun PinItem(index: Int, model: State<Model>) {
-    val isVisible = rememberUpdatedState(model.value.pinSecure.isVisible)
+    val isVisible = rememberUpdatedState(model.value.pinSecure.isVisiblePin)
     val isNotFilled = rememberUpdatedState(model.value.input.length <= index)
     val color = if (isNotFilled.value) outline else primary
     val itemValue = if (isNotFilled.value) "●" else {

@@ -3,6 +3,7 @@ package ru.maksonic.beresta.ui.widget.button
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ContentAlpha
@@ -26,6 +27,8 @@ import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.onBackground
 import ru.maksonic.beresta.ui.theme.color.primary
 import ru.maksonic.beresta.ui.theme.component.Shape
+import ru.maksonic.beresta.ui.theme.component.dp12
+import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
  * @Author maksonic on 19.06.2023
@@ -69,6 +72,27 @@ fun ClickableIcon(
     BaseClickableIcon(onClick = action, rippleColor = ripple, modifier = modifier) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)
     }
+}
+
+@Composable
+fun NewClickableIcon(
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    tint: Color = onBackground,
+    ripple: Color = primary,
+    contentDescription: String = "",
+    action: () -> Unit
+) {
+    Icon(
+        imageVector = icon,
+        contentDescription = contentDescription,
+        tint = tint,
+        modifier = modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .rippledClick(rippleColor = ripple) { action() }
+            .padding(dp12)
+    )
 }
 
 @Composable

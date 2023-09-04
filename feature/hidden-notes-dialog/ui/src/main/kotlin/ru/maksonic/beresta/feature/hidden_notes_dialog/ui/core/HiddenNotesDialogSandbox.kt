@@ -1,12 +1,14 @@
 package ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import ru.maksonic.beresta.core.system.pinCoolDownTime
 import ru.maksonic.beresta.elm.core.ElmUpdate
 import ru.maksonic.beresta.elm.core.Sandbox
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.DialogContent
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesPasswordProgram
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesPinPrivacyProgram
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesPinProgram
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNotesScreenCaptureProgram
+import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 15.07.2023
@@ -14,38 +16,68 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.program.HiddenNot
 private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 
 class HiddenNotesDialogSandbox(
-    passwordProgram: HiddenNotesPasswordProgram,
+    pinProgram: HiddenNotesPinProgram,
+    pinPrivacyProgram: HiddenNotesPinPrivacyProgram,
     screenCaptureProgram: HiddenNotesScreenCaptureProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(
-        Cmd.FetchSavedPinCodeStatus,
-        Cmd.FetchPinSecurePrefs
-    ),
-    subscriptions = listOf(passwordProgram, screenCaptureProgram)
+    initialCmd = setOf(Cmd.FetchPinPrivacyState),
+    subscriptions = listOf(pinProgram, pinPrivacyProgram, screenCaptureProgram)
 ) {
     private companion object {
         private const val PIN_CODE_LENGTH = 6
-        private const val FAIL_COUNT = 1
+        private const val FAIL_COUNT = 4
     }
 
     override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+        is Msg.Inner.FetchedPinStatusRequest -> fetchedPinStatusRequest(model)
+        is Msg.Inner.FetchedPinStatus -> fetchedPinStatus(model, msg)
+        is Msg.Inner.FetchedPinPrivacyState -> fetchedPinPrivacyState(model, msg)
         is Msg.Inner.UpdatedScreenCapturePermission -> updatedScreenCapturePermission(model, msg)
-        is Msg.Ui.CloseDialog -> closedDialog(model)
-        is Msg.Inner.UpdateInput -> updatedInput(model, msg)
-        is Msg.Ui.OnBackspaceClicked -> onBackspaceClicked(model)
-        is Msg.Inner.UpdatedCacheCode -> updatedCacheCode(model, msg)
-        is Msg.Inner.FetchedPinCodeStatus -> fetchedPiCodeStatus(model, msg)
-        is Msg.Inner.SuccessCodeResult -> successCodeResult(model)
-        is Msg.Inner.FailureCodeResult -> failureCodeResult(model, msg)
+        is Msg.Ui.ClosedDialog -> closedDialog(model)
+        is Msg.Inner.UpdatedInput -> updatedInput(model, msg)
         is Msg.Ui.UpdateDialogContent -> updatedDialogCurrentContent(model, msg)
-        is Msg.Ui.ResetPinCodeClicked -> resetPinCodeClicked(model)
+        is Msg.Ui.OnBackspaceClicked -> onBackspaceClicked(model)
+        is Msg.Inner.UpdatedCachePin -> updatedCacheCode(model, msg)
+        is Msg.Inner.SuccessCodeResult -> successPinResult(model)
+        is Msg.Inner.FailureCodeResult -> failurePinResult(model, msg)
+        is Msg.Ui.OnResetPinClicked -> resetPinCodeClicked(model)
         is Msg.Ui.OnKeyTapVisibilityClicked -> onKeyTapVisibilityClicked(model)
         is Msg.Ui.OnPinVisibilityClicked -> onPinVisibilityClicked(model)
-        is Msg.Inner.FetchedPinSecurePrefs -> fetchedPinSecurePrefs(model, msg)
-        //is Msg.Inner.FetchedPinCoolDownWorkResult -> fetchedPinCoolDownWorkResult(model, msg)
-        is Msg.Inner.CancelCoolDown -> ElmUpdate(model, commands = setOf(Cmd.ResetPinFailCoolDown))
+        is Msg.Inner.FinishedCoolDown -> finishedCoolDownBlock(model)
     }
+
+    private fun fetchedPinStatusRequest(model: Model): UpdateResult =
+        ElmUpdate(model, commands = setOf(Cmd.FetchPinStatus))
+
+    private fun fetchedPinStatus(
+        model: Model,
+        msg: Msg.Inner.FetchedPinStatus
+    ): UpdateResult {
+        val content = if (msg.info.isCreated) {
+            if (msg.info.isCoolDown) {
+                DialogContent.BLOCK_KEYBOARD
+            } else {
+                DialogContent.KEYBOARD
+            }
+        } else {
+            DialogContent.INITIAL
+        }
+
+        return ElmUpdate(
+            model.copy(
+                pinInfo = msg.info.copy(delay = coolDownDelay(msg.info.failCount)),
+                isFetchedPinInfo = true,
+                dialogContent = content
+            )
+        )
+    }
+
+    private fun fetchedPinPrivacyState(
+        model: Model,
+        msg: Msg.Inner.FetchedPinPrivacyState
+    ): UpdateResult =
+        ElmUpdate(model.copy(pinSecure = msg.pinInputVisibility))
 
     private fun updatedScreenCapturePermission(
         model: Model,
@@ -67,26 +99,31 @@ class HiddenNotesDialogSandbox(
         )
     }
 
-    private fun updatedInput(model: Model, msg: Msg.Inner.UpdateInput): UpdateResult {
+    private fun updatedInput(model: Model, msg: Msg.Inner.UpdatedInput): UpdateResult {
         val code = model.input.plus("${msg.value}").take(PIN_CODE_LENGTH)
         val isCreate = code.length == PIN_CODE_LENGTH && !model.pinInfo.isCreated
         val isVerify = code.length == PIN_CODE_LENGTH && model.pinInfo.isCreated
         val command = when {
-            isCreate -> setOf(Cmd.CreatePinCode(code, model.cachedInput))
-            isVerify -> setOf(Cmd.VerifyPinCode(viewModelScope, code))
+            isCreate -> setOf(Cmd.CreatePin(code, model.cachedInput, viewModelScope))
+            isVerify -> setOf(Cmd.VerifyPin(code, viewModelScope))
             else -> emptySet()
         }
 
         return ElmUpdate(model.copy(input = code), commands = command)
     }
 
+    private fun updatedDialogCurrentContent(
+        model: Model,
+        msg: Msg.Ui.UpdateDialogContent
+    ): UpdateResult = ElmUpdate(model.copy(dialogContent = msg.content))
+
     private fun onBackspaceClicked(model: Model): UpdateResult =
         ElmUpdate(model.copy(input = model.input.dropLast(1)))
 
-    private fun updatedCacheCode(model: Model, msg: Msg.Inner.UpdatedCacheCode): UpdateResult =
+    private fun updatedCacheCode(model: Model, msg: Msg.Inner.UpdatedCachePin): UpdateResult =
         ElmUpdate(model.copy(input = "", cachedInput = msg.value))
 
-    private fun successCodeResult(model: Model): UpdateResult = ElmUpdate(
+    private fun successPinResult(model: Model): UpdateResult = ElmUpdate(
         model = model.copy(
             input = "",
             cachedInput = "",
@@ -96,73 +133,66 @@ class HiddenNotesDialogSandbox(
         effects = setOf(Eff.NavigateToHiddenNotes)
     )
 
-    private fun failureCodeResult(model: Model, msg: Msg.Inner.FailureCodeResult): UpdateResult {
-        val updatedCounter = model.pinInfo.failCount + 1
-        val content = if (updatedCounter >= 1) DialogContent.BLOCK_KEYBOARD else model.dialogContent
+    private fun failurePinResult(model: Model, msg: Msg.Inner.FailureCodeResult): UpdateResult {
+        val failCount = model.pinInfo.failCount + 1
+        val isBlocked = failCount >= FAIL_COUNT && model.pinInfo.isCreated
+        val content = if (isBlocked) DialogContent.BLOCK_KEYBOARD else model.dialogContent
+
+        val endDate = LocalDateTime.now().pinCoolDownTime(coolDownDelay(failCount))
+        val command = if (isBlocked) setOf(Cmd.ShowPinCoolDownBlock(failCount, endDate))
+        else emptySet()
+        val effect = if (isBlocked) emptySet() else setOf(Eff.ShowWrongPinCodeMessage(msg.fail))
 
         return ElmUpdate(
             model = model.copy(
                 input = "",
                 cachedInput = "",
-                pinInfo = model.pinInfo.copy(failCount = updatedCounter),
+                pinInfo = model.pinInfo.copy(
+                    failCount = failCount,
+                    endDate = endDate,
+                    delay = coolDownDelay(failCount)
+                ),
                 dialogContent = content
             ),
-            commands = if (updatedCounter >= 1) setOf(Cmd.RunPinCoolDownWork(updatedCounter)) else emptySet(),
-            effects = setOf(Eff.ShowWrongPinCodeMessage(msg.fail))
+            commands = command,
+            effects = effect
         )
     }
 
-    private fun fetchedPiCodeStatus(
-        model: Model,
-        msg: Msg.Inner.FetchedPinCodeStatus
-    ): UpdateResult {
-        val content = if (msg.info.isCreated) {
-            if (msg.info.isCoolDown) DialogContent.BLOCK_KEYBOARD else DialogContent.KEYBOARD
-        } else {
-            DialogContent.INITIAL
-        }
-
-        return ElmUpdate(model.copy(pinInfo = msg.info, dialogContent = content))
-    }
-
-    private fun updatedDialogCurrentContent(
-        model: Model,
-        msg: Msg.Ui.UpdateDialogContent
-    ): UpdateResult = ElmUpdate(model.copy(dialogContent = msg.content))
-
     private fun resetPinCodeClicked(model: Model): UpdateResult = ElmUpdate(
         model.copy(
-            pinInfo = model.pinInfo.copy(isCreated = false),
+            pinInfo = model.pinInfo.copy(isCreated = false, delay = 5L, failCount = 0),
             input = "",
             cachedInput = "",
             dialogContent = DialogContent.KEYBOARD
         ),
-        commands = setOf(Cmd.ResetHiddenNotesPinCode)
+        commands = setOf(Cmd.ResetPin)
     )
 
     private fun onKeyTapVisibilityClicked(model: Model): UpdateResult =
         ElmUpdate(
             model.updatedKeyTapVisibility(),
-            commands = setOf(Cmd.UpdateKeyTapVisibility(!model.pinSecure.isVisibleKeyboardTap))
+            commands = setOf(Cmd.UpdateKeyTapVisibility(!model.pinSecure.isVisibleOnKeyboardTap))
         )
 
     private fun onPinVisibilityClicked(model: Model): UpdateResult =
         ElmUpdate(
             model.updatedPinVisibility(),
-            commands = setOf(Cmd.UpdatePinVisibility(!model.pinSecure.isVisible))
+            commands = setOf(Cmd.UpdatePinVisibility(!model.pinSecure.isVisiblePin))
         )
 
-    private fun fetchedPinSecurePrefs(
-        model: Model,
-        msg: Msg.Inner.FetchedPinSecurePrefs
-    ): UpdateResult =
-        ElmUpdate(model.copy(pinSecure = msg.pinVisibilityUiState))
+    private fun finishedCoolDownBlock(model: Model): UpdateResult =
+        ElmUpdate(
+            model.copy(dialogContent = DialogContent.KEYBOARD),
+            commands = setOf(Cmd.HidePinCoolDownBlock)
+        )
 
-    /* private fun fetchedPinCoolDownWorkResult(
-         model: Model,
-         msg: Msg.Inner.FetchedPinCoolDownWorkResult
-     ): UpdateResult {
-         val content = if (msg.isBlocked) DialogContent.BLOCK_KEYBOARD else model.dialogContent)
-         return ElmUpdate(model.copy(dialogContent = content))
-     }*/
+    private fun coolDownDelay(failCount: Int) = when (failCount) {
+        4 -> 5L
+        5 -> 10L
+        6 -> 15L
+        7 -> 20L
+        8 -> 25L
+        else -> 30L
+    }
 }

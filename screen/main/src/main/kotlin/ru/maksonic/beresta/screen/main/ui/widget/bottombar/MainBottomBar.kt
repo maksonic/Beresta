@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +38,6 @@ import ru.maksonic.beresta.ui.theme.icons.Unpin
 import ru.maksonic.beresta.ui.widget.bar.bottom.BaseBottomBarItem
 import ru.maksonic.beresta.ui.widget.bar.bottom.BottomBarOld
 import ru.maksonic.beresta.ui.widget.bar.bottom.DisabledBottomBarPlaceholder
-import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBar
 import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
@@ -60,7 +60,6 @@ internal fun MainBottomBar(
 ) {
     val offset = Theme.widgetSize.bottomMainBarHeight.plus(SystemNavigationBarHeight)
     val transition = animateDp(if (isVisibleBottomBar.value) 0.dp else offset)
-
 
     LaunchedEffect(isSelectionState.value) {
         sharedNotesUiScrollState.updateScroll(true)
@@ -106,18 +105,16 @@ private fun IdleBarContent(
         BaseBottomBarItem(AppIcon.SortBy, { send(Msg.Ui.OnBottomBarSortNotesClicked) }),
     )
 
-    Column {
-        Row(
-            modifier
-                .padding(start = dp4)
-                .height(Theme.widgetSize.bottomMainBarHeight),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items.forEach { panelItem ->
-                ClickableIcon(icon = panelItem.icon, action = panelItem.action, tint = onSurface)
-            }
+    Row(
+        modifier
+            .navigationBarsPadding()
+            .padding(start = dp4)
+            .height(Theme.widgetSize.bottomMainBarHeight),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        items.forEach { panelItem ->
+            ClickableIcon(icon = panelItem.icon, action = panelItem.action, tint = onSurface)
         }
-        SystemNavigationBar()
     }
 }
 

@@ -36,7 +36,7 @@ internal fun PinInformationContent(send: SendMessage, modifier: Modifier = Modif
         ModalSheetBottomButtonsRow(
             leftTitle = text.shared.btnTitleCancel,
             rightTitle = text.shared.btnTitleAccept,
-            onLeftClicked = { send(Msg.Ui.CloseDialog) },
+            onLeftClicked = { send(Msg.Ui.ClosedDialog) },
             onRightClicked = { send(Msg.Ui.UpdateDialogContent(DialogContent.KEYBOARD)) }
         )
     }

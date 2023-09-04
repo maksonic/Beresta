@@ -11,8 +11,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,8 +52,6 @@ internal fun Content(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val isVisibleFirstFolderOffset = remember { mutableStateOf(true) }
-    val isCanScrollForward = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.isSelectionState)
     val currentSelectedFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
 
@@ -76,15 +72,13 @@ internal fun Content(
                     model = model,
                     send = send,
                     currentSelectedFolder = currentSelectedFolder,
-                    updateFirstVisibleFolderOffset = { isVisibleFirstFolderOffset.value = it },
-                    updateCanScrollForwardState = { isCanScrollForward.value = it },
                     listSortUiState = listSortUiState
                 )
             }
         }
 
         AnimateFadeInOut(model.value.base.successAfterLoading) {
-            BottomBarContent(model, send, isVisibleFirstFolderOffset, isCanScrollForward)
+            BottomBarContent(model, send)
         }
 
         AnimatedVisibility(model.value.isVisibleRemovedSnackBar) {

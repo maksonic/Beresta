@@ -10,32 +10,12 @@ import ru.maksonic.beresta.elm.core.ElmMessage
 import ru.maksonic.beresta.elm.core.ElmModel
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.DialogContent
 import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinFailStatus
-import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinVisibilityUiState
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinInfo
+import ru.maksonic.beresta.feature.hidden_notes_dialog.api.ui.PinInputVisibility
 
 /**
  * @Author maksonic on 15.07.2023
  */
-
-@Stable
-@Immutable
-data class PinCodeInfo(
-    val isCreated: Boolean,
-    val isCoolDown: Boolean,
-    val coolDownDelay: Int,
-    val failCount: Int
-) {
-    companion object {
-        private const val INITIAL_FAIL_DELAY = 15
-
-        val INITIAL = PinCodeInfo(
-            isCreated = false,
-            isCoolDown = false,
-            failCount = 0,
-            coolDownDelay = INITIAL_FAIL_DELAY
-        )
-    }
-}
-
 @Stable
 @Immutable
 data class Model(
@@ -43,8 +23,9 @@ data class Model(
     val input: String,
     val cachedInput: String,
     val dialogContent: DialogContent,
-    val pinSecure: PinVisibilityUiState,
-    val pinInfo: PinCodeInfo
+    val pinSecure: PinInputVisibility,
+    val pinInfo: PinInfo,
+    val isFetchedPinInfo: Boolean
 ) : ElmModel {
     companion object {
 
@@ -53,55 +34,59 @@ data class Model(
             input = "",
             cachedInput = "",
             dialogContent = DialogContent.INITIAL,
-            pinSecure = PinVisibilityUiState.INITIAL,
-            pinInfo = PinCodeInfo.INITIAL
+            pinSecure = PinInputVisibility.INITIAL,
+            pinInfo = PinInfo.INITIAL,
+            isFetchedPinInfo = false
         )
     }
 
     fun updatedPinVisibility() = this.copy(
-        pinSecure = this.pinSecure.copy(isVisible = !this.pinSecure.isVisible)
+        pinSecure = this.pinSecure.copy(isVisiblePin = !this.pinSecure.isVisiblePin)
     )
 
     fun updatedKeyTapVisibility() = this.copy(
-        pinSecure = this.pinSecure.copy(isVisibleKeyboardTap = !this.pinSecure.isVisibleKeyboardTap)
+        pinSecure = this.pinSecure.copy(isVisibleOnKeyboardTap = !this.pinSecure.isVisibleOnKeyboardTap)
     )
 }
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        data object CloseDialog : Ui()
+        data object ClosedDialog : Ui()
         data object OnBackspaceClicked : Ui()
         data class UpdateDialogContent(val content: DialogContent) : Ui()
-        data object ResetPinCodeClicked : Ui()
+        data object OnResetPinClicked : Ui()
         data object OnPinVisibilityClicked : Ui()
         data object OnKeyTapVisibilityClicked : Ui()
     }
 
     sealed class Inner : Msg() {
-        data class FetchedPinCodeStatus(val info: PinCodeInfo) : Inner()
-        data class FetchedPinSecurePrefs(val pinVisibilityUiState: PinVisibilityUiState) : Inner()
-        data class UpdateInput(val value: Int) : Inner()
+        data object FetchedPinStatusRequest : Inner()
+        data class FetchedPinStatus(val info: PinInfo) : Inner()
+        data class FetchedPinPrivacyState(val pinInputVisibility: PinInputVisibility) : Inner()
+        data class UpdatedInput(val value: Int) : Inner()
         data class UpdatedScreenCapturePermission(val isEnabled: Boolean) : Inner()
-        data class UpdatedCacheCode(val value: String) : Inner()
+        data class UpdatedCachePin(val value: String) : Inner()
         data object SuccessCodeResult : Inner()
         data class FailureCodeResult(val fail: PinFailStatus) : Inner()
-        data object CancelCoolDown : Inner()
-        //data class FetchedPinCoolDownWorkResult(val isBlocked: Boolean): Inner()
+        data object FinishedCoolDown : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    data object FetchSavedPinCodeStatus : Cmd()
-    data object FetchPinSecurePrefs : Cmd()
-    data class CreatePinCode(val code: String, val cachedCode: String) : Cmd()
-    data class VerifyPinCode(val scope: CoroutineScope, val code: String) : Cmd()
+    data object FetchPinStatus : Cmd()
+    data object FetchPinPrivacyState : Cmd()
     data class UpdateScreenCapturePermission(val isEnabled: Boolean) : Cmd()
-    data object ResetHiddenNotesPinCode : Cmd()
+    data class CreatePin(
+        val code: String, val cachedCode: String, val scope: CoroutineScope
+    ) : Cmd()
+
+    data class VerifyPin(val code: String, val scope: CoroutineScope) : Cmd()
+    data object ResetPin : Cmd()
+    data object ResetPinFailCounter : Cmd()
     data class UpdatePinVisibility(val isVisible: Boolean) : Cmd()
     data class UpdateKeyTapVisibility(val isVisible: Boolean) : Cmd()
-    data class RunPinCoolDownWork(val count: Int) : Cmd()
-    data object ResetPinFailCounter : Cmd()
-    data object ResetPinFailCoolDown : Cmd()
+    data class ShowPinCoolDownBlock(val failCount: Int, val endDate: Long) : Cmd()
+    data object HidePinCoolDownBlock : Cmd()
 }
 
 sealed class Eff : ElmEffect {

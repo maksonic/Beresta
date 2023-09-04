@@ -28,7 +28,8 @@ class LanguageProviderImpl(
                     folders = folders(currentLanguage, data),
                     trash = trash(currentLanguage, data),
                     sortSheet = sortNotesSheet(currentLanguage, data),
-                    hiddenNotes = hiddenNotes(currentLanguage, data)
+                    hiddenNotes = hiddenNotes(currentLanguage, data),
+                    errorUi = errorUi(currentLanguage, data)
                 )
                 emit(berestaLanguage)
             }
@@ -122,5 +123,12 @@ class LanguageProviderImpl(
         AppLanguage.ENGLISH -> data.english.hiddenNotes
         AppLanguage.CHINESE -> data.chinese.hiddenNotes
         AppLanguage.CHINESE_TR -> data.chineseTr.hiddenNotes
+    }
+
+    private fun errorUi(language: AppLanguage, data: LanguageStore) = when (language) {
+        AppLanguage.RUSSIAN -> data.russian.errorUi
+        AppLanguage.ENGLISH -> data.english.errorUi
+        AppLanguage.CHINESE -> data.chinese.errorUi
+        AppLanguage.CHINESE_TR -> data.chineseTr.errorUi
     }
 }

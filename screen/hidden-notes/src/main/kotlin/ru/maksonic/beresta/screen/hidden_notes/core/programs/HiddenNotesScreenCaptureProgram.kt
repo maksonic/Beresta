@@ -13,7 +13,7 @@ class HiddenNotesScreenCaptureProgram(
     ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Cmd.AllowScreenCapture -> screenCaptureManager.allowScreenCapture()
+            is Cmd.AllowScreenCapture -> screenCaptureManager.update(true)
             else -> {}
         }
     }

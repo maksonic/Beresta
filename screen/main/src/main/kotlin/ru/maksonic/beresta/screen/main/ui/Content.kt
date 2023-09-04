@@ -55,7 +55,7 @@ internal fun Content(
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
-    val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
+    val sortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
 
     BackHandler(isSelectionState.value) {
@@ -88,8 +88,8 @@ internal fun Content(
         val isCanScrollBackwardState = rememberSaveable { mutableStateOf(false) }
 
         CompositionLocalProvider(
-            LocalListSortState provides notesSortState.value,
-            LocalCurrentSelectedFolderState provides currentSelectedChipId.value
+            LocalListSortState provides sortState.value,
+            LocalCurrentSelectedFolderState provides currentSelectedChipId.value,
         ) {
             NotesList(
                 model = model,
@@ -98,6 +98,14 @@ internal fun Content(
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
                 updateChipsRowOffsetHeight = { chipsRowOffsetHeightPx.floatValue = it },
                 updatedCanScrollBackwardValue = { isCanScrollBackwardState.value = it }
+            )
+
+            ChipsRow(
+                model = model,
+                send = send,
+                api = chipsRowApi,
+                isColoredBackground = isCanScrollBackwardState,
+                chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             )
 
             MainBottomBar(
@@ -110,18 +118,9 @@ internal fun Content(
                 sharedNotesUiScrollState = notesListApi.sharedUiState
             )
 
-            ChipsRow(
-                api = chipsRowApi,
-                model = model,
-                isColoredBackground = isCanScrollBackwardState,
-                chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
-                onAddNewChipClicked = { send(Msg.Ui.OnAddNewChipClicked) },
-            )
-
             MainSearchBar(model, send, isCanScrollBackwardState)
 
             EditNoteExpandableFab(model, send, modifier)
-
 
             if (model.value.modalSheet.isVisible) {
                 ModalBottomSheetDefault(

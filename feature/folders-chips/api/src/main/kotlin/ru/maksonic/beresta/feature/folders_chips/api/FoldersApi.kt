@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.elm.core.ElmBaseModel
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
-
 
 /**
  * @Author maksonic on 03.07.2023
@@ -19,11 +19,12 @@ interface FoldersApi {
 
             @Composable
             fun Widget(
-                isLoading: State<Boolean>,
+                state: ElmBaseModel,
                 isColoredBackground: State<Boolean>,
                 chips: FolderUi.Collection,
                 chipsRowOffsetHeightPx: State<Float>,
                 onAddNewChipClicked: () -> Unit,
+                onRetryFetchClicked: () -> Unit
             )
         }
 
@@ -46,6 +47,7 @@ interface FoldersApi {
                 modifier: Modifier
             )
         }
+
         interface Placeholder {
             @Composable
             fun List(modifier: Modifier)

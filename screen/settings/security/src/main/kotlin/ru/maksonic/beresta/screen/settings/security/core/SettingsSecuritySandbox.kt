@@ -28,18 +28,18 @@ class SettingsSecuritySandbox(
     private fun onKeyTapVisibilityClicked(model: Model): UpdateResult =
         ElmUpdate(
             model.updatedKeyTapVisibility(),
-            commands = setOf(Cmd.UpdateKeyTapVisibility(!model.pinSecure.isVisibleKeyboardTap))
+            commands = setOf(Cmd.UpdateKeyTapVisibility(!model.pinSecure.isVisibleOnKeyboardTap))
         )
 
     private fun onPinVisibilityClicked(model: Model): UpdateResult =
         ElmUpdate(
             model.updatedPinVisibility(),
-            commands = setOf(Cmd.UpdatePinVisibility(!model.pinSecure.isVisible))
+            commands = setOf(Cmd.UpdatePinVisibility(!model.pinSecure.isVisiblePin))
         )
 
     private fun fetchedPinSecurePrefs(
         model: Model,
         msg: Msg.Inner.FetchedPinSecurePrefs
     ): UpdateResult =
-        ElmUpdate(model.copy(pinSecure = msg.pinVisibilityUiState))
+        ElmUpdate(model.copy(pinSecure = msg.pinInputVisibility))
 }

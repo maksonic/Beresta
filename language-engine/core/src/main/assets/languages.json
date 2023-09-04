@@ -157,14 +157,18 @@
       "top_bar_title": "Скрытые заметки",
       "dialog_title": "Установить ПИН-код",
       "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
+      "hint_cool_down_verification": "Слишком много попыток. Пожалуйста повторите ввод ПИН-кода через:",
       "hint_create_code": "Введите 6-значный код",
       "hint_create_repeat_code": "Повторите код ещё раз",
       "hint_verify_code": "Введите ПИН-код",
-      "hint_fail_creation": "Ошибка. ПИН-коды не совпали.",
-      "hint_fail_verification": "Ошибка. Неверный ПИН-код.",
-      "hint_forget_pin_code": "Забыли ПИН-код?",
+      "hint_forget_pin_code": "Создать новый ПИН-код?",
       "dialog_title_reset_pin": "Вы действительно хотите создать новый ПИН-код?",
       "dialog_message_reset_pin": "Внимание! Все текущие скрытые заметки будут безвозвратно удалены."
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "Не удалось загрузить папки",
+      "error_ui_fail_pin_creation": "Ошибка. ПИН-коды не совпали.",
+      "error_ui_fail_pin_verification": "Ошибка. Неверный ПИН-код."
     }
   },
   "english": {
@@ -325,14 +329,18 @@
       "top_bar_title": "Hidden notes",
       "dialog_title": "Set PIN",
       "dialog_message": "The PIN code is used to access the hidden notes folder.\n\nThe PIN cannot be restored.\n\nIf you have forgotten your PIN, you can set a new one, but all hidden notes will be permanently deleted.",
+      "hint_cool_down_verification": "Too many tries. Please re-enter the PIN code via:",
       "hint_create_code": "Enter 6 digit code",
       "hint_create_repeat_code": "Repeat the code again",
       "hint_verify_code": "Enter your PIN",
-      "hint_fail_creation": "Error. PIN codes did not match.",
-      "hint_fail_verification": "Error. Invalid PIN.",
-      "hint_forget_pin_code": "Forgot your PIN?",
+      "hint_forget_pin_code": "Create a new PIN?",
       "dialog_title_reset_pin": "Are you sure you want to create a new PIN?",
       "dialog_message_reset_pin": "Attention! All current hidden notes will be permanently deleted."
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "Failed to load folders",
+      "error_ui_fail_pin_creation": "Error. PIN codes did not match.",
+      "error_ui_fail_pin_verification": "Error. Invalid PIN."
     }
   },
   "chinese": {
@@ -493,14 +501,18 @@
       "top_bar_title": "隐藏笔记",
       "dialog_title": "设置密码",
       "dialog_message": "PIN 码用于访问包含隐藏笔记的文件夹。\n\nPIN 码无法恢复。\n\n如果您忘记了 PIN 码，可以设置新的 PIN 码，但所有隐藏的笔记将被永久删除。",
+      "hint_cool_down_verification": "尝试太多了。 请通过以下方式重新输入 PIN 码：",
       "hint_create_code": "输入6位数字代码",
       "hint_create_repeat_code": "再次重复代码",
       "hint_verify_code": "输入您的 PIN 码",
-      "hint_fail_creation": "错误。 PIN 码不匹配。",
-      "hint_fail_verification": "错误。 PIN 码无效。",
-      "hint_forget_pin_code": "忘记了您的 PIN 码？",
+      "hint_forget_pin_code": "创建新的 PIN 码？",
       "dialog_title_reset_pin": "您确定要创建新的 PIN 码吗？",
       "dialog_message_reset_pin": "注意力！ 所有当前隐藏的笔记将被永久删除。"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "无法加载文件夹",
+      "error_ui_fail_pin_creation": "错误。 PIN 码不匹配。",
+      "error_ui_fail_pin_verification": "错误。 PIN 码无效。"
     }
   },
   "chinese_tr": {
@@ -661,14 +673,18 @@
       "top_bar_title": "隱藏筆記",
       "dialog_title": "設置密碼",
       "dialog_message": "PIN 碼用於訪問包含隱藏筆記的文件夾。\n\nPIN 碼無法恢復。\n\n如果您忘記了 PIN 碼，可以設置新的 PIN 碼，但所有隱藏的筆記將被永久刪除。",
+      "hint_cool_down_verification": "嘗試太多了。 請通過以下方式重新輸入 PIN 碼：",
       "hint_create_code": "輸入6位數字代碼",
       "hint_create_repeat_code": "再次重複代碼",
       "hint_verify_code": "輸入您的 PIN 碼",
-      "hint_fail_creation": "錯誤。 PIN 碼不匹配。",
-      "hint_fail_verification": "錯誤。 PIN 碼無效。",
-      "hint_forget_pin_code": "忘記了您的 PIN 碼？",
+      "hint_forget_pin_code": "創建新的 PIN 碼？",
       "dialog_title_reset_pin": "您確定要創建新的 PIN 碼嗎？",
       "dialog_message_reset_pin": "注意力！ 所有當前隱藏的筆記將被永久刪除。"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "無法加載文件夾",
+      "error_ui_fail_pin_creation": "錯誤。 PIN 碼不匹配。",
+      "error_ui_fail_pin_verification": "錯誤。 PIN 碼無效。"
     }
   }
 }

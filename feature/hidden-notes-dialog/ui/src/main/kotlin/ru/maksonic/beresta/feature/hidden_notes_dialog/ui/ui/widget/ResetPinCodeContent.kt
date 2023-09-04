@@ -42,7 +42,7 @@ fun ResetPinCodeContent(
             leftTitle = text.shared.btnTitleCancel,
             rightTitle = text.shared.btnTitleCreate,
             onLeftClicked = { send(Msg.Ui.UpdateDialogContent(DialogContent.KEYBOARD)) },
-            onRightClicked = { send(Msg.Ui.ResetPinCodeClicked) }
+            onRightClicked = { send(Msg.Ui.OnResetPinClicked) }
         )
     }
 }

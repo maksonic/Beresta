@@ -28,11 +28,10 @@ import ru.maksonic.beresta.ui.widget.functional.animation.PlaceholderListWidget
 private const val PLACEHOLDER_LIST_COUNT = 5
 
 @Composable
-internal fun Placeholder(modifier: Modifier = Modifier) {
+internal fun ChipsPlaceholder(modifier: Modifier = Modifier) {
     Box(
         modifier
             .fillMaxWidth()
-            .padding(top = Theme.widgetSize.topBarSmallHeight)
             .height(Theme.widgetSize.noteChipsContainerHeight),
         contentAlignment = Alignment.Center
     ) {

@@ -42,7 +42,7 @@ class ChipsDataProgram(
                 consumer(Msg.Inner.FetchedChipsData(FolderUi.Collection(chips)))
             }.collect()
         }.onFailure {
-            consumer(Msg.Inner.FetchedChipsData(FolderUi.Collection(emptyList())))
+            consumer(Msg.Inner.FetchedChipsError)
         }
     }
 }

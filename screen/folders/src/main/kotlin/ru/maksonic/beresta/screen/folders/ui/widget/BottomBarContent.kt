@@ -1,20 +1,13 @@
 package ru.maksonic.beresta.screen.folders.ui.widget
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
@@ -25,10 +18,6 @@ import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.color.onTertiaryContainer
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
-import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Edit
@@ -38,11 +27,9 @@ import ru.maksonic.beresta.ui.theme.icons.Unpin
 import ru.maksonic.beresta.ui.widget.bar.bottom.BaseBottomBarItem
 import ru.maksonic.beresta.ui.widget.bar.bottom.BottomBarOld
 import ru.maksonic.beresta.ui.widget.bar.bottom.DisabledBottomBarPlaceholder
-import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
+import ru.maksonic.beresta.ui.widget.button.PrimaryButton
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
-import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
-import ru.maksonic.beresta.ui.widget.functional.rippledClick
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 
 /**
@@ -52,8 +39,6 @@ import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 internal fun BottomBarContent(
     model: State<Model>,
     send: SendMessage,
-    isVisibleFirstFolderOffset: State<Boolean>,
-    isCanScrollForward: State<Boolean>,
     modifier: Modifier = Modifier
 ) {
     val isSelection = rememberUpdatedState(model.value.isSelectionState)
@@ -61,67 +46,24 @@ internal fun BottomBarContent(
     val isDisabledBottomBar = rememberUpdatedState(
         model.value.selectedList.isEmpty() && model.value.isSelectionState
     )
-    val containerElevation = animateDpAsState(
-        if (isSelection.value) Theme.elevation.Level0
-        else if (!isCanScrollForward.value) Theme.elevation.Level0 else Theme.elevation.Level2,
-        label = ""
-    )
 
-    val selectionHeight = Theme.widgetSize.btnPrimaryHeight.plus(SystemNavigationBarHeight)
-    val containerHeight = animateDp(
-        if (isSelection.value) selectionHeight else Theme.widgetSize.bottomBarNormalHeight
-    )
-    val paddingEdge = animateDp(if (isSelection.value) 0.dp else dp16)
-    val paddingBottom = animateDp(
-        if (isSelection.value) 0.dp else SystemNavigationBarHeight.plus(dp16)
-    )
-    val tonal = animateDp(
-        if (isVisibleFirstFolderOffset.value) Theme.tonal.Level0 else Theme.tonal.Level4
-    )
-    val color = animateColorAsState(
-        targetValue = if (isSelection.value) background else tertiaryContainer, label = ""
-    )
-    val shape = animateDp(if (isSelection.value) 0.dp else 50.dp)
-
-
-    SurfacePro(
-        tonalElevation = tonal.value,
-        shadowElevation = containerElevation.value,
-        color = color.value,
-        shape = RoundedCornerShape(shape.value),
-        modifier = modifier
-            .padding(
-                start = paddingEdge.value,
-                end = paddingEdge.value,
-                bottom = paddingBottom.value
+    AnimateContent(isSelection.value) {
+        if (it) {
+            SelectedStateBarContent(
+                send = send,
+                selectedFoldersCount = model.value.selectedList.count(),
+                isVisibleUnpinBtn = isVisibleUnpinBottomBarIcon,
+                isDisabledBottomBar = isDisabledBottomBar
             )
-            .fillMaxWidth()
-            .height(containerHeight.value)
-    ) {
-        AnimateContent(isSelection.value) {
-            if (it) {
-                SelectedStateBarContent(
-                    send = send,
-                    selectedFoldersCount = model.value.selectedList.count(),
-                    isVisibleUnpinBtn = isVisibleUnpinBottomBarIcon,
-                    isDisabledBottomBar = isDisabledBottomBar
-                )
-            } else {
-                Box(
-                    modifier
-                        .fillMaxWidth()
-                        .height(Theme.widgetSize.btnPrimaryHeight)
-                        .rippledClick(rippleColor = onTertiaryContainer) {
-                            send(Msg.Ui.OnAddNewFolderClicked)
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text.folders.titleDialogNewFolder,
-                        style = TextDesign.title.copy(color = onTertiaryContainer)
-                    )
-                }
-            }
+        } else {
+            PrimaryButton(
+                action = { send(Msg.Ui.OnAddNewFolderClicked) },
+                title = text.folders.titleDialogNewFolder,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(dp16)
+            )
         }
     }
 }
@@ -164,7 +106,9 @@ private fun SelectedStateBarContent(
             )
         )
 
-        BottomBarOld(actions)
+        SurfacePro(tonalElevation = Theme.tonal.Level4) {
+            BottomBarOld(actions)
+        }
 
         AnimateFadeInOut(isDisabledBottomBar.value) {
             DisabledBottomBarPlaceholder()

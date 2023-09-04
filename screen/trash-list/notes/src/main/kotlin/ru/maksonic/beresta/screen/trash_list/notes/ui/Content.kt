@@ -9,8 +9,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -39,7 +37,6 @@ internal fun Content(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val isVisibleFirstItemOffset = remember { mutableStateOf(true) }
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         Scaffold(
@@ -52,7 +49,6 @@ internal fun Content(
                 send = send,
                 notesListUiApi = notesListUiApi,
                 noteCardUiApi = noteCardUiApi,
-                updateFirstVisibleItemOffset = { isVisibleFirstItemOffset.value = it },
                 modifier = modifier.padding(paddings)
             )
         }
@@ -60,7 +56,6 @@ internal fun Content(
             onRestoreClicked = { send(Msg.Ui.OnBottomBarRestoreSelectedNotesClicked) },
             onDeleteClicked = { send(Msg.Ui.OnBottomBarDeleteSelectedNotesClicked) },
             isSelectionState = model.value.isSelectionState,
-            isVisibleFirstItemOffset = isVisibleFirstItemOffset,
             isDisabledBottomBar = model.value.selectedList.isEmpty() && model.value.isSelectionState,
         )
     }
@@ -85,4 +80,3 @@ internal fun Content(
         isSingleItemAction = model.value.isSingleItemAction,
     )
 }
-
