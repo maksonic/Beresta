@@ -30,8 +30,8 @@ data class ModalSheet(
         val Initial = ModalSheet(
             isVisible = false,
             state = SheetState(
-                initialValue = SheetValue.Hidden,
-                skipPartiallyExpanded = true
+                skipPartiallyExpanded = true,
+                initialValue = SheetValue.Hidden
             ),
             content = ModalSheetContent.NOTHING
         )
