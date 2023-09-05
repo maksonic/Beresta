@@ -106,11 +106,10 @@ sealed class Msg : ElmMessage {
 
 sealed class Cmd : ElmCommand {
     data object FetchNotesData : Cmd()
-    data object FetchMovedForHideNotesData : Cmd()
     data object AllowScreenCapture : Cmd()
     data class UpdateNotesGridDatastoreState(val count: Int) : Cmd()
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
-    data class UnhideSelectedNotes(val notes: List<NoteUi>) : Cmd()
+    data class UnhideSelectedNotes(val notes: Set<NoteUi>) : Cmd()
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
 }

@@ -20,10 +20,7 @@ internal fun NavGraphBuilder.hiddenNotesScreen(
     animator: NavigationAnimator,
 ) {
     composable(
-        route = Destination.HiddenNotes.routeWithArg,
-        arguments = listOf(navArgument(Destination.HiddenNotes.passedKey) {
-            type = NavType.StringType
-        }),
+        route = Destination.HiddenNotes.route,
         enterTransition = {
             when (initialState.destination.route) {
                 Destination.Main.route -> animator.slideIntoLeft(this, velocity)

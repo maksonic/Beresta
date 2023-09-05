@@ -328,15 +328,17 @@ class MainSandbox(
         ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
 
     private fun navigatedToHiddenNotes(model: Model): UpdateResult {
-        val args = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
-            model.notes.selectedList.map { it.id } else emptyList()
+        val hiddenNotes = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
+            model.notes.selectedList else emptySet()
 
         return ElmUpdate(
             model.copy(
                 notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
                 searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
                 editNoteFabState = model.editNoteFabState.copy(isVisible = true),
-            ), effects = setOf(Eff.NavigateToHiddenNotes(args))
+            ),
+            commands = setOf(Cmd.HideSelectedNotes(hiddenNotes)),
+            effects = setOf(Eff.NavigateToHiddenNotes)
         )
     }
 

@@ -128,6 +128,7 @@ sealed class Cmd : ElmCommand {
     data class RemoveSelectedNotes(val notes: List<NoteUi>) : Cmd()
     data class UndoRemoveNotes(val notes: List<NoteUi>) : Cmd()
     data class UpdatePinnedNotesInCache(val pinned: Set<NoteUi>) : Cmd()
+    data class HideSelectedNotes(val notes: Set<NoteUi>) : Cmd()
     data object FetchChipsData : Cmd()
     data object FetchChipsSortState : Cmd()
     data object ResetCurrentSelectedFolder : Cmd()
@@ -139,7 +140,7 @@ sealed class Eff : ElmEffect {
     data object NavigateToSettings : Eff()
     data class NavigateToFolders(val ids: List<Long>) : Eff()
     data object NavigateToTrash : Eff()
-    data class NavigateToHiddenNotes(val ids: List<Long>) : Eff()
+    data object NavigateToHiddenNotes : Eff()
     data object ShowAddNewChipDialog : Eff()
     data object ShowedHiddenNotesEnterPasswordDialog : Eff()
 }

@@ -36,6 +36,7 @@ class NotesDataProgram(
             is Cmd.RemoveSelectedNotes -> moveSelectedNotesToTrash(cmd.notes, consumer)
             is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
             is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes, consumer)
+            is Cmd.HideSelectedNotes -> moveNotesToHiddenFolder(cmd.notes)
             else -> {}
         }
     }
@@ -96,6 +97,14 @@ class NotesDataProgram(
             )
         }
         val notesDomain = mapper.mapListFrom(selected)
+        notesInteractor.updateList(notesDomain)
+    }
+
+    private suspend fun moveNotesToHiddenFolder(notes: Set<NoteUi>) = runCatching {
+        val notesDomain = mapper.mapListFrom(notes.toList()).map {
+            it.copy(isHidden = true, isPinned = false, pinTime = null)
+        }
+
         notesInteractor.updateList(notesDomain)
     }
 }

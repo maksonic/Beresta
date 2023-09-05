@@ -20,7 +20,6 @@ val hiddenNotesScreenModule = module {
             mapper = get(),
             appLanguageEngineApi = get(),
             dateFormatter = get(),
-            navigator = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }

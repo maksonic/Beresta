@@ -38,7 +38,7 @@ class AppNavigator : AbstractNavigator() {
             navigate(entry, Destination.EditNote.passedListArgs(listOf(false, noteId)))
         },
         toFoldersList = { ids -> navigate(entry, Destination.Folders.passedArgs(ids)) },
-        toHiddenNotes = { ids -> navigate(entry, Destination.HiddenNotes.passedArgs(ids)) }
+        toHiddenNotes = { navigate(entry, Destination.HiddenNotes.route) }
     )
 
     override fun settingsRouter(entry: NavBackStackEntry) =
@@ -59,9 +59,7 @@ class AppNavigator : AbstractNavigator() {
 
     override fun foldersRouter(entry: NavBackStackEntry) = FoldersScreenRouter(
         onBack = ::backPressed,
-        toHiddenNotes = {
-            navigate(entry, Destination.HiddenNotes.passedArgs(emptyList<Long>()))
-        }
+        toHiddenNotes = { navigate(entry, Destination.HiddenNotes.route) }
     )
 
     override fun trashNotesRouter(entry: NavBackStackEntry) = TrashNotesScreenRouter(

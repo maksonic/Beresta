@@ -61,7 +61,11 @@ internal fun NotesList(
             modifier = modifier.padding(top = Theme.widgetSize.topBarSmallHeight),
             placeholderModifier = Modifier
                 .systemBarsPadding()
-                .padding(top = Theme.widgetSize.topBarSmallHeight, start = dp10, end = dp10),
+                .padding(
+                    top = Theme.widgetSize.topBarSmallHeight.plus(dp12),
+                    start = dp10,
+                    end = dp10,
+                ),
             state = model.value.notes,
             sorter = sorter,
             onNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },

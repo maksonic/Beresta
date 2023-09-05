@@ -8,5 +8,5 @@ data class MainScreenRouter(
     val toTrash: () -> Unit,
     val toNoteEditor: (id: Long?) -> Unit,
     val toFoldersList: (passedListIds: List<Long>) -> Unit,
-    val toHiddenNotes: (passedListIds: List<Long>) -> Unit
+    val toHiddenNotes: () -> Unit
 )

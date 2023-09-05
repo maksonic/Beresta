@@ -12,8 +12,6 @@ import ru.maksonic.beresta.feature.notes.api.domain.usecase.FetchHiddenNotesUseC
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
 import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
-import ru.maksonic.beresta.navigation.router.AbstractNavigator
-import ru.maksonic.beresta.navigation.router.Destination
 import ru.maksonic.beresta.screen.hidden_notes.core.Cmd
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
 import java.time.LocalDateTime
@@ -27,7 +25,6 @@ class HiddenNotesDataProgram(
     private val mapper: NoteUiMapper,
     private val appLanguageEngineApi: LanguageEngineApi,
     private val dateFormatter: DateFormatter,
-    private val navigator: AbstractNavigator,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
 
@@ -38,7 +35,6 @@ class HiddenNotesDataProgram(
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchNotesData -> fetchNotesList(consumer)
-            is Cmd.FetchMovedForHideNotesData -> fetchMovedForHideNotes(consumer)
             is Cmd.RemoveSelectedNotes -> moveSelectedNotesToTrash(cmd.notes, consumer)
             is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
             is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes, consumer)
@@ -64,25 +60,6 @@ class HiddenNotesDataProgram(
             consumer(Msg.Inner.FetchedNotesError(throwable.localizedMessage ?: "Error"))
         }
     }
-
-    private suspend fun fetchMovedForHideNotes(consumer: (Msg) -> Unit) =
-        withContext(ioDispatcher) {
-            val passedNotesIds = navigator.getListLongFromString(Destination.HiddenNotes.passedKey)
-
-            if (passedNotesIds.isNotEmpty()) {
-                runCatching {
-                    notesInteractor.fetchList().collect { notesDomain ->
-                        val notes = notesDomain
-                            .filter { note -> passedNotesIds.any { noteId -> note.id == noteId } }
-                            .map { it.copy(isHidden = true, isPinned = false, pinTime = null) }
-
-                        notesInteractor.updateList(notes)
-                    }
-                }.onFailure { throwable ->
-                    consumer(Msg.Inner.FetchedNotesError(throwable.localizedMessage ?: "Error"))
-                }
-            }
-        }
 
     private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) =
         withContext(ioDispatcher) {
@@ -125,8 +102,8 @@ class HiddenNotesDataProgram(
         notesInteractor.updateList(notesDomain)
     }
 
-    private suspend fun unhideNotes(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
-        val unhidden = mapper.mapListFrom(notes)
+    private suspend fun unhideNotes(notes: Set<NoteUi>, consumer: (Msg) -> Unit) {
+        val unhidden = mapper.mapListFrom(notes.toList())
             .map { it.copy(isPinned = false, pinTime = null, isHidden = false) }
 
         notesInteractor.updateList(unhidden)

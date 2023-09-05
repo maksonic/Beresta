@@ -23,7 +23,7 @@ class HiddenNotesSandbox(
     hiddenNotesScreenCaptureProgram: HiddenNotesScreenCaptureProgram,
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchNotesData, Cmd.FetchMovedForHideNotesData),
+    initialCmd = setOf(Cmd.FetchNotesData),
     subscriptions = listOf(
         hiddenNotesDataProgram,
         hiddenNotesSortProgram,
@@ -159,7 +159,7 @@ class HiddenNotesSandbox(
                 searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
                 editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
-            commands = setOf(Cmd.UnhideSelectedNotes(unhidden.toList())),
+            commands = setOf(Cmd.UnhideSelectedNotes(unhidden)),
         )
     }
 

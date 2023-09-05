@@ -84,7 +84,7 @@ private fun HandleUiEffects(
             is Eff.NavigateToSettings -> router.toSettings()
             is Eff.NavigateToFolders -> router.toFoldersList(eff.ids)
             is Eff.NavigateToTrash -> router.toTrash()
-            is Eff.NavigateToHiddenNotes -> router.toHiddenNotes(eff.ids)
+            is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
             is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.addNewFolder()
             is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
 
