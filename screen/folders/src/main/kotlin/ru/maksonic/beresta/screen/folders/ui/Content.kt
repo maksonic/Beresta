@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.screen.folders.ui
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,14 +10,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
-import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.widget.BottomBarContent
@@ -26,13 +23,8 @@ import ru.maksonic.beresta.screen.folders.ui.widget.FoldersList
 import ru.maksonic.beresta.screen.folders.ui.widget.HiddenNotesDialog
 import ru.maksonic.beresta.screen.folders.ui.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.screen.folders.ui.widget.TopBar
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.bar.SnackBarAction
-import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
-import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
@@ -52,7 +44,6 @@ internal fun Content(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val isSelectionState = rememberUpdatedState(model.value.isSelectionState)
     val currentSelectedFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
 
     BackHandler(model.value.isSelectionState) {
@@ -79,24 +70,6 @@ internal fun Content(
 
         AnimateFadeInOut(model.value.base.successAfterLoading) {
             BottomBarContent(model, send)
-        }
-
-        AnimatedVisibility(model.value.isVisibleRemovedSnackBar) {
-            val idlePadding =
-                Theme.widgetSize.btnPrimaryHeight.plus(dp16).plus(SystemNavigationBarHeight)
-            val selectionPadding =
-                Theme.widgetSize.bottomBarNormalHeight.plus(SystemNavigationBarHeight)
-            val snackBarPadding =
-                animateDp(if (isSelectionState.value) selectionPadding else idlePadding)
-
-            SnackBarAction(
-                message = text.folders.hintRemovedFoldersCount.plus(
-                    " ${model.value.removedList.count()}"
-                ),
-                actionTitle = text.shared.btnTitleCancel,
-                onClick = { send(Msg.Ui.OnSnackUndoRemoveFoldersClicked) },
-                modifier = Modifier.padding(bottom = snackBarPadding.value)
-            )
         }
 
         if (model.value.modalSheet.isVisible) {

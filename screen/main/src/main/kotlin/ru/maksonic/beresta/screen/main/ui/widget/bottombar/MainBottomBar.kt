@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -20,6 +21,7 @@ import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
 import ru.maksonic.beresta.feature.notes.api.ui.updateScroll
 import ru.maksonic.beresta.language_engine.shell.provider.text
+import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
 import ru.maksonic.beresta.screen.main.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
@@ -49,23 +51,21 @@ import ru.maksonic.beresta.ui.widget.surface.SurfacePro
  */
 @Composable
 internal fun MainBottomBar(
-    state: State<MainBottomBarState>,
+    model: State<Model>,
     send: SendMessage,
-    isSelectionState: State<Boolean>,
+    state: State<MainBottomBarState>,
     isVisibleBottomBar: State<Boolean>,
-    isEnabledBar: State<Boolean>,
-    isShowUnpinBtn: State<Boolean>,
     sharedNotesUiScrollState: SharedUiState<SharedNotesUiScrollState>,
     modifier: Modifier = Modifier
 ) {
     val offset = Theme.widgetSize.bottomMainBarHeight.plus(SystemNavigationBarHeight)
     val transition = animateDp(if (isVisibleBottomBar.value) 0.dp else offset)
 
-    LaunchedEffect(isSelectionState.value) {
+    LaunchedEffect(model.value.notes.isSelection) {
         sharedNotesUiScrollState.updateScroll(true)
     }
 
-    Column(
+    Box(
         modifier
             .fillMaxWidth()
             .graphicsLayer { translationY = transition.value.toPx() }
@@ -83,9 +83,7 @@ internal fun MainBottomBar(
                 AnimatedContent(targetState = state.value, label = "") { barState ->
                     when (barState) {
                         MainBottomBarState.IDLE -> IdleBarContent(send)
-                        MainBottomBarState.SELECTION -> {
-                            SelectedBarContent(send, isEnabledBar, isShowUnpinBtn)
-                        }
+                        MainBottomBarState.SELECTION -> SelectedBarContent(model, send)
                     }
                 }
             }
@@ -120,10 +118,11 @@ private fun IdleBarContent(
 
 @Composable
 private fun SelectedBarContent(
-    send: SendMessage,
-    isEnabledBar: State<Boolean>,
-    isShowUnpinBtn: State<Boolean>
+    model: State<Model>,
+    send: SendMessage
 ) {
+    val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
+
     val items = arrayOf(
         BaseBottomBarItem(
             icon = AppIcon.Lock,
@@ -152,6 +151,9 @@ private fun SelectedBarContent(
 
     Box {
         BottomBarOld(items)
-        AnimateFadeInOut(visible = !isEnabledBar.value) { DisabledBottomBarPlaceholder() }
+
+        AnimateFadeInOut(visible = model.value.notes.selectedList.isEmpty()) {
+            DisabledBottomBarPlaceholder()
+        }
     }
 }

@@ -58,7 +58,6 @@ class HiddenNotesSandbox(
         is Msg.Ui.OnCounterBarSelectAllClicked -> onCounterBarSelectAllClicked(model)
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
         //snack bar
-        is Msg.Inner.HiddenRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         //other
         is Msg.Inner.HiddenLoadingPlaceholder -> hiddenLoadingPlaceholder(model)
@@ -178,12 +177,12 @@ class HiddenNotesSandbox(
                     selectedList = emptySet(),
                     removedList = model.notes.selectedList,
                     isSelection = false,
-                    isVisibleRemovedSnackBar = true
                 ),
                 searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
                 editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
             commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
+            effects = setOf(Eff.ShowSnackBar("${model.notes.selectedList.count()}"))
         )
     }
 
@@ -239,16 +238,6 @@ class HiddenNotesSandbox(
             )
         )
     }
-
-    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = ElmUpdate(
-        model = model.copy(
-            base = model.base.copy(isLoading = false),
-            notes = model.notes.copy(
-                removedList = emptySet(),
-                isVisibleRemovedSnackBar = false
-            )
-        )
-    )
 
     private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
         val restored = model.notes.removedList.map { note -> note.copy(isMovedToTrash = false) }

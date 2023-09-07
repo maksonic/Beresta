@@ -53,7 +53,7 @@ val mainScreenModule = module {
             notesDataProgram = get(),
             notesSortProgram = get(),
             chipsDataProgram = get(),
-            chipsSortProgram = get()
+            chipsSortProgram = get(),
         )
     }
 }

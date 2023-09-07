@@ -2,6 +2,9 @@ package ru.maksonic.beresta.screen.main.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalFocusManager
@@ -15,9 +18,11 @@ import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.core.Eff
 import ru.maksonic.beresta.screen.main.core.MainSandbox
+import ru.maksonic.beresta.screen.main.core.MainSnackBarKey
 import ru.maksonic.beresta.screen.main.core.Msg
 
 /**
@@ -40,9 +45,11 @@ internal fun Container(
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        modalBottomSheetState = model.value.modalSheet.state,
-        hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         chipsDialogApi = chipsDialogApi,
+        modalBottomSheetState = model.value.modalSheet.state,
+        snackState = model.value.snackNotesState,
+        hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
+        send = sandbox::send
     )
 
     Content(
@@ -51,7 +58,7 @@ internal fun Container(
         notesListApi = notesListApi,
         chipsRowApi = chipsRowApi,
         chipsDialogApi = chipsDialogApi,
-        listSortUiState = listSortUiState,
+        listSortUiState = listSortUiState
     )
 }
 
@@ -60,19 +67,25 @@ internal fun Container(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: MainScreenRouter,
-    modalBottomSheetState: SheetState,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    hideSheet: () -> Unit
+    modalBottomSheetState: SheetState,
+    snackState: SnackbarHostState,
+    hideModalSheet: () -> Unit,
+    send: SendMessage
 ) {
     val scope = rememberCoroutineScope()
+    val snackScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+
+    // Snack messages
+    val removedNotesPrefix = text.shared.hintRemovedNotesCount
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
-                        hideSheet()
+                        hideModalSheet()
                     }
                 }
             }
@@ -86,8 +99,23 @@ private fun HandleUiEffects(
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
             is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.addNewFolder()
-            is Eff.ShowedHiddenNotesEnterPasswordDialog -> {
 
+            is Eff.ShowSnackBar -> {
+                snackScope.launch {
+                    when (eff.key) {
+                        MainSnackBarKey.REMOVED_NOTES -> {
+                            val result = snackState.showSnackbar(
+                                message = "$removedNotesPrefix ${eff.message}",
+                                actionLabel = eff.key.name,
+                                duration = SnackbarDuration.Short
+                            )
+
+                            if (result == SnackbarResult.ActionPerformed) {
+                                send(Msg.Ui.OnSnackUndoRemoveNotesClicked)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

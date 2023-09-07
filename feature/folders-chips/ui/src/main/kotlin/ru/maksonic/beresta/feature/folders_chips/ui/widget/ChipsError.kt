@@ -52,7 +52,7 @@ internal fun ChipsError(
 
         Box(
             modifier
-                .height(Theme.widgetSize.filterChipHeight)
+                .height(Theme.widgetSize.chipHeight)
                 .padding(start = dp16)
                 .clip(CircleShape)
                 .background(tertiaryContainer)

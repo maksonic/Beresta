@@ -37,7 +37,7 @@ internal fun AddNewChipButton(
     ) {
         Box(
             modifier
-                .size(Theme.widgetSize.filterChipHeight)
+                .size(Theme.widgetSize.chipHeight)
                 .clip(CircleShape)
                 .drawBehind { drawRect(color.value) }
                 .border(1.dp, onSurface, CircleShape)

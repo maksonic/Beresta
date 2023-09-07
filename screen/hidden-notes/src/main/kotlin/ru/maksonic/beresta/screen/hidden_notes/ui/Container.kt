@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +31,7 @@ import ru.maksonic.beresta.feature.edit_note.api.isExpanded
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.search_bar.api.isExpanded
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
@@ -58,8 +62,10 @@ internal fun Container(
         effects = sandbox.effects,
         router = router,
         modalBottomSheetState = model.value.modalSheet.state,
-        hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
-        updateUserAction = { isUserAction.value = it }
+        hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
+        updateUserAction = { isUserAction.value = it },
+        snackState = model.value.snackNotesState,
+        send = sandbox::send
     )
 
     BackHandler {
@@ -117,11 +123,16 @@ private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: HiddenNotesScreenRouter,
     modalBottomSheetState: SheetState,
-    hideSheet: () -> Unit,
-    updateUserAction: (Boolean) -> Unit
+    hideModalSheet: () -> Unit,
+    updateUserAction: (Boolean) -> Unit,
+    snackState: SnackbarHostState,
+    send: SendMessage
 ) {
     val scope = rememberCoroutineScope()
+    val snackScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
+    // Snack messages
+    val removedNotesPrefix = text.shared.hintRemovedNotesCount
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
@@ -129,7 +140,7 @@ private fun HandleUiEffects(
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
-                        hideSheet()
+                        hideModalSheet()
                     }
                 }
             }
@@ -138,6 +149,20 @@ private fun HandleUiEffects(
                 focusManager.clearFocus().let {
                     updateUserAction(true)
                     router.toNoteEditor(eff.id)
+                }
+            }
+
+            is Eff.ShowSnackBar -> {
+                snackScope.launch {
+                    val result = snackState.showSnackbar(
+                        message = "$removedNotesPrefix ${eff.message}",
+                        actionLabel = "Undo remove selected notes",
+                        duration = SnackbarDuration.Short
+                    )
+
+                    if (result == SnackbarResult.ActionPerformed) {
+                        send(Msg.Ui.OnSnackUndoRemoveNotesClicked)
+                    }
                 }
             }
         }

@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.screen.hidden_notes.core.programs
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
@@ -28,16 +27,12 @@ class HiddenNotesDataProgram(
     private val ioDispatcher: CoroutineDispatcher,
 ) : ElmProgram<Msg, Cmd> {
 
-    private companion object {
-        private const val SNACK_BAR_VISIBILITY_TIME = 5000L
-    }
-
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchNotesData -> fetchNotesList(consumer)
-            is Cmd.RemoveSelectedNotes -> moveSelectedNotesToTrash(cmd.notes, consumer)
+            is Cmd.RemoveSelectedNotes -> moveSelectedNotesToTrash(cmd.notes)
             is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
-            is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes, consumer)
+            is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes)
             is Cmd.UnhideSelectedNotes -> unhideNotes(cmd.notes, consumer)
             else -> {}
         }
@@ -61,22 +56,19 @@ class HiddenNotesDataProgram(
         }
     }
 
-    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) =
-        withContext(ioDispatcher) {
-            val notesUi = notes.map { note ->
-                note.copy(
-                    isMovedToTrash = true,
-                    folderId = 2L,
-                    dateMovedToTrashRaw = LocalDateTime.now()
-                )
-            }
-            val notesDomain = mapper.mapListFrom(notesUi)
-            notesInteractor.updateList(notesDomain)
-            delay(SNACK_BAR_VISIBILITY_TIME)
-            consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
+    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>) = withContext(ioDispatcher) {
+        val notesUi = notes.map { note ->
+            note.copy(
+                isMovedToTrash = true,
+                folderId = 2L,
+                dateMovedToTrashRaw = LocalDateTime.now()
+            )
         }
+        val notesDomain = mapper.mapListFrom(notesUi)
+        notesInteractor.updateList(notesDomain)
+    }
 
-    private suspend fun undoRemovedFromTrash(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
+    private suspend fun undoRemovedFromTrash(notes: List<NoteUi>) {
         val restored = mapper.mapListFrom(notes.map {
             it.copy(
                 isHidden = true,
@@ -85,7 +77,6 @@ class HiddenNotesDataProgram(
             )
         })
         notesInteractor.updateList(restored)
-        consumer(Msg.Inner.HiddenRemovedNotesSnackBar)
     }
 
     private suspend fun updatePinnedNotes(notes: Set<NoteUi>) {

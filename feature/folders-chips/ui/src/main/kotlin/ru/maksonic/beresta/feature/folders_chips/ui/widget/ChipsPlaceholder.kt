@@ -58,7 +58,7 @@ private fun ChipPlaceholderItem(
     Box(
         modifier
             .padding(start = dp12)
-            .height(Theme.widgetSize.filterChipHeight)
+            .height(Theme.widgetSize.chipHeight)
             .aspectRatio(3f / 1f)
             .clip(CircleShape)
             .drawBehind { drawRect(animateColor.value) }

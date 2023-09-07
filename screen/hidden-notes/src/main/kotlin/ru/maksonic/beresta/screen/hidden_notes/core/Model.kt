@@ -3,6 +3,7 @@ package ru.maksonic.beresta.screen.hidden_notes.core
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.core.ElmBaseModel
@@ -50,7 +51,9 @@ data class Model(
     val modalSheet: ModalSheet,
     val searchBarState: SearchBarUiState,
     val editNoteFabState: EditNoteUiFabState,
-    val isVisibleStonewall: Boolean
+    val isVisibleStonewall: Boolean,
+    val snackNotesState: SnackbarHostState
+
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -59,7 +62,8 @@ data class Model(
             modalSheet = ModalSheet.Initial,
             searchBarState = SearchBarUiState.InitialHiddenNotes,
             editNoteFabState = EditNoteUiFabState.Initial,
-            isVisibleStonewall = false
+            isVisibleStonewall = false,
+            snackNotesState = SnackbarHostState()
         )
     }
 }
@@ -97,7 +101,6 @@ sealed class Msg : ElmMessage {
         data class FetchedNotesData(val notes: NoteUi.Collection) : Inner()
         data class FetchedNotesError(val errorMsg: String = "") : Inner()
         data object HiddenModalBottomSheet : Inner()
-        data object HiddenRemovedNotesSnackBar : Inner()
         data object HiddenLoadingPlaceholder : Inner()
         data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
         data class UpdateStonewallVisibility(val isVisible: Boolean): Inner()
@@ -118,4 +121,5 @@ sealed class Eff : ElmEffect {
     data object NavigateBack : Eff()
     data class NavigateToEditNote(val id: Long) : Eff()
     data object HideModalSheet : Eff()
+    data class ShowSnackBar(val message: String): Eff()
 }

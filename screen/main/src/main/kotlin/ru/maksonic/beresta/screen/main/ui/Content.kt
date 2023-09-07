@@ -51,11 +51,8 @@ internal fun Content(
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
     val isVisibleBottomBar = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
-    val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
-    val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
     val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
-    val sortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
 
     BackHandler(isSelectionState.value) {
@@ -86,6 +83,7 @@ internal fun Content(
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         val isCanScrollBackwardState = rememberSaveable { mutableStateOf(false) }
+        val sortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
         CompositionLocalProvider(
             LocalListSortState provides sortState.value,
@@ -109,13 +107,11 @@ internal fun Content(
             )
 
             MainBottomBar(
-                state = mainBottomBarState,
+                model = model,
                 send = send,
-                isSelectionState = isSelectionState,
+                state = mainBottomBarState,
                 isVisibleBottomBar = isVisibleBottomBar,
-                isEnabledBar = isEnabledBottomBar,
-                isShowUnpinBtn = isShowUnpinBtn,
-                sharedNotesUiScrollState = notesListApi.sharedUiState
+                sharedNotesUiScrollState = notesListApi.sharedUiState,
             )
 
             MainSearchBar(model, send, isCanScrollBackwardState)

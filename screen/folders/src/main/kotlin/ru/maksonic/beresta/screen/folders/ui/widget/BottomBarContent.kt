@@ -1,8 +1,10 @@
 package ru.maksonic.beresta.screen.folders.ui.widget
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -19,11 +21,13 @@ import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Edit
 import ru.maksonic.beresta.ui.theme.icons.MoveTrash
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.theme.icons.Unpin
+import ru.maksonic.beresta.ui.widget.bar.SnackBar
 import ru.maksonic.beresta.ui.widget.bar.bottom.BaseBottomBarItem
 import ru.maksonic.beresta.ui.widget.bar.bottom.BottomBarOld
 import ru.maksonic.beresta.ui.widget.bar.bottom.DisabledBottomBarPlaceholder
@@ -47,23 +51,30 @@ internal fun BottomBarContent(
         model.value.selectedList.isEmpty() && model.value.isSelectionState
     )
 
-    AnimateContent(isSelection.value) {
-        if (it) {
-            SelectedStateBarContent(
-                send = send,
-                selectedFoldersCount = model.value.selectedList.count(),
-                isVisibleUnpinBtn = isVisibleUnpinBottomBarIcon,
-                isDisabledBottomBar = isDisabledBottomBar
-            )
-        } else {
-            PrimaryButton(
-                action = { send(Msg.Ui.OnAddNewFolderClicked) },
-                title = text.folders.titleDialogNewFolder,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(dp16)
-            )
+    Column {
+        SnackbarHost(
+            hostState = model.value.snackState,
+            snackbar = { SnackBar(model.value.snackState.currentSnackbarData) },
+            modifier = Modifier.padding(bottom = dp8)
+        )
+        AnimateContent(isSelection.value) {
+            if (it) {
+                SelectedStateBarContent(
+                    send = send,
+                    selectedFoldersCount = model.value.selectedList.count(),
+                    isVisibleUnpinBtn = isVisibleUnpinBottomBarIcon,
+                    isDisabledBottomBar = isDisabledBottomBar
+                )
+            } else {
+                PrimaryButton(
+                    action = { send(Msg.Ui.OnAddNewFolderClicked) },
+                    title = text.folders.titleDialogNewFolder,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(start = dp16, end = dp16, bottom = dp16)
+                )
+            }
         }
     }
 }

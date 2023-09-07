@@ -37,7 +37,6 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         is Msg.Ui.OnBottomBarPinSelectedClicked -> onBarPinSelectedClicked(model)
         is Msg.Ui.OnBottomBarRemoveSelectedClicked -> onBarMoveSelectedToTrashClicked(model, msg)
         is Msg.Ui.OnBottomBarEditSelectedClicked -> onBarEditClicked(model)
-        is Msg.Inner.HideRemovedFoldersSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
         //modal sheet
         is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
@@ -165,26 +164,18 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
                 base = model.base.copy(isLoading = isShowLoading),
                 selectedList = emptySet(),
                 removedList = model.selectedList,
-                isSelectionState = false,
-                isVisibleRemovedSnackBar = true
+                isSelectionState = false
             ),
             commands = setOf(
                 Cmd.RemoveSelected(model.selectedList.toList()),
                 Cmd.UpdateCurrentSelectedFolder(currentSelectedId)
             ),
+            effects = setOf(Eff.ShowSnackBar("${model.selectedList.count()}"))
         )
     }
 
     private fun onBarEditClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.UpdateFolder(model.selectedList.first().id)))
-
-    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = ElmUpdate(
-        model = model.copy(
-            base = model.base.copy(isLoading = false),
-            isVisibleRemovedSnackBar = false,
-            removedList = emptySet()
-        )
-    )
 
     private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
         val restored = model.removedList.map { folder -> folder.copy(isMovedToTrash = false) }

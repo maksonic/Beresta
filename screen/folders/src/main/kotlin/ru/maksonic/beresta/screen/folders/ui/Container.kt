@@ -2,6 +2,9 @@ package ru.maksonic.beresta.screen.folders.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -14,6 +17,7 @@ import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.folders_chips.api.ui.updateFolder
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
 import ru.maksonic.beresta.screen.folders.core.Eff
 import ru.maksonic.beresta.screen.folders.core.FoldersScreenSandbox
@@ -42,7 +46,9 @@ internal fun Container(
         router = router,
         chipsDialogApi = chipsDialogApi,
         modalBottomSheetState = model.value.modalSheet.state,
-        hideSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
+        snackState = model.value.snackState,
+        hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
+        send = sandbox::send
     )
 
     Content(
@@ -63,9 +69,14 @@ private fun HandleUiEffects(
     router: FoldersScreenRouter,
     chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     modalBottomSheetState: SheetState,
-    hideSheet: () -> Unit,
+    snackState: SnackbarHostState,
+    hideModalSheet: () -> Unit,
+    send: SendMessage
 ) {
     val scope = rememberCoroutineScope()
+    val snackScope = rememberCoroutineScope()
+    // Snack messages
+    val removedFoldersPrefix = text.folders.hintRemovedFoldersCount
 
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
@@ -75,12 +86,26 @@ private fun HandleUiEffects(
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {
-                        hideSheet()
+                        hideModalSheet()
                     }
                 }
             }
 
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
+
+            is Eff.ShowSnackBar -> {
+                snackScope.launch {
+                    val result = snackState.showSnackbar(
+                        message = "$removedFoldersPrefix ${eff.message}",
+                        actionLabel = "Undo remove selected folders",
+                        duration = SnackbarDuration.Short
+                    )
+
+                    if (result == SnackbarResult.ActionPerformed) {
+                        send(Msg.Ui.OnSnackUndoRemoveFoldersClicked)
+                    }
+                }
+            }
         }
     }
 }

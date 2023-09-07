@@ -3,6 +3,7 @@ package ru.maksonic.beresta.screen.main.core
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.core.ElmBaseModel
@@ -56,7 +57,9 @@ data class Model(
     val searchBarState: SearchBarUiState,
     val editNoteFabState: EditNoteUiFabState,
     val isVisibleHiddenNotesDialog: Boolean,
+    val snackNotesState: SnackbarHostState
 ) : ElmModel {
+
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Initial,
@@ -66,7 +69,8 @@ data class Model(
             bottomBarState = MainBottomBarState.IDLE,
             searchBarState = SearchBarUiState.InitialMainNotes,
             editNoteFabState = EditNoteUiFabState.Initial,
-            isVisibleHiddenNotesDialog = false
+            isVisibleHiddenNotesDialog = false,
+            snackNotesState = SnackbarHostState()
         )
     }
 }
@@ -77,6 +81,7 @@ sealed class Msg : ElmMessage {
         data class OnNoteClicked(val id: Long) : Ui()
         data class OnNoteLongClicked(val id: Long) : Ui()
         data object CancelNotesSelection : Ui()
+
         //chips
         data object OnRetryFetchChipsClicked : Ui()
 
@@ -114,7 +119,6 @@ sealed class Msg : ElmMessage {
         data class FetchedChipsData(val chips: FolderUi.Collection) : Inner()
         data object FetchedChipsError : Inner()
         data object HiddenModalBottomSheet : Inner()
-        data object HiddenRemovedNotesSnackBar : Inner()
         data object NavigatedToHiddenNotes : Inner()
         data class UpdatedEditNoteFabState(val state: EditNoteFabState) : Inner()
         data object ResetCurrentSelectedFolder : Inner()
@@ -142,5 +146,5 @@ sealed class Eff : ElmEffect {
     data object NavigateToTrash : Eff()
     data object NavigateToHiddenNotes : Eff()
     data object ShowAddNewChipDialog : Eff()
-    data object ShowedHiddenNotesEnterPasswordDialog : Eff()
+    data class ShowSnackBar(val key: MainSnackBarKey, val message: String): Eff()
 }

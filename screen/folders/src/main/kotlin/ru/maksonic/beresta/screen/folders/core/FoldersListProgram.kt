@@ -42,7 +42,6 @@ class FoldersListProgram(
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
-        private const val SNACK_BAR_VISIBILITY_TIME = 5000L
         private const val RETRY_REQUEST_DELAY = 3000L
     }
 
@@ -57,8 +56,8 @@ class FoldersListProgram(
             is Cmd.RetryFetchFoldersWithNotes -> retryFetchFoldersWithNotes(consumer)
             is Cmd.UpdatePinnedFoldersInCache -> updatePinnedFolders(cmd.pinned)
             is Cmd.ChangeNoteFolderId -> changeNotesFolderId(cmd.folderId)
-            is Cmd.RemoveSelected -> moveSelectedFoldersToTrash(cmd.removed, consumer)
-            is Cmd.UndoRemovedFolders -> undoRemovedFoldersFromTrash(cmd.removed, consumer)
+            is Cmd.RemoveSelected -> moveSelectedFoldersToTrash(cmd.removed)
+            is Cmd.UndoRemovedFolders -> undoRemovedFoldersFromTrash(cmd.removed)
             is Cmd.UpdateCurrentSelectedFolder -> updateCurrentSelectedFolderState(cmd.id)
         }
     }
@@ -97,31 +96,21 @@ class FoldersListProgram(
         _notes.update { notesUi }
     }
 
-    private suspend fun moveSelectedFoldersToTrash(
-        selectedFolders: List<FolderUi>,
-        consumer: (Msg) -> Unit
-    ) {
+    private suspend fun moveSelectedFoldersToTrash(selectedFolders: List<FolderUi>) {
         val removedUiFolders = selectedFolders.map { it.trash() }
         val removedDomainFolders = foldersMapper.mapListFrom(removedUiFolders)
 
         updateFolderNotes(removedDomainFolders.map { it.id }, true)
-
         foldersInteractor.updateList(removedDomainFolders)
-        delay(SNACK_BAR_VISIBILITY_TIME)
-        consumer(Msg.Inner.HideRemovedFoldersSnackBar)
     }
 
-    private suspend fun undoRemovedFoldersFromTrash(
-        folders: List<FolderUi>,
-        consumer: (Msg) -> Unit
-    ) {
+    private suspend fun undoRemovedFoldersFromTrash(folders: List<FolderUi>) {
         val restoredUiFolders = folders.map { it.restored() }
         val restoredDomainFolders = foldersMapper.mapListFrom(restoredUiFolders)
 
         updateFolderNotes(restoredUiFolders.map { it.id }, false)
 
         foldersInteractor.updateList(restoredDomainFolders)
-        consumer(Msg.Inner.HideRemovedFoldersSnackBar)
     }
 
     private suspend fun updatePinnedFolders(folders: Set<FolderUi>) {

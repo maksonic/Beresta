@@ -16,7 +16,6 @@ data class NotesListUiState(
     val removedList: Set<NoteUi>,
     val isSelection: Boolean,
     val isVisibleUnpinMainBarIcon: Boolean,
-    val isVisibleRemovedSnackBar: Boolean,
     val isHidden: Boolean
 ) {
     companion object {
@@ -27,7 +26,6 @@ data class NotesListUiState(
             removedList = emptySet(),
             isSelection = false,
             isVisibleUnpinMainBarIcon = false,
-            isVisibleRemovedSnackBar = false,
             isHidden = false
         )
         val InitialHidden = NotesListUiState(
@@ -37,7 +35,6 @@ data class NotesListUiState(
             removedList = emptySet(),
             isSelection = false,
             isVisibleUnpinMainBarIcon = false,
-            isVisibleRemovedSnackBar = false,
             isHidden = true
         )
     }

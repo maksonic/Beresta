@@ -69,7 +69,6 @@ class MainSandbox(
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
         //other
         //snack bar
-        is Msg.Inner.HiddenRemovedNotesSnackBar -> hideRemoveNotesSnackBar(model)
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
         is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
@@ -215,24 +214,27 @@ class MainSandbox(
         )
     }
 
-    private fun onBottomBarRemoveSelectedClicked(model: Model): UpdateResult {
-        val isShowLoading = model.notes.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
-
-        return ElmUpdate(
-            model.copy(
-                notes = model.notes.copy(
-                    state = model.notes.state.copy(isLoading = isShowLoading),
-                    selectedList = emptySet(),
-                    removedList = model.notes.selectedList,
-                    isSelection = false,
-                    isVisibleRemovedSnackBar = true
+    private fun onBottomBarRemoveSelectedClicked(model: Model): UpdateResult = ElmUpdate(
+        model.copy(
+            notes = model.notes.copy(
+                state = model.notes.state.copy(
+                    isLoading = model.notes.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
                 ),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
-                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
+                selectedList = emptySet(),
+                removedList = model.notes.selectedList,
+                isSelection = false,
             ),
-            commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
+            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+            editNoteFabState = model.editNoteFabState.copy(isVisible = true)
+        ),
+        commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
+        effects = setOf(
+            Eff.ShowSnackBar(
+                MainSnackBarKey.REMOVED_NOTES,
+                message = "${model.notes.selectedList.count()}"
+            )
         )
-    }
+    )
 
     private fun onHideModalBottomSheet(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
@@ -301,16 +303,6 @@ class MainSandbox(
             )
         )
     }
-
-    private fun hideRemoveNotesSnackBar(model: Model): UpdateResult = ElmUpdate(
-        model.copy(
-            base = model.base.copy(isLoading = false),
-            notes = model.notes.copy(
-                removedList = emptySet(),
-                isVisibleRemovedSnackBar = false
-            )
-        )
-    )
 
     private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
         val restored = model.notes.removedList.map { note -> note.copy(isMovedToTrash = false) }

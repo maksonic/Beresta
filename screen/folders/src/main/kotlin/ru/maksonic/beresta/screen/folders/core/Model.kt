@@ -3,6 +3,7 @@ package ru.maksonic.beresta.screen.folders.core
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import ru.maksonic.beresta.elm.core.ElmBaseModel
@@ -48,9 +49,9 @@ data class Model(
     val removedList: Set<FolderUi> = emptySet(),
     val isSelectionState: Boolean,
     val isVisibleUnpinBottomBarIcon: Boolean,
-    val isVisibleRemovedSnackBar: Boolean,
     val isMoveNotesToFolder: Boolean,
-    val isVisibleHiddenNotesDialog: Boolean
+    val isVisibleHiddenNotesDialog: Boolean,
+    val snackState: SnackbarHostState
 ) : ElmModel {
 
     companion object {
@@ -61,9 +62,9 @@ data class Model(
             selectedList = emptySet(),
             isSelectionState = false,
             isVisibleUnpinBottomBarIcon = false,
-            isVisibleRemovedSnackBar = false,
             isMoveNotesToFolder = false,
-            isVisibleHiddenNotesDialog = false
+            isVisibleHiddenNotesDialog = false,
+            snackState = SnackbarHostState()
         )
     }
 }
@@ -94,7 +95,6 @@ sealed class Msg : ElmMessage {
         ) : Inner()
 
         data class FetchedDataError(val errorMsg: String = "") : Inner()
-        data object HideRemovedFoldersSnackBar : Inner()
         data object HiddenModalBottomSheet : Inner()
         data object NavigatedToHiddenNotes : Inner()
     }
@@ -116,4 +116,5 @@ sealed class Eff : ElmEffect {
     data object AddNewFolder : Eff()
     data class UpdateFolder(val id: Long): Eff()
     data object HideModalSheet : Eff()
+    data class ShowSnackBar(val message: String): Eff()
 }
