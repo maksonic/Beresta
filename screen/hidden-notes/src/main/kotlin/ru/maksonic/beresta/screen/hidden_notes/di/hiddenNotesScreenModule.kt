@@ -23,7 +23,12 @@ val hiddenNotesScreenModule = module {
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }
-    single { HiddenNotesScreenCaptureProgram(screenCaptureManager = get()) }
+    single {
+        HiddenNotesScreenCaptureProgram(
+            screenCaptureManager = get(),
+            ioDispatcher = get(named(CoroutineDispatchers.IO))
+        )
+    }
     single { HiddenNotesSortProgram(listSortStateUiApi = get(), listSortStateFeatureState = get()) }
 
     viewModel {

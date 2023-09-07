@@ -14,11 +14,8 @@ class HiddenNotesScreenCaptureProgram(
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
-            is Cmd.UpdateScreenCapturePermission -> updateScreenCapturePermission(cmd.isEnabled)
+            is Cmd.UpdateScreenCapturePermission -> screenCaptureManager.update(cmd.isEnabled)
             else -> {}
         }
     }
-
-    private fun updateScreenCapturePermission(isEnabled: Boolean) =
-        screenCaptureManager.update(isEnabled)
 }

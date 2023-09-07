@@ -68,7 +68,7 @@ class HiddenNotesSandbox(
     private fun onTopBarBackPressed(model: Model): UpdateResult = ElmUpdate(
         model,
         effects = setOf(Eff.NavigateBack),
-        commands = setOf(Cmd.AllowScreenCapture)
+        commands = setOf(Cmd.UpdateScreenCapturePermission(false))
     )
 
     private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
@@ -140,7 +140,7 @@ class HiddenNotesSandbox(
                 isVisible = true, content = CurrentSheetContent.SORT_HIDDEN_NOTES
             )
         ),
-        commands = setOf(Cmd.AllowScreenCapture)
+        commands = setOf(Cmd.UpdateScreenCapturePermission(false))
     )
 
     private fun onBottomBarUnhideSelectedClicked(model: Model): UpdateResult {
