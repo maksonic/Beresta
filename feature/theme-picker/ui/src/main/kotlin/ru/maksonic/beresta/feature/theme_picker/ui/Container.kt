@@ -18,9 +18,5 @@ internal fun Container(
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
-    Content(
-        model = model,
-        send = sandbox::send,
-        hideSheet = hideSheet,
-    )
+    Content(model = model, send = sandbox::send, hideSheet = hideSheet)
 }

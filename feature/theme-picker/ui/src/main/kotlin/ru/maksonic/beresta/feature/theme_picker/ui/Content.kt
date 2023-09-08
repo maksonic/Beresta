@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
@@ -37,7 +38,7 @@ internal fun Content(
 
         PaletteColorPicker(model) { send(Msg.Ui.OnPaletteColorClicked(it)) }
 
-        Divider(modifier.padding(top = dp16, bottom = dp16), color = onSecondaryContainer)
+        HorizontalDivider(modifier.padding(top = dp16, bottom = dp16), color = onSecondaryContainer)
 
         ThemeItemsColumn(
             currentSelectedTheme = model.value.currentTheme.first,

@@ -45,11 +45,10 @@ internal fun ThemeItemsColumn(
                 AppTheme.DARK -> text.settings.themeTitleNight
                 AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
             }
-            val updated = item.copy(title = title)
 
             ThemeItem(
                 isCurrent = currentSelectedTheme == item.theme,
-                item = updated,
+                item = item.copy(title = title),
                 onChangeTheme = { onChangeTheme(item.theme) }
             )
         }

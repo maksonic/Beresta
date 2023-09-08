@@ -12,7 +12,6 @@ import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.BerestaTheme
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.AppThemePalette
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 
 /**
  * @Author maksonic on 25.02.2023
@@ -38,7 +37,7 @@ internal fun PaletteColorPicker(
         //Remove outline black color when filled high contrast palette is current
         val highContrastColors = outlineColors.drop(BLACK_ITEM_COLOR_POSITION).toTypedArray()
 
-        AnimateFadeInOut(model.value.currentTheme.first != AppTheme.HIGH_CONTRAST) {
+        if (model.value.currentTheme.first != AppTheme.HIGH_CONTRAST) {
             PickerRowContainer(
                 currentPalette = model.value.currentPalette,
                 isFilledPalette = false,
