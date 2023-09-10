@@ -2,18 +2,20 @@ package ru.maksonic.beresta.feature.folders_chips.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import ru.maksonic.beresta.core.SharedUiState
+import androidx.compose.runtime.mutableLongStateOf
 import ru.maksonic.beresta.elm.core.ElmBaseModel
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.updateId
 
 /**
  * @Author maksonic on 03.07.2023
  */
-class FoldersChipsRowWidget(
-    override val currentSelectedId: SharedUiState<Long>
-) : FoldersApi.Ui.ChipsRow {
+class FoldersChipsRowWidget : FoldersApi.Ui.ChipsRow {
+    override val currentSelectedId = mutableLongStateOf(1)
+
+    override fun updateCurrent(id: Long) {
+        currentSelectedId.longValue = id
+    }
 
     @Composable
     override fun Widget(
@@ -31,7 +33,7 @@ class FoldersChipsRowWidget(
             chips = chips,
             chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             onAddNewChipClicked = onAddNewChipClicked,
-            updateCurrentSelectedFolder = { currentSelectedId.updateId(it) },
+            updateCurrentSelectedFolder = { updateCurrent(it) },
             onRetryFetchClicked = onRetryFetchClicked
         )
     }

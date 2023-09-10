@@ -52,14 +52,12 @@ internal fun Content(
     val isVisibleBottomBar = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
-    val currentSelectedChipId = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
-
 
     BackHandler(isSelectionState.value) {
         send(Msg.Ui.CancelNotesSelection)
     }
 
-    BackHandler(currentSelectedChipId.value != 1L) {
+    BackHandler(chipsRowApi.currentSelectedId.value != 1L) {
         send(Msg.Inner.ResetCurrentSelectedFolder)
     }
 
@@ -87,7 +85,7 @@ internal fun Content(
 
         CompositionLocalProvider(
             LocalListSortState provides sortState.value,
-            LocalCurrentSelectedFolderState provides currentSelectedChipId.value,
+            LocalCurrentSelectedFolderState provides chipsRowApi.currentSelectedId.value,
         ) {
             NotesList(
                 model = model,

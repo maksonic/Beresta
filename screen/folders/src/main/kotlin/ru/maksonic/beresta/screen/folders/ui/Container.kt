@@ -14,8 +14,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
-import ru.maksonic.beresta.feature.folders_chips.api.ui.updateFolder
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
@@ -81,8 +79,8 @@ private fun HandleUiEffects(
     ElmComposableEffectHandler(effects) { eff ->
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
-            is Eff.AddNewFolder -> chipsDialogApi.sharedUiState.addNewFolder()
-            is Eff.UpdateFolder -> chipsDialogApi.sharedUiState.updateFolder(eff.id)
+            is Eff.AddNewFolder -> chipsDialogApi.addFolder()
+            is Eff.UpdateFolder -> chipsDialogApi.updateFolder(eff.id)
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {

@@ -26,10 +26,6 @@ internal fun Container(
     hideDialog: () -> Unit
 ) {
 
-    if (uiState.value.isVisible) {
-        HandleUiEffects(effects = sandbox.effects, hideDialog)
-    }
-
     BaseDialog(
         isVisible = uiState.value.isVisible,
         alignment = Alignment.BottomCenter,
@@ -37,6 +33,8 @@ internal fun Container(
         onAcceptClicked = { sandbox.send(Msg.Ui.OnAcceptClicked) }
     ) {
         val model = sandbox.model.collectAsStateWithLifecycle()
+
+        HandleUiEffects(effects = sandbox.effects, hideDialog)
 
         Content(model, sandbox::send, uiState = uiState)
     }

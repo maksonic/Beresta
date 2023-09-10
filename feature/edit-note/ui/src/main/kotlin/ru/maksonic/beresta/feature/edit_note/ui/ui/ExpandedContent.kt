@@ -1,34 +1,35 @@
 package ru.maksonic.beresta.feature.edit_note.ui.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import ru.maksonic.beresta.feature.edit_note.ui.Model
-import ru.maksonic.beresta.feature.edit_note.ui.Msg
-import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.EditNoteTopBar
-import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.EditorBottomBar
+import ru.maksonic.beresta.feature.edit_note.ui.core.Model
+import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
+import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.CategoryBar
+import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.ControlBars
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteMessageInputFieldWidget
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteTitleInputFieldWidget
-import ru.maksonic.beresta.feature.notes.api.ui.isBlank
+import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
+import ru.maksonic.beresta.feature.marker_color_picker.api.MarkerColorPickerApi
+import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.surface
 
 /**
@@ -36,16 +37,23 @@ import ru.maksonic.beresta.ui.theme.color.surface
  */
 @Composable
 internal fun ExpandedContent(
-    model: Model,
+    model: State<Model>,
     send: SendMessage,
+    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    chipsRowApi: FoldersApi.Ui.ChipsRow,
+    markerColorPickerApi: MarkerColorPickerApi.Ui,
     focusRequester: FocusRequester,
     isHiddenNote: Boolean,
     modifier: Modifier = Modifier
 ) {
+
+    LaunchedEffect(chipsRowApi.currentSelectedId) {
+        send(Msg.Inner.FetchedCurrentFolderId(chipsRowApi.currentSelectedId.value))
+    }
+
     Box(
         modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .background(surface)
             .imePadding()
     ) {
@@ -64,51 +72,31 @@ internal fun ExpandedContent(
         }
 
         Column(
-            modifier
+            Modifier
+                .statusBarsPadding()
                 .fillMaxSize()
                 .nestedScroll(nestedScrollConnection)
                 .verticalScroll(scrollState)
-
         ) {
-            NoteTitleInputFieldWidget(model.currentNote.title, send, focusRequester)
-            NoteMessageInputFieldWidget(model.currentNote.message, send)
+            if (isHiddenNote) {
+                Box(Modifier.height(Theme.widgetSize.topBarSmallHeight))
+            } else {
+                CategoryBar(model, send)
+            }
+
+            NoteTitleInputFieldWidget(model.value.currentNote.title, send, focusRequester)
+            NoteMessageInputFieldWidget(model.value.currentNote.message, send)
         }
 
-        ControlPanels(
-            send,
-            isScrollUp,
-            canScrollBackward,
-            model.currentNote.isBlank(),
-            isHiddenNote
-        )
-    }
-}
-
-@Composable
-private fun ControlPanels(
-    send: SendMessage,
-    isScrollUp: State<Boolean>,
-    canScrollBackward: State<Boolean>,
-    isBlankNote: Boolean,
-    isHiddenNote: Boolean
-) {
-    Column(
-        modifier = Modifier.fillMaxHeight(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        EditNoteTopBar(
+        ControlBars(
+            model = model,
+            send = send,
+            isHiddenNote = isHiddenNote,
             isScrollUp = isScrollUp,
             canScrollBackward = canScrollBackward,
-            backAction = { send(Msg.Ui.OnTopBarBackPressed) },
-            menuAction = {}
+            isVisibleAddNoteDialog = chipsDialogApi.state.value.isVisible,
         )
 
-        EditorBottomBar(
-            send = send,
-            isScrollUp = isScrollUp,
-            isBlankNote = isBlankNote,
-            isHiddenNote = isHiddenNote
-        )
+        markerColorPickerApi.Widget()
     }
 }

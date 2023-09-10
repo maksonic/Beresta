@@ -125,18 +125,6 @@ object feature {
         )
     }
 
-    object topBarCounter {
-        object api : base(
-            path = ":feature:top-bar-counter:api",
-            namespace = "ru.maksonic.beresta.feature.top_bar_counter.api"
-        )
-
-        object ui : base(
-            path = ":feature:top-bar-counter:ui",
-            namespace = "ru.maksonic.beresta.feature.top_bar_counter.ui"
-        )
-    }
-
     object sortingSheet {
         object api : base(
             path = ":feature:sorting-sheet:api",
@@ -168,6 +156,17 @@ object feature {
         object ui : base(
             path = ":feature:hidden-notes-dialog:ui",
             namespace = "ru.maksonic.beresta.feature.hidden_notes_dialog.ui"
+        )
+    }
+    object markerColorPicker {
+        object api : base(
+            path = ":feature:marker-color-picker:api",
+            namespace = "ru.maksonic.beresta.feature.marker_color_picker.api"
+        )
+
+        object ui : base(
+            path = ":feature:marker-color-picker:ui",
+            namespace = "ru.maksonic.beresta.feature.marker_color_picker.ui"
         )
     }
 }

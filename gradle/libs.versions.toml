@@ -35,6 +35,7 @@ appcompat = "1.6.1"
 material = "1.9.0"
 androidx-appcompat-appcompat = "1.6.1"
 com-google-android-material-material = "1.9.0"
+com-google-android-material-material180 = "1.8.0"
 
 [libraries]
 #CORE
@@ -89,6 +90,7 @@ accompanist-systemuicontroller = { group = "com.google.accompanist", name = "acc
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat-appcompat" }
+com-google-android-material-material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material180" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.DateFormatter
+import ru.maksonic.beresta.core.ui.DropdownMenuItem
 import ru.maksonic.beresta.feature.notes.api.ui.LocalNoteCardState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
@@ -39,7 +40,6 @@ import ru.maksonic.beresta.ui.theme.icons.CornerRadius
 import ru.maksonic.beresta.ui.theme.icons.Grading
 import ru.maksonic.beresta.ui.theme.icons.Shadow
 import ru.maksonic.beresta.ui.widget.button.BoxWithScaleInOutOnClick
-import ru.maksonic.beresta.ui.widget.button.settings.DropdownMenuItem
 import ru.maksonic.beresta.ui.widget.button.settings.RightPart
 import ru.maksonic.beresta.ui.widget.button.settings.SettingClickableItem
 import ru.maksonic.beresta.ui.widget.button.settings.SettingItem

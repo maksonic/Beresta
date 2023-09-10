@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.feature.edit_note.ui.Msg
+import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
 import ru.maksonic.beresta.feature.edit_note.ui.ui.SendMessage
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme

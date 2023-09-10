@@ -3,7 +3,6 @@ package ru.maksonic.beresta.feature.folders_chips.api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.elm.core.ElmBaseModel
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiState
@@ -15,7 +14,8 @@ interface FoldersApi {
 
     interface Ui {
         interface ChipsRow {
-            val currentSelectedId: SharedUiState<Long>
+            val currentSelectedId: State<Long>
+            fun updateCurrent(id: Long)
 
             @Composable
             fun Widget(
@@ -29,7 +29,10 @@ interface FoldersApi {
         }
 
         interface AddChipDialog {
-            val sharedUiState: SharedUiState<SharedNewFolderDialogUiState>
+            val state: State<SharedNewFolderDialogUiState>
+            fun hideDialog()
+            fun addFolder()
+            fun updateFolder(id: Long)
 
             @Composable
             fun Widget()

@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteApi
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
-import ru.maksonic.beresta.feature.edit_note.ui.Msg
+import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
 
 /**

@@ -19,7 +19,7 @@ val foldersScreenModule = module {
             notesMapper = get(),
             navigator = get(),
             appLanguageEngineApi = get(),
-            stickyItemsTitleFormatter = get(),
+            stickyFoldersTitleFormatter = get(),
             chipsRowApi = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
 

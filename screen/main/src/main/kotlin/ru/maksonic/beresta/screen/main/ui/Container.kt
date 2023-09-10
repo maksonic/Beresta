@@ -15,7 +15,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.addNewFolder
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -98,7 +97,7 @@ private fun HandleUiEffects(
             is Eff.NavigateToFolders -> router.toFoldersList(eff.ids)
             is Eff.NavigateToTrash -> router.toTrash()
             is Eff.NavigateToHiddenNotes -> router.toHiddenNotes()
-            is Eff.ShowAddNewChipDialog -> chipsDialogApi.sharedUiState.addNewFolder()
+            is Eff.ShowAddNewChipDialog -> chipsDialogApi.addFolder()
 
             is Eff.ShowSnackBar -> {
                 snackScope.launch {

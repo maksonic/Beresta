@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.feature.folders_chips.ui.dialog.core
 
-import kotlinx.coroutines.flow.collectLatest
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
@@ -27,14 +26,14 @@ class FolderDialogProgram(
     }
 
     private suspend fun fetchFolderById(consumer: (Msg) -> Unit) = runCatching {
-        addChipDialog.sharedUiState.state.collectLatest { state ->
-            if (state.editableFolderId == 0L) {
-                consumer(Msg.Inner.FetchFolderData(FolderUi.Empty))
-            } else {
-                interactor.fetchById(state.editableFolderId).collect { folderDomain ->
-                    val folder = mapper.mapTo(folderDomain)
-                    consumer(Msg.Inner.FetchFolderData(folder))
-                }
+        val editableFolderId = addChipDialog.state.value.editableFolderId
+
+        if (editableFolderId == 0L) {
+            consumer(Msg.Inner.FetchFolderData(FolderUi.Empty))
+        } else {
+            interactor.fetchById(editableFolderId).collect { folderDomain ->
+                val folder = mapper.mapTo(folderDomain)
+                consumer(Msg.Inner.FetchFolderData(folder))
             }
         }
     }.onFailure {
@@ -53,11 +52,10 @@ class FolderDialogProgram(
     }
 
     private suspend fun addNewFolder(folder: FolderDomain, time: LocalDateTime) =
-        interactor.add(folder.copy(dateCreation = time)).also { id -> updateCurrentFolder(id) }
+        interactor.add(folder.copy(dateCreation = time))
+            .also { id -> chipsRowApi.updateCurrent(id) }
 
 
     private suspend fun updateOldFolder(folder: FolderDomain, time: LocalDateTime) =
         interactor.update(folder.copy(dateCreation = folder.dateCreation, dateLastUpdateRaw = time))
-
-    private fun updateCurrentFolder(id: Long) = chipsRowApi.currentSelectedId.update(id)
 }

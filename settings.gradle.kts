@@ -77,3 +77,6 @@ include(":feature:sorting-sheet:ui")
 include(":feature:hidden-notes-dialog:api")
 include(":feature:hidden-notes-dialog:core")
 include(":feature:hidden-notes-dialog:ui")
+
+include(":feature:marker-color-picker:api")
+include(":feature:marker-color-picker:ui")

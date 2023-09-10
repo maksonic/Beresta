@@ -7,7 +7,6 @@ import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -24,18 +23,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import ru.maksonic.beresta.core.ui.DropdownMenuItem
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.secondaryContainer
 import ru.maksonic.beresta.ui.theme.component.PrimaryRipple
-import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.widget.text.DropdownMenuTitle
 
 /**
  * @Author maksonic on 08.07.2023
  */
-
-data class DropdownMenuItem(val title: String, val onClick: () -> Unit)
-
 @Composable
 fun SettingDropdownClickableItem(
     settingItem: SettingItem,
@@ -65,10 +62,9 @@ fun SettingDropdownClickableItem(
                 CompositionLocalProvider(LocalRippleTheme provides PrimaryRipple) {
                     dropdownMenuItems.forEach { item ->
                         DropdownMenuItem(
-                            text = { Text(item.title, style = TextDesign.bodyPrimary) },
+                            text = { DropdownMenuTitle(item.title) },
                             onClick = {
-                                item.onClick()
-                                shapeDropdownMenuState.value = false
+                                item.onClick().run { shapeDropdownMenuState.value = false }
                             },
                         )
                     }

@@ -10,7 +10,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
@@ -87,8 +86,9 @@ private fun SelectedStateBarContent(
     isDisabledBottomBar: State<Boolean>,
     chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject()
 ) {
-    val currentFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
-    CompositionLocalProvider(LocalCurrentSelectedFolderState provides currentFolder.value) {
+    CompositionLocalProvider(
+        LocalCurrentSelectedFolderState provides chipsRowApi.currentSelectedId.value
+    ) {
         val currentSelectedFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
 
         val actions = arrayOf(

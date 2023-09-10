@@ -111,6 +111,9 @@ dependencies {
     implementation(project(module.feature.hiddenNotesDialog.core.path))
     implementation(project(module.feature.hiddenNotesDialog.ui.path))
 
+    implementation(project(module.feature.markerColorPicker.api.path))
+    implementation(project(module.feature.markerColorPicker.ui.path))
+
     //screens
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.path))

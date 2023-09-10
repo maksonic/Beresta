@@ -13,7 +13,6 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.screen.folders.core.Model
@@ -44,7 +43,6 @@ internal fun Content(
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val currentSelectedFolder = chipsRowApi.currentSelectedId.state.collectAsStateWithLifecycle()
 
     BackHandler(model.value.isSelectionState) {
         send(Msg.Ui.CancelSelectionState)
@@ -62,7 +60,7 @@ internal fun Content(
                     foldersPlaceholderApi = foldersPlaceholderApi,
                     model = model,
                     send = send,
-                    currentSelectedFolder = currentSelectedFolder,
+                    currentSelectedFolder = chipsRowApi.currentSelectedId,
                     listSortUiState = listSortUiState
                 )
             }

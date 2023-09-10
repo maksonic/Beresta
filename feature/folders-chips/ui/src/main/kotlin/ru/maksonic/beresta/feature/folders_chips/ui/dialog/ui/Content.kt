@@ -127,7 +127,3 @@ private fun InputCounterHint(counterValue: String, isError: Boolean) {
 
     Text(text = caption, style = TextDesign.captionSmall.copy(color = color))
 }
-
-
-
-

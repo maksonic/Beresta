@@ -13,10 +13,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import ru.maksonic.beresta.feature.edit_note.ui.Msg
+import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
 import ru.maksonic.beresta.feature.edit_note.ui.ui.SendMessage
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.theme.color.NoteInputDefaultColors
 import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.component.TextDesign
@@ -51,6 +50,6 @@ internal fun NoteTitleInputFieldWidget(
         modifier = modifier
             .focusRequester(focusRequester)
             .fillMaxWidth()
-            .padding(start = dp8, end = dp8, top = Theme.widgetSize.topBarNormalHeight)
+            .padding(start = dp8, end = dp8)
     )
 }

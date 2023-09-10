@@ -20,6 +20,7 @@ import ru.maksonic.beresta.feature.hidden_notes_dialog.core.di.hiddenNotesCoreFe
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.di.hiddenNotesUiFeatureModule
 import ru.maksonic.beresta.feature.language_picker.core.di.languagePickerCoreFeatureModule
 import ru.maksonic.beresta.feature.language_picker.ui.di.languagePickerUiFeatureModule
+import ru.maksonic.beresta.feature.marker_color_picker.ui.di.markerColorPickerFeatureModule
 import ru.maksonic.beresta.feature.notes.core.di.notesCoreFeatureModule
 import ru.maksonic.beresta.feature.notes.ui.di.notesUiFeatureModule
 import ru.maksonic.beresta.feature.onboarding.core.di.onboardingCoreFeatureModule
@@ -85,7 +86,8 @@ class BerestaApplication : Application() {
         listSortCoreFeatureModule,
         hiddenNotesCoreFeatureModule,
         hiddenNotesCoreFeaturePinFail,
-        hiddenNotesUiFeatureModule
+        hiddenNotesUiFeatureModule,
+        markerColorPickerFeatureModule
     )
 
     override fun onCreate() {

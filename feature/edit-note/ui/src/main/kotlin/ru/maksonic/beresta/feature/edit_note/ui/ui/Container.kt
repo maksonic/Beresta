@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.edit_note.ui.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,12 +29,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
 import ru.maksonic.beresta.feature.edit_note.api.isExpanded
-import ru.maksonic.beresta.feature.edit_note.ui.EditNoteSandbox
-import ru.maksonic.beresta.feature.edit_note.ui.Eff
-import ru.maksonic.beresta.feature.edit_note.ui.Msg
+import ru.maksonic.beresta.feature.edit_note.ui.core.EditNoteSandbox
+import ru.maksonic.beresta.feature.edit_note.ui.core.Eff
+import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
+import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
+import ru.maksonic.beresta.feature.marker_color_picker.api.MarkerColorPickerApi
 import ru.maksonic.beresta.feature.notes.api.ui.isBlank
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.EditNoteRouter
@@ -59,14 +63,25 @@ internal fun Container(
     isEntryPoint: Boolean,
     isCircleFab: Boolean,
     modifier: Modifier,
-    sandbox: EditNoteSandbox = koinViewModel()
+    sandbox: EditNoteSandbox = koinViewModel(),
+    chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
+    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
+    markerColorPickerApi: MarkerColorPickerApi.Ui = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
     val isExpanded = rememberUpdatedState(state.value.isExpanded)
-    val isHiddenNotes = rememberUpdatedState(model.value.isHiddenNote)
+    val isHiddenNote = rememberUpdatedState(model.value.isHiddenNote)
 
-    HandleUiEffects(sandbox.effects, router, focusRequester, collapseFab = updateFabState)
+    HandleUiEffects(
+        effects = sandbox.effects,
+        router = router,
+        focusRequester = focusRequester,
+        collapseFab = updateFabState,
+        chipsDialogApi = chipsDialogApi,
+        chipsRowApi = chipsRowApi,
+        markerColorPickerApi = markerColorPickerApi
+    )
 
     BackHandler(isExpanded.value) {
         sandbox.send(Msg.Ui.OnTopBarBackPressed)
@@ -93,9 +108,19 @@ internal fun Container(
         val fabShape = if (isFullExpanded) 0.dp else if (isCircleFab) 50.dp else dp16
 
         if (isEntryPoint) {
-            ExpandedContent(model.value, sandbox::send, focusRequester, isHiddenNotes.value)
+            Box {
+                ExpandedContent(
+                    model = model,
+                    send = sandbox::send,
+                    chipsDialogApi = chipsDialogApi,
+                    chipsRowApi = chipsRowApi,
+                    markerColorPickerApi = markerColorPickerApi,
+                    focusRequester = focusRequester,
+                    isHiddenNote = isHiddenNote.value
+                )
+                chipsDialogApi.Widget()
+            }
         } else {
-
             LaunchedEffect(isFullExpanded) {
                 if (isFullExpanded) {
                     sandbox.send(Msg.Inner.ShowedKeyboardForExpandedFab)
@@ -114,10 +139,13 @@ internal fun Container(
 
                 if (state.value.isExpanded) {
                     ExpandedContent(
-                        model = model.value,
+                        model = model,
                         send = sandbox::send,
+                        chipsDialogApi = chipsDialogApi,
+                        chipsRowApi = chipsRowApi,
+                        markerColorPickerApi = markerColorPickerApi,
                         focusRequester = focusRequester,
-                        isHiddenNote = isHiddenNotes.value || isCircleFab,
+                        isHiddenNote = isHiddenNote.value || isCircleFab,
                         modifier = Modifier.size(width = width.value, height = height.value)
                     )
                 }
@@ -127,12 +155,10 @@ internal fun Container(
                     fadeInDuration = animSpeed,
                     fadeOutDuration = animSpeed
                 ) {
-                    val alpha = if (state.value.isExpanded) 0f else 1f
-
                     CollapsedContent(
                         isBlankNote = model.value.currentNote.isBlank(),
                         onExpandFabClicked = { updateFabState(EditNoteFabState.EXPANDED) },
-                        modifier = modifier.alpha(alpha)
+                        modifier = modifier.alpha(if (state.value.isExpanded) 0f else 1f)
                     )
                 }
             }
@@ -146,6 +172,9 @@ private fun HandleUiEffects(
     router: EditNoteRouter?,
     focusRequester: FocusRequester,
     collapseFab: (EditNoteFabState) -> Unit,
+    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    chipsRowApi: FoldersApi.Ui.ChipsRow,
+    markerColorPickerApi: MarkerColorPickerApi.Ui
 ) {
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -157,13 +186,18 @@ private fun HandleUiEffects(
             is Eff.NavigateBack -> router?.let { it.onBack() }
             is Eff.ShowToastMaxLengthNoteExceed -> context.toastLongTime(noteMaxLengthWarning.value)
             is Eff.ShowNoteUpdateSnackBar -> context.toastLongTime("Bye")
-            is Eff.ShowKeyboardForExpandedFab ->  focusRequester.requestFocus()
+            is Eff.ShowKeyboardForExpandedFab -> focusRequester.requestFocus()
+            is Eff.HideKeyboard -> focusManager.clearFocus()
+            is Eff.ShowAddNewChipDialog -> chipsDialogApi.addFolder()
             is Eff.CollapseFab -> focusManager.clearFocus().run {
                 scope.launch {
                     delay(100)
                     collapseFab(EditNoteFabState.COLLAPSED)
                 }
             }
+
+            is Eff.UpdateCurrentFolder -> chipsRowApi.updateCurrent(eff.id)
+            is Eff.ShowMarkerColorPickerDialog -> markerColorPickerApi.updateVisibility(true)
         }
     }
 }

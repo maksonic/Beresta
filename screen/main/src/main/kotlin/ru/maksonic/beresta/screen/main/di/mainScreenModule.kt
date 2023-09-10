@@ -26,7 +26,7 @@ val mainScreenModule = module {
             foldersMapper = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO)),
             appLanguageEngineApi = get(),
-            stickyItemsTitleFormatter = get(),
+            stickyFoldersTitleFormatter = get(),
             chipsRowApi = get()
         )
     }

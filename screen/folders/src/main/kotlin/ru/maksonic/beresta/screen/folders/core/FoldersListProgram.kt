@@ -14,7 +14,7 @@ import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
-import ru.maksonic.beresta.feature.folders_chips.api.ui.StickyItemsTitleFormatter
+import ru.maksonic.beresta.feature.folders_chips.api.ui.StickyFoldersTitleFormatter
 import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
 import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
@@ -36,7 +36,7 @@ class FoldersListProgram(
     private val notesMapper: NoteUiMapper,
     private val navigator: AbstractNavigator,
     private val appLanguageEngineApi: LanguageEngineApi,
-    private val stickyItemsTitleFormatter: StickyItemsTitleFormatter,
+    private val stickyFoldersTitleFormatter: StickyFoldersTitleFormatter,
     private val chipsRowApi: FoldersApi.Ui.ChipsRow,
     private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
@@ -159,13 +159,11 @@ class FoldersListProgram(
             .map { folder ->
                 val count = notes.count { it.folderId == folder.id }
                 folder.copy(
-                    title = stickyItemsTitleFormatter.format(folder, lang),
+                    title = stickyFoldersTitleFormatter.format(folder, lang),
                     notesCount = if (folder.isStickyToStart) notes.count() else count
                 )
             }
     }
 
-    private fun updateCurrentSelectedFolderState(id: Long) {
-        chipsRowApi.currentSelectedId.update(id)
-    }
+    private fun updateCurrentSelectedFolderState(id: Long) { chipsRowApi.updateCurrent(id) }
 }
