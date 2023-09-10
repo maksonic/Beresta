@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.sorting_sheet.api.LocalListSortState
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
@@ -37,15 +37,13 @@ internal fun Content(
     model: State<Model>,
     send: SendMessage,
     modifier: Modifier = Modifier,
-    notesListApi: NotesApi.Ui.List,
-    sortedSheetApi: SortingSheetApi.Ui,
-    listSortUiState: SortingSheetApi.Ui,
+    notesListApi: NotesApi.List.Ui = koinInject(),
+    listSortApi: SortingSheetApi.Ui = koinInject(),
 ) {
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val isEnabledBottomBar = rememberUpdatedState(model.value.notes.selectedList.isNotEmpty())
     val isShowUnpinBtn = rememberUpdatedState(model.value.notes.isVisibleUnpinMainBarIcon)
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
-    val notesSortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
     BackHandler(isSelectionState.value) {
         send(Msg.Ui.CancelNotesSelection)
@@ -60,7 +58,7 @@ internal fun Content(
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         val isCanScrollBackwardState = rememberSaveable { mutableStateOf(false) }
 
-        CompositionLocalProvider(LocalListSortState provides notesSortState.value) {
+        CompositionLocalProvider(LocalListSortState provides listSortApi.sharedState.value) {
             NotesList(
                 model = model,
                 send = send,
@@ -76,7 +74,7 @@ internal fun Content(
                 isVisibleBottomBar = isSelectionState,
                 isEnabledBar = isEnabledBottomBar,
                 isShowUnpinBtn = isShowUnpinBtn,
-                sharedNotesUiScrollState = notesListApi.sharedUiState
+                updateIsScrollUpSharedScrollState = { notesListApi.updateScrollState(it) },
             )
 
             SearchBar(model, send, isColoredBackplate = isCanScrollBackwardState)
@@ -88,7 +86,7 @@ internal fun Content(
                     sheetState = model.value.modalSheet.state,
                     onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
                 ) {
-                    sortedSheetApi.SheetContent(
+                    listSortApi.SheetContent(
                         sortDataKey = SortDataKey.HIDDEN_NOTES,
                         hideSheet = { send(Msg.Ui.OnHideModalBottomSheet) }
                     )

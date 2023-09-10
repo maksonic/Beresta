@@ -23,7 +23,7 @@ class ChipsDataProgram(
     private val ioDispatcher: CoroutineDispatcher,
     private val appLanguageEngineApi: LanguageEngineApi,
     private val stickyFoldersTitleFormatter: StickyFoldersTitleFormatter,
-    private val chipsRowApi: FoldersApi.Ui.ChipsRow,
+    private val chipsRowApi: FoldersApi.ChipsRow.Ui,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {

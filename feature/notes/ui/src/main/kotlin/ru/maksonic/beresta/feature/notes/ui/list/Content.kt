@@ -23,12 +23,10 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import ru.maksonic.beresta.core.SharedUiState
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
-import ru.maksonic.beresta.feature.notes.api.ui.updateScroll
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.ui.theme.Theme
 import ru.maksonic.beresta.ui.widget.functional.animation.OverscrollBehavior
@@ -42,14 +40,14 @@ internal fun Content(
     modifier: Modifier,
     state: NotesListUiState,
     sorter: State<NotesSorter>,
-    noteCard: NotesApi.Ui.Card,
-    sharedUiState: SharedUiState<SharedNotesUiScrollState>,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongClicked: (id: Long) -> Unit,
     chipsRowOffsetHeightPx: State<Float>,
     updateChipsRowOffsetHeight: (Float) -> Unit,
     updatedCanScrollBackwardValue: (Boolean) -> Unit,
+    updateIsScrollUpSharedScrollState: (Boolean) -> Unit,
     contentPaddingValues: PaddingValues,
+    noteCardApi: NotesApi.Card.Ui = koinInject()
 ) {
     val scrollState = rememberLazyStaggeredGridState()
     val scrollOffset = remember { mutableFloatStateOf(0f) }
@@ -79,8 +77,7 @@ internal fun Content(
                 } else {
                     updateChipsRowOffsetHeight(0f)
                 }
-
-                sharedUiState.updateScroll(newOffset > scrollOffset.floatValue)
+                updateIsScrollUpSharedScrollState(newOffset > scrollOffset.floatValue)
 
                 return Offset.Zero
             }
@@ -92,11 +89,11 @@ internal fun Content(
     }
 
     LaunchedEffect(isInitialScroll.value) {
-        if (isInitialScroll.value) sharedUiState.updateScroll(true)
+        if (isInitialScroll.value) updateIsScrollUpSharedScrollState(true)
     }
 
     LaunchedEffect(isBottomScroll.value) {
-        if (isBottomScroll.value) sharedUiState.updateScroll(true)
+        if (isBottomScroll.value) updateIsScrollUpSharedScrollState(true)
     }
 
     Box(
@@ -118,7 +115,7 @@ internal fun Content(
                 itemsIndexed(
                     items = sorter.value.sortedWithFilterList,
                     key = { index, item -> if (index == 0) index else item.id }) { _, note ->
-                    noteCard.Widget(
+                    noteCardApi.Widget(
                         note = note,
                         isSelected = state.selectedList.contains(note),
                         onNoteClicked = onNoteClicked,

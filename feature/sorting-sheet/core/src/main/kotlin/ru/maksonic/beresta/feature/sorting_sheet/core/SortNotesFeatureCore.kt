@@ -18,7 +18,7 @@ import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 /**
  * @Author maksonic on 27.06.2023
  */
-class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.Feature.State {
+class SortNotesFeatureCore(private val datastore: Datastore) : SortingSheetApi.Storage {
     private companion object {
         private val INITIAL_ORDER_STATE = Order.DESCENDING.name
         private val INITIAL_SORT_STATE = Sort.DATE_CREATION.name

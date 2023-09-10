@@ -74,9 +74,9 @@ internal fun ExpandedContent(
     actions: Map<SearchBarApi.ActionKey, () -> Unit>,
     onSearchResultNoteClicked: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SearchBarViewModel = koinViewModel(),
     queryModifier: Modifier,
-    notesListFeatureApi: NotesApi.Ui.Card = koinInject()
+    viewModel: SearchBarViewModel = koinViewModel(),
+    noteCardApi: NotesApi.Card.Ui = koinInject()
 ) {
     val searchQuery = viewModel.textFiledValue.collectAsStateWithLifecycle()
     val searchList = remember { mutableStateOf(uiState.value.searchList) }
@@ -112,7 +112,7 @@ internal fun ExpandedContent(
         )
         SearchListResult(
             notes = searchList.value,
-            noteCard = notesListFeatureApi,
+            noteCardApi = noteCardApi,
             isEmptySearch = isEmptySearchResult.value,
             onSearchResultNoteClicked = onSearchResultNoteClicked,
             updateStatusBarColor = { isColoredStatusBar.value = it }
@@ -198,7 +198,7 @@ private fun InputQueryTextFiled(
 @Composable
 private fun SearchListResult(
     notes: NoteUi.Collection,
-    noteCard: NotesApi.Ui.Card,
+    noteCardApi: NotesApi.Card.Ui,
     isEmptySearch: Boolean,
     onSearchResultNoteClicked: (Long) -> Unit,
     updateStatusBarColor: (Boolean) -> Unit,
@@ -216,7 +216,7 @@ private fun SearchListResult(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = notes.data, key = { note -> note.id }) { note ->
-            noteCard.Widget(
+            noteCardApi.Widget(
                 note = note,
                 isSelected = false,
                 onNoteClicked = onSearchResultNoteClicked,

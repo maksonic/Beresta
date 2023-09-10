@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_chips.ui
+package ru.maksonic.beresta.feature.folders_chips.ui.chips_row
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FoldersSorter
+import ru.maksonic.beresta.feature.folders_chips.ui.ChipItem
 import ru.maksonic.beresta.feature.folders_chips.ui.widget.AddNewChipButton
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.ui.theme.component.dp16

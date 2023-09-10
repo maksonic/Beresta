@@ -14,11 +14,11 @@ import ru.maksonic.beresta.screen.main.ui.SendMessage
 internal fun ChipsRow(
     model: State<Model>,
     send: SendMessage,
-    api: FoldersApi.Ui.ChipsRow,
+    chipsRowUi: FoldersApi.ChipsRow.Ui,
     isColoredBackground: State<Boolean>,
     chipsRowOffsetHeightPx: State<Float>,
 ) {
-    api.Widget(
+    chipsRowUi.Widget(
         state = model.value.chips.state,
         isColoredBackground = isColoredBackground,
         chips = model.value.chips.collection,

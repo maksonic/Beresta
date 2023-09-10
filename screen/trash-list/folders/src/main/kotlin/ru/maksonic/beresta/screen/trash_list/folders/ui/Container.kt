@@ -26,8 +26,8 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 internal fun Container(
     router: TrashFoldersScreenRouter,
-    folderUiItemApi: FoldersApi.Ui.FolderItem = koinInject(),
-    foldersPlaceholderApi: FoldersApi.Ui.Placeholder = koinInject(),
+    folderItemUi: FoldersApi.FolderItem.Ui = koinInject(),
+    foldersPlaceholderUi: FoldersApi.ListPlaceholder.Ui = koinInject(),
     sandbox: FoldersTrashSandbox = koinViewModel(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
@@ -48,8 +48,8 @@ internal fun Container(
     )
 
     Content(
-        folderUiItemApi = folderUiItemApi,
-        foldersPlaceholderApi = foldersPlaceholderApi,
+        folderItemUi = folderItemUi,
+        foldersPlaceholderUi = foldersPlaceholderUi,
         model = model,
         send = sandbox::send
     )

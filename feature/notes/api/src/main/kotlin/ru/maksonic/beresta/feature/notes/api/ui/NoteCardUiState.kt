@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.core.SharedUiState
 
 /**
  * @Author maksonic on 06.07.2023
@@ -38,18 +37,6 @@ data class NoteCardUiState(
 }
 
 val noteUiCardState: NoteCardUiState @Composable get() = LocalNoteCardState.current
-
-fun SharedUiState<NoteCardUiState>.updateShape(shape: NoteCardShape) =
-    this.update { it.copy(shape = shape) }
-
-fun SharedUiState<NoteCardUiState>.updateElevation(elevation: NoteCardElevation) =
-    this.update { it.copy(elevation = elevation) }
-
-fun SharedUiState<NoteCardUiState>.updateMaxTitleLines(count: Int) =
-    this.update { it.copy(maxTitleLines = count) }
-
-fun SharedUiState<NoteCardUiState>.updateMaxMessageLines(count: Int) =
-    this.update { it.copy(maxMessageLines = count) }
 
 val NoteCardShape.isSquare get() = this == NoteCardShape.SQUARED
 val NoteCardElevation.isEnabled get() = this == NoteCardElevation.ENABLED

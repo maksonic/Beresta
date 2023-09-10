@@ -10,8 +10,8 @@ import ru.maksonic.beresta.screen.main.core.Msg
  * @Author maksonic on 11.07.2023
  */
 class ChipsSortProgram(
-    private val listSortStateUiApi: SortingSheetApi.Ui,
-    private val listSortStateFeatureState: SortingSheetApi.Feature.State,
+    private val listSortFeatureApi: SortingSheetApi.Ui,
+    private val listSortFeatureStorage: SortingSheetApi.Storage,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -21,6 +21,6 @@ class ChipsSortProgram(
     }
 
     private suspend fun fetchChipsSortState() =
-        listSortStateFeatureState.current(SortDataKey.FOLDERS)
-            .collect { listSortStateUiApi.state.update(it) }
+        listSortFeatureStorage.current(SortDataKey.FOLDERS)
+            .collect { listSortFeatureApi.update(it) }
 }

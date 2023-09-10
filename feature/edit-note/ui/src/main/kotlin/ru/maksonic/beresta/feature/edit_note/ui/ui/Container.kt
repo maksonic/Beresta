@@ -64,9 +64,9 @@ internal fun Container(
     isCircleFab: Boolean,
     modifier: Modifier,
     sandbox: EditNoteSandbox = koinViewModel(),
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
-    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
-    markerColorPickerApi: MarkerColorPickerApi.Ui = koinInject()
+    addChipDialogApi: FoldersApi.AddChipDialog.Ui = koinInject(),
+    chipsRowApi: FoldersApi.ChipsRow.Ui = koinInject(),
+    markerColorPickerApi: MarkerColorPickerApi.Ui = koinInject(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
     val focusRequester = remember { FocusRequester() }
@@ -78,7 +78,7 @@ internal fun Container(
         router = router,
         focusRequester = focusRequester,
         collapseFab = updateFabState,
-        chipsDialogApi = chipsDialogApi,
+        addChipDialogApi = addChipDialogApi,
         chipsRowApi = chipsRowApi,
         markerColorPickerApi = markerColorPickerApi
     )
@@ -112,13 +112,14 @@ internal fun Container(
                 ExpandedContent(
                     model = model,
                     send = sandbox::send,
-                    chipsDialogApi = chipsDialogApi,
-                    chipsRowApi = chipsRowApi,
-                    markerColorPickerApi = markerColorPickerApi,
                     focusRequester = focusRequester,
-                    isHiddenNote = isHiddenNote.value
+                    isHiddenNote = isHiddenNote.value,
+                    addChipDialogApi = addChipDialogApi,
+                    chipsRowApi = chipsRowApi,
+                    markerColorPickerApi = markerColorPickerApi
                 )
-                chipsDialogApi.Widget()
+
+                addChipDialogApi.Widget()
             }
         } else {
             LaunchedEffect(isFullExpanded) {
@@ -141,12 +142,12 @@ internal fun Container(
                     ExpandedContent(
                         model = model,
                         send = sandbox::send,
-                        chipsDialogApi = chipsDialogApi,
-                        chipsRowApi = chipsRowApi,
-                        markerColorPickerApi = markerColorPickerApi,
                         focusRequester = focusRequester,
                         isHiddenNote = isHiddenNote.value || isCircleFab,
-                        modifier = Modifier.size(width = width.value, height = height.value)
+                        modifier = Modifier.size(width = width.value, height = height.value),
+                        addChipDialogApi = addChipDialogApi,
+                        chipsRowApi = chipsRowApi,
+                        markerColorPickerApi = markerColorPickerApi
                     )
                 }
 
@@ -172,8 +173,8 @@ private fun HandleUiEffects(
     router: EditNoteRouter?,
     focusRequester: FocusRequester,
     collapseFab: (EditNoteFabState) -> Unit,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    chipsRowApi: FoldersApi.Ui.ChipsRow,
+    addChipDialogApi: FoldersApi.AddChipDialog.Ui,
+    chipsRowApi: FoldersApi.ChipsRow.Ui,
     markerColorPickerApi: MarkerColorPickerApi.Ui
 ) {
     val focusManager = LocalFocusManager.current
@@ -188,7 +189,7 @@ private fun HandleUiEffects(
             is Eff.ShowNoteUpdateSnackBar -> context.toastLongTime("Bye")
             is Eff.ShowKeyboardForExpandedFab -> focusRequester.requestFocus()
             is Eff.HideKeyboard -> focusManager.clearFocus()
-            is Eff.ShowAddNewChipDialog -> chipsDialogApi.addFolder()
+            is Eff.ShowAddNewChipDialog -> addChipDialogApi.addFolder()
             is Eff.CollapseFab -> focusManager.clearFocus().run {
                 scope.launch {
                     delay(100)

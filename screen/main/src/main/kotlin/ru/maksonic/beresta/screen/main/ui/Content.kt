@@ -15,7 +15,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.LocalCurrentSelectedFolderState
 import ru.maksonic.beresta.feature.notes.api.NotesApi
@@ -42,12 +42,11 @@ internal fun Content(
     model: State<Model>,
     send: SendMessage,
     modifier: Modifier = Modifier,
-    notesListApi: NotesApi.Ui.List,
-    chipsRowApi: FoldersApi.Ui.ChipsRow,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    listSortUiState: SortingSheetApi.Ui,
+    notesListApi: NotesApi.List.Ui = koinInject(),
+    listSortUi: SortingSheetApi.Ui = koinInject(),
+    chipsRowUi: FoldersApi.ChipsRow.Ui = koinInject(),
+    chipsDialogUi: FoldersApi.AddChipDialog.Ui = koinInject(),
 ) {
-    val sharedNotesUiState = notesListApi.sharedUiState.state.collectAsStateWithLifecycle()
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
     val isVisibleBottomBar = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
@@ -57,13 +56,13 @@ internal fun Content(
         send(Msg.Ui.CancelNotesSelection)
     }
 
-    BackHandler(chipsRowApi.currentSelectedId.value != 1L) {
+    BackHandler(chipsRowUi.currentSelectedId.value != 1L) {
         send(Msg.Inner.ResetCurrentSelectedFolder)
     }
 
-    LaunchedEffect(sharedNotesUiState.value.isScrollUp) {
+    LaunchedEffect(notesListApi.isScrollUpSharedState.value) {
         isVisibleBottomBar.value =
-            if (model.value.notes.isSelection) true else sharedNotesUiState.value.isScrollUp
+            if (model.value.notes.isSelection) true else notesListApi.isScrollUpSharedState.value
     }
 
     LaunchedEffect(isSelectionState.value) {
@@ -81,11 +80,10 @@ internal fun Content(
 
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         val isCanScrollBackwardState = rememberSaveable { mutableStateOf(false) }
-        val sortState = listSortUiState.state.state.collectAsStateWithLifecycle()
 
         CompositionLocalProvider(
-            LocalListSortState provides sortState.value,
-            LocalCurrentSelectedFolderState provides chipsRowApi.currentSelectedId.value,
+            LocalListSortState provides listSortUi.sharedState.value,
+            LocalCurrentSelectedFolderState provides chipsRowUi.currentSelectedId.value,
         ) {
             NotesList(
                 model = model,
@@ -99,7 +97,7 @@ internal fun Content(
             ChipsRow(
                 model = model,
                 send = send,
-                api = chipsRowApi,
+                chipsRowUi = chipsRowUi,
                 isColoredBackground = isCanScrollBackwardState,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             )
@@ -109,7 +107,7 @@ internal fun Content(
                 send = send,
                 state = mainBottomBarState,
                 isVisibleBottomBar = isVisibleBottomBar,
-                sharedNotesUiScrollState = notesListApi.sharedUiState,
+                updateIsScrollUpSharedScrollState = { notesListApi.updateScrollState(it) }
             )
 
             MainSearchBar(model, send, isCanScrollBackwardState)
@@ -125,7 +123,7 @@ internal fun Content(
                 }
             }
 
-            chipsDialogApi.Widget()
+            chipsDialogUi.Widget()
 
             HiddenNotesDialog(isVisible = model.value.isVisibleHiddenNotesDialog, send)
         }

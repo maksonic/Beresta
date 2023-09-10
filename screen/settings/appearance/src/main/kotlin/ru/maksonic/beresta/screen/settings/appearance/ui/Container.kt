@@ -8,9 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
-import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.navigation.router.router.settings.SettingsAppearanceScreenRouter
 import ru.maksonic.beresta.screen.settings.appearance.core.Eff
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
@@ -26,7 +24,6 @@ internal typealias SendMessage = (Msg) -> Unit
 internal fun Container(
     router: SettingsAppearanceScreenRouter,
     sandbox: SettingsAppearanceSandbox = koinViewModel(),
-    noteCardApi: NotesApi.Ui.Card = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -34,7 +31,7 @@ internal fun Container(
         sandbox.send(Msg.Inner.HiddenModalBottomSheet)
     }
 
-    Content(model = model, send = sandbox::send, noteCardApi = noteCardApi)
+    Content(model, sandbox::send)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

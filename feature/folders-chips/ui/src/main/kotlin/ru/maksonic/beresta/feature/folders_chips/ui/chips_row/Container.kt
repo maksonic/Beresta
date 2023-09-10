@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_chips.ui
+package ru.maksonic.beresta.feature.folders_chips.ui.chips_row
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,8 +27,8 @@ import kotlin.math.roundToInt
 @Composable
 internal fun Container(
     state: ElmBaseModel,
-    isColoredBackground: State<Boolean>,
     chips: FolderUi.Collection,
+    isColoredBackground: State<Boolean>,
     chipsRowOffsetHeightPx: State<Float>,
     onAddNewChipClicked: () -> Unit,
     updateCurrentSelectedFolder: (Long) -> Unit,

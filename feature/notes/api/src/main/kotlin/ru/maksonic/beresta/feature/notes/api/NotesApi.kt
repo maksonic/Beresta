@@ -5,23 +5,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
-import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardElevation
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
 
 /**
  * @Author maksonic on 22.06.2023
  */
 interface NotesApi {
-
-    interface Ui {
-        interface Card {
-            val state: SharedUiState<NoteCardUiState>
+    interface Card {
+        interface Ui {
+            val sharedState: State<NoteCardUiState>
+            fun update(state: NoteCardUiState)
+            fun updateShape(shape: NoteCardShape)
+            fun updateElevation(elevation: NoteCardElevation)
+            fun updateMaxTitleLines(count: Int)
+            fun updateMaxMessageLines(count: Int)
+            fun resetNoteCardLinesByDefault()
 
             @Composable
             fun Widget(
@@ -32,9 +35,12 @@ interface NotesApi {
                 modifier: Modifier
             )
         }
+    }
 
-        interface List {
-            val sharedUiState: SharedUiState<SharedNotesUiScrollState>
+    interface List {
+        interface Ui {
+            val isScrollUpSharedState: State<Boolean>
+            fun updateScrollState(isScrollUp: Boolean)
 
             @Composable
             fun Widget(
@@ -49,20 +55,22 @@ interface NotesApi {
                 updatedCanScrollBackwardValue: (Boolean) -> Unit,
                 contentPaddingValues: PaddingValues
             )
+        }
+    }
 
+    interface ListPlaceholder {
+        interface Ui {
             @Composable
             fun Placeholder(gridCellsCount: Int, modifier: Modifier)
         }
     }
 
-    interface Feature {
-        interface NoteCardState {
-            val current: Flow<NoteCardUiState>
-            suspend fun setCardShape(shape: NoteCardShape)
-            suspend fun setCardElevation(elevation: NoteCardElevation)
-            suspend fun setCardTitleMaxLines(value: Int)
-            suspend fun setCardMessageMaxLines(value: Int)
-            suspend fun setByDefaultCardMaxLines()
-        }
+    interface CardStateStorage {
+        val current: Flow<NoteCardUiState>
+        suspend fun setCardShape(shape: NoteCardShape)
+        suspend fun setCardElevation(elevation: NoteCardElevation)
+        suspend fun setCardTitleMaxLines(value: Int)
+        suspend fun setCardMessageMaxLines(value: Int)
+        suspend fun setByDefaultCardMaxLines()
     }
 }

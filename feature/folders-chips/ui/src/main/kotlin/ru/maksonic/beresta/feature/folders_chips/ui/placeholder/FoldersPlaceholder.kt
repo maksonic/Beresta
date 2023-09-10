@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.folders_chips.ui.widget
+package ru.maksonic.beresta.feature.folders_chips.ui.placeholder
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector4D
@@ -25,13 +25,13 @@ import ru.maksonic.beresta.ui.widget.functional.animation.PlaceholderListWidget
 /**
  * @Author maksonic on 12.07.2023
  */
-class FoldersPlaceholder : FoldersApi.Ui.Placeholder {
+class FoldersPlaceholder : FoldersApi.ListPlaceholder.Ui {
     companion object {
         private const val PLACEHOLDER_LIST_COUNT = 15
     }
 
     @Composable
-    override fun List(modifier: Modifier) {
+    override fun Placeholder(modifier: Modifier) {
         Box(modifier.background(background)) {
             PlaceholderListWidget(
                 placeholdersCount = PLACEHOLDER_LIST_COUNT,
@@ -43,7 +43,7 @@ class FoldersPlaceholder : FoldersApi.Ui.Placeholder {
     }
 
     @Composable
-    override fun TrashList(modifier: Modifier) {
+    override fun PlaceholderTrash(modifier: Modifier) {
         Box(modifier.background(background)) {
             PlaceholderListWidget(
                 placeholdersCount = PLACEHOLDER_LIST_COUNT,
@@ -57,7 +57,6 @@ class FoldersPlaceholder : FoldersApi.Ui.Placeholder {
         }
     }
 }
-
 
 @Composable
 private fun FolderPlaceholderItem(

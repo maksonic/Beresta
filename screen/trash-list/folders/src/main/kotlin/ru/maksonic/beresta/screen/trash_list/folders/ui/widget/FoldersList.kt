@@ -31,10 +31,10 @@ import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun FoldersList(
-    folderUiItemApi: FoldersApi.Ui.FolderItem,
-    placeholderApi: FoldersApi.Ui.Placeholder,
     model: State<Model>,
     send: SendMessage,
+    folderItemUi: FoldersApi.FolderItem.Ui,
+    placeholderUi: FoldersApi.ListPlaceholder.Ui,
     updateFirstVisibleItemOffset: (Boolean) -> Unit,
     modifier: Modifier
 ) {
@@ -51,19 +51,18 @@ internal fun FoldersList(
 
         LazyColumn(
             state = scrollState,
+            modifier = modifier,
             contentPadding = PaddingValues(
                 top = dp10,
                 start = dp16,
                 end = dp16,
                 bottom = bottomContentPadding.value
-            ),
-            modifier = modifier
+            )
         ) {
-
             when {
                 model.value.base.isLoading -> {
                     item {
-                        placeholderApi.TrashList(Modifier.height(maxHeight))
+                        placeholderUi.PlaceholderTrash(Modifier.height(maxHeight))
                     }
                 }
 
@@ -79,7 +78,7 @@ internal fun FoldersList(
 
                 else -> {
                     items(model.value.folders.data) { folder ->
-                        folderUiItemApi.Widget(
+                        folderItemUi.Widget(
                             isSelected = model.value.selectedList.contains(folder),
                             isCurrent = false,
                             folder = folder,

@@ -84,7 +84,7 @@ private fun SelectedStateBarContent(
     selectedFoldersCount: Int,
     isVisibleUnpinBtn: State<Boolean>,
     isDisabledBottomBar: State<Boolean>,
-    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject()
+    chipsRowApi: FoldersApi.ChipsRow.Ui = koinInject()
 ) {
     CompositionLocalProvider(
         LocalCurrentSelectedFolderState provides chipsRowApi.currentSelectedId.value

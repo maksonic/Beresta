@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.maksonic.beresta.core.SharedUiState
 import ru.maksonic.beresta.data.common.Datastore
 import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
 
@@ -13,14 +12,11 @@ import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
  * @Author maksonic on 14.07.2023
  */
 interface AnimationVelocity {
-    val current: SharedUiState<AppAnimationVelocity.Key>
     val currentCacheVelocity: Flow<AppAnimationVelocity>
     suspend fun updateInDatastore(key: AppAnimationVelocity.Key)
 
-    class Core(
-        private val datastore: Datastore,
-        override val current: SharedUiState<AppAnimationVelocity.Key>
-    ) : AnimationVelocity {
+    class Core(private val datastore: Datastore) : AnimationVelocity {
+
         private val defaultAnimVelocity = AppAnimationVelocity.Key.NORMAL
         private val key = stringPreferencesKey("prefs_app_animation_velocity_key")
 

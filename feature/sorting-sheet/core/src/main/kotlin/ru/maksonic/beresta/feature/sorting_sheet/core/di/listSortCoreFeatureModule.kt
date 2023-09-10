@@ -8,5 +8,5 @@ import ru.maksonic.beresta.feature.sorting_sheet.core.SortNotesFeatureCore
  * @Author maksonic on 09.07.2023
  */
 val listSortCoreFeatureModule = module {
-    single<SortingSheetApi.Feature.State> { SortNotesFeatureCore(datastore = get()) }
+    single<SortingSheetApi.Storage> { SortNotesFeatureCore(datastore = get()) }
 }

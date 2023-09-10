@@ -16,7 +16,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Model
@@ -39,13 +39,12 @@ internal fun Content(
     model: State<Model>,
     send: SendMessage,
     modifier: Modifier = Modifier,
-    noteCardApi: NotesApi.Ui.Card
+    noteCardApi: NotesApi.Card.Ui = koinInject()
 ) {
     val scrollState = rememberScrollState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val currentSheetContent = rememberUpdatedState(model.value.modalSheet.content)
-    val noteCardState = noteCardApi.state.state.collectAsStateWithLifecycle()
 
     Box(
         modifier
@@ -80,7 +79,7 @@ internal fun Content(
                     .verticalScroll(scrollState)
                     .padding(paddings)
             ) {
-                CardSettingItem(send, noteCardState, model.value.currentLang)
+                CardSettingItem(send, noteCardApi.sharedState, model.value.currentLang)
 
                 AnimationsSettingItem(send, currentVelocityTitle)
             }
@@ -92,10 +91,10 @@ internal fun Content(
                 onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
             ) {
                 MultipleModalBottomSheetContent(
-                    send,
-                    currentSheetContent,
-                    noteCardState,
-                    currentVelocityTitle
+                    send = send,
+                    currentSheetContent = currentSheetContent,
+                    noteCardState = noteCardApi.sharedState,
+                    currentVelocityTitle = currentVelocityTitle
                 )
             }
         }

@@ -25,12 +25,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.edit_note.api.isExpanded
-import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.search_bar.api.isExpanded
-import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
@@ -49,10 +46,7 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 internal fun Container(
     router: HiddenNotesScreenRouter,
-    notesListApi: NotesApi.Ui.List = koinInject(),
-    sortedSheetApi: SortingSheetApi.Ui = koinInject(),
     sandbox: HiddenNotesSandbox = koinViewModel(),
-    listSortUiState: SortingSheetApi.Ui = koinInject(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
@@ -103,13 +97,7 @@ internal fun Container(
                 Canvas(modifier = Modifier.fillMaxSize(), onDraw = { drawRect(color) })
 
             } else {
-                Content(
-                    model = model,
-                    send = sandbox::send,
-                    notesListApi = notesListApi,
-                    sortedSheetApi = sortedSheetApi,
-                    listSortUiState = listSortUiState,
-                )
+                Content(model, sandbox::send)
             }
         }
 

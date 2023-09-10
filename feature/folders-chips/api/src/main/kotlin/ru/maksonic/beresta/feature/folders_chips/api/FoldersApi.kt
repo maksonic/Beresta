@@ -11,9 +11,8 @@ import ru.maksonic.beresta.feature.folders_chips.api.ui.SharedNewFolderDialogUiS
  * @Author maksonic on 03.07.2023
  */
 interface FoldersApi {
-
-    interface Ui {
-        interface ChipsRow {
+    interface ChipsRow {
+        interface Ui {
             val currentSelectedId: State<Long>
             fun updateCurrent(id: Long)
 
@@ -27,9 +26,11 @@ interface FoldersApi {
                 onRetryFetchClicked: () -> Unit
             )
         }
+    }
 
-        interface AddChipDialog {
-            val state: State<SharedNewFolderDialogUiState>
+    interface AddChipDialog {
+        interface Ui {
+            val sharedState: State<SharedNewFolderDialogUiState>
             fun hideDialog()
             fun addFolder()
             fun updateFolder(id: Long)
@@ -37,26 +38,30 @@ interface FoldersApi {
             @Composable
             fun Widget()
         }
+    }
 
-        interface FolderItem {
+    interface FolderItem {
+        interface Ui {
             @Composable
             fun Widget(
+                folder: FolderUi,
                 isSelected: Boolean,
                 isCurrent: Boolean,
-                folder: FolderUi,
                 isTrashPlacement: Boolean,
                 onFolderClicked: (id: Long) -> Unit,
                 onFolderLongPressed: (id: Long) -> Unit,
                 modifier: Modifier
             )
         }
+    }
 
-        interface Placeholder {
+    interface ListPlaceholder {
+        interface Ui {
             @Composable
-            fun List(modifier: Modifier)
+            fun Placeholder(modifier: Modifier)
 
             @Composable
-            fun TrashList(modifier: Modifier)
+            fun PlaceholderTrash(modifier: Modifier)
         }
     }
 }

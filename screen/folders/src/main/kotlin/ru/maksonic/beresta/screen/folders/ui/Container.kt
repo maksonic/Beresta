@@ -14,7 +14,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.FoldersScreenRouter
 import ru.maksonic.beresta.screen.folders.core.Eff
@@ -30,34 +29,20 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 internal fun Container(
     router: FoldersScreenRouter,
-    foldersUiItemApi: FoldersApi.Ui.FolderItem = koinInject(),
-    foldersPlaceholderApi: FoldersApi.Ui.Placeholder = koinInject(),
-    sandbox: FoldersScreenSandbox = koinViewModel(),
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
-    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
-    listSortUiState: SortingSheetApi.Ui = koinInject()
+    sandbox: FoldersScreenSandbox = koinViewModel()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        chipsDialogApi = chipsDialogApi,
+        send = sandbox::send,
         modalBottomSheetState = model.value.modalSheet.state,
         snackState = model.value.snackState,
-        hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
-        send = sandbox::send
+        hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) }
     )
 
-    Content(
-        foldersUiItemApi = foldersUiItemApi,
-        foldersPlaceholderApi = foldersPlaceholderApi,
-        chipsDialogApi = chipsDialogApi,
-        chipsRowApi = chipsRowApi,
-        model = model,
-        send = sandbox::send,
-        listSortUiState = listSortUiState,
-    )
+    Content(model, sandbox::send)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,11 +50,11 @@ internal fun Container(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: FoldersScreenRouter,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
+    send: SendMessage,
     modalBottomSheetState: SheetState,
     snackState: SnackbarHostState,
     hideModalSheet: () -> Unit,
-    send: SendMessage
+    chipsDialogApi: FoldersApi.AddChipDialog.Ui = koinInject()
 ) {
     val scope = rememberCoroutineScope()
     val snackScope = rememberCoroutineScope()

@@ -39,12 +39,12 @@ import ru.maksonic.beresta.ui.theme.color.surface
 internal fun ExpandedContent(
     model: State<Model>,
     send: SendMessage,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    chipsRowApi: FoldersApi.Ui.ChipsRow,
-    markerColorPickerApi: MarkerColorPickerApi.Ui,
     focusRequester: FocusRequester,
     isHiddenNote: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    addChipDialogApi: FoldersApi.AddChipDialog.Ui,
+    chipsRowApi: FoldersApi.ChipsRow.Ui,
+    markerColorPickerApi: MarkerColorPickerApi.Ui
 ) {
 
     LaunchedEffect(chipsRowApi.currentSelectedId) {
@@ -94,7 +94,7 @@ internal fun ExpandedContent(
             isHiddenNote = isHiddenNote,
             isScrollUp = isScrollUp,
             canScrollBackward = canScrollBackward,
-            isVisibleAddNoteDialog = chipsDialogApi.state.value.isVisible,
+            isVisibleAddNoteDialog = addChipDialogApi.sharedState.value.isVisible,
         )
 
         markerColorPickerApi.Widget()

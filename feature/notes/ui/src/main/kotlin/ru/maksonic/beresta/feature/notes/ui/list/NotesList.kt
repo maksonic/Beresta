@@ -3,19 +3,19 @@ package ru.maksonic.beresta.feature.notes.ui.list
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.core.SharedUiState
+import ru.maksonic.beresta.core.ui.ext.update
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
 
 /**
  * @Author maksonic on 01.07.2023
  */
-class NotesList : NotesApi.Ui.List {
-    override val sharedUiState: SharedUiState<SharedNotesUiScrollState>
-        get() = SharedNotesUiScrollState.Initial
+class NotesList : NotesApi.List.Ui {
+    override val isScrollUpSharedState = mutableStateOf(false)
+    override fun updateScrollState(isScrollUp: Boolean) = isScrollUpSharedState.update(isScrollUp)
 
     @Composable
     override fun Widget(
@@ -35,19 +35,14 @@ class NotesList : NotesApi.Ui.List {
             placeholderModifier = placeholderModifier,
             state = state,
             sorter = sorter,
-            sharedUiState = sharedUiState,
             onNoteClicked = onNoteClicked,
             onNoteLongClicked = onNoteLongClicked,
             chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
             updateChipsRowOffsetHeight = updateChipsRowOffsetHeight,
             updatedCanScrollBackwardValue = updatedCanScrollBackwardValue,
+            updateIsScrollUpSharedScrollState = { isScrollUp -> updateScrollState(isScrollUp) },
             contentPaddingValues = contentPaddingValues
         )
-    }
-
-    @Composable
-    override fun Placeholder(gridCellsCount: Int, modifier: Modifier) {
-        PlaceholderContent(gridCellsCount, modifier)
     }
 }
 

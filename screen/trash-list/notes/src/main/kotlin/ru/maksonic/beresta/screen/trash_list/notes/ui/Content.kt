@@ -12,6 +12,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.screen.trash_list.notes.core.Model
 import ru.maksonic.beresta.screen.trash_list.notes.core.Msg
@@ -31,9 +32,9 @@ import ru.maksonic.beresta.ui.widget.sheet.TrashDeleteModalSheetContent
 internal fun Content(
     model: State<Model>,
     send: SendMessage,
-    notesListUiApi: NotesApi.Ui.List,
-    noteCardUiApi: NotesApi.Ui.Card,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    noteCardUiApi: NotesApi.Card.Ui = koinInject(),
+    notesListPlaceholderApi: NotesApi.ListPlaceholder.Ui = koinInject()
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -47,8 +48,8 @@ internal fun Content(
             NotesList(
                 model = model,
                 send = send,
-                notesListUiApi = notesListUiApi,
-                noteCardUiApi = noteCardUiApi,
+                noteCardApi = noteCardUiApi,
+                notesListPlaceholderApi = notesListPlaceholderApi,
                 modifier = modifier.padding(paddings)
             )
         }

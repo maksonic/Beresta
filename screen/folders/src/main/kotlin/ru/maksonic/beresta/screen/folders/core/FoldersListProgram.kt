@@ -37,7 +37,7 @@ class FoldersListProgram(
     private val navigator: AbstractNavigator,
     private val appLanguageEngineApi: LanguageEngineApi,
     private val stickyFoldersTitleFormatter: StickyFoldersTitleFormatter,
-    private val chipsRowApi: FoldersApi.Ui.ChipsRow,
+    private val chipsRowApi: FoldersApi.ChipsRow.Ui,
     private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 

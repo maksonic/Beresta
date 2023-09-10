@@ -10,9 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.core.SharedUiState
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
-import ru.maksonic.beresta.feature.notes.api.ui.updateScroll
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
 import ru.maksonic.beresta.screen.hidden_notes.ui.SendMessage
@@ -40,14 +37,14 @@ internal fun BottomBar(
     isVisibleBottomBar: State<Boolean>,
     isEnabledBar: State<Boolean>,
     isShowUnpinBtn: State<Boolean>,
-    sharedNotesUiScrollState: SharedUiState<SharedNotesUiScrollState>,
+    updateIsScrollUpSharedScrollState: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val offset = Theme.widgetSize.bottomMainBarHeight.plus(SystemNavigationBarHeight)
     val transition = animateDp(if (isVisibleBottomBar.value) 0.dp else offset)
 
     LaunchedEffect(isSelectionState.value) {
-        sharedNotesUiScrollState.updateScroll(true)
+        updateIsScrollUpSharedScrollState(true)
     }
 
     Column(

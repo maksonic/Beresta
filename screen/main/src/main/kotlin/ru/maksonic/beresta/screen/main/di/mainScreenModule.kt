@@ -14,12 +14,7 @@ import ru.maksonic.beresta.screen.main.core.programs.NotesSortProgram
  * @Author maksonic on 25.04.2023
  */
 val mainScreenModule = module {
-    single {
-        ChipsSortProgram(
-            listSortStateUiApi = get(),
-            listSortStateFeatureState = get()
-        )
-    }
+    single { ChipsSortProgram(listSortFeatureApi = get(), listSortFeatureStorage = get()) }
     single {
         ChipsDataProgram(
             interactor = get(),
@@ -41,8 +36,8 @@ val mainScreenModule = module {
     }
     single {
         NotesSortProgram(
-            listSortStateUiApi = get(),
-            listSortStateFeatureState = get(),
+            listSortFeatureApi = get(),
+            listSortFeatureStorage = get(),
             noteCardUiState = get(),
             noteCardFeatureState = get(),
         )

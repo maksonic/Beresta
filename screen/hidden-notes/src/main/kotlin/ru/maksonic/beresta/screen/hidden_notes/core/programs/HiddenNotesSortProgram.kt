@@ -10,8 +10,8 @@ import ru.maksonic.beresta.screen.hidden_notes.core.Msg
  * @Author maksonic on 21.07.2023
  */
 class HiddenNotesSortProgram(
-    private val listSortStateUiApi: SortingSheetApi.Ui,
-    private val listSortStateFeatureState: SortingSheetApi.Feature.State,
+    private val listSortFeatureApi: SortingSheetApi.Ui,
+    private val listSortFeatureStorage: SortingSheetApi.Storage,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -20,7 +20,7 @@ class HiddenNotesSortProgram(
         }
     }
 
-    private suspend fun updateGridViewState(count: Int) = listSortStateUiApi.state
-        .update { it.copy(gridHiddenNotesCount = count) }
-        .let { listSortStateFeatureState.setGridCount(Pair(GridCountKey.HIDDEN_NOTES, count)) }
+    private suspend fun updateGridViewState(count: Int) = listSortFeatureApi
+        .updateGridHiddenNotesCount(count)
+        .let { listSortFeatureStorage.setGridCount(Pair(GridCountKey.HIDDEN_NOTES, count)) }
 }

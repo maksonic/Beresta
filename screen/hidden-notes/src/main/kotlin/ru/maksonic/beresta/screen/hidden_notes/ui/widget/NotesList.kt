@@ -33,7 +33,7 @@ import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 internal fun NotesList(
     model: State<Model>,
     send: SendMessage,
-    api: NotesApi.Ui.List,
+    api: NotesApi.List.Ui,
     chipsRowOffsetHeightPx: State<Float>,
     updateChipsRowOffsetHeight: (Float) -> Unit,
     updatedCanScrollBackwardValue: (Boolean) -> Unit,

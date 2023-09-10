@@ -14,7 +14,7 @@ import ru.maksonic.beresta.feature.notes.api.NotesApi
 /**
  * @Author maksonic on 08.07.2023
  */
-class NoteCardStateFeatureCore(private val datastore: Datastore) : NotesApi.Feature.NoteCardState {
+class CardStateStorageCore(private val datastore: Datastore) : NotesApi.CardStateStorage {
 
     private companion object {
         private const val SHAPE = "prefs_note_card_ui_shape_key"

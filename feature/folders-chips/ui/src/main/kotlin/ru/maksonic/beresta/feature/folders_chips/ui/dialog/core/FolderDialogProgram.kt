@@ -15,8 +15,8 @@ import java.time.LocalDateTime
 class FolderDialogProgram(
     private val interactor: FoldersInteractor,
     private val mapper: FolderUiMapper,
-    private val chipsRowApi: FoldersApi.Ui.ChipsRow,
-    private val addChipDialog: FoldersApi.Ui.AddChipDialog,
+    private val chipsRowApi: FoldersApi.ChipsRow.Ui,
+    private val addChipDialogApi: FoldersApi.AddChipDialog.Ui,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -26,7 +26,7 @@ class FolderDialogProgram(
     }
 
     private suspend fun fetchFolderById(consumer: (Msg) -> Unit) = runCatching {
-        val editableFolderId = addChipDialog.state.value.editableFolderId
+        val editableFolderId = addChipDialogApi.sharedState.value.editableFolderId
 
         if (editableFolderId == 0L) {
             consumer(Msg.Inner.FetchFolderData(FolderUi.Empty))
@@ -51,11 +51,11 @@ class FolderDialogProgram(
         }
     }
 
-    private suspend fun addNewFolder(folder: FolderDomain, time: LocalDateTime) =
-        interactor.add(folder.copy(dateCreation = time))
-            .also { id -> chipsRowApi.updateCurrent(id) }
+    private suspend fun addNewFolder(folder: FolderDomain, time: LocalDateTime) = interactor
+        .add(folder.copy(dateCreation = time))
+        .also { id -> chipsRowApi.updateCurrent(id) }
 
 
-    private suspend fun updateOldFolder(folder: FolderDomain, time: LocalDateTime) =
-        interactor.update(folder.copy(dateCreation = folder.dateCreation, dateLastUpdateRaw = time))
+    private suspend fun updateOldFolder(folder: FolderDomain, time: LocalDateTime) = interactor
+        .update(folder.copy(dateCreation = folder.dateCreation, dateLastUpdateRaw = time))
 }

@@ -13,8 +13,8 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
 import ru.maksonic.beresta.screen.folders.ui.widget.BottomBarContent
@@ -32,14 +32,10 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Content(
-    foldersUiItemApi: FoldersApi.Ui.FolderItem,
-    foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
-    chipsRowApi: FoldersApi.Ui.ChipsRow,
     model: State<Model>,
     send: SendMessage,
-    listSortUiState: SortingSheetApi.Ui,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    chipsDialogUi: FoldersApi.AddChipDialog.Ui = koinInject()
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -55,14 +51,7 @@ internal fun Content(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
             Box(modifier.padding(paddings)) {
-                FoldersList(
-                    folderUiItemApi = foldersUiItemApi,
-                    foldersPlaceholderApi = foldersPlaceholderApi,
-                    model = model,
-                    send = send,
-                    currentSelectedFolder = chipsRowApi.currentSelectedId,
-                    listSortUiState = listSortUiState
-                )
+                FoldersList(model = model, send = send)
             }
         }
 
@@ -79,7 +68,7 @@ internal fun Content(
             }
         }
 
-        chipsDialogApi.Widget()
+        chipsDialogUi.Widget()
 
         HiddenNotesDialog(isVisible = model.value.isVisibleHiddenNotesDialog, send)
     }

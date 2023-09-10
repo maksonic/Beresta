@@ -15,8 +15,6 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.notes.api.NotesApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.SortingSheetApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.navigation.router.router.MainScreenRouter
 import ru.maksonic.beresta.screen.main.core.Eff
@@ -33,32 +31,20 @@ internal typealias SendMessage = (Msg) -> Unit
 @Composable
 internal fun Container(
     router: MainScreenRouter,
-    notesListApi: NotesApi.Ui.List = koinInject(),
-    chipsRowApi: FoldersApi.Ui.ChipsRow = koinInject(),
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog = koinInject(),
     sandbox: MainSandbox = koinViewModel(),
-    listSortUiState: SortingSheetApi.Ui = koinInject(),
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        chipsDialogApi = chipsDialogApi,
         modalBottomSheetState = model.value.modalSheet.state,
         snackState = model.value.snackNotesState,
         hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         send = sandbox::send
     )
 
-    Content(
-        model = model,
-        send = sandbox::send,
-        notesListApi = notesListApi,
-        chipsRowApi = chipsRowApi,
-        chipsDialogApi = chipsDialogApi,
-        listSortUiState = listSortUiState
-    )
+    Content(model, sandbox::send)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,16 +52,15 @@ internal fun Container(
 private fun HandleUiEffects(
     effects: Flow<Eff>,
     router: MainScreenRouter,
-    chipsDialogApi: FoldersApi.Ui.AddChipDialog,
     modalBottomSheetState: SheetState,
     snackState: SnackbarHostState,
     hideModalSheet: () -> Unit,
-    send: SendMessage
+    send: SendMessage,
+    chipsDialogApi: FoldersApi.AddChipDialog.Ui = koinInject()
 ) {
     val scope = rememberCoroutineScope()
     val snackScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-
     // Snack messages
     val removedNotesPrefix = text.shared.hintRemovedNotesCount
 

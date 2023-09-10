@@ -31,8 +31,8 @@ import ru.maksonic.beresta.ui.widget.sheet.TrashDeleteModalSheetContent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Content(
-    folderUiItemApi: FoldersApi.Ui.FolderItem,
-    foldersPlaceholderApi: FoldersApi.Ui.Placeholder,
+    folderItemUi: FoldersApi.FolderItem.Ui,
+    foldersPlaceholderUi: FoldersApi.ListPlaceholder.Ui,
     model: State<Model>,
     send: SendMessage,
     modifier: Modifier = Modifier
@@ -48,10 +48,10 @@ internal fun Content(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
             FoldersList(
-                folderUiItemApi = folderUiItemApi,
-                placeholderApi = foldersPlaceholderApi,
                 model = model,
                 send = send,
+                folderItemUi = folderItemUi,
+                placeholderUi = foldersPlaceholderUi,
                 updateFirstVisibleItemOffset = { isVisibleFirstItemOffset.value = it },
                 modifier = modifier.padding(paddings)
             )

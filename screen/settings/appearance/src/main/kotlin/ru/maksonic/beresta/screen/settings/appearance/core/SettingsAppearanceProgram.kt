@@ -4,10 +4,6 @@ import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardElevation
 import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
 import ru.maksonic.beresta.feature.notes.api.NotesApi
-import ru.maksonic.beresta.feature.notes.api.ui.updateElevation
-import ru.maksonic.beresta.feature.notes.api.ui.updateMaxMessageLines
-import ru.maksonic.beresta.feature.notes.api.ui.updateMaxTitleLines
-import ru.maksonic.beresta.feature.notes.api.ui.updateShape
 import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
 import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
 
@@ -15,16 +11,11 @@ import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
  * @Author maksonic on 07.07.2023
  */
 class SettingsAppearanceProgram(
-    private val noteCardUiApi: NotesApi.Ui.Card,
-    private val noteCardFeatureState: NotesApi.Feature.NoteCardState,
+    private val noteCardUiApi: NotesApi.Card.Ui,
+    private val noteCardFeatureState: NotesApi.CardStateStorage,
     private val languageEngineApi: LanguageEngineApi,
     private val animationVelocity: AnimationVelocity,
 ) : ElmProgram<Msg, Cmd> {
-
-    companion object {
-        private const val INITIAL_TITLE_LINES_COUNT = 1
-        private const val INITIAL_MESSAGE_LINES_COUNT = 2
-    }
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -38,32 +29,28 @@ class SettingsAppearanceProgram(
         }
     }
 
-    private suspend fun updateNoteCardShape(cardShape: NoteCardShape) = noteCardUiApi.state
+    private suspend fun updateNoteCardShape(cardShape: NoteCardShape) = noteCardUiApi
         .updateShape(cardShape)
         .let { noteCardFeatureState.setCardShape(cardShape) }
 
     private suspend fun updateNoteCardElevation(isEnabled: Boolean) {
         val elevation = if (isEnabled) NoteCardElevation.DISABLED else NoteCardElevation.ENABLED
 
-        noteCardUiApi.state.updateElevation(elevation).let {
+        noteCardUiApi.updateElevation(elevation).let {
             noteCardFeatureState.setCardElevation(elevation)
         }
     }
 
-    private suspend fun updateNoteCardTitleMaxLines(count: Int) = noteCardUiApi.state
+    private suspend fun updateNoteCardTitleMaxLines(count: Int) = noteCardUiApi
         .updateMaxTitleLines(count)
         .let { noteCardFeatureState.setCardTitleMaxLines(count) }
 
-    private suspend fun updateNoteCardMessageMaxLines(count: Int) = noteCardUiApi.state
+    private suspend fun updateNoteCardMessageMaxLines(count: Int) = noteCardUiApi
         .updateMaxMessageLines(count)
         .let { noteCardFeatureState.setCardMessageMaxLines(count) }
 
-    private suspend fun resetNoteCardLinesByDefault() = noteCardUiApi.state.update {
-        it.copy(
-            maxTitleLines = INITIAL_TITLE_LINES_COUNT,
-            maxMessageLines = INITIAL_MESSAGE_LINES_COUNT
-        )
-    }
+    private suspend fun resetNoteCardLinesByDefault() = noteCardUiApi
+        .resetNoteCardLinesByDefault()
         .let { noteCardFeatureState.setByDefaultCardMaxLines() }
 
     private suspend fun fetchAppLang(consumer: (Msg) -> Unit) = languageEngineApi.current.collect {
@@ -71,7 +58,5 @@ class SettingsAppearanceProgram(
     }
 
     private suspend fun updateAnimationVelocity(key: AppAnimationVelocity.Key) =
-        animationVelocity.current.update(key).let {
-            animationVelocity.updateInDatastore(key)
-        }
+        animationVelocity.updateInDatastore(key)
 }

@@ -36,8 +36,8 @@ import ru.maksonic.beresta.ui.widget.placeholder.ScreenPlaceholder
 internal fun NotesList(
     model: State<Model>,
     send: SendMessage,
-    notesListUiApi: NotesApi.Ui.List,
-    noteCardUiApi: NotesApi.Ui.Card,
+    noteCardApi: NotesApi.Card.Ui,
+    notesListPlaceholderApi: NotesApi.ListPlaceholder.Ui,
     modifier: Modifier
 ) {
     val trashButton = movableContentOf {
@@ -55,7 +55,7 @@ internal fun NotesList(
                 Column(modifier.padding(start = dp10, end = dp10)) {
                     trashButton()
 
-                    notesListUiApi.Placeholder(1, Modifier.weight(1f))
+                    notesListPlaceholderApi.Placeholder(1, Modifier.weight(1f))
                 }
             }
 
@@ -75,7 +75,7 @@ internal fun NotesList(
                 SuccessContent(
                     model = model,
                     send = send,
-                    noteCardUiApi = noteCardUiApi,
+                    noteCardUiApi = noteCardApi,
                     modifier = modifier,
                     trashButton = trashButton
                 )
@@ -89,7 +89,7 @@ internal fun NotesList(
 private fun SuccessContent(
     model: State<Model>,
     send: SendMessage,
-    noteCardUiApi: NotesApi.Ui.Card,
+    noteCardUiApi: NotesApi.Card.Ui,
     modifier: Modifier,
     trashButton: @Composable () -> Unit
 ) {

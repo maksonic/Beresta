@@ -5,12 +5,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import org.koin.compose.koinInject
-import ru.maksonic.beresta.core.SharedUiState
-import ru.maksonic.beresta.feature.notes.api.NotesApi
 import ru.maksonic.beresta.feature.notes.api.ui.NotesListUiState
 import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.notes.api.ui.SharedNotesUiScrollState
+import ru.maksonic.beresta.feature.notes.ui.placeholder.PlaceholderContent
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.images.AddNotePlaceholder
@@ -27,14 +24,13 @@ internal fun Container(
     placeholderModifier: Modifier,
     state: NotesListUiState,
     sorter: State<NotesSorter>,
-    sharedUiState: SharedUiState<SharedNotesUiScrollState>,
     onNoteClicked: (id: Long) -> Unit,
     onNoteLongClicked: (id: Long) -> Unit,
     chipsRowOffsetHeightPx: State<Float>,
     updateChipsRowOffsetHeight: (Float) -> Unit,
     updatedCanScrollBackwardValue: (Boolean) -> Unit,
+    updateIsScrollUpSharedScrollState: (Boolean) -> Unit,
     contentPaddingValues: PaddingValues,
-    noteCard: NotesApi.Ui.Card = koinInject(),
 ) {
     val gridCells =
         with(listUiSortState) { if (state.isHidden) gridHiddenNotesCount else gridNotesCount }
@@ -48,14 +44,13 @@ internal fun Container(
                 modifier = modifier,
                 state = state,
                 sorter = sorter,
-                noteCard = noteCard,
-                sharedUiState = sharedUiState,
                 onNoteClicked = onNoteClicked,
                 onNoteLongClicked = onNoteLongClicked,
                 chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
                 updateChipsRowOffsetHeight = updateChipsRowOffsetHeight,
                 updatedCanScrollBackwardValue = updatedCanScrollBackwardValue,
-                contentPaddingValues = contentPaddingValues,
+                updateIsScrollUpSharedScrollState = updateIsScrollUpSharedScrollState,
+            contentPaddingValues = contentPaddingValues,
             )
         }
 

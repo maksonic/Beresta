@@ -14,10 +14,10 @@ import ru.maksonic.beresta.screen.main.core.Msg
  * @Author maksonic on 03.07.2023
  */
 class NotesSortProgram(
-    private val listSortStateUiApi: SortingSheetApi.Ui,
-    private val listSortStateFeatureState: SortingSheetApi.Feature.State,
-    private val noteCardUiState: NotesApi.Ui.Card,
-    private val noteCardFeatureState: NotesApi.Feature.NoteCardState,
+    private val listSortFeatureApi: SortingSheetApi.Ui,
+    private val listSortFeatureStorage: SortingSheetApi.Storage,
+    private val noteCardUiState: NotesApi.Card.Ui,
+    private val noteCardFeatureState: NotesApi.CardStateStorage,
 ) : ElmProgram<Msg, Cmd> {
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
@@ -28,14 +28,13 @@ class NotesSortProgram(
     }
 
     private suspend fun fetchNotesState() = combine(
-        listSortStateFeatureState.current(SortDataKey.NOTES), noteCardFeatureState.current
+        listSortFeatureStorage.current(SortDataKey.NOTES), noteCardFeatureState.current
     ) { sortState, cardState ->
-        listSortStateUiApi.state.update(sortState)
-        noteCardUiState.state.update(cardState)
-
+        listSortFeatureApi.update(sortState)
+        noteCardUiState.update(cardState)
     }.collect()
 
-    private suspend fun updateGridViewState(count: Int) = listSortStateUiApi.state
-        .update { it.copy(gridNotesCount = count) }
-        .let { listSortStateFeatureState.setGridCount(Pair(GridCountKey.NOTES, count)) }
+    private suspend fun updateGridViewState(count: Int) = listSortFeatureApi
+        .updateGridNotesCount(count)
+        .let { listSortFeatureStorage.setGridCount(Pair(GridCountKey.NOTES, count)) }
 }
