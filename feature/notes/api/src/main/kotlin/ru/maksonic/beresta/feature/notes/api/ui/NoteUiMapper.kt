@@ -18,7 +18,8 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         isHidden = i.isHidden,
         pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash,
-        folderId = i.folderId
+        folderId = i.folderId,
+        markerColorId = i.markerColorId
     )
 
     override fun mapFrom(o: NoteUi) = NoteDomain(
@@ -32,6 +33,7 @@ class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
         isHidden = o.isHidden,
         pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash,
-        folderId = o.folderId
+        folderId = o.folderId,
+        markerColorId = o.markerColorId
     )
 }

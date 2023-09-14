@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +34,12 @@ import ru.maksonic.beresta.ui.widget.surface.SurfacePro
 fun BaseDialog(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
+    isVisibleActions: Boolean = true,
     alignment: Alignment = Alignment.Center,
     btnTitleCancel: String = text.shared.btnTitleClose,
     btnTitleAccept: String = text.shared.btnTitleAccept,
-    onCancelClicked: () -> Unit,
-    onAcceptClicked: () -> Unit,
+    onCancelClicked: () -> Unit = {},
+    onAcceptClicked: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
 
@@ -55,32 +58,35 @@ fun BaseDialog(
             Box(modifier.fillMaxSize(), contentAlignment = alignment) {
                 Column(
                     modifier
+                        .verticalScroll(rememberScrollState())
                         .systemBarsPadding()
                         .imePadding()
                         .padding(dp32)
                         .clip(Shape.cornerExtra)
                         .background(secondaryContainer)
-                        .padding(dp16)
+                        .padding(top = dp16, bottom = dp16)
                 ) {
                     content()
 
-                    Row(
-                        modifier.padding(top = dp16),
-                        horizontalArrangement = Arrangement.spacedBy(dp16)
-                    ) {
+                    if (isVisibleActions) {
+                        Row(
+                            modifier.padding(top = dp16, start = dp16, end = dp16),
+                            horizontalArrangement = Arrangement.spacedBy(dp16)
+                        ) {
 
-                        DialogButton(
-                            action = onCancelClicked,
-                            title = btnTitleCancel,
-                            isDismiss = true,
-                            modifier = Modifier.weight(1f)
-                        )
-                        DialogButton(
-                            action = onAcceptClicked,
-                            title = btnTitleAccept,
-                            isDismiss = false,
-                            modifier = Modifier.weight(1f)
-                        )
+                            DialogButton(
+                                action = onCancelClicked,
+                                title = btnTitleCancel,
+                                isDismiss = true,
+                                modifier = Modifier.weight(1f)
+                            )
+                            DialogButton(
+                                action = onAcceptClicked,
+                                title = btnTitleAccept,
+                                isDismiss = false,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
             }

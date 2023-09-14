@@ -15,6 +15,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.feature.edit_note.ui.core.Model
 import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
@@ -33,7 +34,13 @@ import ru.maksonic.beresta.ui.widget.functional.rippledClick
  * @Author maksonic on 08.09.2023
  */
 @Composable
-fun CategoryBar(model: State<Model>, send: SendMessage, modifier: Modifier = Modifier) {
+fun CategoryBar(
+    isHiddenNote: Boolean,
+    model: State<Model>,
+    send: SendMessage,
+    markerColor: Color,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier
             .fillMaxWidth()
@@ -55,7 +62,7 @@ fun CategoryBar(model: State<Model>, send: SendMessage, modifier: Modifier = Mod
                     .fillMaxSize()
                     .padding(dp4)
                     .clip(CircleShape)
-                    .background(onBackground)
+                    .background(markerColor)
             )
         }
         ClickableIcon(
@@ -65,6 +72,8 @@ fun CategoryBar(model: State<Model>, send: SendMessage, modifier: Modifier = Mod
 
         Spacer(modifier.weight(1f))
 
-        DropdownFolderPicker(model, send)
+        if (!isHiddenNote) {
+            DropdownFolderPicker(model, send)
+        }
     }
 }

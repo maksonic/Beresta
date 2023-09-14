@@ -62,7 +62,12 @@ internal fun Content(
     val dialogTitle = if (uiState.value.isNewFolder) text.folders.titleDialogNewFolder
     else text.folders.titleDialogEditFolder
 
-    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier
+            .fillMaxWidth()
+            .padding(start = dp16, end = dp16),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         Text(
             dialogTitle,

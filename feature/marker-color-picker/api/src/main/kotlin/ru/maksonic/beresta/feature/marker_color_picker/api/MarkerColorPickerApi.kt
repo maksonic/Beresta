@@ -8,10 +8,12 @@ import androidx.compose.runtime.State
  */
 interface MarkerColorPickerApi {
     interface Ui {
-        val visibilityState: State<Boolean>
+        val sharedState: State<MarkerPickerState>
+        fun showWithColor(colorId: Long)
         fun updateVisibility(value: Boolean)
+        fun updateColorId(id: Long)
 
         @Composable
-        fun Widget()
+        fun Widget(onAcceptClicked: (colorId: Long) -> Unit)
     }
 }

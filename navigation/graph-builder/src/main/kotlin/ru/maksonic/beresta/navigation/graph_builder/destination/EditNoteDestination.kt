@@ -31,7 +31,7 @@ internal fun NavGraphBuilder.editNoteScreen(api: EditNoteApi.Ui, navigator: Abst
             state = remember { mutableStateOf(EditNoteFabState.COLLAPSED) },
             updateFabState = {},
             isEntryPoint = true,
-            isHiddenNotes = false,
+            isHiddenNote = false,
             modifier = Modifier
         )
     }

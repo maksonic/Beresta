@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.elm.core.ElmProgram
 import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
 import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
 import ru.maksonic.beresta.feature.folders_chips.api.ui.StickyFoldersTitleFormatter
 import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
@@ -35,28 +34,20 @@ class EditNoteProgram(
             is Cmd.FetchFolders -> fetchFolders(consumer)
             is Cmd.SaveNote -> saveOrUpdateNote(cmd.note)
             is Cmd.UpdatePinnedNoteInCache -> updateNotePinState(cmd.note)
+            is Cmd.UpdateNoteMarkerColor -> updateNoteMarkerColorId(cmd.note)
         }
     }
 
     private suspend fun fetchNote(consumer: (Msg) -> Unit) {
         val args = navigator.getNoteEditorArgs(Destination.EditNote.passedKeysList)
-
         runCatching {
             interactor.fetchById(args.second).collect { noteDomain ->
-                combine(
-                    foldersInteractor.fetchById(noteDomain.folderId),
-                    appLanguageEngineApi.current
-                ) { folderDomain, lang ->
-                    val note = mapper.mapTo(noteDomain)
-                    val folderRaw = foldersMapper.mapTo(folderDomain)
-                    val updatedTitle = stickyFoldersTitleFormatter.format(folderRaw, lang)
-                    val folder = folderRaw.copy(title = updatedTitle)
-                    consumer(Msg.Inner.FetchedPassedNoteResult(args.first, note, folder))
-                }.collect()
+                val note = mapper.mapTo(noteDomain)
+                consumer(Msg.Inner.FetchedPassedNoteResult(args.first, note))
             }
 
         }.onFailure {
-            consumer(Msg.Inner.FetchedPassedNoteResult(args.first, NoteUi.Default, FolderUi.Empty))
+            consumer(Msg.Inner.FetchedPassedNoteResult(args.first, NoteUi.Default))
         }
     }
 
@@ -92,4 +83,6 @@ class EditNoteProgram(
     }
 
     private suspend fun updateNotePinState(note: NoteUi) = interactor.update(mapper.mapFrom(note))
+    private suspend fun updateNoteMarkerColorId(note: NoteUi) =
+        interactor.update(mapper.mapFrom(note))
 }

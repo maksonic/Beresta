@@ -77,7 +77,7 @@ internal fun EditNoteTopBar(
                 .clip(CircleShape)
                 .drawBehind { drawRect(color.value) }) {
 
-            PinBtn(model.value.currentNote) { send(Msg.Ui.OnPinClicked) }
+            PinBtn(model.value.editableNote) { send(Msg.Ui.OnPinClicked) }
 
             DropdownMoreMenu(model, send)
         }

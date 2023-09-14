@@ -48,6 +48,7 @@ class MainSandbox(
         is Msg.Inner.FetchedChipsData -> fetchedChipsData(model, msg)
         is Msg.Inner.FetchedChipsError -> fetchedChipsError(model)
         is Msg.Ui.OnRetryFetchChipsClicked -> onRetryFetchChipsClicked(model)
+        is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
         //idle bottom bar actions
         is Msg.Ui.OnBottomBarSettingsClicked -> onBottomBarSettingsClicked(model)
         is Msg.Ui.OnBottomBarFoldersClicked -> onBottomBarFoldersClicked(model)
@@ -70,7 +71,6 @@ class MainSandbox(
         //other
         //snack bar
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
-        is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
         is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
         is Msg.Inner.ResetCurrentSelectedFolder -> resetCurrentSelectedFolder(model)
@@ -160,6 +160,9 @@ class MainSandbox(
         model.copy(chips = model.chips.copy(state = model.chips.state.Loading)),
         commands = setOf(Cmd.FetchChipsData)
     )
+
+    private fun onAddNewChipClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
 
     private fun onBottomBarSettingsClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSettings))
@@ -315,9 +318,6 @@ class MainSandbox(
             commands = setOf(Cmd.UndoRemoveNotes(restored))
         )
     }
-
-    private fun onAddNewChipClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
 
     private fun navigatedToHiddenNotes(model: Model): UpdateResult {
         val hiddenNotes = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)

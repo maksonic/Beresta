@@ -41,11 +41,11 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 internal fun Content(
     model: State<Model>,
     send: SendMessage,
+    chipsDialogUi: FoldersApi.AddChipDialog.Ui,
     modifier: Modifier = Modifier,
     notesListApi: NotesApi.List.Ui = koinInject(),
     listSortUi: SortingSheetApi.Ui = koinInject(),
     chipsRowUi: FoldersApi.ChipsRow.Ui = koinInject(),
-    chipsDialogUi: FoldersApi.AddChipDialog.Ui = koinInject(),
 ) {
     val mainBottomBarState = rememberSaveable { mutableStateOf(MainBottomBarState.IDLE) }
     val isVisibleBottomBar = remember { mutableStateOf(true) }
@@ -66,10 +66,8 @@ internal fun Content(
     }
 
     LaunchedEffect(isSelectionState.value) {
-        val value =
-            if (isSelectionState.value) MainBottomBarState.SELECTION else MainBottomBarState.IDLE
-
-        mainBottomBarState.value = value
+        mainBottomBarState.value = if (isSelectionState.value) MainBottomBarState.SELECTION
+        else MainBottomBarState.IDLE
     }
 
     LaunchedEffect(model.value.notes.collection) {

@@ -32,6 +32,7 @@ internal typealias SendMessage = (Msg) -> Unit
 internal fun Container(
     router: MainScreenRouter,
     sandbox: MainSandbox = koinViewModel(),
+    chipsDialogApi: FoldersApi.AddChipDialog.Ui = koinInject()
 ) {
     val model = sandbox.model.collectAsStateWithLifecycle()
 
@@ -41,10 +42,11 @@ internal fun Container(
         modalBottomSheetState = model.value.modalSheet.state,
         snackState = model.value.snackNotesState,
         hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
-        send = sandbox::send
+        send = sandbox::send,
+        chipsDialogApi = chipsDialogApi
     )
 
-    Content(model, sandbox::send)
+    Content(model, sandbox::send, chipsDialogApi)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +58,7 @@ private fun HandleUiEffects(
     snackState: SnackbarHostState,
     hideModalSheet: () -> Unit,
     send: SendMessage,
-    chipsDialogApi: FoldersApi.AddChipDialog.Ui = koinInject()
+    chipsDialogApi: FoldersApi.AddChipDialog.Ui
 ) {
     val scope = rememberCoroutineScope()
     val snackScope = rememberCoroutineScope()

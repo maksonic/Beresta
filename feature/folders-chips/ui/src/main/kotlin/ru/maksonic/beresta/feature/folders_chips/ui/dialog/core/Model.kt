@@ -33,22 +33,22 @@ data class Model(
 
 sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
-        object OnAcceptClicked : Ui()
-        object OnDismissClicked : Ui()
+        data object OnAcceptClicked : Ui()
+        data object OnDismissClicked : Ui()
     }
 
     sealed class Inner : Msg() {
         data class UpdatedInputField(val value: TextFieldValue) : Inner()
-        object FetchedPassedFolderId : Inner()
+        data object FetchedPassedFolderId : Inner()
         data class FetchFolderData(val folder: FolderUi) : Inner()
     }
 }
 
 sealed class Cmd : ElmCommand {
-    object FetchFolderById : Cmd()
+    data object FetchFolderById : Cmd()
     data class SaveOrUpdateCurrentFolder(val folder: FolderUi) : Cmd()
 }
 
 sealed class Eff : ElmEffect {
-    object HideDialog : Eff()
+    data object HideDialog : Eff()
 }

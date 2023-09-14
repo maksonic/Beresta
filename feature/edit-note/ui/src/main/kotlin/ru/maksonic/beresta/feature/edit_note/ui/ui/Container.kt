@@ -3,7 +3,6 @@ package ru.maksonic.beresta.feature.edit_note.ui.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -88,7 +87,7 @@ internal fun Container(
     }
 
     LaunchedEffect(isEntryPoint) {
-        sandbox.send(Msg.Inner.CheckedEntryPoint(isEntryPoint))
+        sandbox.send(Msg.Inner.UpdatedEntryPointValue(isEntryPoint))
     }
 
     BoxWithConstraints(
@@ -108,19 +107,15 @@ internal fun Container(
         val fabShape = if (isFullExpanded) 0.dp else if (isCircleFab) 50.dp else dp16
 
         if (isEntryPoint) {
-            Box {
-                ExpandedContent(
-                    model = model,
-                    send = sandbox::send,
-                    focusRequester = focusRequester,
-                    isHiddenNote = isHiddenNote.value,
-                    addChipDialogApi = addChipDialogApi,
-                    chipsRowApi = chipsRowApi,
-                    markerColorPickerApi = markerColorPickerApi
-                )
-
-                addChipDialogApi.Widget()
-            }
+            ExpandedContent(
+                model = model,
+                send = sandbox::send,
+                focusRequester = focusRequester,
+                isHiddenNote = isHiddenNote.value,
+                addChipDialogApi = addChipDialogApi,
+                chipsRowApi = chipsRowApi,
+                markerColorPickerApi = markerColorPickerApi
+            )
         } else {
             LaunchedEffect(isFullExpanded) {
                 if (isFullExpanded) {
@@ -157,7 +152,7 @@ internal fun Container(
                     fadeOutDuration = animSpeed
                 ) {
                     CollapsedContent(
-                        isBlankNote = model.value.currentNote.isBlank(),
+                        isBlankNote = model.value.editableNote.isBlank(),
                         onExpandFabClicked = { updateFabState(EditNoteFabState.EXPANDED) },
                         modifier = modifier.alpha(if (state.value.isExpanded) 0f else 1f)
                     )
@@ -198,7 +193,7 @@ private fun HandleUiEffects(
             }
 
             is Eff.UpdateCurrentFolder -> chipsRowApi.updateCurrent(eff.id)
-            is Eff.ShowMarkerColorPickerDialog -> markerColorPickerApi.updateVisibility(true)
+            is Eff.ShowMarkerColorPickerDialog -> markerColorPickerApi.showWithColor(eff.colorId)
         }
     }
 }

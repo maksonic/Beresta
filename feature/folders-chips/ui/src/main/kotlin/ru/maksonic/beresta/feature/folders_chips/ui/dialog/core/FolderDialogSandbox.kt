@@ -64,6 +64,7 @@ class FolderDialogSandbox(program: FolderDialogProgram) : Sandbox<Model, Msg, Cm
                 commands = setOf(Cmd.SaveOrUpdateCurrentFolder(folder)),
                 effects = setOf(Eff.HideDialog)
             )
+
         }
 
     private fun onDismissBtnClicked(model: Model): UpdateResult =

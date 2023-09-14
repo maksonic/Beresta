@@ -4,23 +4,26 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import ru.maksonic.beresta.core.ui.saver.ColorSaver
 import ru.maksonic.beresta.feature.edit_note.ui.core.Model
 import ru.maksonic.beresta.feature.edit_note.ui.core.Msg
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.CategoryBar
@@ -29,7 +32,8 @@ import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteMessageInpu
 import ru.maksonic.beresta.feature.edit_note.ui.ui.widget.inputs.NoteTitleInputFieldWidget
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.feature.marker_color_picker.api.MarkerColorPickerApi
-import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.color_palette.Palette
+import ru.maksonic.beresta.ui.theme.color.outline
 import ru.maksonic.beresta.ui.theme.color.surface
 
 /**
@@ -39,8 +43,8 @@ import ru.maksonic.beresta.ui.theme.color.surface
 internal fun ExpandedContent(
     model: State<Model>,
     send: SendMessage,
-    focusRequester: FocusRequester,
     isHiddenNote: Boolean,
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
     addChipDialogApi: FoldersApi.AddChipDialog.Ui,
     chipsRowApi: FoldersApi.ChipsRow.Ui,
@@ -70,6 +74,12 @@ internal fun ExpandedContent(
                 }
             }
         }
+        val defaultMarkerColor = outline
+        val color = rememberSaveable(saver = ColorSaver) { mutableStateOf(defaultMarkerColor) }
+
+        LaunchedEffect(model.value.editableNote.markerColorId) {
+            updateMarkerColor(model, color, defaultMarkerColor)
+        }
 
         Column(
             Modifier
@@ -78,14 +88,11 @@ internal fun ExpandedContent(
                 .nestedScroll(nestedScrollConnection)
                 .verticalScroll(scrollState)
         ) {
-            if (isHiddenNote) {
-                Box(Modifier.height(Theme.widgetSize.topBarSmallHeight))
-            } else {
-                CategoryBar(model, send)
-            }
+            CategoryBar(isHiddenNote, model, send, markerColor = color.value)
 
-            NoteTitleInputFieldWidget(model.value.currentNote.title, send, focusRequester)
-            NoteMessageInputFieldWidget(model.value.currentNote.message, send)
+            NoteTitleInputFieldWidget(model.value.editableNote.title, send, focusRequester)
+
+            NoteMessageInputFieldWidget(model.value.editableNote.message, send)
         }
 
         ControlBars(
@@ -97,6 +104,14 @@ internal fun ExpandedContent(
             isVisibleAddNoteDialog = addChipDialogApi.sharedState.value.isVisible,
         )
 
-        markerColorPickerApi.Widget()
+        markerColorPickerApi.Widget(
+            onAcceptClicked = { colorId -> send(Msg.Inner.UpdatedCurrentNoteMarkerColor(colorId)) }
+        )
+
+        addChipDialogApi.Widget()
     }
+}
+
+private fun updateMarkerColor(model: State<Model>, color: MutableState<Color>, default: Color) {
+    color.value = Palette.markerColors[model.value.editableNote.markerColorId] ?: default
 }

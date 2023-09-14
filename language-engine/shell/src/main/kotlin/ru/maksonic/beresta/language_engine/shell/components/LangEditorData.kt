@@ -33,4 +33,13 @@ data class LangEditorData(
     val noteWallpaperCategoryGrids: String = "",
     @SerializedName("note_wallpaper_category_best")
     val noteWallpaperCategoryBest: String = "",
+
+    @SerializedName("dialog_title_marker_color_picker")
+    val dialogTitleMarkerColorPicker: String = "",
+    @SerializedName("tab_title_marker_color_category_bright")
+    val tabTitleMarkerPickerColorBright: String = "",
+    @SerializedName("tab_title_marker_color_category_normal")
+    val tabTitleMarkerPickerColorNormal: String = "",
+    @SerializedName("tab_title_marker_color_category_neutral")
+    val tabTitleMarkerPickerColorNeutral: String = "",
 )

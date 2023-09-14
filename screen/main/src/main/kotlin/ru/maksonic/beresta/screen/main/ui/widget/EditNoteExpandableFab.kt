@@ -25,7 +25,8 @@ internal fun EditNoteExpandableFab(
     api: EditNoteApi.Ui = koinInject()
 ) {
     val fabTransition = animateFloatAsState(
-        if (model.value.editNoteFabState.isVisible) 1f else 0f, tween(Theme.animVelocity.common)
+        if (model.value.editNoteFabState.isVisible) 1f else 0f, tween(Theme.animVelocity.common),
+        label = ""
     )
 
     api.ExpandableScreen(
@@ -35,7 +36,7 @@ internal fun EditNoteExpandableFab(
             if (model.value.editNoteFabState.isVisible) send(Msg.Inner.UpdatedEditNoteFabState(it))
         },
         isEntryPoint = false,
-        isHiddenNotes = false,
+        isHiddenNote = false,
         modifier = modifier.graphicsLayer {
             scaleX = fabTransition.value
             scaleY = fabTransition.value

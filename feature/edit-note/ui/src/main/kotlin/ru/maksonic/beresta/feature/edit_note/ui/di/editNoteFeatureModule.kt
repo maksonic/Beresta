@@ -19,7 +19,7 @@ val editNoteUiFeatureModule = module {
             foldersMapper = get(),
             navigator = get(),
             appLanguageEngineApi = get(),
-            stickyFoldersTitleFormatter = get()
+            stickyFoldersTitleFormatter = get(),
         )
     }
     single<EditNoteApi.Ui> { EditNoteExpandableScreen() }

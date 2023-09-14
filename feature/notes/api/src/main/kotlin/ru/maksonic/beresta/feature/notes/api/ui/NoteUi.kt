@@ -23,7 +23,8 @@ data class NoteUi(
     val isHidden: Boolean = false,
     val pinTime: LocalDateTime?,
     val isMovedToTrash: Boolean,
-    val folderId: Long = 2L
+    val folderId: Long = 2L,
+    val markerColorId: Long = 0L
 ) {
 
     companion object {
@@ -41,14 +42,12 @@ data class NoteUi(
             isSelected = false,
             isPinned = false,
             pinTime = null,
-            isMovedToTrash = false
+            isMovedToTrash = false,
+            markerColorId = 0L
         )
 
         val Preview = Default.copy(title = "Note title preview", message = "Note message preview")
     }
-
-    fun trashWithoutFolder() =
-        this.copy(isMovedToTrash = true, folderId = 2L, dateMovedToTrashRaw = LocalDateTime.now())
 
     fun trash() = this.copy(isMovedToTrash = true, dateMovedToTrashRaw = LocalDateTime.now())
     fun restored() = this.copy(isMovedToTrash = false, dateMovedToTrashRaw = null)

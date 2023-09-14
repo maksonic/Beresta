@@ -24,5 +24,6 @@ data class NoteCache(
     val isMovedToTrash: Boolean = false,
     val folderId: Long = 2L,
     val dateMovedToTrash: LocalDateTime? = null,
-    val dateLastUpdateRaw: LocalDateTime? = null
+    val dateLastUpdateRaw: LocalDateTime? = null,
+    val markerColorId: Long = 0L
 )

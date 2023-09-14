@@ -42,7 +42,7 @@ internal fun ControlBars(
             EditorBottomBar(
                 send = send,
                 isScrollUp = isScrollUp,
-                isBlankNote = model.value.currentNote.isBlank(),
+                isBlankNote = model.value.editableNote.isBlank(),
                 isHiddenNote = isHiddenNote
             )
         }

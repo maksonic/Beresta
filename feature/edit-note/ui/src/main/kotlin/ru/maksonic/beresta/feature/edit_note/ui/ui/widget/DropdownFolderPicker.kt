@@ -77,6 +77,7 @@ internal fun DropdownFolderPicker(
             modifier = modifier.fillMaxWidth(0.6f),
             contentAlignment = Alignment.TopEnd
         ) {
+            val chipLabel = model.value.selectedFolder?.title ?: text.folders.titlePinnedEndFolder
             val dropdownState = rememberSaveable { mutableStateOf(false) }
             var dropdownWidth by remember { mutableStateOf(0.dp) }
             var dropdownMinHeight by remember { mutableStateOf(0.dp) }
@@ -94,7 +95,7 @@ internal fun DropdownFolderPicker(
                 onClick = { send(Msg.Ui.OnChipFolderClicked).run { dropdownState.value = true } },
                 label = {
                     Text(
-                        text = model.value.selectedFolder?.title ?: "",
+                        text = chipLabel,
                         maxLines = SINGLE_LINE_VALUE,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -158,7 +159,7 @@ internal fun DropdownFolderPicker(
                             DropdownMenuItem(
                                 text = { DropdownMenuTitle(item.title) },
                                 onClick = {
-                                    send(Msg.Ui.OnSelectNoteFolderClicked(item.id)).run {
+                                    send(Msg.Ui.OnSelectNoteFolderClicked(item)).run {
                                         dropdownState.value = false
                                     }
                                 }

@@ -131,4 +131,120 @@ object Palette {
         val cosmicLatte = Color(0xFFFFFCE5)
         val milk = Color(0xFFF8F7F2)
     }
+
+    object Bright {
+        val color101 = Color(0xFFFF0000)
+        val color102 = Color(0xFFFF0056)
+        val color103 = Color(0xFFDB00FF)
+        val color104 = Color(0xFF5600F1)
+        val color105 = Color(0xFF002BFF)
+        val color106 = Color(0xFF0090FF)
+        val color107 = Color(0xFF38C3FF)
+        val color108 = Color(0xFF00E4FF)
+        val color109 = Color(0xFF00D1BC)
+        val color110 = Color(0xFF27CA2D)
+        val color111 = Color(0xFF93E833)
+        val color112 = Color(0xFFE3F44A)
+        val color113 = Color(0xFFFFE700)
+        val color114 = Color(0xFFFFC000)
+        val color115 = Color(0xFF686868)
+        val color116 = Color(0xFF244F5F)
+
+        val colorMap = mapOf(
+            101L to color101,
+            102L to color102,
+            103L to color103,
+            104L to color104,
+            105L to color105,
+            106L to color106,
+            107L to color107,
+            108L to color108,
+            109L to color109,
+            110L to color110,
+            111L to color111,
+            112L to color112,
+            113L to color113,
+            114L to color114,
+            115L to color115,
+            116L to color116
+        )
+    }
+
+    object Normal {
+        val color201 = Color(0xFFF34334)
+        val color202 = Color(0xFFE71E62)
+        val color203 = Color(0xFF9B27AE)
+        val color204 = Color(0xFF663AB5)
+        val color205 = Color(0xFF3D51B4)
+        val color206 = Color(0xFF1F96F2)
+        val color207 = Color(0xFF01A9F2)
+        val color208 = Color(0xFF00BCD2)
+        val color209 = Color(0xFF009687)
+        val color210 = Color(0xFF4BAF4F)
+        val color211 = Color(0xFF89C348)
+        val color212 = Color(0xFFCCDD39)
+        val color213 = Color(0xFFFFEC3A)
+        val color214 = Color(0xFFFEC106)
+        val color215 = Color(0xFF9E9E9E)
+        val color216 = Color(0xFF5F7D88)
+
+        val colorMap = mapOf(
+            201L to color201,
+            202L to color202,
+            203L to color203,
+            204L to color204,
+            205L to color205,
+            206L to color206,
+            207L to color207,
+            208L to color208,
+            209L to color209,
+            210L to color210,
+            211L to color211,
+            212L to color212,
+            213L to color213,
+            214L to color214,
+            215L to color215,
+            216L to color216
+        )
+    }
+
+    object Neutral {
+        val color301 = Color(0xFFF9A69F)
+        val color302 = Color(0xFFF5A3BE)
+        val color303 = Color(0xFFE4ACEC)
+        val color304 = Color(0xFFC4B2E6)
+        val color305 = Color(0xFFB3BBE5)
+        val color306 = Color(0xFF9FD2F9)
+        val color307 = Color(0xFF9AE0FE)
+        val color308 = Color(0xFFB3F0F6)
+        val color309 = Color(0xFFA9F2EB)
+        val color310 = Color(0xFFB8E0B9)
+        val color311 = Color(0xFFCEE6B2)
+        val color312 = Color(0xFFE9F0A8)
+        val color313 = Color(0xFFFFF599)
+        val color314 = Color(0xFFFEE59A)
+        val color315 = Color(0xFFE6E6E6)
+        val color316 = Color(0xFFC3D0D5)
+
+        val colorMap = mapOf(
+            301L to color301,
+            302L to color302,
+            303L to color303,
+            304L to color304,
+            305L to color305,
+            306L to color306,
+            307L to color307,
+            308L to color308,
+            309L to color309,
+            310L to color310,
+            311L to color311,
+            312L to color312,
+            313L to color313,
+            314L to color314,
+            315L to color315,
+            316L to color316,
+        )
+    }
+
+    val markerColors = mapOf(0L to doveGray) + Bright.colorMap + Normal.colorMap + Neutral.colorMap
 }

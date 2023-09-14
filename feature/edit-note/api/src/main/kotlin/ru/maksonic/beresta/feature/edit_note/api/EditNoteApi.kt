@@ -16,7 +16,7 @@ interface EditNoteApi {
             state: State<EditNoteFabState>,
             updateFabState: (EditNoteFabState) -> Unit,
             isEntryPoint: Boolean,
-            isHiddenNotes: Boolean,
+            isHiddenNote: Boolean,
             modifier: Modifier
         )
     }

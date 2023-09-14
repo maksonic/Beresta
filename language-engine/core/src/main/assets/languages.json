@@ -114,7 +114,11 @@
       "note_wallpaper_category_bright_colors": "Яркие цвета",
       "note_wallpaper_category_gradients": "Градиенты",
       "note_wallpaper_category_grids": "Сетка",
-      "note_wallpaper_category_best": "Лучшее"
+      "note_wallpaper_category_best": "Лучшее",
+      "dialog_title_marker_color_picker": "Выбрать цвет маркера",
+      "tab_title_marker_color_category_bright": "Яркий",
+      "tab_title_marker_color_category_normal": "Нормальный",
+      "tab_title_marker_color_category_neutral": "Нейтральный"
     },
     "folders": {
       "top_bar_title": "Управление папками",
@@ -286,7 +290,11 @@
       "note_wallpaper_category_bright_colors": "Bright Colors",
       "note_wallpaper_category_gradients": "Gradients",
       "note_wallpaper_category_grids": "Grid",
-      "note_wallpaper_category_best": "Best"
+      "note_wallpaper_category_best": "Best",
+      "dialog_title_marker_color_picker": "Select marker color",
+      "tab_title_marker_color_category_bright": "Bright",
+      "tab_title_marker_color_category_normal": "Normal",
+      "tab_title_marker_color_category_neutral": "Neutral"
     },
     "folders": {
       "top_bar_title": "Folder Management",
@@ -458,7 +466,11 @@
       "note_wallpaper_category_bright_colors": "明亮的颜色",
       "note_wallpaper_category_gradients": "渐变",
       "note_wallpaper_category_grids": "网格",
-      "note_wallpaper_category_best": "最佳"
+      "note_wallpaper_category_best": "最佳",
+      "dialog_title_marker_color_picker": "选择标记颜色",
+      "tab_title_marker_color_category_bright": "色泽鲜艳",
+      "tab_title_marker_color_category_normal": "正常颜色",
+      "tab_title_marker_color_category_neutral": "中性色"
     },
     "folders": {
       "top_bar_title": "文件夹管理",
@@ -630,7 +642,11 @@
       "note_wallpaper_category_bright_colors": "明亮的顏色",
       "note_wallpaper_category_gradients": "漸變",
       "note_wallpaper_category_grids": "網格",
-      "note_wallpaper_category_best": "最佳"
+      "note_wallpaper_category_best": "最佳",
+      "dialog_title_marker_color_picker": "選擇標記顏色",
+      "tab_title_marker_color_category_bright": "色澤鮮豔",
+      "tab_title_marker_color_category_normal": "正常顏色",
+      "tab_title_marker_color_category_neutral": "中性色"
     },
     "folders": {
       "top_bar_title": "文件夾管理",

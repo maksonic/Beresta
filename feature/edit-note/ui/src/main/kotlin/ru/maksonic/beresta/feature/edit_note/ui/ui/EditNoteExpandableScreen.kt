@@ -21,7 +21,7 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
         state: State<EditNoteFabState>,
         updateFabState: (EditNoteFabState) -> Unit,
         isEntryPoint: Boolean,
-        isHiddenNotes: Boolean,
+        isHiddenNote: Boolean,
         modifier: Modifier
     ) {
         Container(
@@ -29,7 +29,7 @@ class EditNoteExpandableScreen : EditNoteApi.Ui {
             state = state,
             updateFabState = updateFabState,
             isEntryPoint = isEntryPoint,
-            isCircleFab = isHiddenNotes,
+            isCircleFab = isHiddenNote,
             modifier = modifier
         )
     }

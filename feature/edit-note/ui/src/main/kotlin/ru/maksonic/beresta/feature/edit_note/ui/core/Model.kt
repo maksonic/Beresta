@@ -19,21 +19,23 @@ data class Model(
     val base: ElmBaseModel,
     val isEntryPoint: Boolean,
     val isHiddenNote: Boolean,
-    val currentNote: NoteUi,
+    val isFetchedNote: Boolean,
+    val editableNote: NoteUi,
     val folders: FolderUi.Collection,
     val selectedFolder: FolderUi?,
     val currentFolderId: Long,
-    val isUserSelectedNoteFolder: Boolean
+    val isUserSelectedNoteFolder: Boolean,
 ) : ElmModel {
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Loading,
             isEntryPoint = false,
             isHiddenNote = false,
-            currentNote = NoteUi.Default,
-            folders = FolderUi.Collection.Empty,
+            isFetchedNote = false,
+            editableNote = NoteUi.Default,
             selectedFolder = null,
             currentFolderId = 2L,
+            folders = FolderUi.Collection.Empty,
             isUserSelectedNoteFolder = false
         )
     }
@@ -49,7 +51,7 @@ sealed class Msg : ElmMessage {
         data object OnAddImagesClicked : Ui()
         data object OnAddCameraSnapshotClicked : Ui()
         data object OnSetNoteWallpaperClicked : Ui()
-        data class OnSelectNoteFolderClicked(val folderId: Long) : Ui()
+        data class OnSelectNoteFolderClicked(val folder: FolderUi) : Ui()
 
         // Top bar actions
         data object OnPinClicked : Ui()
@@ -59,18 +61,16 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class CheckedEntryPoint(val value: Boolean) : Inner()
+        data object FetchedPassedNote : Inner()
+        data class FetchedPassedNoteResult(val isHidden: Boolean, val note: NoteUi) : Inner()
+        data class UpdatedEntryPointValue(val isEntryPoint: Boolean) : Inner()
         data object ShowedKeyboardForExpandedFab : Inner()
-        data class FetchedPassedNoteResult(
-            val isHidden: Boolean,
-            val note: NoteUi,
-            val folder: FolderUi
-        ) : Inner()
-
+        data class FetchedCurrentFolderId(val id: Long) : Inner()
         data class FetchedFoldersResult(val folders: List<FolderUi>) : Inner()
         data class UpdatedCurrentNoteTitle(val text: String) : Inner()
         data class UpdatedCurrentNoteMessage(val text: String) : Inner()
-        data class FetchedCurrentFolderId(val id: Long) : Inner()
+        data class UpdatedCurrentNoteMarkerColor(val colorId: Long) : Ui()
+
     }
 }
 
@@ -79,6 +79,8 @@ sealed class Cmd : ElmCommand {
     data object FetchFolders : Cmd()
     data class SaveNote(val note: NoteUi) : Cmd()
     data class UpdatePinnedNoteInCache(val note: NoteUi) : Cmd()
+    data class UpdateNoteMarkerColor(val note: NoteUi) : Cmd()
+
 }
 
 sealed class Eff : ElmEffect {
@@ -90,5 +92,5 @@ sealed class Eff : ElmEffect {
     data object ShowAddNewChipDialog : Eff()
     data object CollapseFab : Eff()
     data class UpdateCurrentFolder(val id: Long) : Eff()
-    data object ShowMarkerColorPickerDialog : Eff()
+    data class ShowMarkerColorPickerDialog(val colorId: Long) : Eff()
 }

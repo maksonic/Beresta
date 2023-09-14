@@ -16,7 +16,7 @@ import ru.maksonic.beresta.feature.folders_chips.ui.placeholder.FoldersPlacehold
  */
 val foldersChipsRowUiFeatureModule = module {
     single<FoldersApi.ChipsRow.Ui> { FoldersChipsRowWidget() }
-    single<FoldersApi.AddChipDialog.Ui> { FoldersAddNewChipDialog() }
+    factory<FoldersApi.AddChipDialog.Ui> { FoldersAddNewChipDialog() }
     single<FoldersApi.FolderItem.Ui> { FolderItemWidget() }
     single<FoldersApi.ListPlaceholder.Ui> { FoldersPlaceholder() }
 
