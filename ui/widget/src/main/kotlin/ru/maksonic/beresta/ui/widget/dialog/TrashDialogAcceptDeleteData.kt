@@ -58,7 +58,10 @@ fun TrashDialogAcceptDeleteData(
         onCancelClicked = onCancelClicked,
         onAcceptClicked = onAcceptClicked
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier.padding(start = dp16, end = dp16),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
                 imageVector = imageDialog.value,
                 contentDescription = "",

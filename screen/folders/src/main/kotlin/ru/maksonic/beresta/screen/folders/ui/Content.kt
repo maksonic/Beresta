@@ -13,7 +13,6 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import org.koin.compose.koinInject
 import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
 import ru.maksonic.beresta.screen.folders.core.Model
 import ru.maksonic.beresta.screen.folders.core.Msg
@@ -34,8 +33,8 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 internal fun Content(
     model: State<Model>,
     send: SendMessage,
-    modifier: Modifier = Modifier,
-    chipsDialogUi: FoldersApi.AddChipDialog.Ui = koinInject()
+    chipsDialogUi: FoldersApi.AddChipDialog.Ui,
+    modifier: Modifier = Modifier
 ) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
