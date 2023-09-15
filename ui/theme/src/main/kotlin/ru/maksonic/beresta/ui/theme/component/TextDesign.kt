@@ -62,6 +62,16 @@ object TextDesign {
             color = Theme.color.onBackground
         )
 
+    val bodyMedium: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeight = 20.0.sp,
+            letterSpacing = 0.2.sp,
+            color = Theme.color.onBackground
+        )
+
     val main: TextStyle
         @Composable
         get() = TextStyle(

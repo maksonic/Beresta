@@ -149,8 +149,8 @@
     "sort_notes_sheet": {
       "title_sheet_notes": "Сортировать заметки",
       "title_sheet_folders": "Сортировать папки",
-      "hint_sort_by_ascending": "По порядку",
-      "hint_sort_by_descending": "В обратном порядке",
+      "hint_sort_by_ascending": "По возрастанию",
+      "hint_sort_by_descending": "По убыванию",
       "hint_sort_category_alphabet": "Алфавит",
       "hint_sort_category_date_creation": "Дата создания",
       "hint_sort_category_date_update": "Дата изменения",

@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.sorting_sheet.ui.ui.widget
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,24 +8,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import ru.maksonic.beresta.feature.sorting_sheet.api.Order
 import ru.maksonic.beresta.feature.sorting_sheet.api.SortDataKey
+import ru.maksonic.beresta.feature.sorting_sheet.api.isAscending
 import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.outline
+import ru.maksonic.beresta.ui.theme.color.onBackground
+import ru.maksonic.beresta.ui.theme.color.onSecondaryContainer
 import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
+import ru.maksonic.beresta.ui.theme.color.transparent
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
 import ru.maksonic.beresta.ui.theme.component.dp8
+import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.sort.Ascending
 import ru.maksonic.beresta.ui.widget.functional.rippledClick
 
 /**
@@ -41,7 +47,7 @@ internal fun OrderSelector(
     Row(
         modifier
             .fillMaxWidth()
-            .padding(dp16, dp8, dp16, dp16)
+            .padding(start = dp16, end = dp16, top = dp16)
     ) {
 
         Item(
@@ -80,19 +86,27 @@ private fun Item(
         }
     }
     val isSelected = rememberUpdatedState(order == value.order)
-    val color = if (isSelected.value) tertiaryContainer else outline
-    val borderWidth = if (isSelected.value) 2.dp else 1.dp
+    val color = if (isSelected.value) onSecondaryContainer else transparent
+    val iconModifier = if (!order.isAscending) Modifier
+        .rotate(180f)
+        .scale(-1f, 1f) else Modifier
 
-    Box(
+    Row(
         modifier
             .fillMaxSize()
-            .height(48.dp)
+            .height(Theme.widgetSize.modalSheetItemHeight)
             .clip(Theme.shape.cornerBig)
-            .border(borderWidth, color, Theme.shape.cornerBig)
+            .drawBehind { drawRect(color) }
             .rippledClick(rippleColor = primary) { onOrderClicked(order) },
-        contentAlignment = Alignment.Center
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        val style = if (isSelected.value) TextDesign.bodyPrimaryMedium else TextDesign.bodyPrimary
-        Text(text = title, style = style)
+        Icon(
+            AppIcon.Ascending, "", tint = onBackground, modifier = Modifier
+                .padding(end = dp8)
+                .then(iconModifier)
+        )
+
+        Text(text = title, style = TextDesign.bodyMedium)
     }
 }

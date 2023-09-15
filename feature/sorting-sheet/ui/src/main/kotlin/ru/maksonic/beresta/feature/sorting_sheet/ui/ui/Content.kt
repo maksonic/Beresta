@@ -3,7 +3,7 @@ package ru.maksonic.beresta.feature.sorting_sheet.ui.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -50,11 +50,11 @@ internal fun Content(
                 onOrderClicked = { send(Msg.Ui.OnOrderClicked(Pair(sortDataKey, it))) }
             )
 
-            Divider(
-                color = onSecondaryContainer,
+            HorizontalDivider(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = dp16, end = dp16, top = dp8, bottom = dp8)
+                    .padding(start = dp16, end = dp16, top = dp8, bottom = dp8),
+                color = onSecondaryContainer
             )
 
             sortVariants.forEach { item ->
@@ -65,7 +65,7 @@ internal fun Content(
                 )
             }
 
-            Divider(
+            HorizontalDivider(
                 color = onSecondaryContainer,
                 modifier = modifier
                     .fillMaxWidth()
