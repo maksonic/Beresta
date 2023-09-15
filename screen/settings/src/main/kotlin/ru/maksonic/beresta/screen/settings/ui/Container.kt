@@ -48,6 +48,7 @@ private fun HandleUiEffects(
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
             is Eff.NavigateToAppearance -> router.toAppearance()
+            is Eff.NavigateToNotifications -> router.toNotifications()
             is Eff.NavigateToSecurity -> router.toSecurity()
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {

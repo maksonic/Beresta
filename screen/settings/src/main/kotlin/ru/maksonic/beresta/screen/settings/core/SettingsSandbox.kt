@@ -25,6 +25,7 @@ class SettingsSandbox(
         is Msg.Ui.OnPickLanguageClicked -> onShowLanguageSheetClicked(model)
         is Msg.Ui.OnPickThemeClicked -> onShowThemeSheetClicked(model)
         is Msg.Ui.OnAppearanceClicked -> onAppearanceClicked(model)
+        is Msg.Ui.OnNotificationsClicked -> onNotificationsClicked(model)
         is Msg.Ui.OnSecurityClicked -> onSecurityClicked(model)
         is Msg.Inner.FetchedTheme -> fetchedTheme(model, msg)
         is Msg.Ui.OnAboutAppClicked -> onAboutAppClicked(model)
@@ -60,6 +61,9 @@ class SettingsSandbox(
 
     private fun onAppearanceClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToAppearance))
+
+    private fun onNotificationsClicked(model: Model): UpdateResult =
+        ElmUpdate(model, effects = setOf(Eff.NavigateToNotifications))
 
     private fun onSecurityClicked(model: Model): UpdateResult =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSecurity))

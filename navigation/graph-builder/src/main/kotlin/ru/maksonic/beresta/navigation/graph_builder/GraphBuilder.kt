@@ -12,6 +12,7 @@ import ru.maksonic.beresta.navigation.graph_builder.destination.hiddenNotesScree
 import ru.maksonic.beresta.navigation.graph_builder.destination.mainScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.onboardingScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsAppearanceScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsNotificationsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsSecurityScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.splashScreen
@@ -53,6 +54,7 @@ interface GraphBuilder {
                     mainScreen(this)
                     settingsScreen(this, slide, animator)
                     settingsAppearanceScreen(this, slide)
+                    settingsNotificationsScreen(this)
                     settingsSecurityScreen(this, slide)
                     editNoteScreen(apiStore.editNote, this)
                     foldersScreen(this, slide, animator)

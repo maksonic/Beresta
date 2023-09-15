@@ -10,6 +10,7 @@ import ru.maksonic.beresta.ui.theme.AppTheme
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.Appearance
 import ru.maksonic.beresta.ui.theme.icons.Language
+import ru.maksonic.beresta.ui.theme.icons.notifications.Notifications
 import ru.maksonic.beresta.ui.theme.icons.Security
 import ru.maksonic.beresta.ui.theme.icons.ThemeContrast
 import ru.maksonic.beresta.ui.theme.icons.ThemeLight
@@ -60,6 +61,11 @@ internal fun GeneralSettingsItem(send: SendMessage, theme: AppTheme, isDarkTheme
             title = text.settingsAppearance.topBarTitle,
             prefixIcon = AppIcon.Appearance,
             onClick = { send(Msg.Ui.OnAppearanceClicked) }
+        ),
+        SettingItem(
+            title = text.settingsNotifications.topBarTitle,
+            prefixIcon = AppIcon.Notifications,
+            onClick = { send(Msg.Ui.OnNotificationsClicked) }
         ),
         SettingItem(
             title = text.settingsSecurity.topBarTitle,

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = module.screen.settingsSecurity.namespace
+    namespace = module.screen.settings.security.namespace
     compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {

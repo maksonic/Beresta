@@ -18,6 +18,7 @@ object Destination : AbstractDestination(route = "root") {
     object HiddenNotes : AbstractDestination(route = "hidden_notes")
     object Settings : AbstractDestination(route = "settings") {
         object Appearance : AbstractDestination(route = "settings.appearance")
+        object Notifications : AbstractDestination(route = "settings.notifications")
         object Security : AbstractDestination(route = "settings.security")
     }
 }

@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.system.VibrationManager
@@ -118,6 +120,7 @@ private fun HandleUiEffects(
     onSuccessPin: () -> Unit,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val failCreationMessage = text.errorUi.failCreationCode
     val failVerificationMessage = text.errorUi.failVerificationCode
 
@@ -130,8 +133,10 @@ private fun HandleUiEffects(
                     PinFailStatus.NOT_VERIFIED -> failVerificationMessage
                 }
                 context.toastShortTime(failMessage)
-                vibrationManager.vibrateShortOneShot()
-                shakeKeyboardTitle()
+                scope.launch {
+                    vibrationManager.vibrateShortOneShot()
+                    shakeKeyboardTitle()
+                }
             }
 
             is Eff.NavigateToHiddenNotes -> onSuccessPin().run { hideDialog() }

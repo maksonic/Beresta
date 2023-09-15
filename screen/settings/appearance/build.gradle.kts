@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = module.screen.settingsAppearance.namespace
+    namespace = module.screen.settings.appearance.namespace
     compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {

@@ -13,6 +13,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
 import ru.maksonic.beresta.language_engine.shell.components.LangUiErrorData
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsNotificationsData
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
 
 /**
@@ -26,6 +27,7 @@ data class Russian(
     @SerializedName("shared") val shared: LangSharedData,
     @SerializedName("settings") val settings: LangSettingsScreenData,
     @SerializedName("settings_appearance") val settingsAppearance: LangSettingsAppearanceData,
+    @SerializedName("settings_notifications") val settingsNotifications: LangSettingsNotificationsData,
     @SerializedName("settings_security") val settingsSecurity: LangSettingsSecurityData,
     @SerializedName("editor") val editor: LangEditorData,
     @SerializedName("folders") val folders: LangFoldersListData,

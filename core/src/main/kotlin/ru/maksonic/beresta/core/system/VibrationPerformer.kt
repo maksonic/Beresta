@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.Flow
  */
 interface VibrationPerformer {
     val isEnabled: Flow<Boolean>
+    suspend fun init()
     suspend fun updateVibrationState(isEnabled: Boolean)
 
     fun keyboardTapVibration(view: View)
-    fun toggleTapVibration(view: View, isEnabled: Boolean)
+    fun toggleTapVibration(view: View, isToggleOn: Boolean)
 }

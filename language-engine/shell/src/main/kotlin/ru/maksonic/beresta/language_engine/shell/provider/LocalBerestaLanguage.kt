@@ -14,6 +14,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangUiErrorData
 import ru.maksonic.beresta.language_engine.shell.components.OnboardingDataItem
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsNotificationsData
 import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
 
 /**
@@ -41,6 +42,7 @@ data class BerestaLanguage(
     val shared: LangSharedData = LangSharedData(),
     val settings: LangSettingsScreenData = LangSettingsScreenData(),
     val settingsAppearance: LangSettingsAppearanceData = LangSettingsAppearanceData(),
+    val settingsNotifications: LangSettingsNotificationsData = LangSettingsNotificationsData(),
     val settingsSecurity: LangSettingsSecurityData = LangSettingsSecurityData(),
     val editNote: LangEditorData = LangEditorData(),
     val folders: LangFoldersListData = LangFoldersListData(),
@@ -57,6 +59,7 @@ data class BerestaLanguage(
             shared = LangSharedData(),
             settings = LangSettingsScreenData(),
             settingsAppearance = LangSettingsAppearanceData(),
+            settingsNotifications = LangSettingsNotificationsData(),
             settingsSecurity = LangSettingsSecurityData(),
             editNote = LangEditorData(),
             folders = LangFoldersListData(),

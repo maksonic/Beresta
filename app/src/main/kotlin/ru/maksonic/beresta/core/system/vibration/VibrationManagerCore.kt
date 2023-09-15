@@ -7,12 +7,14 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import ru.maksonic.beresta.core.system.VibrationManager
-
+import ru.maksonic.beresta.core.system.VibrationPerformer
 
 /**
  * @Author maksonic on 26.07.2023
  */
-class VibrationManagerCore(context: Context) : VibrationManager {
+class VibrationManagerCore(
+    context: Context, private val vibrationPerformer: VibrationPerformer
+) : VibrationManager {
     private companion object {
         private const val ONE_SHOT_MS = 250L
     }
@@ -27,10 +29,18 @@ class VibrationManagerCore(context: Context) : VibrationManager {
         }
     }
 
-
-    override fun vibrateShortOneShot() {
-        val effect = VibrationEffect.createOneShot(ONE_SHOT_MS, VibrationEffect.DEFAULT_AMPLITUDE)
-        vibrator.cancel()
-        vibrator.vibrate(effect)
-    }
+    override suspend fun vibrateShortOneShot() = vibrationPerformer.isEnabled
+        .collect { isEnabledVibration ->
+            if (isEnabledVibration) {
+                vibrator.apply {
+                    cancel()
+                    vibrate(
+                        VibrationEffect.createOneShot(
+                            ONE_SHOT_MS,
+                            VibrationEffect.DEFAULT_AMPLITUDE
+                        )
+                    )
+                }
+            }
+        }
 }

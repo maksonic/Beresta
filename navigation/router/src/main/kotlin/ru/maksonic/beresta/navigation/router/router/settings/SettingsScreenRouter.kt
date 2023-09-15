@@ -6,5 +6,6 @@ package ru.maksonic.beresta.navigation.router.router.settings
 data class SettingsScreenRouter(
     val onBack: () -> Unit,
     val toAppearance: () -> Unit,
+    val toNotifications: () -> Unit,
     val toSecurity: () -> Unit,
 )

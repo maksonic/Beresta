@@ -38,10 +38,10 @@ enum class RightPart {
 
 data class SettingItem(
     val title: String,
+    val rightPart: RightPart = RightPart.NOTHING,
     val prefixIcon: ImageVector? = null,
     val descriptionHint: String = "",
     val valueHint: String = "",
-    val rightPart: RightPart = RightPart.NOTHING,
     val isEnabledToggle: Boolean = false,
     val onClick: () -> Unit = {},
     val onToggleClicked: () -> Unit = onClick,
@@ -68,7 +68,7 @@ fun SettingClickableItem(
                     .let {
                         if (setting.rightPart == RightPart.TOGGLE) {
                             vibrationPerformer.toggleTapVibration(
-                                view, isEnabled = setting.isEnabledToggle
+                                view, isToggleOn = setting.isEnabledToggle
                             )
                         }
                     }

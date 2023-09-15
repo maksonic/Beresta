@@ -80,3 +80,4 @@ include(":feature:hidden-notes-dialog:ui")
 
 include(":feature:marker-color-picker:api")
 include(":feature:marker-color-picker:ui")
+include(":screen:settings:notifications")

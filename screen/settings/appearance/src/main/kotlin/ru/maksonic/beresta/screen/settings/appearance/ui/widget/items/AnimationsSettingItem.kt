@@ -31,8 +31,8 @@ fun AnimationsSettingItem(send: SendMessage, currentVelocityTitle: State<String>
 @Composable
 private fun settings(send: SendMessage, currentVelocityTitle: State<String>) = listOf(
     SettingItem(
-        rightPart = RightPart.CURRENT_VALUE,
         title = text.settingsAppearance.itemAnimVelocity,
+        rightPart = RightPart.CURRENT_VALUE,
         prefixIcon = AppIcon.Speed,
         valueHint = currentVelocityTitle.value,
         onClick = { send(Msg.Ui.OnAnimationsVelocityClicked) })

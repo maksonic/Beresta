@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.navigation.graph_builder.destination.settings
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.maksonic.beresta.navigation.graph_builder.navigator.NavigationAnimator
@@ -11,7 +10,6 @@ import ru.maksonic.beresta.screen.settings.ui.SettingsScreen
 /**
  * @Author maksonic on 17.02.2023
  */
-@OptIn(ExperimentalAnimationApi::class)
 internal fun NavGraphBuilder.settingsScreen(
     navigator: AbstractNavigator,
     velocity: Int,

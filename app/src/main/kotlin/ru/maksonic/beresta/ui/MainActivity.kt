@@ -57,9 +57,14 @@ class MainActivity : ComponentActivity() {
             val model = sandbox.model.collectAsStateWithLifecycle(lifecycle)
             val isDarkTheme = isSystemInDarkTheme()
 
+            LaunchedEffect(Unit) {
+                vibrationPerformer.init()
+            }
+
             LaunchedEffect(isDarkTheme) {
                 sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkTheme))
             }
+
 
             BaseTheme(
                 theme = model.value.currentTheme,

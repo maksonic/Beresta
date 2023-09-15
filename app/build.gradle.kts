@@ -116,9 +116,10 @@ dependencies {
 
     //screens
     implementation(project(module.screen.main.path))
-    implementation(project(module.screen.settings.path))
-    implementation(project(module.screen.settingsAppearance.path))
-    implementation(project(module.screen.settingsSecurity.path))
+    implementation(project(module.screen.settings.main.path))
+    implementation(project(module.screen.settings.appearance.path))
+    implementation(project(module.screen.settings.notifications.path))
+    implementation(project(module.screen.settings.security.path))
     implementation(project(module.screen.folders.path))
     implementation(project(module.screen.trashList.notes.path))
     implementation(project(module.screen.trashList.folders.path))

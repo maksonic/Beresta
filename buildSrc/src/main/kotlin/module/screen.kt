@@ -9,20 +9,28 @@ object screen {
         namespace = "ru.maksonic.beresta.screen.main"
     )
 
-    object settings : base(
-        path = ":screen:settings",
-        namespace = "ru.maksonic.beresta.screen.settings"
-    )
+    object settings {
+        object main : base(
+            path = ":screen:settings",
+            namespace = "ru.maksonic.beresta.screen.settings"
+        )
 
-    object settingsAppearance : base(
-        path = ":screen:settings:appearance",
-        namespace = "ru.maksonic.beresta.screen.settings.appearance"
-    )
+        object appearance : base(
+            path = ":screen:settings:appearance",
+            namespace = "ru.maksonic.beresta.screen.settings.appearance"
+        )
 
-    object settingsSecurity : base(
-        path = ":screen:settings:security",
-        namespace = "ru.maksonic.beresta.screen.settings.security"
-    )
+        object notifications : base(
+            path = ":screen:settings:notifications",
+            namespace = "ru.maksonic.beresta.screen.settings.notifications"
+        )
+
+        object security : base(
+            path = ":screen:settings:security",
+            namespace = "ru.maksonic.beresta.screen.settings.security"
+        )
+    }
+
 
     object editNote : base(
         path = ":screen:edit-note",

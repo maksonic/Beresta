@@ -14,7 +14,12 @@ import ru.maksonic.beresta.core.system.vibration.VibrationPerformerCore
  * @Author maksonic on 18.06.2023
  */
 internal val appModule = module {
-    single<VibrationManager> { VibrationManagerCore(context = androidContext()) }
+    single<VibrationManager> {
+        VibrationManagerCore(
+            context = androidContext(),
+            vibrationPerformer = get()
+        )
+    }
     single<VibrationPerformer> { VibrationPerformerCore(datastore = get()) }
 
     single {

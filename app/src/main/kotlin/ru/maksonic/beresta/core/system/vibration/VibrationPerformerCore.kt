@@ -26,6 +26,12 @@ class VibrationPerformerCore(private val datastore: Datastore) : VibrationPerfor
         current
     }
 
+    override suspend fun init() {
+        isEnabled.collect {
+            _mutableVibrationState.update { it }
+        }
+    }
+
     override suspend fun updateVibrationState(isEnabled: Boolean) {
         datastore.datastore.edit { pref ->
             pref[key] = isEnabled
@@ -38,9 +44,9 @@ class VibrationPerformerCore(private val datastore: Datastore) : VibrationPerfor
             view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
     }
 
-    override fun toggleTapVibration(view: View, isEnabled: Boolean) {
+    override fun toggleTapVibration(view: View, isToggleOn: Boolean) {
         val feedbackConstants = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            if (isEnabled) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.TOGGLE_OFF
+            if (isToggleOn) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.TOGGLE_OFF
         } else {
             HapticFeedbackConstants.KEYBOARD_TAP
         }

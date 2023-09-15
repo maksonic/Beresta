@@ -38,6 +38,7 @@ import ru.maksonic.beresta.screen.hidden_notes.di.hiddenNotesScreenModule
 import ru.maksonic.beresta.screen.main.di.mainScreenModule
 import ru.maksonic.beresta.screen.settings.appearance.di.settingsAppearanceScreenModule
 import ru.maksonic.beresta.screen.settings.di.settingsScreenModule
+import ru.maksonic.beresta.screen.settings.notifications.di.settingsNotificationsScreenModule
 import ru.maksonic.beresta.screen.settings.security.di.settingsSecurityScreenModule
 import ru.maksonic.beresta.screen.trash_list.folders.di.trashFoldersScreenModule
 import ru.maksonic.beresta.screen.trash_list.notes.di.trashNotesScreenModule
@@ -64,6 +65,7 @@ class BerestaApplication : Application() {
         settingsScreenModule,
         settingsAppearanceScreenModule,
         settingsSecurityScreenModule,
+        settingsNotificationsScreenModule,
         foldersScreenModule,
         trashNotesScreenModule,
         trashFoldersScreenModule,
