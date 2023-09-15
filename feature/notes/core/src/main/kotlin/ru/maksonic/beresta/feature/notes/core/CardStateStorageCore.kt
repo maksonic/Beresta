@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.notes.core
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -17,18 +18,21 @@ import ru.maksonic.beresta.feature.notes.api.NotesApi
 class CardStateStorageCore(private val datastore: Datastore) : NotesApi.CardStateStorage {
 
     private companion object {
-        private const val SHAPE = "prefs_note_card_ui_shape_key"
-        private const val ELEVATION = "prefs_note_card_ui_elevation_key"
-        private const val TITLE_LINES = "prefs_note_card_ui_max_title_lines_key"
-        private const val MESSAGE_LINES = "prefs_note_card_ui_max_message_lines_key"
+        private const val BASE_KEY = "prefs_note_card_ui_"
+        private const val SHAPE_KEY = BASE_KEY + "shape_key"
+        private const val ELEVATION_KEY = BASE_KEY + "elevation_key"
+        private const val TITLE_LINES_KEY = BASE_KEY + "max_title_lines_key"
+        private const val MESSAGE_LINES_KEY = BASE_KEY + "max_message_lines_key"
+        private const val COLOR_MARKER_KEY = BASE_KEY + "color_marker_key"
         private const val INITIAL_TITLE_LINES_COUNT = 1
         private const val INITIAL_MESSAGE_LINES_COUNT = 2
     }
 
-    private val shapeKey = stringPreferencesKey(SHAPE)
-    private val elevationKey = stringPreferencesKey(ELEVATION)
-    private val maxTitleLinesKey = intPreferencesKey(TITLE_LINES)
-    private val maxMessageLinesKey = intPreferencesKey(MESSAGE_LINES)
+    private val shapeKey = stringPreferencesKey(SHAPE_KEY)
+    private val elevationKey = stringPreferencesKey(ELEVATION_KEY)
+    private val maxTitleLinesKey = intPreferencesKey(TITLE_LINES_KEY)
+    private val maxMessageLinesKey = intPreferencesKey(MESSAGE_LINES_KEY)
+    private val colorMarkerKey = booleanPreferencesKey(COLOR_MARKER_KEY)
 
     private val initialShape = NoteCardShape.ROUNDED.name
     private val initialElevation = NoteCardElevation.DISABLED.name
@@ -38,12 +42,14 @@ class CardStateStorageCore(private val datastore: Datastore) : NotesApi.CardStat
         val elevation = NoteCardElevation.valueOf(card[elevationKey] ?: initialElevation)
         val maxTitleLines = card[maxTitleLinesKey] ?: INITIAL_TITLE_LINES_COUNT
         val maxMessageLines = card[maxMessageLinesKey] ?: INITIAL_MESSAGE_LINES_COUNT
+        val isVisibleColorMarker = card[colorMarkerKey] ?: true
 
         return@map NoteCardUiState(
             shape = shape,
             elevation = elevation,
             maxTitleLines = maxTitleLines,
-            maxMessageLines = maxMessageLines
+            maxMessageLines = maxMessageLines,
+            isVisibleColorMarker = isVisibleColorMarker
         )
     }
 
@@ -61,6 +67,10 @@ class CardStateStorageCore(private val datastore: Datastore) : NotesApi.CardStat
 
     override suspend fun setCardMessageMaxLines(value: Int) {
         datastore.datastore.edit { prefs -> prefs[maxMessageLinesKey] = value }
+    }
+
+    override suspend fun setCardColorMarkerVisibility(isVisible: Boolean) {
+        datastore.datastore.edit { prefs -> prefs[colorMarkerKey] = isVisible }
     }
 
     override suspend fun setByDefaultCardMaxLines() {

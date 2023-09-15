@@ -121,16 +121,16 @@ private fun TopBar(
         Crossfade(model.value.pinSecure.isVisiblePin, label = "") {
             ClickableIcon(
                 icon = if (it) AppIcon.VisibilityOn else AppIcon.VisibilityOff,
-                action = { send(Msg.Ui.OnPinVisibilityClicked) })
+                onClick = { send(Msg.Ui.OnPinVisibilityClicked) })
         }
 
         Crossfade(model.value.pinSecure.isVisibleOnKeyboardTap, label = "") {
             ClickableIcon(
                 icon = if (it) AppIcon.PreviewOn else AppIcon.PreviewOff,
-                action = { send(Msg.Ui.OnKeyTapVisibilityClicked) })
+                onClick = { send(Msg.Ui.OnKeyTapVisibilityClicked) })
         }
 
-        ClickableIcon(icon = AppIcon.Close, action = onCloseClicked)
+        ClickableIcon(icon = AppIcon.Close, onClick = onCloseClicked)
 
     }
 }

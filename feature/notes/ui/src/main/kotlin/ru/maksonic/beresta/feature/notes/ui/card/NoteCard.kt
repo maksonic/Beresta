@@ -36,6 +36,9 @@ class NoteCard : NotesApi.Card.Ui {
     override fun updateMaxMessageLines(count: Int) =
         sharedState.update(sharedState.value.copy(maxMessageLines = count))
 
+    override fun updateColorMarkerVisibility(isVisible: Boolean) =
+        sharedState.update(sharedState.value.copy(isVisibleColorMarker = isVisible))
+
     override fun resetNoteCardLinesByDefault() = sharedState.update(
         sharedState.value.copy(
             maxTitleLines = INITIAL_TITLE_LINES_COUNT,

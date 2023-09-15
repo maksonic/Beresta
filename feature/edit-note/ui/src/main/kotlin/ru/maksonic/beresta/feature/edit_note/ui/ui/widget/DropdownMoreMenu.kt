@@ -48,7 +48,7 @@ internal fun DropdownMoreMenu(
         ) {
             val dropdownState = rememberSaveable { mutableStateOf(false) }
 
-            ClickableIcon(icon = AppIcon.MoreVertical, action = { dropdownState.value = true })
+            ClickableIcon(icon = AppIcon.MoreVertical, onClick = { dropdownState.value = true })
 
             MaterialTheme(if (Theme.darkMode.value) darkColorScheme() else lightColorScheme()) {
                 DropdownMenu(

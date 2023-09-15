@@ -67,7 +67,7 @@ fun CategoryBar(
         }
         ClickableIcon(
             icon = AppIcon.LabelOutlined,
-            action = {},
+            onClick = {},
         )
 
         Spacer(modifier.weight(1f))

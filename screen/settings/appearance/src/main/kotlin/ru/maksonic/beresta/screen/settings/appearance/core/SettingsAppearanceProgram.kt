@@ -26,6 +26,9 @@ class SettingsAppearanceProgram(
             is Cmd.ResetNoteCardLinesByDefault -> resetNoteCardLinesByDefault()
             is Cmd.FetchCurrentAppLang -> fetchAppLang(consumer)
             is Cmd.UpdateAnimationsVelocity -> updateAnimationVelocity(cmd.key)
+            is Cmd.UpdatedNoteCardColorMarkerVisibility -> {
+                updateColorMarkerVisibility(cmd.isVisible)
+            }
         }
     }
 
@@ -59,4 +62,8 @@ class SettingsAppearanceProgram(
 
     private suspend fun updateAnimationVelocity(key: AppAnimationVelocity.Key) =
         animationVelocity.updateInDatastore(key)
+
+    private suspend fun updateColorMarkerVisibility(isVisible: Boolean) = noteCardUiApi
+        .updateColorMarkerVisibility(isVisible)
+        .let { noteCardFeatureState.setCardColorMarkerVisibility(!isVisible) }
 }

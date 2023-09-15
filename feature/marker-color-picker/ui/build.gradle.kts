@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = module.feature.hiddenNotesDialog.ui.namespace
+    namespace = module.feature.markerColorPicker.ui.namespace
     compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {

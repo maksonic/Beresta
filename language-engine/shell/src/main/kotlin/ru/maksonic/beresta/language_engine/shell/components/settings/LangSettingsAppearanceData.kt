@@ -15,6 +15,7 @@ data class LangSettingsAppearanceData(
     @SerializedName("hint_note_card_squared_shape") val hintNoteCardSquaredShape: String = "",
     @SerializedName("item_note_card_elevation") val itemNoteCardElevation: String = "",
     @SerializedName("item_note_card_max_lines") val itemNoteCardMaxLines: String = "",
+    @SerializedName("item_note_card_color_marker") val itemNoteCardColorMarker: String = "",
 
     @SerializedName("title_animations") val titleAnimations: String = "",
     @SerializedName("item_velocity") val itemAnimVelocity: String = "",

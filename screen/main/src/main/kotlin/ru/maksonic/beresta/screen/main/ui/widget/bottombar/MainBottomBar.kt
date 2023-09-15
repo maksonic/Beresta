@@ -108,7 +108,7 @@ private fun IdleBarContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEach { panelItem ->
-            ClickableIcon(icon = panelItem.icon, action = panelItem.action, tint = onSurface)
+            ClickableIcon(icon = panelItem.icon, onClick = panelItem.action, tint = onSurface)
         }
     }
 }

@@ -25,6 +25,7 @@ data class NoteCardUiState(
     val elevation: NoteCardElevation,
     val maxTitleLines: Int,
     val maxMessageLines: Int,
+    val isVisibleColorMarker: Boolean
 ) {
     companion object {
         val Initial = NoteCardUiState(
@@ -32,6 +33,7 @@ data class NoteCardUiState(
             elevation = NoteCardElevation.DISABLED,
             maxTitleLines = 1,
             maxMessageLines = 2,
+            isVisibleColorMarker = true
         )
     }
 }

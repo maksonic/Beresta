@@ -94,11 +94,11 @@ private fun MainStateComponent(onUserAvatarClicked: () -> Unit, onChangeGridClic
 
     UserClickableAvatar(onUserAvatarClicked)
 
-    ClickableIcon(icon = afterSearchBarIcon.value, tint = onBackground, action = onChangeGridClicked)
+    ClickableIcon(icon = afterSearchBarIcon.value, tint = onBackground, onClick = onChangeGridClicked)
 }
 
 @Composable
 private fun HiddenNotesStateComponent(onBackClicked: () -> Unit, onSortByClicked: () -> Unit) {
-    ClickableIcon(icon = AppIcon.ArrowBack, tint = onBackground, action = onBackClicked)
-    ClickableIcon(icon = AppIcon.SortBy, tint = onBackground, action = onSortByClicked)
+    ClickableIcon(icon = AppIcon.ArrowBack, tint = onBackground, onClick = onBackClicked)
+    ClickableIcon(icon = AppIcon.SortBy, tint = onBackground, onClick = onSortByClicked)
 }

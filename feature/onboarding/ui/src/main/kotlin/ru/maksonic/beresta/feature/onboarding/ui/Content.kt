@@ -57,7 +57,7 @@ internal fun Content(
                 actions = {
                     ClickableIcon(
                         icon = AppIcon.ThemeSystem,
-                        action = { send(Msg.Ui.OnShowThemePickerClicked) })
+                        onClick = { send(Msg.Ui.OnShowThemePickerClicked) })
                 }
             )
 

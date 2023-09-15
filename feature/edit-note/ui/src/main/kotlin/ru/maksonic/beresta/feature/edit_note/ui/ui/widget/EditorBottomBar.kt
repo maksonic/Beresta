@@ -118,10 +118,7 @@ private fun EditorBottomBarContent(
             action = { send(Msg.Ui.OnAddImagesClicked) }),
         BaseBottomBarItem(
             icon = AppIcon.MakePhoto,
-            action = { send(Msg.Ui.OnAddCameraSnapshotClicked) }),
-        BaseBottomBarItem(
-            icon = AppIcon.Wallpaper,
-            action = { send(Msg.Ui.OnSetNoteWallpaperClicked) }),
+            action = { send(Msg.Ui.OnAddCameraSnapshotClicked) })
     )
 
     Column {
@@ -138,7 +135,7 @@ private fun EditorBottomBarContent(
             actions.forEach { panelItem ->
                 ClickableIcon(
                     icon = panelItem.icon,
-                    action = panelItem.action,
+                    onClick = panelItem.action,
                     tint = onSurface
                 )
             }

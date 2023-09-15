@@ -60,12 +60,12 @@ internal fun IconsRow(
                 ClickableIcon(
                     icon = AppIcon.ShareIos,
                     tint = onBackground,
-                    action = {}
+                    onClick = {}
                 )
                 ClickableIcon(
                     icon = AppIcon.SelectAll,
                     tint = onBackground,
-                    action = { actions[SearchBarApi.ActionKey.OnSelectAllClicked]?.invoke() },
+                    onClick = { actions[SearchBarApi.ActionKey.OnSelectAllClicked]?.invoke() },
                     modifier = modifier.padding(end = dp4)
                 )
             }
@@ -88,7 +88,7 @@ internal fun IconsRow(
                     ClickableIcon(
                         icon = AppIcon.ArrowBack,
                         tint = onBackground,
-                        action = { actions[SearchBarApi.ActionKey.OnCollapseBar]?.invoke() },
+                        onClick = { actions[SearchBarApi.ActionKey.OnCollapseBar]?.invoke() },
                         modifier = modifier.padding(end = dp4)
                     )
                 }
@@ -97,7 +97,7 @@ internal fun IconsRow(
                     ClickableIcon(
                         icon = AppIcon.Close,
                         tint = onBackground,
-                        action = { actions[SearchBarApi.ActionKey.OnCancelClicked]?.invoke() },
+                        onClick = { actions[SearchBarApi.ActionKey.OnCancelClicked]?.invoke() },
                         modifier = modifier.padding(end = dp4)
                     )
                 }
@@ -144,7 +144,7 @@ private fun HiddenNotesGridCountButton(
         ClickableIcon(
             icon = afterSearchBarIcon.value,
             tint = onSurface,
-            action = onChangeGridClicked
+            onClick = onChangeGridClicked
         )
     }
 }

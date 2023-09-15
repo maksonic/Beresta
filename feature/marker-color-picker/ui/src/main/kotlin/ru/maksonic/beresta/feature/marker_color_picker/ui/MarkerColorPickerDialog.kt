@@ -86,7 +86,7 @@ class MarkerColorPickerDialog : MarkerColorPickerApi.Ui {
 
                     ClickableIcon(
                         icon = AppIcon.FormatResetColor,
-                        action = {
+                        onClick = {
                             if (isDisabledColor.value) {
                                 isDisabledColor.value = false
                                 updateColorId(201L)

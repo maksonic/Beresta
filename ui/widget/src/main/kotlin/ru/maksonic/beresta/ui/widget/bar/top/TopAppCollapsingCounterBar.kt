@@ -90,7 +90,7 @@ private fun NavigationIcon(isSelectionState: State<Boolean>, onBackClicked: () -
     Crossfade(isSelectionState.value, label = "") {
         ClickableIcon(
             icon = if (it) AppIcon.Close else AppIcon.ArrowBack,
-            action = onBackClicked
+            onClick = onBackClicked
         )
     }
 }

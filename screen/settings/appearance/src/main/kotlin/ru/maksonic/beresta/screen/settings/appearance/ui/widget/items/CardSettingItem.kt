@@ -2,19 +2,29 @@ package ru.maksonic.beresta.screen.settings.appearance.ui.widget.items
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.core.DateFormatter
 import ru.maksonic.beresta.core.ui.DropdownMenuItem
@@ -29,13 +39,19 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
 import ru.maksonic.beresta.ui.theme.Theme
+import ru.maksonic.beresta.ui.theme.color.color_palette.Palette
+import ru.maksonic.beresta.ui.theme.color.inversePrimary
 import ru.maksonic.beresta.ui.theme.color.inverseSurface
 import ru.maksonic.beresta.ui.theme.color.onPrimaryContainer
 import ru.maksonic.beresta.ui.theme.color.surfaceVariant
+import ru.maksonic.beresta.ui.theme.color.tertiaryContainer
 import ru.maksonic.beresta.ui.theme.component.TextDesign
 import ru.maksonic.beresta.ui.theme.component.dp16
+import ru.maksonic.beresta.ui.theme.component.dp24
+import ru.maksonic.beresta.ui.theme.component.dp4
 import ru.maksonic.beresta.ui.theme.component.dp8
 import ru.maksonic.beresta.ui.theme.icons.AppIcon
+import ru.maksonic.beresta.ui.theme.icons.Colors
 import ru.maksonic.beresta.ui.theme.icons.CornerRadius
 import ru.maksonic.beresta.ui.theme.icons.Grading
 import ru.maksonic.beresta.ui.theme.icons.Shadow
@@ -44,6 +60,7 @@ import ru.maksonic.beresta.ui.widget.button.settings.RightPart
 import ru.maksonic.beresta.ui.widget.button.settings.SettingClickableItem
 import ru.maksonic.beresta.ui.widget.button.settings.SettingItem
 import ru.maksonic.beresta.ui.widget.button.settings.SettingDropdownClickableItem
+import ru.maksonic.beresta.ui.widget.functional.animation.AnimateFadeInOut
 import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
 import ru.maksonic.beresta.ui.widget.surface.SettingContainer
 import ru.maksonic.beresta.ui.widget.surface.SurfacePro
@@ -96,9 +113,9 @@ private fun Card(
                 modifier
                     .fillMaxWidth()
                     .background(surfaceVariant)
-                    .padding(dp16),
-                verticalArrangement = Arrangement.spacedBy(dp8)
+                    .padding(start = dp16, end = dp16, bottom = dp16),
             ) {
+                TopPanelIndicators()
 
                 Text(
                     text = text.shared.noteTitlePlaceholder,
@@ -108,6 +125,8 @@ private fun Card(
                     modifier = modifier.animateContentSize(tween(Theme.animVelocity.common))
                 )
 
+                Spacer(modifier.size(dp8))
+
                 Text(
                     text = text.shared.noteMessagePlaceholder,
                     style = TextDesign.bodyPrimary.copy(color = onPrimaryContainer),
@@ -115,6 +134,9 @@ private fun Card(
                     overflow = TextOverflow.Ellipsis,
                     modifier = modifier.animateContentSize(tween(Theme.animVelocity.common))
                 )
+
+                Spacer(modifier.size(dp8))
+
                 Text(
                     text = dateFormatter.fetchFormattedUiDate(LocalDateTime.now(), currentLang),
                     style = TextDesign.captionSmall.copy(color = inverseSurface),
@@ -142,7 +164,8 @@ private fun shapeSettingItem(): SettingItem {
 
 @Composable
 private fun items(send: SendMessage): List<SettingItem> {
-    val isEnabledElevation = rememberUpdatedState(noteUiCardState.elevation.isEnabled)
+    val isEnabledElevation = noteUiCardState.elevation.isEnabled
+    val isVisibleColorMarker = noteUiCardState.isVisibleColorMarker
 
     return listOf(
         SettingItem(
@@ -150,7 +173,14 @@ private fun items(send: SendMessage): List<SettingItem> {
             prefixIcon = AppIcon.Shadow,
             rightPart = RightPart.TOGGLE,
             isEnabledToggle = noteUiCardState.elevation.isEnabled,
-            onClick = { send(Msg.Ui.OnNoteCardElevationClicked(isEnabledElevation.value)) },
+            onClick = { send(Msg.Ui.OnNoteCardElevationClicked(isEnabledElevation)) },
+        ),
+        SettingItem(
+            title = text.settingsAppearance.itemNoteCardColorMarker,
+            rightPart = RightPart.TOGGLE,
+            prefixIcon = AppIcon.Colors,
+            isEnabledToggle = noteUiCardState.isVisibleColorMarker,
+            onClick = { send(Msg.Ui.OnNoteCardColorMarkerVisibilityClicked(isVisibleColorMarker)) }
         ),
         SettingItem(
             title = text.settingsAppearance.itemNoteCardMaxLines,
@@ -172,3 +202,24 @@ private fun dropdownMenuItems(send: SendMessage) = listOf(
         onClick = { send(Msg.Ui.OnNoteCardShapeClicked(NoteCardShape.SQUARED)) }
     )
 )
+
+@Composable
+private fun TopPanelIndicators(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .height(dp24), contentAlignment = Alignment.Center
+    ) {
+
+        AnimateFadeInOut(noteUiCardState.isVisibleColorMarker) {
+            val color = tertiaryContainer
+
+            Canvas(
+                modifier
+                    .fillMaxWidth()
+                    .size(dp4)
+                    .clip(CircleShape),
+                onDraw = { drawRect(color) })
+        }
+    }
+}

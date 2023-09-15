@@ -35,7 +35,7 @@ fun TopAppBarCollapsingLarge(
         LargeTopAppBar(
             scrollBehavior = scrollBehavior,
             title = { Text(title) },
-            navigationIcon = { ClickableIcon(icon = AppIcon.ArrowBack, action = onBackAction) },
+            navigationIcon = { ClickableIcon(icon = AppIcon.ArrowBack, onClick = onBackAction) },
             actions = actions,
             colors = TopAppBarDefaults.largeTopAppBarColors(
                 containerColor = color,

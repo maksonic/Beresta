@@ -67,9 +67,9 @@ fun ClickableIcon(
     tint: Color = onBackground,
     ripple: Color = primary,
     contentDescription: String = "",
-    action: () -> Unit
+    onClick: () -> Unit
 ) {
-    BaseClickableIcon(onClick = action, rippleColor = ripple, modifier = modifier) {
+    BaseClickableIcon(onClick = onClick, rippleColor = ripple, modifier = modifier) {
         Icon(imageVector = icon, contentDescription = contentDescription, tint = tint)
     }
 }

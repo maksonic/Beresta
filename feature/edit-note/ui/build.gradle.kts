@@ -60,6 +60,7 @@ dependencies {
     implementation(project(module.feature.editNote.api.path))
     implementation(project(module.feature.foldersChipsRow.api.path))
     implementation(project(module.feature.markerColorPicker.api.path))
+    implementation(project(module.feature.wallpaperPicker.api.path))
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.compose)

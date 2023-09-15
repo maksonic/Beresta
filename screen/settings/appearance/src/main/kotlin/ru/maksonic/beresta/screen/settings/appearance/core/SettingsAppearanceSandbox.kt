@@ -23,6 +23,10 @@ class SettingsAppearanceSandbox(
         is Msg.Ui.OnNoteCardShapeClicked -> onChangeCardCornersClicked(model, msg)
         is Msg.Ui.OnNoteCardElevationClicked -> onChangeCardElevationClicked(model, msg)
         is Msg.Ui.OnNoteLinesCountClicked -> onChangeCardLinesCountClicked(model)
+        is Msg.Ui.OnNoteCardColorMarkerVisibilityClicked -> {
+            onNoteCardColorMarkerVisibilityClicked(model, msg)
+        }
+
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
         is Msg.Ui.OnModalSheetAcceptClicked -> onModalSheetAcceptClicked(model)
         is Msg.Inner.UpdatedNoteTitleMaxLines -> updatedNoteTitleMaxLines(model, msg)
@@ -60,6 +64,12 @@ class SettingsAppearanceSandbox(
             )
         )
     )
+
+    private fun onNoteCardColorMarkerVisibilityClicked(
+        model: Model,
+        msg: Msg.Ui.OnNoteCardColorMarkerVisibilityClicked
+    ): UpdateResult =
+        ElmUpdate(model, commands = setOf(Cmd.UpdatedNoteCardColorMarkerVisibility(msg.isVisible)))
 
     @OptIn(ExperimentalMaterial3Api::class)
     private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(

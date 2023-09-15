@@ -114,6 +114,9 @@ dependencies {
     implementation(project(module.feature.markerColorPicker.api.path))
     implementation(project(module.feature.markerColorPicker.ui.path))
 
+    implementation(project(module.feature.wallpaperPicker.api.path))
+    implementation(project(module.feature.wallpaperPicker.ui.path))
+
     //screens
     implementation(project(module.screen.main.path))
     implementation(project(module.screen.settings.main.path))

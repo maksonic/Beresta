@@ -24,6 +24,7 @@ interface NotesApi {
             fun updateElevation(elevation: NoteCardElevation)
             fun updateMaxTitleLines(count: Int)
             fun updateMaxMessageLines(count: Int)
+            fun updateColorMarkerVisibility(isVisible: Boolean)
             fun resetNoteCardLinesByDefault()
 
             @Composable
@@ -71,6 +72,7 @@ interface NotesApi {
         suspend fun setCardElevation(elevation: NoteCardElevation)
         suspend fun setCardTitleMaxLines(value: Int)
         suspend fun setCardMessageMaxLines(value: Int)
+        suspend fun setCardColorMarkerVisibility(isVisible: Boolean)
         suspend fun setByDefaultCardMaxLines()
     }
 }

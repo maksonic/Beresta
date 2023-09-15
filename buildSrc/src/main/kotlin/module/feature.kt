@@ -169,4 +169,16 @@ object feature {
             namespace = "ru.maksonic.beresta.feature.marker_color_picker.ui"
         )
     }
+
+    object wallpaperPicker {
+        object api : base(
+            path = ":feature:wallpaper-picker:api",
+            namespace = "ru.maksonic.beresta.feature.wallpaper_picker.api"
+        )
+
+        object ui : base(
+            path = ":feature:wallpaper-picker:ui",
+            namespace = "ru.maksonic.beresta.feature.wallpaper_picker.ui"
+        )
+    }
 }

@@ -44,7 +44,7 @@ fun TopAppBarNormal(
         TopAppBar(
             scrollBehavior = scrollBehavior,
             title = { Text(title) },
-            navigationIcon = { ClickableIcon(icon = navIcon, action = navIconAction) },
+            navigationIcon = { ClickableIcon(icon = navIcon, onClick = navIconAction) },
             actions = actions,
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = color,
@@ -66,7 +66,7 @@ fun TopAppBarDefault(
 ) {
     TopAppBar(
         title = { Text(title) },
-        navigationIcon = { ClickableIcon(icon = navIcon, action = navIconAction) },
+        navigationIcon = { ClickableIcon(icon = navIcon, onClick = navIconAction) },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor.value,

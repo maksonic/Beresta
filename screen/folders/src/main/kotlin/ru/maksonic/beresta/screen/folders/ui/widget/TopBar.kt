@@ -67,7 +67,7 @@ private fun ActionIcon(send: SendMessage, isVisible: Boolean, isSelectionState: 
         ) {
             ClickableIcon(
                 icon = if (it) AppIcon.SelectAll else AppIcon.SortBy,
-                action = {
+                onClick = {
                     if (isSelectionState.value) {
                         send(Msg.Ui.OnTopBarSelectAllClicked)
                     } else {

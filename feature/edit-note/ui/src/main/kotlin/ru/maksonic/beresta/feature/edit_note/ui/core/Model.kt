@@ -1,7 +1,11 @@
 package ru.maksonic.beresta.feature.edit_note.ui.core
 
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.platform.LocalDensity
 import ru.maksonic.beresta.elm.core.ElmBaseModel
 import ru.maksonic.beresta.elm.core.ElmCommand
 import ru.maksonic.beresta.elm.core.ElmEffect
@@ -13,10 +17,28 @@ import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
 /**
  * @Author maksonic on 26.04.2023
  */
+enum class CurrentSheetContent {
+    NOTHING, WALLPAPER_PICKER
+}
+
+@Stable
+data class ModalSheet(
+    val isVisible: Boolean,
+    val content: CurrentSheetContent
+) {
+    companion object {
+        val Initial = ModalSheet(
+            isVisible = false,
+            content = CurrentSheetContent.NOTHING
+        )
+    }
+}
+
 @Stable
 @Immutable
 data class Model(
     val base: ElmBaseModel,
+    val modalSheet: ModalSheet,
     val isEntryPoint: Boolean,
     val isHiddenNote: Boolean,
     val isFetchedNote: Boolean,
@@ -29,6 +51,7 @@ data class Model(
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Loading,
+            modalSheet = ModalSheet.Initial,
             isEntryPoint = false,
             isHiddenNote = false,
             isFetchedNote = false,

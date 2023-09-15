@@ -29,6 +29,7 @@ import ru.maksonic.beresta.ui.theme.icons.AppIcon
 import ru.maksonic.beresta.ui.theme.icons.ArrowBack
 import ru.maksonic.beresta.ui.theme.icons.Pin
 import ru.maksonic.beresta.ui.theme.icons.PinFilled
+import ru.maksonic.beresta.ui.theme.icons.Wallpaper
 import ru.maksonic.beresta.ui.widget.bar.system.SystemStatusBarHeight
 import ru.maksonic.beresta.ui.widget.button.ClickableCircleIcon
 import ru.maksonic.beresta.ui.widget.button.ClickableIcon
@@ -79,6 +80,8 @@ internal fun EditNoteTopBar(
 
             PinBtn(model.value.editableNote) { send(Msg.Ui.OnPinClicked) }
 
+            ClickableIcon(icon = AppIcon.Wallpaper, onClick = {})
+
             DropdownMoreMenu(model, send)
         }
     }
@@ -89,7 +92,7 @@ private fun PinBtn(note: NoteUi, onPinClicked: () -> Unit) {
     Crossfade(note.isPinned, label = "") { isPinned ->
         ClickableIcon(
             icon = if (isPinned) AppIcon.PinFilled else AppIcon.Pin,
-            action = onPinClicked
+            onClick = onPinClicked
         )
     }
 }
