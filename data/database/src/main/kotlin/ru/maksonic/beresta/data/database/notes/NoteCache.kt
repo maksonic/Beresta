@@ -15,15 +15,16 @@ typealias NoteCacheItem = Flow<NoteCache>
 data class NoteCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
+    val folderId: Long = 2L,
     val title: String = "",
     val message: String = "",
     val dateCreation: LocalDateTime = LocalDateTime.now(),
+    val dateLastUpdateRaw: LocalDateTime? = null,
+    val pinTime: LocalDateTime? = null,
+    val dateMovedToTrash: LocalDateTime? = null,
     val isPinned: Boolean = false,
     val isHidden: Boolean = false,
-    val pinTime: LocalDateTime? = null,
     val isMovedToTrash: Boolean = false,
-    val folderId: Long = 2L,
-    val dateMovedToTrash: LocalDateTime? = null,
-    val dateLastUpdateRaw: LocalDateTime? = null,
-    val markerColorId: Long = 0L
+    val markerColorId: Long = 0L,
+    val wallpaperId: Long = 0L
 )

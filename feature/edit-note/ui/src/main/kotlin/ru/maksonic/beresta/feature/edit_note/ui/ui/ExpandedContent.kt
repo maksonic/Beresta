@@ -77,7 +77,7 @@ internal fun ExpandedContent(
         val defaultMarkerColor = outline
         val color = rememberSaveable(saver = ColorSaver) { mutableStateOf(defaultMarkerColor) }
 
-        LaunchedEffect(model.value.editableNote.markerColorId) {
+        LaunchedEffect(model.value.editableNote.style.markerColorId) {
             updateMarkerColor(model, color, defaultMarkerColor)
         }
 
@@ -113,5 +113,5 @@ internal fun ExpandedContent(
 }
 
 private fun updateMarkerColor(model: State<Model>, color: MutableState<Color>, default: Color) {
-    color.value = Palette.markerColors[model.value.editableNote.markerColorId] ?: default
+    color.value = Palette.markerColors[model.value.editableNote.style.markerColorId] ?: default
 }

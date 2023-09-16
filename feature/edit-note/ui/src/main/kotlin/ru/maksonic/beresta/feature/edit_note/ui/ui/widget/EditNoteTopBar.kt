@@ -89,7 +89,7 @@ internal fun EditNoteTopBar(
 
 @Composable
 private fun PinBtn(note: NoteUi, onPinClicked: () -> Unit) {
-    Crossfade(note.isPinned, label = "") { isPinned ->
+    Crossfade(note.style.isPinned, label = "") { isPinned ->
         ClickableIcon(
             icon = if (isPinned) AppIcon.PinFilled else AppIcon.Pin,
             onClick = onPinClicked

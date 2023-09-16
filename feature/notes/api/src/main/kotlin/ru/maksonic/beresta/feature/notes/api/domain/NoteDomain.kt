@@ -11,16 +11,16 @@ typealias NoteDomainItem = Flow<NoteDomain>
 
 data class NoteDomain(
     val id: Long = 0L,
+    val folderId: Long = 2L,
     val title: String = "",
     val message: String = "",
     val dateCreationRaw: LocalDateTime = LocalDateTime.now(),
-    val isSelected: Boolean = false,
-    val isPinned: Boolean = false,
-    val isHidden: Boolean = false,
-    val pinTime: LocalDateTime? = null,
-    val isMovedToTrash: Boolean = false,
-    val folderId: Long = 2L,
-    val dateMovedToTrash: LocalDateTime? = null,
     val dateLastUpdateRaw: LocalDateTime? = null,
-    val markerColorId: Long = 0L
+    val pinTime: LocalDateTime? = null,
+    val dateMovedToTrash: LocalDateTime? = null,
+    val isHidden: Boolean = false,
+    val isPinned: Boolean = false,
+    val isMovedToTrash: Boolean = false,
+    val markerColorId: Long = 0L,
+    val wallpaperId: Long = 0L,
 )

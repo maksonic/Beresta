@@ -51,13 +51,14 @@ internal fun Content(
     val isVisibleBottomBar = remember { mutableStateOf(true) }
     val isSelectionState = rememberUpdatedState(model.value.notes.isSelection)
     val chipsRowOffsetHeightPx = remember { mutableFloatStateOf(0f) }
+    val isNotInitialFolder = rememberUpdatedState(chipsRowUi.currentSelectedId.value != 1L)
 
-    BackHandler(isSelectionState.value) {
-        send(Msg.Ui.CancelNotesSelection)
-    }
-
-    BackHandler(chipsRowUi.currentSelectedId.value != 1L) {
-        send(Msg.Inner.ResetCurrentSelectedFolder)
+    BackHandler(isSelectionState.value.or(isNotInitialFolder.value)) {
+        if (isSelectionState.value && isNotInitialFolder.value) {
+            send(Msg.Ui.CancelNotesSelection)
+        } else {
+            send(Msg.Inner.ResetCurrentSelectedFolder)
+        }
     }
 
     LaunchedEffect(notesListApi.isScrollUpSharedState.value) {

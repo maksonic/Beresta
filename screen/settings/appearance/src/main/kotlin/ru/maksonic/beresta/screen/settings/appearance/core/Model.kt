@@ -46,8 +46,6 @@ data class Model(
     val base: ElmBaseModel,
     val modalSheet: ModalSheet,
     val currentLang: AppLanguage
-
-
 ) : ElmModel {
     companion object {
         val Initial = Model(

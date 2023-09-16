@@ -98,7 +98,7 @@ class HiddenNotesSandbox(
         }.toSet()
 
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
-            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+            if (this) !selectedList.map { it.style.isPinned }.contains(false) else false
         }
 
         return ElmUpdate(
@@ -226,7 +226,7 @@ class HiddenNotesSandbox(
         }.toSet()
 
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
-            if (this) !selectedList.map { it.isPinned }.contains(false) else false
+            if (this) !selectedList.map { it.style.isPinned }.contains(false) else false
         }
 
         return ElmUpdate(

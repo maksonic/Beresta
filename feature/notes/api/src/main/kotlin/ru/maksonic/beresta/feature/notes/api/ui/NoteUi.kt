@@ -7,24 +7,35 @@ import java.time.LocalDateTime
 /**
  * @Author maksonic on 21.02.2023
  */
+data class Style(
+    val isPinned: Boolean,
+    val markerColorId: Long,
+    val wallpaperId: Long,
+) {
+    companion object {
+        val Initial = Style(
+            isPinned = false,
+            markerColorId = 0L,
+            wallpaperId = 0L
+        )
+    }
+}
+
 data class NoteUi(
     val id: Long,
+    val folderId: Long = 2L,
     val key: Long = 0,
     val title: String,
     val message: String,
     val dateCreationRaw: LocalDateTime,
     val dateCreation: String = "",
+    val dateLastUpdateRaw: LocalDateTime?,
     val dateMovedToTrashRaw: LocalDateTime?,
     val dateMovedToTrash: String = "",
-    val dateLastUpdateRaw: LocalDateTime?,
-    val backgroundId: Int = 0,
-    val isSelected: Boolean = false,
-    val isPinned: Boolean,
     val isHidden: Boolean = false,
     val pinTime: LocalDateTime?,
     val isMovedToTrash: Boolean,
-    val folderId: Long = 2L,
-    val markerColorId: Long = 0L
+    val style: Style = Style.Initial
 ) {
 
     companion object {
@@ -38,12 +49,9 @@ data class NoteUi(
             dateMovedToTrashRaw = null,
             dateMovedToTrash = "",
             dateLastUpdateRaw = null,
-            backgroundId = 0,
-            isSelected = false,
-            isPinned = false,
             pinTime = null,
             isMovedToTrash = false,
-            markerColorId = 0L
+            style = Style.Initial
         )
 
         val Preview = Default.copy(title = "Note title preview", message = "Note message preview")

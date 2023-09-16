@@ -51,7 +51,7 @@ internal fun Content(note: NoteUi, modifier: Modifier) {
 
     val noteTitle = rememberUpdatedState(note.title.take(MAX_TEXT_LENGTH))
     val noteMessage = rememberUpdatedState(note.message.take(MAX_TEXT_LENGTH))
-    val isPinned = rememberUpdatedState(note.isPinned && !note.isMovedToTrash)
+    val isPinned = rememberUpdatedState(note.style.isPinned && !note.isMovedToTrash)
     val isHiddenAndTrashed = rememberUpdatedState(note.isHidden && note.isMovedToTrash)
     val hintPrefixRemovedDate = text.trash.hintRemovedDatePrefix
     val date = if (note.isMovedToTrash) "$hintPrefixRemovedDate ${note.dateMovedToTrash}"
@@ -63,7 +63,7 @@ internal fun Content(note: NoteUi, modifier: Modifier) {
             .padding(start = dp16)
     ) {
 
-        TopPanelIndication(note.markerColorId, isPinned, isHiddenAndTrashed)
+        TopPanelIndication(note.style.markerColorId, isPinned, isHiddenAndTrashed)
 
         Text(
             text = if (note.title.isBlank()) noteMessage.value else noteTitle.value,

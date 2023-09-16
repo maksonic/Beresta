@@ -77,12 +77,12 @@ class NotesDataProgram(
 
     private suspend fun updatePinnedNotes(notes: Set<NoteUi>) {
         val currentDate = LocalDateTime.now()
-        val isSelectedContainsUnpinned = notes.map { !it.isPinned }.contains(true)
+        val isSelectedContainsUnpinned = notes.map { !it.style.isPinned }.contains(true)
         val selected = notes.map { note ->
             note.copy(
-                isPinned = isSelectedContainsUnpinned,
+                dateCreationRaw = note.dateCreationRaw,
                 pinTime = if (isSelectedContainsUnpinned) currentDate else null,
-                dateCreationRaw = note.dateCreationRaw
+                style = note.style.copy(isPinned = isSelectedContainsUnpinned)
             )
         }
         val notesDomain = mapper.mapListFrom(selected)

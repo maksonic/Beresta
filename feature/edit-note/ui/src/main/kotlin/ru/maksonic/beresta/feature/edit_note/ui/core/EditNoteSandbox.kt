@@ -149,7 +149,10 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     }
 
     private fun onPinClicked(model: Model): UpdateResult {
-        val updatedNote = model.editableNote.copy(isPinned = !model.editableNote.isPinned)
+        val updatedNote =
+            model.editableNote.copy(
+                style = model.editableNote.style.copy(isPinned = !model.editableNote.style.isPinned)
+            )
 
         return ElmUpdate(
             model = model.copy(editableNote = updatedNote),
@@ -167,7 +170,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         model = model,
         effects = setOf(
             Eff.HideKeyboard,
-            Eff.ShowMarkerColorPickerDialog(model.editableNote.markerColorId)
+            Eff.ShowMarkerColorPickerDialog(model.editableNote.style.markerColorId)
         )
     )
 
@@ -175,6 +178,12 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         model: Model,
         msg: Msg.Inner.UpdatedCurrentNoteMarkerColor
     ): UpdateResult = ElmUpdate(
-        model = model.copy(editableNote = model.editableNote.copy(markerColorId = msg.colorId))
+        model = model.copy(
+            editableNote = model.editableNote.copy(
+                style = model.editableNote.style.copy(
+                    markerColorId = msg.colorId
+                )
+            )
+        )
     )
 }

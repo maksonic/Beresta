@@ -31,7 +31,7 @@ class NotesSorter(
         }
     }
 
-    private val pinnedSublist = list.filter { it.isPinned }.sortedWith(
+    private val pinnedSublist = list.filter { it.style.isPinned }.sortedWith(
         if (isSortPinned) {
             if (order.isAscending) compareBy {
                 when (sort) {
@@ -52,7 +52,7 @@ class NotesSorter(
         }
     )
 
-    private val notPinnedSublist = list.filter { !it.isPinned }.sortedWith(
+    private val notPinnedSublist = list.filter { !it.style.isPinned }.sortedWith(
         if (order.isAscending) {
             compareBy {
                 when (sort) {

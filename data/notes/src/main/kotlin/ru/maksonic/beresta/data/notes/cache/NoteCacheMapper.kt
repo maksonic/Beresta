@@ -10,31 +10,33 @@ import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
 class NoteCacheMapper : DataMapper<NoteCache, NoteDomain> {
     override fun dataToDomain(i: NoteCache) = NoteDomain(
         id = i.id,
+        folderId = i.folderId,
         title = i.title,
         message = i.message,
         dateCreationRaw = i.dateCreation,
+        dateLastUpdateRaw = i.dateLastUpdateRaw,
+        pinTime = i.pinTime,
+        dateMovedToTrash = i.dateMovedToTrash,
         isPinned = i.isPinned,
         isHidden = i.isHidden,
-        pinTime = i.pinTime,
         isMovedToTrash = i.isMovedToTrash,
-        folderId = i.folderId,
-        dateMovedToTrash = i.dateMovedToTrash,
-        dateLastUpdateRaw = i.dateLastUpdateRaw,
-        markerColorId = i.markerColorId
+        markerColorId = i.markerColorId,
+        wallpaperId = i.wallpaperId
     )
 
     override fun domainToData(o: NoteDomain) = NoteCache(
         id = o.id,
+        folderId = o.folderId,
         title = o.title,
         message = o.message,
         dateCreation = o.dateCreationRaw,
+        dateLastUpdateRaw = o.dateLastUpdateRaw,
+        pinTime = o.pinTime,
+        dateMovedToTrash = o.dateMovedToTrash,
         isPinned = o.isPinned,
         isHidden = o.isHidden,
-        pinTime = o.pinTime,
         isMovedToTrash = o.isMovedToTrash,
-        folderId = o.folderId,
-        dateMovedToTrash = o.dateMovedToTrash,
-        dateLastUpdateRaw = o.dateLastUpdateRaw,
-        markerColorId = o.markerColorId
+        markerColorId = o.markerColorId,
+        wallpaperId = o.wallpaperId
     )
 }

@@ -9,31 +9,35 @@ import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
 class NoteUiMapper : Mapper<NoteDomain, NoteUi> {
     override fun mapTo(i: NoteDomain) = NoteUi(
         id = i.id,
+        folderId = i.folderId,
         title = i.title,
         message = i.message,
         dateCreationRaw = i.dateCreationRaw,
-        dateMovedToTrashRaw = i.dateMovedToTrash,
         dateLastUpdateRaw = i.dateLastUpdateRaw,
-        isPinned = i.isPinned,
-        isHidden = i.isHidden,
         pinTime = i.pinTime,
+        dateMovedToTrashRaw = i.dateMovedToTrash,
+        isHidden = i.isHidden,
         isMovedToTrash = i.isMovedToTrash,
-        folderId = i.folderId,
-        markerColorId = i.markerColorId
+        style = Style(
+            isPinned = i.isPinned,
+            markerColorId = i.markerColorId,
+            wallpaperId = i.wallpaperId
+        )
     )
 
     override fun mapFrom(o: NoteUi) = NoteDomain(
         id = o.id,
+        folderId = o.folderId,
         title = o.title,
         message = o.message,
         dateCreationRaw = o.dateCreationRaw,
-        dateMovedToTrash = o.dateMovedToTrashRaw,
         dateLastUpdateRaw = o.dateLastUpdateRaw,
-        isPinned = o.isPinned,
-        isHidden = o.isHidden,
         pinTime = o.pinTime,
+        dateMovedToTrash = o.dateMovedToTrashRaw,
+        isPinned = o.style.isPinned,
+        isHidden = o.isHidden,
         isMovedToTrash = o.isMovedToTrash,
-        folderId = o.folderId,
-        markerColorId = o.markerColorId
+        markerColorId = o.style.markerColorId,
+        wallpaperId = o.style.wallpaperId
     )
 }
