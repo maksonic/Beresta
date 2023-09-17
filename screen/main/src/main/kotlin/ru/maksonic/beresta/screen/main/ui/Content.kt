@@ -54,10 +54,10 @@ internal fun Content(
     val isNotInitialFolder = rememberUpdatedState(chipsRowUi.currentSelectedId.value != 1L)
 
     BackHandler(isSelectionState.value.or(isNotInitialFolder.value)) {
-        if (isSelectionState.value && isNotInitialFolder.value) {
-            send(Msg.Ui.CancelNotesSelection)
-        } else {
-            send(Msg.Inner.ResetCurrentSelectedFolder)
+        when {
+            isSelectionState.value && isNotInitialFolder.value -> send(Msg.Ui.CancelNotesSelection)
+            isSelectionState.value && !isNotInitialFolder.value -> send(Msg.Ui.CancelNotesSelection)
+            else -> send(Msg.Inner.ResetCurrentSelectedFolder)
         }
     }
 
