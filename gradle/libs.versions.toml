@@ -1,102 +1,89 @@
 [versions]
-#core
-agp = "8.1.1"
-core-ktx = "1.12.0"
+
+# Android
+agp = "8.1.2"
+activity-compose = "1.8.0"
+appcompat = "1.6.1"
+biometric = "1.2.0-alpha05"
 datastore = "1.1.0-alpha05"
 gson = "2.10.1"
-kotlin = "1.9.0"
+ktx = "1.12.0"
+kotlin = "1.9.10"
+ksp = "1.9.10-1.0.13"
 lifecycle-runtime-ktx = "2.6.2"
-ksp = "1.9.0-1.0.12"
+material3 = "1.2.0-alpha10"
 splash-screen = "1.0.1"
-work-manager = "2.8.1"
-#compose
-activity-compose = "1.7.2"
-compose-bom = "2023.09.00"
-compose-material = "1.6.0-alpha05"
-constraint = "1.1.0-alpha12"
-material3 = "1.2.0-alpha07"
-navigation = "2.7.2"
-#db
-room = "2.5.2"
-#jetBrains
+# Compose
+compose-constraint = "1.1.0-alpha13"
+compose-foundation = "1.6.0-alpha08"
+compose-lifecycle = "2.7.0-alpha03"
+compose-navigation = "2.7.4"
+compose-runtime = "1.6.0-alpha08"
+compose-ui = "1.6.0-alpha08"
+compose-ui-graphics = "1.6.0-alpha08"
+compose-ui-test-manifest = "1.6.0-alpha08"
+compose-ui-tooling = "1.6.0-alpha08"
+compose-ui-tooling-preview = "1.6.0-alpha08"
+compose-ui-test-junit4 = "1.6.0-alpha08"
+# JetBrains
 coroutines = "1.7.3"
 json = "1.6.0"
-#sl
-koin = "3.4.6"
-#other
-accompanist = "0.33.1-alpha"
-coil = "2.4.0"
-glide = "1.0.0-alpha.1"
-#test
+# Room
+room = "2.6.0"
+# Test
 junit = "4.13.2"
-androidx-test-ext-junit = "1.1.5"
+junit-ext = "1.1.5"
 espresso-core = "3.5.1"
-appcompat = "1.6.1"
-material = "1.9.0"
-androidx-appcompat-appcompat = "1.6.1"
-com-google-android-material-material = "1.9.0"
-com-google-android-material-material180 = "1.9.0"
-
+# Others
+coil = "2.4.0"
+koin = "3.5.0"
+material = "1.10.0"
+####################################################################################################
 [libraries]
-#CORE
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+# Android core
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
-workmanager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-manager" }
-
-#COMPOSE
-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-compose-animation = { group = "androidx.compose.animation", name = "animation" }
-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
-compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraint" }
-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-material" }
-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-material = { group = "androidx.compose.material", name = "material-android", version.ref = "compose-material" }
-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose" }
-
-#DB
+# Compose
+compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "compose-constraint" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
+compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose-runtime" }
+compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui-graphics" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "compose-ui-test-manifest" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose-ui-tooling" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose-ui-tooling-preview" }
+# Coil
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+# Room
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-
-
-#JETBRAINS
-coroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "json" }
-
-#SL
+# Dependencies provider
 koin-android = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
-#TEST
+# Jetbrains
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "json" }
+# Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "junit-ext" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "compose-ui-test-junit4" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
-
-#ACCOMPANIST
-accompanist-navigation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
-accompanist-pager = { group = "com.google.accompanist", name = "accompanist-pager", version.ref = "accompanist" }
-accompanist-pager-indicators = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "accompanist" }
-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
-
-#IMAGE
-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide" }
-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat-appcompat" }
-com-google-android-material-material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material180" }
-
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.6.2" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+####################################################################################################
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
-kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-[bundles]
-

@@ -1,16 +1,13 @@
 package ru.maksonic.beresta.screen.settings.core
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import ru.maksonic.beresta.elm.core.ElmUpdate
-import ru.maksonic.beresta.elm.core.Sandbox
-import ru.maksonic.beresta.screen.settings.ui.widget.ModalSheetContent
+import ru.maksonic.beresta.platform.elm.core.ElmUpdate
+import ru.maksonic.beresta.platform.elm.core.Sandbox
 
 /**
  * @Author maksonic on 23.01.2023
  */
-private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
+private typealias Update = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 
-@OptIn(ExperimentalMaterial3Api::class)
 class SettingsSandbox(
     program: SettingsProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
@@ -18,8 +15,7 @@ class SettingsSandbox(
     initialCmd = setOf(Cmd.FetchCurrentTheme),
     subscriptions = listOf(program)
 ) {
-
-    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
+    override fun update(msg: Msg, model: Model): Update = when (msg) {
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnHideModalSheetClicked -> onHideLanguageSheetClicked(model)
         is Msg.Ui.OnPickLanguageClicked -> onShowLanguageSheetClicked(model)
@@ -36,52 +32,58 @@ class SettingsSandbox(
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
     }
 
-    private fun fetchedTheme(model: Model, msg: Msg.Inner.FetchedTheme): UpdateResult =
+    private fun fetchedTheme(model: Model, msg: Msg.Inner.FetchedTheme): Update =
         ElmUpdate(model.copy(currentTheme = msg.theme, isDarkTheme = msg.isDark))
 
-    private fun onTopBarBackPressed(model: Model): UpdateResult =
-        ElmUpdate(model.copy(isVisibleModalSheet = false), effects = setOf(Eff.NavigateBack))
+    private fun onTopBarBackPressed(model: Model): Update =
+        ElmUpdate(
+            model.copy(modalSheet = model.modalSheet.copy(isVisible = false)),
+            effects = setOf(Eff.NavigateBack)
+        )
 
-    private fun onHideLanguageSheetClicked(model: Model): UpdateResult =
+    private fun onHideLanguageSheetClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
 
-    private fun onShowLanguageSheetClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onShowLanguageSheetClicked(model: Model): Update = ElmUpdate(
         model = model.copy(
-            isVisibleModalSheet = true,
-            currentSheetContent = ModalSheetContent.LANGUAGE_SELECTOR
+            modalSheet = model.modalSheet.copy(
+                isVisible = true, content = ModalSheetContent.LANGUAGE_PICKER
+            )
         ),
     )
 
-    private fun onShowThemeSheetClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onShowThemeSheetClicked(model: Model): Update = ElmUpdate(
         model = model.copy(
-            isVisibleModalSheet = true,
-            currentSheetContent = ModalSheetContent.THEME_SELECTOR
+            modalSheet = model.modalSheet.copy(
+                isVisible = true, content = ModalSheetContent.THEME_PICKER
+            )
         ),
     )
 
-    private fun onAppearanceClicked(model: Model): UpdateResult =
+    private fun onAppearanceClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToAppearance))
 
-    private fun onNotificationsClicked(model: Model): UpdateResult =
+    private fun onNotificationsClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToNotifications))
 
-    private fun onSecurityClicked(model: Model): UpdateResult =
+    private fun onSecurityClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSecurity))
 
-    private fun onAboutAppClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onAboutAppClicked(model: Model): Update = ElmUpdate(model)
 
-    private fun onPrivacyPolicyClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onPrivacyPolicyClicked(model: Model): Update = ElmUpdate(model)
 
-    private fun onUserAccountClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onUserAccountClicked(model: Model): Update = ElmUpdate(model)
 
-    private fun onUserAgreementClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onUserAgreementClicked(model: Model): Update = ElmUpdate(model)
 
-    private fun onWriteEmailClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onWriteEmailClicked(model: Model): Update = ElmUpdate(model)
 
-    private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
-        model.copy(
-            isVisibleModalSheet = false,
-            currentSheetContent = ModalSheetContent.NOTHING
+    private fun hiddenModalBottomSheet(model: Model): Update = ElmUpdate(
+        model = model.copy(
+            modalSheet = model.modalSheet.copy(
+                isVisible = false, content = ModalSheetContent.NOTHING
+            )
         )
     )
 }

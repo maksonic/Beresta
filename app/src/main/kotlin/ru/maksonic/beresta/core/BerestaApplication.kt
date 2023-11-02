@@ -4,35 +4,34 @@ import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import ru.maksonic.beresta.common.coroutine_dispatchers.coroutineDispatchersModule
-import ru.maksonic.beresta.common.json_converter.jsonConverterModule
-import ru.maksonic.beresta.core.di.coreModule
-import ru.maksonic.beresta.data.common.di.dataCommonModule
-import ru.maksonic.beresta.data.database.di.databaseModule
-import ru.maksonic.beresta.data.folders.di.foldersDataModule
-import ru.maksonic.beresta.data.notes.di.notesDataModule
+import ru.maksonic.beresta.database.di.databaseModule
 import ru.maksonic.beresta.di.appModule
-import ru.maksonic.beresta.feature.edit_note.ui.di.editNoteUiFeatureModule
-import ru.maksonic.beresta.feature.folders_chips.core.di.foldersChipsRowCoreFeatureModule
-import ru.maksonic.beresta.feature.folders_chips.ui.di.foldersChipsRowUiFeatureModule
-import ru.maksonic.beresta.feature.hidden_notes_dialog.core.di.hiddenNotesCoreFeatureModule
-import ru.maksonic.beresta.feature.hidden_notes_dialog.core.di.hiddenNotesCoreFeaturePinFail
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.di.hiddenNotesUiFeatureModule
-import ru.maksonic.beresta.feature.language_picker.core.di.languagePickerCoreFeatureModule
-import ru.maksonic.beresta.feature.language_picker.ui.di.languagePickerUiFeatureModule
-import ru.maksonic.beresta.feature.marker_color_picker.ui.di.markerColorPickerFeatureModule
-import ru.maksonic.beresta.feature.notes.core.di.notesCoreFeatureModule
-import ru.maksonic.beresta.feature.notes.ui.di.notesUiFeatureModule
-import ru.maksonic.beresta.feature.onboarding.core.di.onboardingCoreFeatureModule
-import ru.maksonic.beresta.feature.onboarding.ui.di.onboardingUiFeatureModule
-import ru.maksonic.beresta.feature.search_bar.ui.di.topSearchBarUiFeatureModule
-import ru.maksonic.beresta.feature.sorting_sheet.core.di.listSortCoreFeatureModule
-import ru.maksonic.beresta.feature.sorting_sheet.ui.di.sortingSheetUiFeatureModule
-import ru.maksonic.beresta.feature.splash_screen.ui.di.splashScreenCoreFeatureModule
-import ru.maksonic.beresta.feature.theme_picker.core.di.themePickerCoreFeatureModule
-import ru.maksonic.beresta.feature.theme_picker.ui.di.themePickerUiFeatureModule
+import ru.maksonic.beresta.feature.app_lang.data.di.appLangDataFeatureModule
+import ru.maksonic.beresta.feature.app_theme.data.di.appThemeDataFeatureModule
+import ru.maksonic.beresta.feature.folders_list.data.di.foldersListDataModule
+import ru.maksonic.beresta.feature.folders_list.data.di.foldersListLocalDataModule
+import ru.maksonic.beresta.feature.folders_list.ui.core.di.foldersListUiFeatureModule
+import ru.maksonic.beresta.feature.hidden_notes_dialog.data.di.hiddenNotesDialogDataFeatureModule
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.di.hiddenNotesDialogUiFeatureModule
+import ru.maksonic.beresta.feature.marker_color_picker.data.di.markerColorPickerFeatureDataModule
+import ru.maksonic.beresta.feature.marker_color_picker.ui.core.di.markerColorPickerFeatureUiModule
+import ru.maksonic.beresta.feature.notes_list.data.di.notesListDataModule
+import ru.maksonic.beresta.feature.notes_list.data.di.notesListLocalDataModule
+import ru.maksonic.beresta.feature.notes_list.ui.core.di.notesListUiFeatureModule
+import ru.maksonic.beresta.feature.onboarding.data.di.onboardingDataFeatureModule
+import ru.maksonic.beresta.feature.onboarding.ui.core.onboardingUiFeatureModule
+import ru.maksonic.beresta.feature.sorting_sheet.data.di.sortingSheetDataFeatureModule
+import ru.maksonic.beresta.feature.sorting_sheet.ui.core.di.sortingSheetUiFeatureModule
+import ru.maksonic.beresta.feature.ui.add_folder_dialog.core.di.addFolderDialogUiFeatureModule
+import ru.maksonic.beresta.feature.ui.edit_note.core.di.editNoteUiFeatureModule
+import ru.maksonic.beresta.feature.ui.language_picker.core.di.languagePickerUiFeatureModule
+import ru.maksonic.beresta.feature.ui.search_bar.core.di.searchBarUiFeatureModule
+import ru.maksonic.beresta.feature.ui.theme_picker.core.di.themePickerUiFeatureModule
+import ru.maksonic.beresta.feature.wallpaper_picker.data.di.wallpaperPickerDataFeatureModule
+import ru.maksonic.beresta.feature.wallpaper_picker.ui.core.di.wallpaperPickerUiFeatureModule
 import ru.maksonic.beresta.language_engine.core.di.languageEngineModule
 import ru.maksonic.beresta.navigation.graph_builder.di.navigationModule
+import ru.maksonic.beresta.platform.core.di.platformCoreModule
 import ru.maksonic.beresta.screen.folders.di.foldersScreenModule
 import ru.maksonic.beresta.screen.hidden_notes.di.hiddenNotesScreenModule
 import ru.maksonic.beresta.screen.main.di.mainScreenModule
@@ -40,56 +39,55 @@ import ru.maksonic.beresta.screen.settings.appearance.di.settingsAppearanceScree
 import ru.maksonic.beresta.screen.settings.di.settingsScreenModule
 import ru.maksonic.beresta.screen.settings.notifications.di.settingsNotificationsScreenModule
 import ru.maksonic.beresta.screen.settings.security.di.settingsSecurityScreenModule
-import ru.maksonic.beresta.screen.trash_list.folders.di.trashFoldersScreenModule
-import ru.maksonic.beresta.screen.trash_list.notes.di.trashNotesScreenModule
+import ru.maksonic.beresta.screen.splash.di.splashScreenModule
+import ru.maksonic.beresta.screen.trash.folders.di.trashFoldersScreenModule
+import ru.maksonic.beresta.screen.trash.notes.di.trashNotesScreenModule
 
 /**
- * @Author maksonic on 22.04.2023
+ * @Author maksonic on 27.09.2023
  */
 class BerestaApplication : Application() {
     private val modules = listOf(
-        //core
         appModule,
-        coreModule,
-        coroutineDispatchersModule,
-        jsonConverterModule,
+        databaseModule,
+        platformCoreModule,
         languageEngineModule,
         navigationModule,
-        //data
-        dataCommonModule,
-        databaseModule,
-        notesDataModule,
-        foldersDataModule,
-        //screens
+        // Screen
+        hiddenNotesScreenModule,
+        foldersScreenModule,
         mainScreenModule,
         settingsScreenModule,
         settingsAppearanceScreenModule,
         settingsSecurityScreenModule,
         settingsNotificationsScreenModule,
-        foldersScreenModule,
-        trashNotesScreenModule,
+        splashScreenModule,
         trashFoldersScreenModule,
-        hiddenNotesScreenModule,
-        //features
-        themePickerUiFeatureModule,
-        themePickerCoreFeatureModule,
-        languagePickerUiFeatureModule,
-        languagePickerCoreFeatureModule,
-        splashScreenCoreFeatureModule,
-        onboardingCoreFeatureModule,
-        onboardingUiFeatureModule,
-        notesUiFeatureModule,
-        notesCoreFeatureModule,
+        trashNotesScreenModule,
+        // Feature
+        addFolderDialogUiFeatureModule,
+        appThemeDataFeatureModule,
+        appLangDataFeatureModule,
         editNoteUiFeatureModule,
-        topSearchBarUiFeatureModule,
-        foldersChipsRowUiFeatureModule,
-        foldersChipsRowCoreFeatureModule,
+        foldersListDataModule,
+        foldersListLocalDataModule,
+        foldersListUiFeatureModule,
+        hiddenNotesDialogDataFeatureModule,
+        hiddenNotesDialogUiFeatureModule,
+        languagePickerUiFeatureModule,
+        markerColorPickerFeatureDataModule,
+        markerColorPickerFeatureUiModule,
+        notesListDataModule,
+        notesListLocalDataModule,
+        notesListUiFeatureModule,
+        onboardingDataFeatureModule,
+        onboardingUiFeatureModule,
+        themePickerUiFeatureModule,
+        searchBarUiFeatureModule,
+        sortingSheetDataFeatureModule,
         sortingSheetUiFeatureModule,
-        listSortCoreFeatureModule,
-        hiddenNotesCoreFeatureModule,
-        hiddenNotesCoreFeaturePinFail,
-        hiddenNotesUiFeatureModule,
-        markerColorPickerFeatureModule
+        wallpaperPickerDataFeatureModule,
+        wallpaperPickerUiFeatureModule
     )
 
     override fun onCreate() {

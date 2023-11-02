@@ -1,20 +1,20 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = module.screen.hiddenNotes.namespace
-    compileSdk = AndroidConfig.compileSdk
+    namespace = module.Screen.HiddenNotes.namespace
+    compileSdk = AndroidConfig.COMPILE_SDK
 
     defaultConfig {
-        minSdk = AndroidConfig.minSdk
-        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
+        minSdk = AndroidConfig.MIN_SDK
+        testInstrumentationRunner = AndroidConfig.TEST_RUNNER
     }
 
     buildTypes {
-        getByName(BuildConfig.Type.current) {
-            isMinifyEnabled = AndroidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.CURRENT) {
+            isMinifyEnabled = AndroidConfig.IS_MINIFY
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -23,12 +23,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = AndroidConfig.javaVersion
-        targetCompatibility = AndroidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.JAVA_VERSION
+        targetCompatibility = AndroidConfig.JAVA_VERSION
     }
 
     kotlinOptions {
-        jvmTarget = AndroidConfig.jvmTarget
+        jvmTarget = AndroidConfig.JVM_TARGET
     }
 
     buildFeatures {
@@ -36,7 +36,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.KOTLIN_COMPILER_EXT
     }
 
     packaging {
@@ -47,26 +47,32 @@ android {
 }
 
 dependencies {
-    implementation(project(module.primary.core.path))
-    implementation(project(module.primary.elm.path))
-    implementation(project(module.primary.data.common.path))
-    implementation(project(module.primary.languageEngine.shell.path))
-    implementation(project(module.primary.navigation.router.path))
-    implementation(project(module.primary.ui.theme.path))
-    implementation(project(module.primary.ui.widget.path))
-    implementation(project(module.common.coroutineDispatchers.path))
-    implementation(project(module.feature.searchBar.api.path))
-    implementation(project(module.feature.notes.api.path))
-    implementation(project(module.feature.sortingSheet.api.path))
-    implementation(project(module.feature.editNote.api.path))
-    implementation(project(module.feature.hiddenNotesDialog.api.path))
-    implementation(platform(libs.compose.bom))
+    implementation(project(module.Common.Core.path))
+    implementation(project(module.Common.Domain.path))
+    implementation(project(module.Common.UiKit.path))
+    implementation(project(module.Common.UiTheme.path))
+    implementation(project(module.LanguageEngine.Shell.path))
+    implementation(project(module.Platform.Elm.path))
+    implementation(project(module.Platform.Navigation.Router.path))
+    implementation(project(module.Feature.EditNote.Ui.Api.path))
+    implementation(project(module.Feature.HiddenNotesDialog.Ui.Api.path))
+    implementation(project(module.Feature.HiddenNotesDialog.Domain.path))
+    implementation(project(module.Feature.NotesList.Domain.path))
+    implementation(project(module.Feature.NotesList.Ui.Api.path))
+    implementation(project(module.Feature.SearchBar.Ui.Api.path))
+    implementation(project(module.Feature.SortingSheet.Domain.path))
+    implementation(project(module.Feature.SortingSheet.Ui.Api.path))
+    implementation(project(module.Feature.MarkerColorPicker.Domain.path))
+    implementation(project(module.Feature.WallpaperPicker.Domain.path))
+    implementation(project(module.Feature.WallpaperPicker.Ui.Api.path))
     implementation(libs.activity.compose)
-    implementation(libs.lifecycle.compose)
-    implementation(libs.material3)
-    implementation(libs.ui)
-    implementation(libs.ui.tooling.preview)
+    implementation(libs.compose.constraint.layout)
+    implementation(libs.compose.lifecycle)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.koin.android)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
 }

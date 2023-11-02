@@ -1,16 +1,16 @@
 package ru.maksonic.beresta.screen.folders.core
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.Loading
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedFailure
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
-import ru.maksonic.beresta.elm.core.ElmUpdate
-import ru.maksonic.beresta.elm.core.Sandbox
+import ru.maksonic.beresta.feature.folders_list.ui.api.unselectAll
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.Loading
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedFailure
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedSuccess
+import ru.maksonic.beresta.platform.elm.core.ElmUpdate
+import ru.maksonic.beresta.platform.elm.core.Sandbox
 
 /**
  * @Author maksonic on 03.04.2023
  */
-private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
+private typealias Update = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 
 class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
@@ -23,64 +23,72 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         private const val MINIMAL_FOR_LOADING_ITEMS_COUNT = 2000
     }
 
-    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Ui.RetryFetchData -> retryFetchData(model)
-        is Msg.Inner.FetchedFoldersData -> fetchedFoldersWithNotes(model, msg)
-        is Msg.Inner.FetchedDataError -> fetchedDataError(model, msg)
+    override fun update(msg: Msg, model: Model): Update = when (msg) {
+        is Msg.Inner.FetchedDataSuccess -> fetchedDataSuccess(model, msg)
+        is Msg.Inner.FetchedDataFail -> fetchedDataFail(model, msg)
+        is Msg.Ui.OnRetryFetchDataClicked -> retryFetchData(model)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Ui.OnTopBarSortFolderClicked -> onTopBarSortFoldersClicked(model)
         is Msg.Ui.OnFolderClicked -> onFolderClicked(model, msg)
-        is Msg.Ui.OnFolderLongPressed -> onFolderLongClicked(model, msg)
+        is Msg.Ui.OnFolderLongClicked -> onFolderLongClicked(model, msg)
         is Msg.Ui.CancelSelectionState -> onCancelSelectionClicked(model)
         is Msg.Ui.OnTopBarSelectAllClicked -> onSelectAllFoldersClicked(model)
         is Msg.Ui.OnAddNewFolderClicked -> onAddNewFolderClicked(model)
-        is Msg.Ui.OnBottomBarPinSelectedClicked -> onBarPinSelectedClicked(model)
-        is Msg.Ui.OnBottomBarRemoveSelectedClicked -> onBarMoveSelectedToTrashClicked(model, msg)
-        is Msg.Ui.OnBottomBarEditSelectedClicked -> onBarEditClicked(model)
+        is Msg.Ui.OnCloseEditFolderDialogClicked -> onCloseEditFolderDialogClicked(model)
+        is Msg.Ui.OnBottomBarPinSelectedClicked -> onBottomBarPinSelectedClicked(model)
+        is Msg.Ui.OnBottomBarRemoveSelectedClicked -> onBottomBarRemoveSelectedClicked(model, msg)
+        is Msg.Ui.OnBottomBarEditSelectedClicked -> onBottomBarEditSelectedClicked(model)
         is Msg.Ui.OnSnackUndoRemoveFoldersClicked -> onSnackBarUndoRemoveClicked(model)
-        //modal sheet
         is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
-        //hidden notes
-        is Msg.Ui.OnToHiddenNotesClicked -> onToHiddenNotesClicked(model)
+        is Msg.Inner.UpdatedHiddenNotesDialogVisibility -> {
+            updatedHiddenNotesDialogVisibility(model, msg)
+        }
+
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
-        is Msg.Ui.OnHideHiddenNotesDialogClicked -> onHideHiddenNotesDialogClicked(model)
     }
 
-    private fun retryFetchData(model: Model): UpdateResult = ElmUpdate(
-        model.copy(base = model.base.Loading), commands = setOf(Cmd.RetryFetchFoldersWithNotes)
+    private fun fetchedDataSuccess(
+        model: Model,
+        msg: Msg.Inner.FetchedDataSuccess
+    ): Update = ElmUpdate(
+        model = model.copy(
+            folders = model.folders.copy(
+                state = model.folders.state.loadedSuccess,
+                collection = msg.folders,
+                isNotesMoving = msg.isNotesMoving
+            ),
+            sortState = msg.sortState
+        )
     )
 
-    private fun fetchedFoldersWithNotes(
-        model: Model,
-        msg: Msg.Inner.FetchedFoldersData
-    ): UpdateResult =
-        ElmUpdate(
-            model = model.copy(
-                base = model.base.loadedSuccess,
-                isMoveNotesToFolder = msg.isMoveNotesToFolderState,
-                folders = msg.folders
-            )
+    private fun fetchedDataFail(model: Model, msg: Msg.Inner.FetchedDataFail): Update = ElmUpdate(
+        model.copy(
+            folders = model.folders.copy(state = model.folders.state.loadedFailure(msg.errorMsg))
         )
+    )
 
-    private fun fetchedDataError(model: Model, msg: Msg.Inner.FetchedDataError): UpdateResult =
-        ElmUpdate(model.copy(base = model.base.loadedFailure(msg.errorMsg)))
+    private fun retryFetchData(model: Model): Update = ElmUpdate(
+        model.copy(folders = model.folders.copy(state = model.folders.state.Loading)),
+        commands = setOf(Cmd.RetryFetchData)
+    )
 
-    private fun onTopBarBackPressed(model: Model): UpdateResult =
+    private fun onTopBarBackPressed(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateBack))
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun onTopBarSortFoldersClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onTopBarSortFoldersClicked(model: Model): Update = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
                 isVisible = true,
                 content = ModalSheetContent.SORT_FOLDERS
-            )
+            ),
+            isVisibleEditFolderDialog = false,
+            isVisibleHiddenNotesDialog = false
         )
     )
 
-    private fun onFolderClicked(model: Model, msg: Msg.Ui.OnFolderClicked): UpdateResult =
-        if (model.isSelectionState)
+    private fun onFolderClicked(model: Model, msg: Msg.Ui.OnFolderClicked): Update =
+        if (model.folders.isSelection)
             baseOnFolderAction(model, msg.id)
         else {
             ElmUpdate(
@@ -90,108 +98,143 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
             )
         }
 
-    private fun onFolderLongClicked(model: Model, msg: Msg.Ui.OnFolderLongPressed): UpdateResult =
+    private fun onFolderLongClicked(model: Model, msg: Msg.Ui.OnFolderLongClicked): Update =
         baseOnFolderAction(model, msg.id)
 
-    private fun baseOnFolderAction(model: Model, folderId: Long): UpdateResult {
-        val selectedList = model.selectedList.toMutableSet().also { list ->
-            model.folders.data.forEach { folder ->
-                val isCanSelected = folderId == folder.id && folder.isSelectable
-                if (isCanSelected) {
-                    if (list.contains(folder)) list.remove(folder) else list.add(folder)
-                }
-            }
-        }.toSet()
-
+    private fun baseOnFolderAction(model: Model, folderId: Long): Update {
+        val folders = model.folders.collection.copy(model.folders.collection.data.map { note ->
+            val isSelected = if (note.id == folderId) !note.isSelected else note.isSelected
+            note.copy(isSelected = isSelected)
+        })
+        val selectedList = folders.data.filter { it.isSelected }
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
             if (this) !selectedList.map { it.isPinned }.contains(false) else false
         }
         val isSticky = folderId == STICKY_START_FOLDER_ID || folderId == STICKY_END_FOLDER_ID
-        val updateResult = if (model.isMoveNotesToFolder || isSticky) model else model.copy(
-            selectedList = selectedList,
-            isSelectionState = true,
-            isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
+        val updateResult = if (model.folders.isNotesMoving || isSticky) model else model.copy(
+            folders = model.folders.copy(collection = folders, isSelection = true),
+            isVisibleUnpinBottomBarIcon = isVisibleUnpinButton,
+            modalSheet = model.modalSheet.copy(
+                isVisible = false, content = ModalSheetContent.NOTHING
+            ),
+            isVisibleEditFolderDialog = false
         )
         return ElmUpdate(updateResult)
     }
 
-    private fun onCancelSelectionClicked(model: Model): UpdateResult =
-        ElmUpdate(model.copy(selectedList = emptySet(), isSelectionState = false))
+    private fun onCancelSelectionClicked(model: Model): Update = ElmUpdate(
+        model.copy(
+            folders = model.folders.copy(
+                collection = model.folders.collection.unselectAll(), isSelection = false
+            ),
+            isVisibleHiddenNotesDialog = false
+        )
+    )
 
-    private fun onSelectAllFoldersClicked(model: Model): UpdateResult {
-        val withoutStickyItemsList = model.folders.data.filter { it.isSelectable }
-        val selectedList = model.selectedList.toMutableSet().also { list ->
-            if (list.containsAll(withoutStickyItemsList)) list.clear()
-            else list.addAll(withoutStickyItemsList)
-        }.toSet()
-
+    private fun onSelectAllFoldersClicked(model: Model): Update {
+        val allSelected =
+            model.folders.collection.data.filter { it.isSelectable }.all { it.isSelected }
+        val folders = model.folders.collection.data.map { item ->
+            if (item.isSelectable) item.copy(isSelected = !allSelected) else item
+        }
+        val selectedList = folders.filter { it.isSelected }
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
             if (this) !selectedList.map { it.isPinned }.contains(false) else false
         }
 
         return ElmUpdate(
             model.copy(
-                selectedList = selectedList, isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
+                isVisibleUnpinBottomBarIcon = isVisibleUnpinButton,
+                folders = model.folders.copy(collection = model.folders.collection.copy(folders))
             )
         )
     }
 
-    private fun onAddNewFolderClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.AddNewFolder))
+    private fun onAddNewFolderClicked(model: Model): Update = ElmUpdate(
+        model.copy(
+            isVisibleEditFolderDialog = true,
+            folders = model.folders.copy(
+                isSelection = false, collection = model.folders.collection.unselectAll()
+            )
+        ),
+        effects = setOf(Eff.AddNewFolder)
+    )
 
-    private fun onBarPinSelectedClicked(model: Model): UpdateResult {
-        return ElmUpdate(
-            model = model.copy(selectedList = emptySet()),
-            commands = setOf(Cmd.UpdatePinnedFoldersInCache(model.selectedList))
+    private fun onCloseEditFolderDialogClicked(model: Model): Update =
+        ElmUpdate(model.copy(isVisibleEditFolderDialog = false))
+
+    private fun onBottomBarPinSelectedClicked(model: Model): Update = ElmUpdate(
+        model = model.copy(
+            folders = model.folders.copy(
+                collection = model.folders.collection.unselectAll(),
+                isSelection = false
+            )
+        ),
+        commands = setOf(
+            Cmd.UpdatePinnedFolders(model.folders.collection.data.filter { it.isSelected })
         )
-    }
+    )
 
-    private fun onBarMoveSelectedToTrashClicked(
+    private fun onBottomBarRemoveSelectedClicked(
         model: Model,
         msg: Msg.Ui.OnBottomBarRemoveSelectedClicked
-    ): UpdateResult {
-        val isShowLoading = model.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
-        // Set initial sticky folder to current if previous current folder was moved to trash.
-        val isWasRemovedCurrentFolder =
-            model.selectedList.map { folder -> folder.id == msg.currentSelectedFolderId }
-                .contains(true)
+    ): Update {
+        val selectedList = model.folders.collection.data.filter { it.isSelected }
 
-        val currentSelectedId = if (isWasRemovedCurrentFolder) STICKY_START_FOLDER_ID
+        val isRemovedCurrentFolder =
+            selectedList.map { folder -> folder.id == msg.currentSelectedFolderId }.contains(true)
+
+        val currentSelectedId = if (isRemovedCurrentFolder) STICKY_START_FOLDER_ID
         else msg.currentSelectedFolderId
 
         return ElmUpdate(
-            model = model.copy(
-                base = model.base.copy(isLoading = isShowLoading),
-                selectedList = emptySet(),
-                removedList = model.selectedList,
-                isSelectionState = false
+            model.copy(
+                folders = model.folders.copy(
+                    state = model.folders.state.copy(
+                        isLoading = selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
+                    ),
+                    collection = model.folders.collection.unselectAll(),
+                    removedList = selectedList,
+                    isSelection = false,
+                ),
             ),
             commands = setOf(
-                Cmd.RemoveSelected(model.selectedList.toList()),
+                Cmd.RemoveSelected(selectedList),
                 Cmd.UpdateCurrentSelectedFolder(currentSelectedId)
             ),
-            effects = setOf(Eff.ShowSnackBar("${model.selectedList.count()}"))
+            effects = setOf(
+                Eff.ShowSnackBar("${selectedList.count()}")
+            )
         )
     }
 
-    private fun onBarEditClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.UpdateFolder(model.selectedList.first().id)))
+    private fun onBottomBarEditSelectedClicked(model: Model): Update = ElmUpdate(
+        model = model.copy(isVisibleEditFolderDialog = true),
+        effects = setOf(Eff.UpdateFolder(model.folders.collection.data.first { it.isSelected }.id))
+    )
 
-    private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
-        val restored = model.removedList.map { folder -> folder.copy(isMovedToTrash = false) }
+    private fun onSnackBarUndoRemoveClicked(model: Model): Update {
+        val restored = model.folders.removedList.map { note -> note.copy(isMovedToTrash = false) }
         val isShowLoading = restored.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
 
         return ElmUpdate(
-            model = model.copy(base = model.base.copy(isLoading = isShowLoading)),
+            model.copy(
+                folders = model.folders.copy(
+                    state = model.folders.state.copy(isLoading = isShowLoading),
+                    isSelection = false,
+                    collection = model.folders.collection.copy(
+                        model.folders.collection.data.map { it.copy(isSelected = false) }
+                    )
+                )
+            ),
             commands = setOf(Cmd.UndoRemovedFolders(restored))
         )
     }
 
-    private fun onHideModalBottomSheet(model: Model): UpdateResult =
+    private fun onHideModalBottomSheet(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
+    private fun hiddenModalBottomSheet(model: Model): Update = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
                 isVisible = false, content = ModalSheetContent.NOTHING
@@ -199,13 +242,12 @@ class FoldersScreenSandbox(program: FoldersListProgram) : Sandbox<Model, Msg, Cm
         )
     )
 
-    private fun onToHiddenNotesClicked(model: Model): UpdateResult =
-        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = true))
+    private fun updatedHiddenNotesDialogVisibility(
+        model: Model,
+        msg: Msg.Inner.UpdatedHiddenNotesDialogVisibility
+    ): Update =
+        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = msg.isVisible))
 
-    private fun onHideHiddenNotesDialogClicked(model: Model): UpdateResult =
-        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = false))
-
-    private fun navigatedToHiddenNotes(model: Model): UpdateResult =
+    private fun navigatedToHiddenNotes(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToHiddenNotes))
-
 }

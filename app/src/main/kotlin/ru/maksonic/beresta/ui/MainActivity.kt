@@ -1,110 +1,117 @@
 package ru.maksonic.beresta.ui
 
+import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.maksonic.beresta.common.core.ScreenCaptureManager
+import ru.maksonic.beresta.common.ui_kit.bar.system.SystemStatusBarHeight
+import ru.maksonic.beresta.common.ui_theme.AppThemeUi
+import ru.maksonic.beresta.common.ui_theme.BaseTheme
+import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.colors.background
+import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.core.MainActivitySandbox
 import ru.maksonic.beresta.core.Msg
-import ru.maksonic.beresta.core.secure.ScreenCaptureManager
-import ru.maksonic.beresta.core.system.VibrationPerformer
 import ru.maksonic.beresta.navigation.graph_builder.GraphBuilder
-import ru.maksonic.beresta.navigation.router.AbstractNavigator
-import ru.maksonic.beresta.navigation.router.Destination
-import ru.maksonic.beresta.ui.theme.BaseTheme
-import ru.maksonic.beresta.ui.theme.SystemComponentColor
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.widget.surface.SurfacePro
+import ru.maksonic.beresta.navigation.router.core.AbstractNavigator
+import ru.maksonic.beresta.navigation.router.core.Destination
 
-class MainActivity : ComponentActivity() {
-
+class MainActivity : FragmentActivity() {
     private val sandbox: MainActivitySandbox by viewModel()
     private val navigator: AbstractNavigator by inject()
     private val graphBuilder: GraphBuilder by inject()
-    private val splashVisibility = MutableStateFlow(true)
     private val screenCaptureManager: ScreenCaptureManager by inject()
-    private val vibrationPerformer: VibrationPerformer by inject()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        screenCaptureManager.initPermission(window, lifecycleScope)
-        updateSplashState()
         installSplashScreen()
+        screenCaptureManager.init(window, lifecycleScope)
         super.onCreate(savedInstanceState)
-        fixChinesVendorEmptyScreen()
 
         setContent {
             navigator.init(rememberNavController())
 
-            val model = sandbox.model.collectAsStateWithLifecycle(lifecycle)
-            val isDarkTheme = isSystemInDarkTheme()
-
-            LaunchedEffect(Unit) {
-                vibrationPerformer.init()
+            val model by sandbox.model.collectAsStateWithLifecycle(lifecycle)
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            val isDarkMode = when (model.currentTheme) {
+                AppThemeUi.SYSTEM -> isSystemInDarkTheme
+                AppThemeUi.DAY -> false
+                AppThemeUi.NIGHT -> true
+                AppThemeUi.DARK -> true
             }
 
-            LaunchedEffect(isDarkTheme) {
-                sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkTheme))
+            LaunchedEffect(isSystemInDarkTheme) {
+                sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkMode))
             }
 
+            LaunchedEffect(model.currentTheme) {
+                sandbox.send(Msg.Inner.UpdatedThemeDarkModeValue(isDarkMode))
+            }
 
             BaseTheme(
-                theme = model.value.currentTheme,
-                darkMode = model.value.darkMode,
-                provideLanguages = model.value.languageProvider,
-                palette = model.value.themePalette,
-                animationVelocity = model.value.animationVelocity
+                theme = model.currentTheme,
+                darkMode = model.darkMode,
+                palette = model.paletteContainer,
+                languages = model.languageProvider,
+                animationVelocity = model.animationVelocity
             ) {
+                LaunchedEffect(model.darkMode.value) {
+                    val navigationBarStyle = with(Color.TRANSPARENT) {
+                        if (model.darkMode.value) SystemBarStyle.dark(this)
+                        else SystemBarStyle.light(this, this)
+                    }
 
-                SystemComponentColor(model.value.currentTheme, model.value.darkMode.value)
+                    enableEdgeToEdge(
+                        statusBarStyle = SystemBarStyle.auto(
+                            lightScrim = Color.TRANSPARENT,
+                            darkScrim = Color.TRANSPARENT,
+                            detectDarkMode = { model.darkMode.value }
+                        ),
+                        navigationBarStyle = navigationBarStyle
+                    )
+                }
 
-                SurfacePro(color = surface) {
-                    val velocity = rememberUpdatedState(Theme.animVelocity.navigationVelocity)
+                Scaffold(containerColor = background) { paddings ->
+                    val screenOrientation = LocalConfiguration.current.orientation
+                    val navigationVelocity = Theme.animVelocity.navigation
+                    val velocity = Theme.animVelocity.navigation.fade
+                    val landscapePadding =
+                        if (screenOrientation == Configuration.ORIENTATION_LANDSCAPE)
+                            Modifier.padding(end = SystemStatusBarHeight.plus(dp4)) else Modifier
 
                     NavHost(
                         navController = navigator.navController,
                         startDestination = Destination.route,
-                        modifier = Modifier
-                            .fillMaxSize()
+                        enterTransition = { fadeIn(tween(velocity)) },
+                        exitTransition = { fadeOut(tween(velocity)) },
+                        modifier = landscapePadding
                     ) {
-                        graphBuilder.buildGraph(graphBuilder = this, velocity.value)
+                        graphBuilder.buildGraph(graphBuilder = this, navigationVelocity)
                     }
                 }
             }
-        }
-    }
-
-    private fun updateSplashState() {
-        lifecycleScope.launch {
-            splashVisibility.update { true }
-            delay(50)
-            splashVisibility.update { false }
-        }
-    }
-
-    //On some Chinese devices, when launching app or switching the theme, a blank screen appears.
-    private fun fixChinesVendorEmptyScreen() {
-        lifecycleScope.launch {
-            delay(50)
-            window.setBackgroundDrawableResource(android.R.color.transparent)
         }
     }
 }

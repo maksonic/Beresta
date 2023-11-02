@@ -9,26 +9,26 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.feature.notes.api.NotesApi
+import ru.maksonic.beresta.common.ui_kit.bar.top.TopAppBarCollapsingLarge
+import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
+import ru.maksonic.beresta.common.ui_theme.AppAnimationVelocity
+import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.colors.background
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NotesCardUiApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Model
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.AnimationsSettingItem
 import ru.maksonic.beresta.screen.settings.appearance.ui.widget.items.CardSettingItem
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
-import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
-import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
  * @Author maksonic on 07.07.2023
@@ -36,15 +36,16 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Content(
-    model: State<Model>,
-    send: SendMessage,
+    model: Model,
+    send: Send,
+    modalBottomSheetState: SheetState,
     modifier: Modifier = Modifier,
-    noteCardApi: NotesApi.Card.Ui = koinInject()
+    notesCardStateStoreUiApi: NotesCardUiApi.CardState = koinInject()
 ) {
     val scrollState = rememberScrollState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    val currentSheetContent = rememberUpdatedState(model.value.modalSheet.content)
+    val currentSheetContent = rememberUpdatedState(model.modalSheet.content)
 
     Box(
         modifier
@@ -79,21 +80,26 @@ internal fun Content(
                     .verticalScroll(scrollState)
                     .padding(paddings)
             ) {
-                CardSettingItem(send, noteCardApi.sharedState, model.value.currentLang)
+
+                CardSettingItem(
+                    send = send,
+                    noteCardDate = model.cardDate,
+                    noteCardState = notesCardStateStoreUiApi.sharedState,
+                )
 
                 AnimationsSettingItem(send, currentVelocityTitle)
             }
         }
 
-        if (model.value.modalSheet.isVisible) {
-            ModalBottomSheetDefault(
-                sheetState = model.value.modalSheet.state,
+        if (model.modalSheet.isVisible) {
+            ModalBottomSheetContainer(
+                sheetState = modalBottomSheetState,
                 onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
             ) {
                 MultipleModalBottomSheetContent(
                     send = send,
                     currentSheetContent = currentSheetContent,
-                    noteCardState = noteCardApi.sharedState,
+                    noteCardState = notesCardStateStoreUiApi.sharedState,
                     currentVelocityTitle = currentVelocityTitle
                 )
             }

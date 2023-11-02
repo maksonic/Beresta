@@ -32,19 +32,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ru.maksonic.beresta.common.ui_theme.AppAnimationVelocity
+import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.colors.onSurface
+import ru.maksonic.beresta.common.ui_theme.colors.primary
+import ru.maksonic.beresta.common.ui_theme.colors.widget.SliderPrimaryColors
+import ru.maksonic.beresta.common.ui_theme.isDisabled
+import ru.maksonic.beresta.common.ui_theme.provide.dp16
+import ru.maksonic.beresta.common.ui_theme.provide.dp32
+import ru.maksonic.beresta.common.ui_theme.provide.dp8
+import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.appearance.core.Msg
-import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.DefaultSliderColors
-import ru.maksonic.beresta.ui.theme.color.onSurface
-import ru.maksonic.beresta.ui.theme.color.primary
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
-import ru.maksonic.beresta.ui.theme.component.TextDesign
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.theme.component.dp32
-import ru.maksonic.beresta.ui.theme.component.isDisabled
-import ru.maksonic.beresta.ui.widget.button.ModalSheetBottomButtonsRow
+import ru.maksonic.beresta.screen.settings.appearance.ui.Send
 
 /**
  * @Author maksonic on 14.07.2023
@@ -55,10 +57,10 @@ private const val SLIDER_STEP = 3
 
 @Composable
 internal fun AnimationsVelocityPickerSheetContent(
-    send: SendMessage,
+    send: Send,
     currentVelocityTitle: State<String>
 ) {
-    Column {
+    Column(Modifier.padding(bottom = dp32)) {
         BaseLinesPicker(currentVelocityTitle) { marker ->
             val velocity = when (marker) {
                 1F -> AppAnimationVelocity.Key.SLOW
@@ -69,11 +71,6 @@ internal fun AnimationsVelocityPickerSheetContent(
             }
             send(Msg.Inner.UpdatedAnimationsVelocity(velocity))
         }
-
-        ModalSheetBottomButtonsRow(
-            onLeftClicked = { send(Msg.Ui.OnModalSheetAnimationsVelocityDefaultClicked) },
-            onRightClicked = { send(Msg.Ui.OnModalSheetAcceptClicked) }
-        )
     }
 }
 
@@ -91,6 +88,14 @@ private fun BaseLinesPicker(
             .padding(start = dp32, end = dp32),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = text.settingsAppearance.itemAnimVelocity,
+            style = TextDesign.headlineSmall,
+            textAlign = TextAlign.Center,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = dp8)
+        )
 
         RotatableBox(currentVelocityState, modifier)
 
@@ -100,11 +105,11 @@ private fun BaseLinesPicker(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Text(text = "x0", style = TextDesign.captionNormal)
+            Text(text = "x0", style = TextDesign.labelSmall)
 
-            Text(text = currentVelocityTitle.value, style = TextDesign.title.copy(onSurface))
+            Text(text = currentVelocityTitle.value, style = TextDesign.titleMedium.copy(onSurface))
 
-            Text(text = "x2", style = TextDesign.captionNormal)
+            Text(text = "x2", style = TextDesign.labelSmall)
         }
 
         Slider(
@@ -112,7 +117,7 @@ private fun BaseLinesPicker(
             onValueChange = { updatePosition(it) },
             valueRange = ANIM_DISABLED..ANIM_VERY_FAST,
             steps = SLIDER_STEP,
-            colors = DefaultSliderColors,
+            colors = SliderPrimaryColors,
             modifier = modifier.fillMaxWidth()
         )
     }

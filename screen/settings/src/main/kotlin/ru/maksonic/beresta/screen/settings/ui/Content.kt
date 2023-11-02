@@ -10,12 +10,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import ru.maksonic.beresta.common.ui_kit.bar.top.TopAppBarCollapsingLarge
+import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
+import ru.maksonic.beresta.common.ui_theme.colors.background
+import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.core.Model
 import ru.maksonic.beresta.screen.settings.core.Msg
@@ -23,10 +27,6 @@ import ru.maksonic.beresta.screen.settings.ui.widget.MultipleModalBottomSheetCon
 import ru.maksonic.beresta.screen.settings.ui.widget.items.AccountSettingsItem
 import ru.maksonic.beresta.screen.settings.ui.widget.items.GeneralSettingsItem
 import ru.maksonic.beresta.screen.settings.ui.widget.items.SupportSettingsItem
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.dp16
-import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
-import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
  * @Author maksonic on 26.07.2023
@@ -35,10 +35,10 @@ import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 @Composable
 internal fun Content(
     model: Model,
-    send: SendMessage,
+    send: Send,
+    modalBottomSheetState: SheetState,
     modifier: Modifier = Modifier
 ) {
-    val currentSheetContent = rememberUpdatedState(model.currentSheetContent)
     val scrollState = rememberScrollState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -55,26 +55,24 @@ internal fun Content(
             containerColor = background,
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
-
-            Box(modifier.padding(paddings)) {
-                Column(
-                    modifier = modifier
-                        .verticalScroll(scrollState)
-                        .fillMaxSize()
-                ) {
-                    GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
-                    AccountSettingsItem(send)
-                    SupportSettingsItem(send)
-                    Spacer(modifier.size(dp16))
-                }
+            Column(
+                modifier = modifier
+                    .verticalScroll(scrollState)
+                    .padding(paddings)
+                    .fillMaxSize()
+            ) {
+                GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
+                AccountSettingsItem(send)
+                SupportSettingsItem(send)
+                Spacer(modifier.size(dp16))
             }
         }
-        if (model.isVisibleModalSheet) {
-            ModalBottomSheetDefault(
-                sheetState = model.modalBottomSheetState,
+        if (model.modalSheet.isVisible) {
+            ModalBottomSheetContainer(
+                sheetState = modalBottomSheetState,
                 onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
             ) {
-                MultipleModalBottomSheetContent(send, currentSheetContent)
+                MultipleModalBottomSheetContent(model)
             }
         }
     }

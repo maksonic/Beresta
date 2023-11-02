@@ -2,43 +2,43 @@ package ru.maksonic.beresta.screen.settings.ui.widget.items
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberUpdatedState
+import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
+import ru.maksonic.beresta.common.ui_kit.icons.Appearance
+import ru.maksonic.beresta.common.ui_kit.icons.Language
+import ru.maksonic.beresta.common.ui_kit.icons.Security
+import ru.maksonic.beresta.common.ui_kit.icons.ThemeContrast
+import ru.maksonic.beresta.common.ui_kit.icons.ThemeLight
+import ru.maksonic.beresta.common.ui_kit.icons.ThemeNight
+import ru.maksonic.beresta.common.ui_kit.icons.notifications.Notifications
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.core.Msg
-import ru.maksonic.beresta.screen.settings.ui.SendMessage
+import ru.maksonic.beresta.screen.settings.ui.Send
 import ru.maksonic.beresta.screen.settings.ui.widget.BaseSettingComponent
-import ru.maksonic.beresta.ui.theme.AppTheme
-import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.Appearance
-import ru.maksonic.beresta.ui.theme.icons.Language
-import ru.maksonic.beresta.ui.theme.icons.notifications.Notifications
-import ru.maksonic.beresta.ui.theme.icons.Security
-import ru.maksonic.beresta.ui.theme.icons.ThemeContrast
-import ru.maksonic.beresta.ui.theme.icons.ThemeLight
-import ru.maksonic.beresta.ui.theme.icons.ThemeNight
-import ru.maksonic.beresta.ui.widget.button.settings.RightPart
-import ru.maksonic.beresta.ui.widget.button.settings.SettingComponentItem
-import ru.maksonic.beresta.ui.widget.button.settings.SettingItem
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.RightPart
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingComponentItem
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingItem
+import ru.maksonic.beresta.common.ui_theme.AppThemeUi
 
 /**
  * @Author maksonic on 20.02.2023
  */
 @Composable
-internal fun GeneralSettingsItem(send: SendMessage, theme: AppTheme, isDarkTheme: Boolean) {
+internal fun GeneralSettingsItem(send: Send, theme: AppThemeUi, isDarkTheme: Boolean) {
     val themeHint = rememberUpdatedState(
         when (theme) {
-            AppTheme.SYSTEM -> text.settings.titleThemeSystem
-            AppTheme.LIGHT -> text.settings.titleThemeLight
-            AppTheme.DARK -> text.settings.themeTitleNight
-            AppTheme.HIGH_CONTRAST -> text.settings.themeTitleHighContrast
+            AppThemeUi.SYSTEM -> text.settings.titleThemeSystem
+            AppThemeUi.DAY -> text.settings.titleThemeLight
+            AppThemeUi.NIGHT -> text.settings.themeTitleNight
+            AppThemeUi.DARK -> text.settings.themeTitleDark
         }
     )
 
     val themePrefixIcon = rememberUpdatedState(
         when (theme) {
-            AppTheme.SYSTEM -> if (isDarkTheme) AppIcon.ThemeNight else AppIcon.ThemeLight
-            AppTheme.LIGHT -> AppIcon.ThemeLight
-            AppTheme.DARK -> AppIcon.ThemeNight
-            AppTheme.HIGH_CONTRAST -> AppIcon.ThemeContrast
+            AppThemeUi.SYSTEM -> if (isDarkTheme) AppIcon.ThemeNight else AppIcon.ThemeLight
+            AppThemeUi.DAY -> AppIcon.ThemeLight
+            AppThemeUi.NIGHT -> AppIcon.ThemeNight
+            AppThemeUi.DARK -> AppIcon.ThemeContrast
         }
     )
 

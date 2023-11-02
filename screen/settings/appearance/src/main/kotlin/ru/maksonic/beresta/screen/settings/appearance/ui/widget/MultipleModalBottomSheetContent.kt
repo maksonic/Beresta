@@ -6,16 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.maksonic.beresta.feature.notes.api.ui.NoteCardUiState
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NoteCardUiState
 import ru.maksonic.beresta.screen.settings.appearance.core.ModalSheetContent
-import ru.maksonic.beresta.screen.settings.appearance.ui.SendMessage
+import ru.maksonic.beresta.screen.settings.appearance.ui.Send
 
 /**
  * @Author maksonic on 08.07.2023
  */
 @Composable
 internal fun MultipleModalBottomSheetContent(
-    send: SendMessage,
+    send: Send,
     currentSheetContent: State<ModalSheetContent>,
     noteCardState: State<NoteCardUiState>,
     currentVelocityTitle: State<String>,

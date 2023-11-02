@@ -1,0 +1,98 @@
+{
+  "russian": {
+    "onboardings": [
+      {
+        "id": 0,
+        "title": "Заголовок 1 на русском",
+        "description": "1 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+      },
+      {
+        "id": 1,
+        "title": "Заголовок 2 на русском",
+        "description": "2 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+      },
+      {
+        "id": 2,
+        "title": "Заголовок 3 на русском",
+        "description": "3 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
+      },
+      {
+        "id": 3,
+        "title": "Синхронизируйте данные с облаком",
+        "description": "Подключите свой Google аккаунт, чтобы иметь возможность восстановить заметки, а так же использовать их на других устройствах."
+      }
+    ]
+  },
+  "english": {
+    "onboardings": [
+      {
+        "id": 0,
+        "title": "Title 1 on english",
+        "description": "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      },
+      {
+        "id": 1,
+        "title": "Title 2 on english",
+        "description": "2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      },
+      {
+        "id": 2,
+        "title": "Title 3 on english",
+        "description": "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      },
+      {
+        "id": 3,
+        "title": "Sync your data to the cloud",
+        "description": "Connect your Google account to be able to restore notes and use them on other devices."
+      }
+    ]
+  },
+  "chinese": {
+    "onboardings": [
+      {
+        "id": 0,
+        "title": "标头 1 用中文表达",
+        "description": "1 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+      },
+      {
+        "id": 1,
+        "title": "标头 2 用中文表达",
+        "description": "2 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+      },
+      {
+        "id": 2,
+        "title": "标头 3 用中文表达",
+        "description": "3 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
+      },
+      {
+        "id": 3,
+        "title": "将您的数据同步到云端",
+        "description": "连接您的 Google 帐户，以便能够恢复笔记并在其他设备上使用它们。"
+      }
+    ]
+  },
+  "chinese_tr": {
+    "onboardings": [
+      {
+        "id": 0,
+        "title": "俄語標題 1",
+        "description": "1 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
+      },
+      {
+        "id": 1,
+        "title": "俄語標題 2",
+        "description": "2 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
+      },
+      {
+        "id": 2,
+        "title": "俄語標題 3",
+        "description": "3 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
+      },
+      {
+        "id": 3,
+        "title": "將您的數據同步到雲端",
+        "description": "連接您的 Google 帳戶以便能夠恢復筆記並在其他設備上使用它們。"
+      }
+    ]
+  }
+}

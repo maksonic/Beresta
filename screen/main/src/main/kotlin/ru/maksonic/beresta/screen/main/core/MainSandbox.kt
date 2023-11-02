@@ -1,83 +1,93 @@
 package ru.maksonic.beresta.screen.main.core
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.Loading
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedFailure
-import ru.maksonic.beresta.elm.core.ElmBaseModel.Companion.loadedSuccess
-import ru.maksonic.beresta.elm.core.ElmUpdate
-import ru.maksonic.beresta.elm.core.Sandbox
-import ru.maksonic.beresta.feature.edit_note.api.EditNoteFabState
-import ru.maksonic.beresta.feature.edit_note.api.isExpanded
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarState
-import ru.maksonic.beresta.screen.main.core.programs.ChipsDataProgram
-import ru.maksonic.beresta.screen.main.core.programs.ChipsSortProgram
-import ru.maksonic.beresta.screen.main.core.programs.NotesDataProgram
-import ru.maksonic.beresta.screen.main.core.programs.NotesSortProgram
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.ui.api.unselectAll
+import ru.maksonic.beresta.feature.ui.edit_note.api.EditNoteFabState
+import ru.maksonic.beresta.feature.ui.edit_note.api.isExpanded
+import ru.maksonic.beresta.feature.ui.search_bar.api.SearchBarState
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.Loading
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedFailure
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedSuccess
+import ru.maksonic.beresta.platform.elm.core.ElmUpdate
+import ru.maksonic.beresta.platform.elm.core.Sandbox
+import ru.maksonic.beresta.screen.main.core.program.ChipsDataProgram
+import ru.maksonic.beresta.screen.main.core.program.ChipsSortProgram
+import ru.maksonic.beresta.screen.main.core.program.NotesDataProgram
+import ru.maksonic.beresta.screen.main.core.program.NotesSortProgram
+import ru.maksonic.beresta.screen.main.ui.SnackBarKey
 
 /**
- * @Author maksonic on 22.06.2023
+ * @Author maksonic on 15.10.2023
  */
-private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
+private typealias Update = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MainSandbox(
     notesDataProgram: NotesDataProgram,
     notesSortProgram: NotesSortProgram,
     chipsDataProgram: ChipsDataProgram,
-    chipsSortProgram: ChipsSortProgram,
+    chipsSortProgram: ChipsSortProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchNotesListFeatureState, Cmd.FetchNotesData, Cmd.FetchChipsData),
+    initialCmd = setOf(
+        Cmd.FetchNotesList,
+        Cmd.FetchNotesSortState,
+        Cmd.FetchChipsList,
+        Cmd.FetchChipsSortState
+    ),
     subscriptions = listOf(notesDataProgram, notesSortProgram, chipsDataProgram, chipsSortProgram)
 ) {
     companion object {
         private const val STICKY_START_FOLDER_ID = 1L
-        private const val STICKY_END_FOLDER_ID = 2L
-        private const val DEFAULT_NOTE_FOLDER_ID = 2L
         private const val MINIMAL_FOR_LOADING_ITEMS_COUNT = 2000
     }
 
-    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        //notes
-        is Msg.Inner.FetchedNotesData -> fetchedNotesData(model, msg)
-        is Msg.Inner.FetchedNotesError -> ElmUpdate(model)
+    override fun update(msg: Msg, model: Model): Update = when (msg) {
+        // Notes
+        is Msg.Inner.FetchedNotesSuccess -> fetchedNotesSuccess(model, msg)
+        is Msg.Inner.FetchedNotesFail -> fetchedNotesFail(model, msg)
+        is Msg.Inner.FetchedNotesSort -> fetchedNotesSort(model, msg)
         is Msg.Ui.OnNoteClicked -> onNoteClicked(model, msg)
         is Msg.Ui.OnNoteLongClicked -> onNoteLongClicked(model, msg)
         is Msg.Ui.CancelNotesSelection -> onCancelSelectionClicked(model)
-        //chips
-        is Msg.Inner.FetchedChipsData -> fetchedChipsData(model, msg)
-        is Msg.Inner.FetchedChipsError -> fetchedChipsError(model)
+        // Folders
+        is Msg.Inner.FetchedChipsSuccess -> fetchedChipsSuccess(model, msg)
+        is Msg.Inner.FetchedChipsFail -> fetchedChipsFail(model)
+        is Msg.Inner.FetchedChipsSort -> fetchedChipsSort(model, msg)
         is Msg.Ui.OnRetryFetchChipsClicked -> onRetryFetchChipsClicked(model)
+        is Msg.Ui.OnChipClicked -> onChipClicked(model, msg)
+        is Msg.Inner.ResetCurrentSelectedFolder -> resetCurrentSelectedFolder(model)
         is Msg.Ui.OnAddNewChipClicked -> onAddNewChipClicked(model)
-        //idle bottom bar actions
+        is Msg.Ui.OnCloseAddChipDialogClicked -> onCloseAddChipDialogClicked(model)
+        // Idle bottom bar actions
         is Msg.Ui.OnBottomBarSettingsClicked -> onBottomBarSettingsClicked(model)
-        is Msg.Ui.OnBottomBarFoldersClicked -> onBottomBarFoldersClicked(model)
-        is Msg.Ui.OnChangeGridViewClicked -> onSearchBarGridViewClicked(model, msg)
-        is Msg.Ui.OnBottomBarSortNotesClicked -> onBottomBarSortNotesClicked(model)
         is Msg.Ui.OnBottomBarTrashClicked -> onBottomBarTrashClicked(model)
-        //selected bottom bar actions
+        is Msg.Ui.OnBottomBarFoldersClicked -> onBottomBarFoldersClicked(model)
+        is Msg.Ui.OnBottomBarSortNotesClicked -> onBottomBarSortNotesClicked(model)
+        // Selected bottom bar actions
         is Msg.Ui.OnBottomBarHideSelectedNotesClicked -> onBottomBarHideSelectedClicked(model)
         is Msg.Ui.OnBottomBarPinSelectedNotesClicked -> onBottomBarPinSelectedClicked(model)
         is Msg.Ui.OnBottomBarMoveSelectedNotesClicked -> onBottomBarMoveSelectedClicked(model)
         is Msg.Ui.OnBottomBarRemoveSelectedNotesClicked -> onBottomBarRemoveSelectedClicked(model)
-        //modal sheet
-        is Msg.Ui.OnHideModalBottomSheet -> onHideModalBottomSheet(model)
-        is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
-        //search bar
+        is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
+        // Search bar
         is Msg.Ui.OnCollapseSearchBar -> onCollapseSearchBar(model)
         is Msg.Ui.OnExpandSearchBar -> onExpandSearchBar(model)
         is Msg.Ui.OnCounterBarSelectAllClicked -> onCounterBarSelectAllClicked(model, msg)
         is Msg.Ui.OnCounterBarShareClicked -> onCounterBarShareClicked(model)
-        //other
-        //snack bar
+        is Msg.Ui.OnChangeGridViewClicked -> onSearchBarGridViewClicked(model, msg)
+        is Msg.Ui.OnCancelSelectionClicked -> onCancelSelectionClicked(model)
+        // Snack bar
         is Msg.Ui.OnSnackUndoRemoveNotesClicked -> onSnackBarUndoRemoveClicked(model)
+        //
+        is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
+        // Hidden notes
         is Msg.Inner.NavigatedToHiddenNotes -> navigatedToHiddenNotes(model)
-        is Msg.Inner.UpdatedEditNoteFabState -> updatedEditNoteFabState(model, msg)
-        is Msg.Inner.ResetCurrentSelectedFolder -> resetCurrentSelectedFolder(model)
-        is Msg.Ui.OnHideHiddenNotesDialogClicked -> onHideHiddenNotesDialogClicked(model)
+        is Msg.Inner.UpdatedHiddenNotesDialogVisibility -> {
+            updatedHiddenNotesDialogVisibility(model, msg)
+        }
     }
 
-    private fun fetchedNotesData(model: Model, msg: Msg.Inner.FetchedNotesData): UpdateResult =
+    private fun fetchedNotesSuccess(model: Model, msg: Msg.Inner.FetchedNotesSuccess): Update =
         ElmUpdate(
             model.copy(
                 notes = model.notes.copy(
@@ -87,7 +97,22 @@ class MainSandbox(
             )
         )
 
-    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): UpdateResult =
+    private fun fetchedNotesFail(model: Model, msg: Msg.Inner.FetchedNotesFail): Update =
+        ElmUpdate(
+            model.copy(
+                notes = model.notes.copy(
+                    state = model.notes.state.loadedFailure(msg.failInfo),
+                    collection = NoteUi.Collection.Empty
+                ),
+                searchBarState = model.searchBarState.copy(searchList = NoteUi.Collection.Empty)
+            )
+        )
+
+    private fun fetchedNotesSort(model: Model, msg: Msg.Inner.FetchedNotesSort): Update = ElmUpdate(
+        model.copy(sortState = model.sortState.copy(notes = msg.sort))
+    )
+
+    private fun onNoteClicked(model: Model, msg: Msg.Ui.OnNoteClicked): Update =
         if (model.notes.isSelection) baseOnNoteAction(model, msg.id)
         else ElmUpdate(
             model.copy(
@@ -96,18 +121,15 @@ class MainSandbox(
             effects = setOf(Eff.NavigateToEditNote(msg.id))
         )
 
-    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): UpdateResult =
+    private fun onNoteLongClicked(model: Model, msg: Msg.Ui.OnNoteLongClicked): Update =
         baseOnNoteAction(model, msg.id)
 
-    private fun baseOnNoteAction(model: Model, noteId: Long): UpdateResult {
-        val selectedList = model.notes.selectedList.toMutableSet().also { list ->
-            model.notes.collection.data.forEach { note ->
-                if (noteId == note.id) {
-                    if (list.contains(note)) list.remove(note) else list.add(note)
-                }
-            }
-        }.toSet()
-
+    private fun baseOnNoteAction(model: Model, noteId: Long): Update {
+        val notes = model.notes.collection.copy(model.notes.collection.data.map { note ->
+            val isSelected = if (note.id == noteId) !note.isSelected else note.isSelected
+            note.copy(isSelected = isSelected)
+        })
+        val selectedList = notes.data.filter { it.isSelected }
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
             if (this) !selectedList.map { it.style.isPinned }.contains(false) else false
         }
@@ -115,9 +137,9 @@ class MainSandbox(
         return ElmUpdate(
             model.copy(
                 notes = model.notes.copy(
-                    selectedList = selectedList,
+                    collection = notes,
                     isSelection = true,
-                    isVisibleUnpinMainBarIcon = isVisibleUnpinButton
+                    isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
                 ),
                 searchBarState = model.searchBarState.copy(
                     barState = SearchBarState.Selected,
@@ -130,15 +152,17 @@ class MainSandbox(
         )
     }
 
-    private fun onCancelSelectionClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onCancelSelectionClicked(model: Model): Update = ElmUpdate(
         model.copy(
-            notes = model.notes.copy(selectedList = emptySet(), isSelection = false),
+            notes = model.notes.copy(
+                collection = model.notes.collection.unselectAll(), isSelection = false
+            ),
             searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
             editNoteFabState = model.editNoteFabState.copy(isVisible = true),
         )
     )
 
-    private fun fetchedChipsData(model: Model, msg: Msg.Inner.FetchedChipsData): UpdateResult =
+    private fun fetchedChipsSuccess(model: Model, msg: Msg.Inner.FetchedChipsSuccess): Update =
         ElmUpdate(
             model.copy(
                 chips = model.chips.copy(
@@ -147,7 +171,7 @@ class MainSandbox(
             ),
         )
 
-    private fun fetchedChipsError(model: Model): UpdateResult = ElmUpdate(
+    private fun fetchedChipsFail(model: Model): Update = ElmUpdate(
         model.copy(
             chips = model.chips.copy(
                 state = model.chips.state.loadedFailure(""),
@@ -156,111 +180,127 @@ class MainSandbox(
         )
     )
 
-    private fun onRetryFetchChipsClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun fetchedChipsSort(model: Model, msg: Msg.Inner.FetchedChipsSort): Update =
+        ElmUpdate(model.copy(sortState = model.sortState.copy(chips = msg.sort)))
+
+    private fun onRetryFetchChipsClicked(model: Model): Update = ElmUpdate(
         model.copy(chips = model.chips.copy(state = model.chips.state.Loading)),
-        commands = setOf(Cmd.FetchChipsData)
+        commands = setOf(Cmd.FetchChipsList)
     )
 
-    private fun onAddNewChipClicked(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.ShowAddNewChipDialog))
+    private fun onChipClicked(model: Model, msg: Msg.Ui.OnChipClicked): Update =
+        ElmUpdate(model, effects = setOf(Eff.UpdateCurrentSelectedFolder(msg.id)))
 
-    private fun onBottomBarSettingsClicked(model: Model): UpdateResult =
+    private fun onAddNewChipClicked(model: Model): Update = ElmUpdate(
+        model.copy(isVisibleAddChipDialog = true), effects = setOf(Eff.ShowAddNewChipDialog)
+    )
+
+    private fun onCloseAddChipDialogClicked(model: Model): Update =
+        ElmUpdate(model = model.copy(isVisibleAddChipDialog = false))
+
+    private fun onBottomBarSettingsClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToSettings))
 
-    private fun onBottomBarFoldersClicked(model: Model): UpdateResult {
-        val args = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
-            model.notes.selectedList.map { it.id } else emptyList()
+    private fun onBottomBarFoldersClicked(model: Model): Update {
+        val selectedList = model.notes.collection.data.filter { it.isSelected }
+        val passedNotesIds = if (selectedList.isNotEmpty() && model.notes.isSelection)
+            selectedList.map { it.id } else emptyList()
 
-        return ElmUpdate(model, effects = setOf(Eff.NavigateToFolders(args)))
+        return ElmUpdate(model, effects = setOf(Eff.NavigateToFolders(passedNotesIds)))
     }
 
     private fun onSearchBarGridViewClicked(
         model: Model,
         msg: Msg.Ui.OnChangeGridViewClicked
-    ): UpdateResult = ElmUpdate(
-        model, commands = setOf(Cmd.UpdateNotesGridDatastoreState(msg.count)),
+    ): Update = ElmUpdate(
+        model.copy(
+            sortState = model.sortState.copy(
+                notes = model.sortState.notes.copy(gridCount = msg.count)
+            )
+        ),
+        commands = setOf(Cmd.UpdateNotesGrid(msg.count))
     )
 
-    private fun onBottomBarSortNotesClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onBottomBarSortNotesClicked(model: Model): Update = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = true, content = CurrentSheetContent.SORT_NOTES
+                isVisible = true, content = ModalSheetContent.SORT_NOTES
             )
         )
     )
 
-    private fun onBottomBarTrashClicked(model: Model): UpdateResult =
+    private fun onBottomBarTrashClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateToTrash))
 
-    private fun onBottomBarHideSelectedClicked(model: Model): UpdateResult =
-        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = true))
-
-    private fun onHideHiddenNotesDialogClicked(model: Model): UpdateResult =
-        ElmUpdate(model.copy(isVisibleHiddenNotesDialog = false))
-
-    private fun onBottomBarPinSelectedClicked(model: Model): UpdateResult = ElmUpdate(
-        model.copy(notes = model.notes.copy(selectedList = emptySet())),
-        commands = setOf(Cmd.UpdatePinnedNotesInCache(model.notes.selectedList))
+    private fun onBottomBarPinSelectedClicked(model: Model): Update = ElmUpdate(
+        model = model.copy(
+            notes = model.notes.copy(collection = model.notes.collection.unselectAll())
+        ),
+        commands = setOf(
+            Cmd.UpdatePinnedNotes(model.notes.collection.data.filter { it.isSelected })
+        )
     )
 
-    private fun onBottomBarMoveSelectedClicked(model: Model): UpdateResult {
-        val args = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
-            model.notes.selectedList.map { it.id } else emptyList()
+    private fun onBottomBarMoveSelectedClicked(model: Model): Update {
+        val selectedList = model.notes.collection.data.filter { it.isSelected }
+        val passedNotesIds = if (selectedList.isNotEmpty() && model.notes.isSelection)
+            selectedList.map { it.id } else emptyList()
 
         return ElmUpdate(
             model.copy(
-                notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
+                notes = model.notes.copy(
+                    isSelection = false, collection = model.notes.collection.unselectAll()
+                ),
                 searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
                 editNoteFabState = model.editNoteFabState.copy(isVisible = true),
             ),
-            effects = setOf(Eff.NavigateToFolders(args))
+            effects = setOf(Eff.NavigateToFolders(passedNotesIds))
         )
     }
 
-    private fun onBottomBarRemoveSelectedClicked(model: Model): UpdateResult = ElmUpdate(
-        model.copy(
-            notes = model.notes.copy(
-                state = model.notes.state.copy(
-                    isLoading = model.notes.selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
+    private fun onBottomBarRemoveSelectedClicked(model: Model): Update {
+        val selectedList = model.notes.collection.data.filter { it.isSelected }
+
+        return ElmUpdate(
+            model.copy(
+                notes = model.notes.copy(
+                    state = model.notes.state.copy(
+                        isLoading = selectedList.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
+                    ),
+                    collection = model.notes.collection.unselectAll(),
+                    removedList = selectedList,
+                    isSelection = false,
                 ),
-                selectedList = emptySet(),
-                removedList = model.notes.selectedList,
-                isSelection = false,
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true)
             ),
-            searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
-            editNoteFabState = model.editNoteFabState.copy(isVisible = true)
-        ),
-        commands = setOf(Cmd.RemoveSelectedNotes(model.notes.selectedList.toList())),
-        effects = setOf(
-            Eff.ShowSnackBar(
-                MainSnackBarKey.REMOVED_NOTES,
-                message = "${model.notes.selectedList.count()}"
+            commands = setOf(Cmd.RemoveSelectedNotes(selectedList.toList())),
+            effects = setOf(
+                Eff.ShowSnackBar(
+                    SnackBarKey.REMOVED_NOTES, message = "${selectedList.count()}"
+                )
             )
         )
-    )
+    }
 
-    private fun onHideModalBottomSheet(model: Model): UpdateResult =
-        ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
+    private fun hiddenModalBottomSheet(model: Model): Update = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = false, content = CurrentSheetContent.NOTHING
+                isVisible = false, content = ModalSheetContent.NOTHING
             )
         )
     )
 
-    private fun onCollapseSearchBar(model: Model): UpdateResult = ElmUpdate(
+    private fun onCollapseSearchBar(model: Model): Update = ElmUpdate(
         model.copy(
             searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
             editNoteFabState = model.editNoteFabState.copy(
                 isVisible = !model.notes.isSelection, state = EditNoteFabState.COLLAPSED
-            ),
+            )
         )
     )
 
-    private fun onExpandSearchBar(model: Model): UpdateResult = ElmUpdate(
+    private fun onExpandSearchBar(model: Model): Update = ElmUpdate(
         model.copy(
             searchBarState = model.searchBarState.copy(barState = SearchBarState.Expanded),
             editNoteFabState = model.editNoteFabState.copy(
@@ -269,30 +309,24 @@ class MainSandbox(
         )
     )
 
-    private fun onCounterBarShareClicked(model: Model): UpdateResult = ElmUpdate(model)
+    private fun onCounterBarShareClicked(model: Model): Update = ElmUpdate(model)
 
     private fun onCounterBarSelectAllClicked(
         model: Model,
         msg: Msg.Ui.OnCounterBarSelectAllClicked
-    ): UpdateResult {
-        val filteredNotes = model.notes.collection.data.filter { note ->
-            when (msg.currentFolderId) {
-                STICKY_START_FOLDER_ID -> true
-                STICKY_END_FOLDER_ID -> note.folderId == DEFAULT_NOTE_FOLDER_ID
-                else -> note.folderId == msg.currentFolderId
+    ): Update {
+        val byFolder = model.notes.collection.data.filter { it.folderId == msg.currentFolderId }
+        val allSelected = byFolder.all { it.isSelected }
+        val notes = model.notes.collection.data.map { item ->
+            if (msg.currentFolderId == STICKY_START_FOLDER_ID) {
+                item.copy(isSelected = !model.notes.collection.data.all { it.isSelected })
+            } else {
+                val isSelected = if (byFolder.contains(item)) !allSelected else item.isSelected
+                item.copy(isSelected = isSelected)
             }
         }
 
-        val selectedList = model.notes.selectedList.toMutableSet().also { list ->
-            if (msg.currentFolderId == STICKY_START_FOLDER_ID) {
-                if (list.containsAll(model.notes.collection.data)) list.clear()
-                else list.addAll(model.notes.collection.data)
-            } else {
-                if (list.containsAll(filteredNotes)) list.removeAll(filteredNotes.toSet())
-                else list.addAll(filteredNotes)
-            }
-        }.toSet()
-
+        val selectedList = notes.filter { it.isSelected }
         val isVisibleUnpinButton = selectedList.isNotEmpty().run {
             if (this) !selectedList.map { it.style.isPinned }.contains(false) else false
         }
@@ -300,44 +334,39 @@ class MainSandbox(
         return ElmUpdate(
             model.copy(
                 notes = model.notes.copy(
-                    isVisibleUnpinMainBarIcon = isVisibleUnpinButton, selectedList = selectedList
+                    collection = model.notes.collection.copy(notes),
+                    isVisibleUnpinBottomBarIcon = isVisibleUnpinButton
                 ),
-                searchBarState = model.searchBarState.copy(counterValue = selectedList.count())
+                searchBarState = model.searchBarState.copy(
+                    counterValue = notes.count { it.isSelected }
+                )
             )
         )
     }
 
-    private fun onSnackBarUndoRemoveClicked(model: Model): UpdateResult {
+    private fun onSnackBarUndoRemoveClicked(model: Model): Update {
         val restored = model.notes.removedList.map { note -> note.copy(isMovedToTrash = false) }
         val isShowLoading = restored.count() >= MINIMAL_FOR_LOADING_ITEMS_COUNT
 
         return ElmUpdate(
             model.copy(
-                notes = model.notes.copy(state = model.notes.state.copy(isLoading = isShowLoading))
+                notes = model.notes.copy(
+                    state = model.notes.state.copy(isLoading = isShowLoading),
+                    isSelection = false,
+                    collection = model.notes.collection.copy(
+                        model.notes.collection.data.map { it.copy(isSelected = false) }
+                    )
+                ),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed)
             ),
             commands = setOf(Cmd.UndoRemoveNotes(restored))
-        )
-    }
-
-    private fun navigatedToHiddenNotes(model: Model): UpdateResult {
-        val hiddenNotes = if (model.notes.selectedList.isNotEmpty() && model.notes.isSelection)
-            model.notes.selectedList else emptySet()
-
-        return ElmUpdate(
-            model.copy(
-                notes = model.notes.copy(isSelection = false, selectedList = emptySet()),
-                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
-                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
-            ),
-            commands = setOf(Cmd.HideSelectedNotes(hiddenNotes)),
-            effects = setOf(Eff.NavigateToHiddenNotes)
         )
     }
 
     private fun updatedEditNoteFabState(
         model: Model,
         msg: Msg.Inner.UpdatedEditNoteFabState
-    ): UpdateResult {
+    ): Update {
 
         val searchBarState = if (msg.state.isExpanded)
             model.searchBarState.copy(barState = SearchBarState.Collapsed)
@@ -353,6 +382,49 @@ class MainSandbox(
         )
     }
 
-    private fun resetCurrentSelectedFolder(model: Model): UpdateResult =
-        ElmUpdate(model, commands = setOf(Cmd.ResetCurrentSelectedFolder))
+    private fun resetCurrentSelectedFolder(model: Model): Update =
+        ElmUpdate(model, effects = setOf(Eff.UpdateCurrentSelectedFolder(1L)))
+
+    private fun navigatedToHiddenNotes(model: Model): Update {
+        val selectedList = model.notes.collection.data.filter { it.isSelected }
+        val hiddenNotes =
+            if (selectedList.isNotEmpty() && model.notes.isSelection) selectedList else emptyList()
+
+        return ElmUpdate(
+            model.copy(
+                notes = model.notes.copy(
+                    isSelection = false, collection = model.notes.collection.unselectAll()
+                ),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
+                isVisibleHiddenNotesDialog = false,
+                isVisibleAddChipDialog = false
+            ),
+            commands = setOf(Cmd.HideSelectedNotes(hiddenNotes)),
+            effects = setOf(Eff.NavigateToHiddenNotes)
+        )
+    }
+
+    private fun onBottomBarHideSelectedClicked(model: Model): Update {
+        val unselectedAll = model.notes.collection.copy(
+            model.notes.collection.data.map { it.copy(isSelected = false) }
+        )
+        val selectedList = model.notes.collection.data.filter { it.isSelected }
+        val hiddenNotes =
+            if (selectedList.isNotEmpty() && model.notes.isSelection) selectedList else emptyList()
+
+        return ElmUpdate(
+            model = model.copy(
+                notes = model.notes.copy(isSelection = false, collection = unselectedAll),
+                searchBarState = model.searchBarState.copy(barState = SearchBarState.Collapsed),
+                editNoteFabState = model.editNoteFabState.copy(isVisible = true),
+            ),
+            commands = setOf(Cmd.TryHideSelectedNotes(hiddenNotes))
+        )
+    }
+
+    private fun updatedHiddenNotesDialogVisibility(
+        model: Model,
+        msg: Msg.Inner.UpdatedHiddenNotesDialogVisibility
+    ): Update = ElmUpdate(model.copy(isVisibleHiddenNotesDialog = msg.isVisible))
 }

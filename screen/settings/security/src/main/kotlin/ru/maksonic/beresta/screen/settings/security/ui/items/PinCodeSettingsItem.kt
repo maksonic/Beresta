@@ -1,34 +1,33 @@
 package ru.maksonic.beresta.screen.settings.security.ui.items
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
+import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
+import ru.maksonic.beresta.common.ui_kit.icons.PreviewOff
+import ru.maksonic.beresta.common.ui_kit.icons.PreviewOn
+import ru.maksonic.beresta.common.ui_kit.icons.VisibilityOff
+import ru.maksonic.beresta.common.ui_kit.icons.VisibilityOn
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.RightPart
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingCategoryContainer
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingClickableItem
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingItem
+import ru.maksonic.beresta.common.ui_kit.widget.settings_screen.SettingTextTitle
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.security.core.Model
 import ru.maksonic.beresta.screen.settings.security.core.Msg
-import ru.maksonic.beresta.screen.settings.security.ui.SendMessage
-import ru.maksonic.beresta.ui.theme.icons.AppIcon
-import ru.maksonic.beresta.ui.theme.icons.PreviewOff
-import ru.maksonic.beresta.ui.theme.icons.PreviewOn
-import ru.maksonic.beresta.ui.theme.icons.VisibilityOff
-import ru.maksonic.beresta.ui.theme.icons.VisibilityOn
-import ru.maksonic.beresta.ui.widget.button.settings.RightPart
-import ru.maksonic.beresta.ui.widget.button.settings.SettingClickableItem
-import ru.maksonic.beresta.ui.widget.button.settings.SettingItem
-import ru.maksonic.beresta.ui.widget.surface.SettingContainer
-import ru.maksonic.beresta.ui.widget.text.SettingTitle
+import ru.maksonic.beresta.screen.settings.security.ui.Send
 
 /**
  * @Author maksonic on 03.08.2023
  */
 @Composable
-internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
+internal fun PinCodeSettingsItem(model: Model, send: Send) {
     val pinIcon = rememberUpdatedState(
-        if (model.value.pinSecure.isVisiblePin) AppIcon.VisibilityOn else AppIcon.VisibilityOff
+        if (model.pinPrivacy.isVisibleWhenInputProcess) AppIcon.VisibilityOn else AppIcon.VisibilityOff
     )
 
     val keyTapIcon = rememberUpdatedState(
-        if (model.value.pinSecure.isVisibleOnKeyboardTap) AppIcon.PreviewOn else AppIcon.PreviewOff
+        if (model.pinPrivacy.isVisibleOnKeyboardTap) AppIcon.PreviewOn else AppIcon.PreviewOff
     )
 
     val settings = listOf(
@@ -36,7 +35,7 @@ internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
             title = text.settingsSecurity.itemPinVisibility,
             prefixIcon = pinIcon.value,
             rightPart = RightPart.TOGGLE,
-            isEnabledToggle = model.value.pinSecure.isVisiblePin,
+            isEnabledToggle = model.pinPrivacy.isVisibleWhenInputProcess,
             onClick = { send(Msg.Ui.OnPinVisibilityClicked) }
         ),
         SettingItem(
@@ -44,13 +43,13 @@ internal fun PinCodeSettingsItem(model: State<Model>, send: SendMessage) {
             descriptionHint = text.settingsSecurity.descriptionKeyTapVisibility,
             prefixIcon = keyTapIcon.value,
             rightPart = RightPart.TOGGLE,
-            isEnabledToggle = model.value.pinSecure.isVisibleOnKeyboardTap,
+            isEnabledToggle = model.pinPrivacy.isVisibleOnKeyboardTap,
             onClick = { send(Msg.Ui.OnKeyTapVisibilityClicked) }
         ),
     )
 
-    SettingContainer {
-        SettingTitle(title = text.settingsSecurity.hintPinCode)
+    SettingCategoryContainer {
+        SettingTextTitle(title = text.settingsSecurity.hintPinCode)
 
         settings.forEach { setting ->
             SettingClickableItem(setting)

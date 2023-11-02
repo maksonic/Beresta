@@ -1,69 +1,85 @@
 package ru.maksonic.beresta.screen.settings.appearance.core
 
-import ru.maksonic.beresta.elm.core.ElmProgram
-import ru.maksonic.beresta.feature.notes.api.ui.NoteCardElevation
-import ru.maksonic.beresta.feature.notes.api.ui.NoteCardShape
-import ru.maksonic.beresta.feature.notes.api.NotesApi
-import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
+import ru.maksonic.beresta.common.ui_theme.AppAnimationVelocity
+import ru.maksonic.beresta.feature.app_lang.domain.formatter.DateFormatter
+import ru.maksonic.beresta.feature.app_lang.domain.usecase.FetchAppLangUseCase
+import ru.maksonic.beresta.feature.notes_list.domain.card.NoteCardInteractor
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NoteCardElevationUi
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NoteCardShapeUi
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NoteCardStateMapper
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NotesCardUiApi
+import ru.maksonic.beresta.platform.core.ui.AnimationVelocity
+import ru.maksonic.beresta.platform.elm.core.ElmProgram
+import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 07.07.2023
  */
 class SettingsAppearanceProgram(
-    private val noteCardUiApi: NotesApi.Card.Ui,
-    private val noteCardFeatureState: NotesApi.CardStateStorage,
-    private val languageEngineApi: LanguageEngineApi,
+    private val notesCardStateStoreUiApi: NotesCardUiApi.CardState,
+    private val notesCardInteractor: NoteCardInteractor,
+    private val cardStateMapper: NoteCardStateMapper,
+    private val fetchAppLangUseCase: FetchAppLangUseCase,
+    private val dateFormatter: DateFormatter,
     private val animationVelocity: AnimationVelocity,
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
+            is Cmd.FetchCardDate -> fetchCardDate(consumer)
             is Cmd.UpdateNoteCardShape -> updateNoteCardShape(cmd.shape)
             is Cmd.UpdateNoteCardElevation -> updateNoteCardElevation(cmd.isEnabled)
+            is Cmd.UpdateNoteCardWallpaper -> updateWallpaperVisibility(cmd.isEnabled)
             is Cmd.UpdatedNoteCardTitleMaxLines -> updateNoteCardTitleMaxLines(cmd.value)
             is Cmd.UpdatedNoteCardMessageMaxLines -> updateNoteCardMessageMaxLines(cmd.value)
             is Cmd.ResetNoteCardLinesByDefault -> resetNoteCardLinesByDefault()
-            is Cmd.FetchCurrentAppLang -> fetchAppLang(consumer)
             is Cmd.UpdateAnimationsVelocity -> updateAnimationVelocity(cmd.key)
             is Cmd.UpdatedNoteCardColorMarkerVisibility -> {
                 updateColorMarkerVisibility(cmd.isVisible)
             }
+
         }
     }
 
-    private suspend fun updateNoteCardShape(cardShape: NoteCardShape) = noteCardUiApi
+    private suspend fun fetchCardDate(consumer: (Msg) -> Unit) {
+        fetchAppLangUseCase().collect {
+            val date = dateFormatter.fetchDateByLang(LocalDateTime.now(), it)
+            consumer(Msg.Inner.FetchedCardDate(date))
+        }
+    }
+
+    private suspend fun updateNoteCardShape(cardShape: NoteCardShapeUi) = notesCardStateStoreUiApi
         .updateShape(cardShape)
-        .let { noteCardFeatureState.setCardShape(cardShape) }
+        .let { notesCardInteractor.setCardShape(cardStateMapper.mapUiShapeToDomain(cardShape)) }
 
     private suspend fun updateNoteCardElevation(isEnabled: Boolean) {
-        val elevation = if (isEnabled) NoteCardElevation.DISABLED else NoteCardElevation.ENABLED
+        val elevation = if (isEnabled) NoteCardElevationUi.DISABLED else NoteCardElevationUi.ENABLED
 
-        noteCardUiApi.updateElevation(elevation).let {
-            noteCardFeatureState.setCardElevation(elevation)
+        notesCardStateStoreUiApi.updateElevation(elevation).let {
+            notesCardInteractor.setCardElevation(cardStateMapper.mapUiElevationToDomain(elevation))
         }
     }
 
-    private suspend fun updateNoteCardTitleMaxLines(count: Int) = noteCardUiApi
+    private suspend fun updateWallpaperVisibility(isVisible: Boolean) = notesCardStateStoreUiApi
+        .updateWallpaperVisibility(isVisible)
+        .let { notesCardInteractor.setCardWallpaperVisibility(!isVisible) }
+
+    private suspend fun updateNoteCardTitleMaxLines(count: Int) = notesCardStateStoreUiApi
         .updateMaxTitleLines(count)
-        .let { noteCardFeatureState.setCardTitleMaxLines(count) }
+        .let { notesCardInteractor.setCardTitleMaxLines(count) }
 
-    private suspend fun updateNoteCardMessageMaxLines(count: Int) = noteCardUiApi
+    private suspend fun updateNoteCardMessageMaxLines(count: Int) = notesCardStateStoreUiApi
         .updateMaxMessageLines(count)
-        .let { noteCardFeatureState.setCardMessageMaxLines(count) }
+        .let { notesCardInteractor.setCardMessageMaxLines(count) }
 
-    private suspend fun resetNoteCardLinesByDefault() = noteCardUiApi
+    private suspend fun resetNoteCardLinesByDefault() = notesCardStateStoreUiApi
         .resetNoteCardLinesByDefault()
-        .let { noteCardFeatureState.setByDefaultCardMaxLines() }
-
-    private suspend fun fetchAppLang(consumer: (Msg) -> Unit) = languageEngineApi.current.collect {
-        consumer(Msg.Inner.FetchedAppLang(it))
-    }
+        .let { notesCardInteractor.setByDefaultCardMaxLines() }
 
     private suspend fun updateAnimationVelocity(key: AppAnimationVelocity.Key) =
-        animationVelocity.updateInDatastore(key)
+        animationVelocity.update(key)
 
-    private suspend fun updateColorMarkerVisibility(isVisible: Boolean) = noteCardUiApi
+    private suspend fun updateColorMarkerVisibility(isVisible: Boolean) = notesCardStateStoreUiApi
         .updateColorMarkerVisibility(isVisible)
-        .let { noteCardFeatureState.setCardColorMarkerVisibility(!isVisible) }
+        .let { notesCardInteractor.setCardColorMarkerVisibility(!isVisible) }
 }

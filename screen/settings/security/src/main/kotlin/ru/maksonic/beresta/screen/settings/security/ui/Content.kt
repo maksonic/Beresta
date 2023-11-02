@@ -12,30 +12,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.common.ui_kit.bar.top.TopAppBarCollapsingLarge
+import ru.maksonic.beresta.common.ui_theme.colors.background
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.HiddenNotesDialogUiApi
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.security.core.Model
 import ru.maksonic.beresta.screen.settings.security.core.Msg
+import ru.maksonic.beresta.screen.settings.security.ui.items.HiddenNotesSettingItem
 import ru.maksonic.beresta.screen.settings.security.ui.items.PinCodeSettingsItem
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
-import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
-import ru.maksonic.beresta.ui.widget.sheet.ModalBottomSheetDefault
 
 /**
  * @Author maksonic on 03.08.2023
  */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Content(
-    model: State<Model>,
-    send: SendMessage,
-    modifier: Modifier = Modifier
+    model: Model,
+    send: Send,
+    modifier: Modifier = Modifier,
+    hiddenNotesNotPinCreatedDialogApi: HiddenNotesDialogUiApi.NotCreatedPinDialog = koinInject(),
+    hiddenNotesPinInputDialogUiApi: HiddenNotesDialogUiApi.PinInputDialog = koinInject(),
 ) {
     val scrollState = rememberScrollState()
     val scrollBehavior =
@@ -46,7 +46,6 @@ internal fun Content(
             .fillMaxSize()
             .navigationBarsPadding()
     ) {
-
         Scaffold(
             topBar = {
                 TopAppBarCollapsingLarge(
@@ -64,8 +63,23 @@ internal fun Content(
                     .padding(paddings)
             ) {
                 PinCodeSettingsItem(model, send)
+                HiddenNotesSettingItem(model, send)
             }
         }
+
+        hiddenNotesNotPinCreatedDialogApi.Widget(
+            isVisible = model.isVisibleHiddenNotesNotCreatedPinDialog,
+            hideDialog = { send(Msg.Inner.UpdatedHiddenNotesNotCreatedPinDialogVisibility(false)) },
+            onAcceptClicked = { send(Msg.Ui.OnCreateHiddenNotesPinClicked) }
+        )
+
+        hiddenNotesPinInputDialogUiApi.Widget(
+            isVisible = model.isVisibleHiddenNotesDialog,
+            hideDialog = { send(Msg.Inner.UpdatedHiddenNotesDialogVisibility(false)) },
+            onSuccessPin = { send(Msg.Inner.UpdatedHiddenNotesDialogVisibility(false)) },
+            isBlocked = false,
+            onBlockedBackPressed = {}
+        )
     }
 }
 

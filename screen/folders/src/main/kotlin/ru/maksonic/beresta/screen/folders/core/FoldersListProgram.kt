@@ -1,50 +1,46 @@
 package ru.maksonic.beresta.screen.folders.core
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.withContext
-import ru.maksonic.beresta.elm.core.ElmProgram
-import ru.maksonic.beresta.feature.folders_chips.api.FoldersApi
-import ru.maksonic.beresta.feature.folders_chips.api.domain.FolderDomain
-import ru.maksonic.beresta.feature.folders_chips.api.domain.FoldersInteractor
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUi
-import ru.maksonic.beresta.feature.folders_chips.api.ui.FolderUiMapper
-import ru.maksonic.beresta.feature.folders_chips.api.ui.StickyFoldersTitleFormatter
-import ru.maksonic.beresta.feature.notes.api.domain.NoteDomain
-import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
-import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
-import ru.maksonic.beresta.feature.notes.api.ui.findNotesByFoldersId
-import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
-import ru.maksonic.beresta.language_engine.shell.provider.AppLanguage
-import ru.maksonic.beresta.navigation.router.AbstractNavigator
-import ru.maksonic.beresta.navigation.router.Destination
+import ru.maksonic.beresta.common.core.ext.RETRY_REQUEST_DELAY
+import ru.maksonic.beresta.feature.folders_list.domain.FolderDomain
+import ru.maksonic.beresta.feature.folders_list.domain.FoldersInteractor
+import ru.maksonic.beresta.feature.folders_list.domain.usecase.FetchFoldersUseCase
+import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUi
+import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUiMapper
+import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
+import ru.maksonic.beresta.feature.notes_list.domain.NoteDomain
+import ru.maksonic.beresta.feature.notes_list.domain.list.NotesInteractor
+import ru.maksonic.beresta.feature.notes_list.domain.list.usecase.FetchNotesUseCase
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.ui.api.findNotesByFoldersId
+import ru.maksonic.beresta.feature.sorting_sheet.domain.usecase.FetchFoldersSortUseCase
+import ru.maksonic.beresta.feature.sorting_sheet.ui.api.FoldersSortUiMapper
+import ru.maksonic.beresta.navigation.router.core.AbstractNavigator
+import ru.maksonic.beresta.navigation.router.core.Destination
+import ru.maksonic.beresta.platform.elm.core.ElmProgram
 import java.time.LocalDateTime
 
 /**
  * @Author maksonic on 03.04.2023
  */
 class FoldersListProgram(
-    private val foldersMapper: FolderUiMapper,
+    private val fetchFoldersUseCase: FetchFoldersUseCase,
+    private val fetchFoldersSortUseCase: FetchFoldersSortUseCase,
     private val foldersInteractor: FoldersInteractor,
+    private val foldersMapper: FolderUiMapper,
+    private val fetchNotesUseCase: FetchNotesUseCase,
     private val notesInteractor: NotesInteractor,
     private val notesMapper: NoteUiMapper,
+    private val foldersSortUiMapper: FoldersSortUiMapper,
     private val navigator: AbstractNavigator,
-    private val appLanguageEngineApi: LanguageEngineApi,
-    private val stickyFoldersTitleFormatter: StickyFoldersTitleFormatter,
-    private val chipsRowApi: FoldersApi.ChipsRow.Ui,
-    private val ioDispatcher: CoroutineDispatcher
+    private val currentFolderStoreUiApi: FoldersChipsRowUiApi.CurrentSelectedFolderStore,
 ) : ElmProgram<Msg, Cmd> {
-
-    private companion object {
-        private const val RETRY_REQUEST_DELAY = 3000L
-    }
-
     private val _notes = MutableStateFlow(emptyList<NoteUi>())
     private val notes = _notes.asStateFlow()
     private val _removedNotes = MutableStateFlow(emptyList<NoteUi>())
@@ -53,37 +49,38 @@ class FoldersListProgram(
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchFoldersWithNotes -> fetchFoldersWithNotes(consumer)
-            is Cmd.RetryFetchFoldersWithNotes -> retryFetchFoldersWithNotes(consumer)
-            is Cmd.UpdatePinnedFoldersInCache -> updatePinnedFolders(cmd.pinned)
+            is Cmd.RetryFetchData -> retryFetchFoldersWithNotes(consumer)
+            is Cmd.UpdatePinnedFolders -> updatePinnedFolders(cmd.pinned)
             is Cmd.ChangeNoteFolderId -> changeNotesFolderId(cmd.folderId)
             is Cmd.RemoveSelected -> moveSelectedFoldersToTrash(cmd.removed)
-            is Cmd.UndoRemovedFolders -> undoRemovedFoldersFromTrash(cmd.removed)
+            is Cmd.UndoRemovedFolders -> undoRemovedFromTrash(cmd.removed)
             is Cmd.UpdateCurrentSelectedFolder -> updateCurrentSelectedFolderState(cmd.id)
         }
     }
 
-    private suspend fun fetchFoldersWithNotes(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
-        runCatching {
-            combine(
-                foldersInteractor.fetchList(),
-                notesInteractor.fetchList(),
-                appLanguageEngineApi.current
-            ) { folders, notes, lang ->
-                val passedNotesIds = navigator.getListLongFromString(Destination.Folders.passedKey)
-                val isMoveNotesState = passedNotesIds.isNotEmpty()
-                val foldersUi = folders.mapToUi(isMoveNotesState, lang, notes)
+    private suspend fun fetchFoldersWithNotes(consumer: (Msg) -> Unit) = runCatching {
+        combine(
+            fetchFoldersUseCase(),
+            fetchNotesUseCase(),
+            fetchFoldersSortUseCase()
+        ) { folders, notes, sort ->
+            val passedNotesIds = navigator.getListLongFromString(Destination.Folders.passedKey)
+            val isMoveNotesState = passedNotesIds.isNotEmpty()
+            val foldersUi = folders.mapToUi(isMoveNotesState, notes)
 
-                saveFetchedNotesToIntermediateCache(notes)
+            saveFetchedNotesToIntermediateCache(notes)
 
-                consumer(
-                    Msg.Inner.FetchedFoldersData(
-                        isMoveNotesToFolderState = isMoveNotesState,
-                        folders = FolderUi.Collection(foldersUi)
-                    )
+            consumer(
+                Msg.Inner.FetchedDataSuccess(
+                    isNotesMoving = isMoveNotesState,
+                    folders = FolderUi.Collection(foldersUi),
+                    sortState = foldersSortUiMapper.mapTo(sort)
                 )
-            }.collect()
+            )
+        }.collect()
 
-        }.onFailure { consumer(Msg.Inner.FetchedDataError(it.localizedMessage ?: "Error")) }
+    }.onFailure {
+        consumer(Msg.Inner.FetchedDataFail(it.localizedMessage ?: "Error"))
     }
 
     private suspend fun retryFetchFoldersWithNotes(consumer: (Msg) -> Unit) {
@@ -96,24 +93,25 @@ class FoldersListProgram(
         _notes.update { notesUi }
     }
 
-    private suspend fun moveSelectedFoldersToTrash(selectedFolders: List<FolderUi>) {
-        val removedUiFolders = selectedFolders.map { it.trash() }
-        val removedDomainFolders = foldersMapper.mapListFrom(removedUiFolders)
+    private suspend fun moveSelectedFoldersToTrash(folders: List<FolderUi>) {
+        val foldersUi = folders.map { folder ->
+            folder.copy(isMovedToTrash = true, dateMovedToTrashRaw = LocalDateTime.now())
+        }
+        updateFolderNotes(foldersUi.map { it.id }, true)
 
-        updateFolderNotes(removedDomainFolders.map { it.id }, true)
-        foldersInteractor.updateList(removedDomainFolders)
+        val foldersDomain = foldersMapper.mapListFrom(foldersUi)
+        foldersInteractor.updateList(foldersDomain)
     }
 
-    private suspend fun undoRemovedFoldersFromTrash(folders: List<FolderUi>) {
-        val restoredUiFolders = folders.map { it.restored() }
-        val restoredDomainFolders = foldersMapper.mapListFrom(restoredUiFolders)
+    private suspend fun undoRemovedFromTrash(folders: List<FolderUi>) {
+        val restore = foldersMapper.mapListFrom(folders.map { it.copy(dateMovedToTrashRaw = null) })
 
-        updateFolderNotes(restoredUiFolders.map { it.id }, false)
+        updateFolderNotes(restore.map { it.id }, false)
 
-        foldersInteractor.updateList(restoredDomainFolders)
+        foldersInteractor.updateList(restore)
     }
 
-    private suspend fun updatePinnedFolders(folders: Set<FolderUi>) {
+    private suspend fun updatePinnedFolders(folders: List<FolderUi>) {
         val currentDate = LocalDateTime.now()
         val isSelectedContainsUnpinned = folders.map { !it.isPinned }.contains(true)
         val selected = folders.map { note ->
@@ -132,7 +130,7 @@ class FoldersListProgram(
 
         updateCurrentSelectedFolderState(folderId)
 
-        notesInteractor.fetchList().collect { notesDomain ->
+        fetchNotesUseCase().collect { notesDomain ->
             val passedNotes = notesDomain.filter { it.id in passedNotesIds }
             val updated = passedNotes.map { it.copy(folderId = folderId) }
             notesInteractor.updateList(updated)
@@ -150,20 +148,15 @@ class FoldersListProgram(
 
     private fun List<FolderDomain>.mapToUi(
         isMoveNotesState: Boolean,
-        lang: AppLanguage,
         notes: List<NoteDomain>
     ): List<FolderUi> {
         val folderDomain = if (isMoveNotesState) this.filter { !it.isStickyToStart } else this
 
-        return foldersMapper.mapListTo(folderDomain)
-            .map { folder ->
-                val count = notes.count { it.folderId == folder.id }
-                folder.copy(
-                    title = stickyFoldersTitleFormatter.format(folder, lang),
-                    notesCount = if (folder.isStickyToStart) notes.count() else count
-                )
-            }
+        return foldersMapper.mapListTo(folderDomain).map { folder ->
+            val count = notes.count { it.folderId == folder.id }
+            folder.copy(notesCount = if (folder.isStickyToStart) notes.count() else count)
+        }
     }
 
-    private fun updateCurrentSelectedFolderState(id: Long) { chipsRowApi.updateCurrent(id) }
+    private fun updateCurrentSelectedFolderState(id: Long) = currentFolderStoreUiApi.updateId(id)
 }

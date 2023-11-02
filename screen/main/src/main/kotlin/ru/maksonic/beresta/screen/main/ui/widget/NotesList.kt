@@ -5,88 +5,78 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
-import ru.maksonic.beresta.feature.notes.api.NotesApi
-import ru.maksonic.beresta.feature.notes.api.ui.NotesSorter
-import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.common.ui_kit.bar.snackbar.SnackBar
+import ru.maksonic.beresta.common.ui_kit.bar.snackbar.SnackBarHost
+import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
+import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.provide.dp10
+import ru.maksonic.beresta.common.ui_theme.provide.dp8
+import ru.maksonic.beresta.feature.notes_list.ui.api.list.NotesListUiApi
+import ru.maksonic.beresta.feature.sorting_sheet.ui.api.listNotesSortState
+import ru.maksonic.beresta.feature.wallpaper_picker.ui.api.WallpaperPickerUiApi
 import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
-import ru.maksonic.beresta.screen.main.ui.SendMessage
-import ru.maksonic.beresta.ui.theme.Theme
-import ru.maksonic.beresta.ui.theme.component.dp10
-import ru.maksonic.beresta.ui.theme.component.dp8
-import ru.maksonic.beresta.ui.widget.bar.SnackBar
-import ru.maksonic.beresta.ui.widget.bar.system.SystemNavigationBarHeight
-import ru.maksonic.beresta.ui.widget.functional.animation.animateDp
+import ru.maksonic.beresta.screen.main.core.sorter.rememberNotesSorter
+import ru.maksonic.beresta.screen.main.ui.screen.Send
 
 /**
  * @Author maksonic on 22.06.2023
  */
 @Composable
 internal fun NotesList(
-    model: State<Model>,
-    send: SendMessage,
-    api: NotesApi.List.Ui,
-    chipsRowOffsetHeightPx: State<Float>,
-    updateChipsRowOffsetHeight: (Float) -> Unit,
-    updatedCanScrollBackwardValue: (Boolean) -> Unit,
+    model: Model,
+    send: Send,
+    api: NotesListUiApi,
     modifier: Modifier = Modifier,
+    wallpaperUiApi: WallpaperPickerUiApi.Wallpaper = koinInject(),
+    updateScrollUpValue: (Boolean) -> Unit,
+    updatedCanScrollBackwardValue: (Boolean) -> Unit,
+    chipsRowOffset: State<Float>,
+    updateChipsRowOffset: (Float) -> Unit,
 ) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        val padding = with(Theme.widgetSize) { topBarSmallHeight.plus(noteChipsContainerHeight) }
-        val idleBottomPadding = Theme.widgetSize.bottomMainBarHeight + SystemNavigationBarHeight
-        val selectionPadding = Theme.widgetSize.bottomBarNormalHeight + SystemNavigationBarHeight
-        val bottomContentPadding =
-            animateDp(if (model.value.notes.isSelection) selectionPadding else idleBottomPadding)
-        val bottomSnackHostPadding = animateDp(
-            if (model.value.notes.isSelection) Theme.widgetSize.bottomBarNormalHeight
-            else Theme.widgetSize.bottomMainBarHeight
-        )
+        val sorter = rememberNotesSorter(model.notes.collection.data)
+        val padding = with(Theme.size) { topBarSmallHeight.plus(noteChipsContainerHeight) }
+        val bottomSnackHostPadding = Theme.size.bottomMainBarHeight.plus(dp8)
 
-        val sorter = rememberUpdatedState(
-            NotesSorter(
-                list = model.value.notes.collection.data,
-                order = listUiSortState.notes.order,
-                isSortPinned = listUiSortState.notes.isSortPinned,
-                sort = listUiSortState.notes.sort,
-                currentFolderId = ChipFeature.currentSelectedFolder
-            )
-        )
-
-        api.Widget(
-            modifier = modifier.padding(top = Theme.widgetSize.topBarSmallHeight),
-            placeholderModifier = Modifier
-                .systemBarsPadding()
-                .padding(top = padding.plus(dp8), start = dp10, end = dp10),
-            state = model.value.notes,
+        api.ListPrimary(
+            state = model.notes,
             sorter = sorter,
+            gridCells = listNotesSortState.gridCount,
             onNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },
             onNoteLongClicked = { send(Msg.Ui.OnNoteLongClicked(it)) },
-            chipsRowOffsetHeightPx = chipsRowOffsetHeightPx,
-            updateChipsRowOffsetHeight = updateChipsRowOffsetHeight,
-            updatedCanScrollBackwardValue = updatedCanScrollBackwardValue,
-            contentPaddingValues = PaddingValues(
-                top = Theme.widgetSize.noteChipsContainerHeight.plus(dp8),
+            updateScrollUpValue = updateScrollUpValue,
+            updateCanScrollBackwardValue = updatedCanScrollBackwardValue,
+            chipsRowOffset = chipsRowOffset,
+            updateChipsOffset = updateChipsRowOffset,
+            contentPadding = PaddingValues(
+                top = Theme.size.noteChipsContainerHeight.plus(dp8),
                 start = dp10,
                 end = dp10,
-                bottom = bottomContentPadding.value
-            )
+                bottom = Theme.size.bottomMainBarHeight.plus(SystemNavigationBarHeight)
+            ),
+            modifier = modifier
+                .statusBarsPadding()
+                .padding(top = Theme.size.topBarSmallHeight),
+            loadingModifier = modifier
+                .systemBarsPadding()
+                .padding(top = padding.plus(dp8)),
+            cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
         )
 
-        SnackbarHost(
-            hostState = model.value.snackNotesState,
-            snackbar = { SnackBar(model.value.snackNotesState.currentSnackbarData) },
+        SnackBarHost(
+            hostState = model.snackNotesState,
+            snackbar = { SnackBar(model.snackNotesState.currentSnackBarData) },
             modifier = Modifier
                 .navigationBarsPadding()
-                .padding(bottom = bottomSnackHostPadding.value)
+                .padding(bottom = bottomSnackHostPadding)
         )
     }
 }
-

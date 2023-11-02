@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.screen.settings.notifications.core
 
-import ru.maksonic.beresta.elm.core.ElmUpdate
-import ru.maksonic.beresta.elm.core.Sandbox
+import ru.maksonic.beresta.platform.elm.core.ElmUpdate
+import ru.maksonic.beresta.platform.elm.core.Sandbox
 import ru.maksonic.beresta.screen.settings.notifications.core.programs.SettingsVibrationProgram
 
 /**

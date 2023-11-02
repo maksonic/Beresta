@@ -1,22 +1,20 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = module.primary.languageEngine.core.namespace
-    compileSdk = AndroidConfig.compileSdk
+    namespace = module.LanguageEngine.Core.namespace
+    compileSdk = AndroidConfig.COMPILE_SDK
 
     defaultConfig {
-        minSdk = AndroidConfig.minSdk
-        targetSdk = AndroidConfig.targetSdk
-
-        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
+        minSdk = AndroidConfig.MIN_SDK
+        testInstrumentationRunner = AndroidConfig.TEST_RUNNER
     }
 
     buildTypes {
-        getByName(BuildConfig.Type.current) {
-            isMinifyEnabled = AndroidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.CURRENT) {
+            isMinifyEnabled = AndroidConfig.IS_MINIFY
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -25,12 +23,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = AndroidConfig.javaVersion
-        targetCompatibility = AndroidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.JAVA_VERSION
+        targetCompatibility = AndroidConfig.JAVA_VERSION
     }
 
     kotlinOptions {
-        jvmTarget = AndroidConfig.jvmTarget
+        jvmTarget = AndroidConfig.JVM_TARGET
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = AndroidConfig.KOTLIN_COMPILER_EXT
     }
 
     packaging {
@@ -41,11 +43,10 @@ android {
 }
 
 dependencies {
-    implementation(project(module.primary.languageEngine.shell.path))
-    implementation(project(module.primary.data.common.path))
-    implementation(project(module.common.coroutineDispatchers.path))
-    implementation(project(module.common.jsonConverter.path))
-    implementation(libs.gson)
+    implementation(project(module.Common.Core.path))
+    implementation(project(module.LanguageEngine.Shell.path))
+    implementation(project(module.Platform.Core.path))
+
     implementation(libs.datastore)
     implementation(libs.json)
     implementation(libs.koin.android)

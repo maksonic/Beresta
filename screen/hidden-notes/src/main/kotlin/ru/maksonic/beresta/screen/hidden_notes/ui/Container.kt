@@ -6,12 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,45 +25,58 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
-import ru.maksonic.beresta.feature.edit_note.api.isExpanded
-import ru.maksonic.beresta.feature.search_bar.api.isExpanded
+import org.koin.compose.koinInject
+import ru.maksonic.beresta.common.ui_kit.animation.AnimateContent
+import ru.maksonic.beresta.common.ui_kit.bar.snackbar.SnackBarDuration
+import ru.maksonic.beresta.common.ui_kit.bar.snackbar.SnackBarHostState
+import ru.maksonic.beresta.common.ui_kit.bar.snackbar.SnackBarResult
+import ru.maksonic.beresta.common.ui_theme.colors.surface
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.HiddenNotesDialogUiApi
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.LocalNoteCardState
+import ru.maksonic.beresta.feature.notes_list.ui.api.card.NotesCardUiApi
+import ru.maksonic.beresta.feature.sorting_sheet.ui.api.LocalListHiddenNotesSortState
+import ru.maksonic.beresta.feature.ui.edit_note.api.isExpanded
+import ru.maksonic.beresta.feature.ui.search_bar.api.isExpanded
 import ru.maksonic.beresta.language_engine.shell.provider.text
-import ru.maksonic.beresta.navigation.router.router.HiddenNotesScreenRouter
+import ru.maksonic.beresta.navigation.router.routes.HiddenNotesRouter
+import ru.maksonic.beresta.platform.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.screen.hidden_notes.core.Eff
 import ru.maksonic.beresta.screen.hidden_notes.core.HiddenNotesSandbox
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
-import ru.maksonic.beresta.screen.hidden_notes.ui.widget.HiddenNotesDialog
-import ru.maksonic.beresta.ui.theme.color.surface
-import ru.maksonic.beresta.ui.widget.functional.animation.AnimateContent
+import ru.maksonic.beresta.screen.hidden_notes.core.SnackBarKey
 
 /**
  * @Author maksonic on 18.07.2023
  */
-internal typealias SendMessage = (Msg) -> Unit
+internal typealias Send = (Msg) -> Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun Container(
-    router: HiddenNotesScreenRouter,
+    router: HiddenNotesRouter,
     sandbox: HiddenNotesSandbox = koinViewModel(),
+    hiddenNotesPinInputDialogUiApi: HiddenNotesDialogUiApi.PinInputDialog = koinInject(),
+    notesCardStateStoreUiApi: NotesCardUiApi.CardState = koinInject(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
-    val model = sandbox.model.collectAsStateWithLifecycle()
+    val model by sandbox.model.collectAsStateWithLifecycle()
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = model.modalSheet.skipPartiallyExpanded
+    )
     val isUserAction = rememberSaveable { mutableStateOf(false) }
 
     HandleUiEffects(
         effects = sandbox.effects,
         router = router,
-        modalBottomSheetState = model.value.modalSheet.state,
+        modalBottomSheetState = modalBottomSheetState,
         hideModalSheet = { sandbox.send(Msg.Inner.HiddenModalBottomSheet) },
         updateUserAction = { isUserAction.value = it },
-        snackState = model.value.snackNotesState,
+        snackState = model.snackNotesState,
         send = sandbox::send
     )
 
     BackHandler {
-        if (!model.value.isVisibleStonewall) {
+        if (!model.isVisibleStonewall) {
             sandbox.send(Msg.Ui.OnTopBarBackPressed)
         }
     }
@@ -82,26 +95,37 @@ internal fun Container(
         }
     }
 
-    LaunchedEffect(model.value.editNoteFabState.state) {
-        isUserAction.value = model.value.editNoteFabState.state.isExpanded
+    LaunchedEffect(model.editNoteFabState.state) {
+        isUserAction.value = model.editNoteFabState.state.isExpanded
     }
 
-    LaunchedEffect(model.value.searchBarState.barState) {
-        isUserAction.value = model.value.searchBarState.barState.isExpanded
+    LaunchedEffect(model.searchBarState.barState) {
+        isUserAction.value = model.searchBarState.barState.isExpanded
     }
 
     Box(Modifier.fillMaxSize()) {
-        AnimateContent(model.value.isVisibleStonewall) {
+        AnimateContent(model.isVisibleStonewall) {
             if (it) {
                 val color = surface
                 Canvas(modifier = Modifier.fillMaxSize(), onDraw = { drawRect(color) })
 
             } else {
-                Content(model, sandbox::send)
+                CompositionLocalProvider(
+                    LocalListHiddenNotesSortState provides model.sortState,
+                    LocalNoteCardState provides notesCardStateStoreUiApi.sharedState.value,
+                ) {
+                    Content(model, sandbox::send, modalBottomSheetState)
+                }
             }
         }
 
-        HiddenNotesDialog(isVisible = model.value.isVisibleStonewall, sandbox::send)
+        hiddenNotesPinInputDialogUiApi.Widget(
+            isVisible = model.isVisibleStonewall,
+            onSuccessPin = { sandbox.send(Msg.Inner.UpdateStonewallVisibility(false)) },
+            hideDialog = { },
+            isBlocked = model.isVisibleStonewall,
+            onBlockedBackPressed = { sandbox.send(Msg.Ui.OnTopBarBackPressed) }
+        )
     }
 }
 
@@ -109,12 +133,12 @@ internal fun Container(
 @Composable
 private fun HandleUiEffects(
     effects: Flow<Eff>,
-    router: HiddenNotesScreenRouter,
+    router: HiddenNotesRouter,
     modalBottomSheetState: SheetState,
     hideModalSheet: () -> Unit,
     updateUserAction: (Boolean) -> Unit,
-    snackState: SnackbarHostState,
-    send: SendMessage
+    snackState: SnackBarHostState,
+    send: Send
 ) {
     val scope = rememberCoroutineScope()
     val snackScope = rememberCoroutineScope()
@@ -142,14 +166,18 @@ private fun HandleUiEffects(
 
             is Eff.ShowSnackBar -> {
                 snackScope.launch {
-                    val result = snackState.showSnackbar(
-                        message = "$removedNotesPrefix ${eff.message}",
-                        actionLabel = "Undo remove selected notes",
-                        duration = SnackbarDuration.Short
-                    )
+                    when (eff.key) {
+                        SnackBarKey.REMOVED_NOTES -> {
+                            val result = snackState.showSnackBar(
+                                message = "$removedNotesPrefix ${eff.message}",
+                                actionLabel = eff.key.id.toString(),
+                                duration = SnackBarDuration.Normal
+                            )
 
-                    if (result == SnackbarResult.ActionPerformed) {
-                        send(Msg.Ui.OnSnackUndoRemoveNotesClicked)
+                            if (result == SnackBarResult.ActionPerformed) {
+                                send(Msg.Ui.OnSnackUndoRemoveNotesClicked)
+                            }
+                        }
                     }
                 }
             }

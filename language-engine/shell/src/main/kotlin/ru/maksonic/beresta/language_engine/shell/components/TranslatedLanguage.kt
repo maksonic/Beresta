@@ -1,6 +1,6 @@
 package ru.maksonic.beresta.language_engine.shell.components
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,8 +8,17 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class TranslatedLanguage(
-    @SerializedName("russian") val russian: String = "",
-    @SerializedName("english") val english: String = "",
-    @SerializedName("chinese") val chinese: String = "",
-    @SerializedName("chinese_tr") val chineseTr: String = "",
-)
+    @SerialName("russian") val russian: String,
+    @SerialName("english") val english: String,
+    @SerialName("chinese") val chinese: String,
+    @SerialName("chinese_tr") val chineseTr: String,
+) {
+    companion object {
+        val Default = TranslatedLanguage(
+            russian = "Русский",
+            english = "English",
+            chinese = "简体中文",
+            chineseTr = "繁体中文",
+        )
+    }
+}

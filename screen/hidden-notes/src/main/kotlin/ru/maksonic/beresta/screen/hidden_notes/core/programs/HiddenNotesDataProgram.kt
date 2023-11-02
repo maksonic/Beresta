@@ -1,16 +1,18 @@
 package ru.maksonic.beresta.screen.hidden_notes.core.programs
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.withContext
-import ru.maksonic.beresta.core.DateFormatter
-import ru.maksonic.beresta.elm.core.ElmProgram
-import ru.maksonic.beresta.feature.notes.api.domain.NotesInteractor
-import ru.maksonic.beresta.feature.notes.api.domain.usecase.FetchHiddenNotesUseCase
-import ru.maksonic.beresta.feature.notes.api.ui.NoteUi
-import ru.maksonic.beresta.feature.notes.api.ui.NoteUiMapper
-import ru.maksonic.beresta.language_engine.shell.LanguageEngineApi
+import androidx.compose.ui.graphics.Color
+import ru.maksonic.beresta.common.ui_theme.colors.ColorContainer
+import ru.maksonic.beresta.feature.marker_color_picker.domain.FindMarkerColorByIdUseCase
+import ru.maksonic.beresta.feature.notes_list.domain.list.NotesInteractor
+import ru.maksonic.beresta.feature.notes_list.domain.list.usecase.FetchHiddenNotesUseCase
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUiMapper
+import ru.maksonic.beresta.feature.notes_list.ui.api.Style
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperParams
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperType
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.usecase.FindWallpaperByParamsUseCase
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
+import ru.maksonic.beresta.platform.elm.core.ElmProgram
 import ru.maksonic.beresta.screen.hidden_notes.core.Cmd
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
 import java.time.LocalDateTime
@@ -19,44 +21,40 @@ import java.time.LocalDateTime
  * @Author maksonic on 21.07.2023
  */
 class HiddenNotesDataProgram(
-    private val notesInteractor: NotesInteractor,
     private val fetchHiddenNotesUseCase: FetchHiddenNotesUseCase,
-    private val mapper: NoteUiMapper,
-    private val appLanguageEngineApi: LanguageEngineApi,
-    private val dateFormatter: DateFormatter,
-    private val ioDispatcher: CoroutineDispatcher,
+    private val notesInteractor: NotesInteractor,
+    private val findMarkerColorByIdUseCase: FindMarkerColorByIdUseCase<ColorContainer>,
+    private val findWallpaperByParamsUseCase: FindWallpaperByParamsUseCase<Color>,
+    private val mapper: NoteUiMapper
 ) : ElmProgram<Msg, Cmd> {
 
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchNotesData -> fetchNotesList(consumer)
             is Cmd.RemoveSelectedNotes -> moveSelectedNotesToTrash(cmd.notes)
-            is Cmd.UpdatePinnedNotesInCache -> updatePinnedNotes(cmd.pinned)
+            is Cmd.UpdatePinnedNotes -> updatePinnedNotes(cmd.pinned)
             is Cmd.UndoRemoveNotes -> undoRemovedFromTrash(cmd.notes)
             is Cmd.UnhideSelectedNotes -> unhideNotes(cmd.notes, consumer)
             else -> {}
         }
     }
 
-    private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = withContext(ioDispatcher) {
-        runCatching {
-            combine(fetchHiddenNotesUseCase(), appLanguageEngineApi.current) { notesDomain, lang ->
-                val notes = mapper.mapListTo(notesDomain).map { note ->
-                    note.copy(
-                        dateCreation = dateFormatter.fetchFormattedUiDate(
-                            note.dateCreationRaw, lang
-                        )
-                    )
-                }
-                consumer(Msg.Inner.FetchedNotesData(NoteUi.Collection(notes)))
-            }.collect()
+    private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = runCatching {
+        fetchHiddenNotesUseCase().collect { notesDomain ->
+            val notes = mapper.mapListTo(notesDomain).map { note ->
+                val markerColor = findMarkerColorByIdUseCase(note.style.markerColorId)
+                val wallpaper = fetchWallpaperByStyle(note.style)
 
-        }.onFailure { throwable ->
-            consumer(Msg.Inner.FetchedNotesError(throwable.localizedMessage ?: "Error"))
+                note.copy(style = note.style.copy(markerColor = markerColor), wallpaper = wallpaper)
+            }
+            consumer(Msg.Inner.FetchedNotesSuccess(NoteUi.Collection(notes)))
         }
+
+    }.onFailure { throwable ->
+        consumer(Msg.Inner.FetchedNotesFail(throwable.localizedMessage ?: "Fail"))
     }
 
-    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>) = withContext(ioDispatcher) {
+    private suspend fun moveSelectedNotesToTrash(notes: List<NoteUi>) {
         val notesUi = notes.map { note ->
             note.copy(
                 isMovedToTrash = true,
@@ -79,7 +77,7 @@ class HiddenNotesDataProgram(
         notesInteractor.updateList(restored)
     }
 
-    private suspend fun updatePinnedNotes(notes: Set<NoteUi>) {
+    private suspend fun updatePinnedNotes(notes: List<NoteUi>) {
         val currentDate = LocalDateTime.now()
         val isSelectedContainsUnpinned = notes.map { !it.style.isPinned }.contains(true)
         val selected = notes.map { note ->
@@ -93,11 +91,23 @@ class HiddenNotesDataProgram(
         notesInteractor.updateList(notesDomain)
     }
 
-    private suspend fun unhideNotes(notes: Set<NoteUi>, consumer: (Msg) -> Unit) {
+    private suspend fun unhideNotes(notes: List<NoteUi>, consumer: (Msg) -> Unit) {
         val unhidden = mapper.mapListFrom(notes.toList())
             .map { it.copy(isPinned = false, pinTime = null, isHidden = false) }
 
         notesInteractor.updateList(unhidden)
         consumer(Msg.Inner.HiddenLoadingPlaceholder)
+    }
+
+    private fun fetchWallpaperByStyle(noteStyle: Style): BaseWallpaper<Color> = with(noteStyle) {
+        findWallpaperByParamsUseCase(
+            WallpaperParams(
+                type = WallpaperType.idToType(wallpaperTypeId),
+                id = wallpaperId,
+                tintColorId = wallpaperTintId,
+                backgroundColorId = wallpaperBackgroundColorId,
+                isTextureStyle = isTextureStyle
+            )
+        )
     }
 }

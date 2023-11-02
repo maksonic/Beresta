@@ -5,8 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.compose.koinViewModel
-import ru.maksonic.beresta.elm.compose.ElmComposableEffectHandler
-import ru.maksonic.beresta.navigation.router.router.settings.SettingsNotificationsScreenRouter
+import ru.maksonic.beresta.navigation.router.routes.settings.SettingsNotificationsScreenRouter
+import ru.maksonic.beresta.platform.elm.compose.ElmComposableEffectHandler
 import ru.maksonic.beresta.screen.settings.notifications.core.Eff
 import ru.maksonic.beresta.screen.settings.notifications.core.Msg
 import ru.maksonic.beresta.screen.settings.notifications.core.SettingsNotificationsSandbox
@@ -14,7 +14,7 @@ import ru.maksonic.beresta.screen.settings.notifications.core.SettingsNotificati
 /**
  * @Author maksonic on 07.07.2023
  */
-internal typealias SendMessage = (Msg) -> Unit
+internal typealias Send = (Msg) -> Unit
 
 @Composable
 internal fun Container(

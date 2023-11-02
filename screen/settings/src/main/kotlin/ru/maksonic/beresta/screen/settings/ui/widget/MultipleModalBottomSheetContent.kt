@@ -3,43 +3,27 @@ package ru.maksonic.beresta.screen.settings.ui.widget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.feature.language_picker.api.LanguagePickerApi
-import ru.maksonic.beresta.feature.theme_picker.api.ThemePickerApi
-import ru.maksonic.beresta.screen.settings.core.Msg
-import ru.maksonic.beresta.screen.settings.ui.SendMessage
+import ru.maksonic.beresta.feature.ui.language_picker.api.LanguagePickerUiApi
+import ru.maksonic.beresta.feature.ui.theme_picker.api.ThemePickerUiApi
+import ru.maksonic.beresta.screen.settings.core.ModalSheetContent
+import ru.maksonic.beresta.screen.settings.core.Model
 
 /**
  * @Author maksonic on 20.02.2023
  */
-enum class ModalSheetContent {
-    NOTHING, LANGUAGE_SELECTOR, THEME_SELECTOR
-}
-
 @Composable
 internal fun MultipleModalBottomSheetContent(
-    send: SendMessage,
-    currentSheetContent: State<ModalSheetContent>,
+    model: Model,
     modifier: Modifier = Modifier,
-    languageSheet: LanguagePickerApi.Ui = koinInject(),
-    themeSheet: ThemePickerApi.Ui = koinInject(),
+    languageSheet: LanguagePickerUiApi = koinInject(),
+    themeSheet: ThemePickerUiApi = koinInject(),
 ) {
-    when (currentSheetContent.value) {
-        ModalSheetContent.LANGUAGE_SELECTOR -> {
-            languageSheet.SheetContent(
-                hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) }
-            )
-        }
-
-        ModalSheetContent.THEME_SELECTOR -> {
-            themeSheet.SheetContent(
-                hideSheet = { send(Msg.Ui.OnHideModalSheetClicked) },
-            )
-        }
-
+    when (model.modalSheet.content) {
+        ModalSheetContent.LANGUAGE_PICKER -> languageSheet.SheetContent()
+        ModalSheetContent.THEME_PICKER -> themeSheet.SheetContent()
         ModalSheetContent.NOTHING -> Box(modifier.size(1.dp))
     }
 }

@@ -2,10 +2,10 @@ package ru.maksonic.beresta.screen.settings.notifications.core
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.maksonic.beresta.elm.core.ElmCommand
-import ru.maksonic.beresta.elm.core.ElmEffect
-import ru.maksonic.beresta.elm.core.ElmMessage
-import ru.maksonic.beresta.elm.core.ElmModel
+import ru.maksonic.beresta.platform.elm.core.ElmCommand
+import ru.maksonic.beresta.platform.elm.core.ElmEffect
+import ru.maksonic.beresta.platform.elm.core.ElmMessage
+import ru.maksonic.beresta.platform.elm.core.ElmModel
 
 /**
  * @Author maksonic on 07.07.2023

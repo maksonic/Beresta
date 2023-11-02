@@ -1,32 +1,29 @@
 package ru.maksonic.beresta.screen.settings.appearance.core
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import ru.maksonic.beresta.elm.core.ElmUpdate
-import ru.maksonic.beresta.elm.core.Sandbox
-import ru.maksonic.beresta.ui.theme.component.AppAnimationVelocity
+import ru.maksonic.beresta.common.ui_theme.AppAnimationVelocity
+import ru.maksonic.beresta.platform.elm.core.ElmUpdate
+import ru.maksonic.beresta.platform.elm.core.Sandbox
 
 /**
  * @Author maksonic on 07.07.2023
  */
-private typealias UpdateResult = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
+private typealias Update = ElmUpdate<Model, Set<Cmd>, Set<Eff>>
 
 class SettingsAppearanceSandbox(
     program: SettingsAppearanceProgram
 ) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
-    initialCmd = setOf(Cmd.FetchCurrentAppLang),
+    initialCmd = setOf(Cmd.FetchCardDate),
     subscriptions = listOf(program)
 ) {
-    override fun update(msg: Msg, model: Model): UpdateResult = when (msg) {
-        is Msg.Inner.FetchedAppLang -> fetchedAppLang(model, msg)
+    override fun update(msg: Msg, model: Model): Update = when (msg) {
+        is Msg.Inner.FetchedCardDate -> fetchedCardDate(model, msg)
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
-        is Msg.Ui.OnNoteCardShapeClicked -> onChangeCardCornersClicked(model, msg)
-        is Msg.Ui.OnNoteCardElevationClicked -> onChangeCardElevationClicked(model, msg)
+        is Msg.Ui.OnCardShapeClicked -> onChangeCardCornersClicked(model, msg)
+        is Msg.Ui.OnCardElevationClicked -> onChangeCardElevationClicked(model, msg)
+        is Msg.Ui.OnCardWallpaperClicked -> onCardWallpaperVisibilityClicked(model, msg)
+        is Msg.Ui.OnCardColorMarkerVisibilityClicked -> onCardMarkerVisibilityClicked(model, msg)
         is Msg.Ui.OnNoteLinesCountClicked -> onChangeCardLinesCountClicked(model)
-        is Msg.Ui.OnNoteCardColorMarkerVisibilityClicked -> {
-            onNoteCardColorMarkerVisibilityClicked(model, msg)
-        }
-
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
         is Msg.Ui.OnModalSheetAcceptClicked -> onModalSheetAcceptClicked(model)
         is Msg.Inner.UpdatedNoteTitleMaxLines -> updatedNoteTitleMaxLines(model, msg)
@@ -40,39 +37,42 @@ class SettingsAppearanceSandbox(
         is Msg.Ui.OnModalSheetAnimationsVelocityDefaultClicked -> {
             onModalSheetAnimationsVelocityDefaultClicked(model)
         }
+
     }
 
-    private fun onTopBarBackPressed(model: Model): UpdateResult =
+    private fun onTopBarBackPressed(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.NavigateBack))
 
     private fun onChangeCardCornersClicked(
         model: Model,
-        msg: Msg.Ui.OnNoteCardShapeClicked
-    ): UpdateResult = ElmUpdate(model, commands = setOf(Cmd.UpdateNoteCardShape(msg.shape)))
+        msg: Msg.Ui.OnCardShapeClicked
+    ): Update = ElmUpdate(model, commands = setOf(Cmd.UpdateNoteCardShape(msg.shape)))
 
     private fun onChangeCardElevationClicked(
         model: Model,
-        msg: Msg.Ui.OnNoteCardElevationClicked
-    ): UpdateResult = ElmUpdate(model, commands = setOf(Cmd.UpdateNoteCardElevation(msg.isEnabled)))
+        msg: Msg.Ui.OnCardElevationClicked
+    ): Update = ElmUpdate(model, commands = setOf(Cmd.UpdateNoteCardElevation(msg.isEnabled)))
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun onChangeCardLinesCountClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onCardWallpaperVisibilityClicked(
+        model: Model,
+        msg: Msg.Ui.OnCardWallpaperClicked
+    ): Update = ElmUpdate(model, commands = setOf(Cmd.UpdateNoteCardWallpaper(msg.isEnabled)))
+
+    private fun onCardMarkerVisibilityClicked(
+        model: Model,
+        msg: Msg.Ui.OnCardColorMarkerVisibilityClicked
+    ): Update =
+        ElmUpdate(model, commands = setOf(Cmd.UpdatedNoteCardColorMarkerVisibility(msg.isVisible)))
+
+    private fun onChangeCardLinesCountClicked(model: Model): Update = ElmUpdate(
         model = model.copy(
             modalSheet = model.modalSheet.copy(
-                isVisible = true,
-                content = ModalSheetContent.NOTE_CARD_LINES_PICKER
+                isVisible = true, content = ModalSheetContent.NOTE_CARD_LINES_PICKER
             )
         )
     )
 
-    private fun onNoteCardColorMarkerVisibilityClicked(
-        model: Model,
-        msg: Msg.Ui.OnNoteCardColorMarkerVisibilityClicked
-    ): UpdateResult =
-        ElmUpdate(model, commands = setOf(Cmd.UpdatedNoteCardColorMarkerVisibility(msg.isVisible)))
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun hiddenModalBottomSheet(model: Model): UpdateResult = ElmUpdate(
+    private fun hiddenModalBottomSheet(model: Model): Update = ElmUpdate(
         model.copy(
             modalSheet = model.modalSheet.copy(
                 isVisible = false, content = ModalSheetContent.NOTHING
@@ -80,29 +80,28 @@ class SettingsAppearanceSandbox(
         )
     )
 
-    private fun onModalSheetAcceptClicked(model: Model): UpdateResult =
+    private fun onModalSheetAcceptClicked(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))
 
     private fun updatedNoteTitleMaxLines(
         model: Model,
         msg: Msg.Inner.UpdatedNoteTitleMaxLines
-    ): UpdateResult =
+    ): Update =
         ElmUpdate(model, commands = setOf(Cmd.UpdatedNoteCardTitleMaxLines(msg.value)))
 
     private fun updatedNoteMessageMaxLines(
         model: Model,
         msg: Msg.Inner.UpdatedNoteMessageMaxLines
-    ): UpdateResult =
+    ): Update =
         ElmUpdate(model, commands = setOf(Cmd.UpdatedNoteCardMessageMaxLines(msg.value)))
 
-    private fun onModalSheetLinesPickerDefaultClicked(model: Model): UpdateResult =
+    private fun onModalSheetLinesPickerDefaultClicked(model: Model): Update =
         ElmUpdate(model, commands = setOf(Cmd.ResetNoteCardLinesByDefault))
 
-    private fun fetchedAppLang(model: Model, msg: Msg.Inner.FetchedAppLang): UpdateResult =
-        ElmUpdate(model.copy(currentLang = msg.lang))
+    private fun fetchedCardDate(model: Model, msg: Msg.Inner.FetchedCardDate): Update =
+        ElmUpdate(model.copy(cardDate = msg.date))
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    private fun onChangeAnimationsVelocityClicked(model: Model): UpdateResult = ElmUpdate(
+    private fun onChangeAnimationsVelocityClicked(model: Model): Update = ElmUpdate(
         model = model.copy(
             modalSheet = model.modalSheet.copy(
                 isVisible = true,
@@ -114,10 +113,10 @@ class SettingsAppearanceSandbox(
     private fun updatedAnimationsVelocity(
         model: Model,
         msg: Msg.Inner.UpdatedAnimationsVelocity
-    ): UpdateResult =
+    ): Update =
         ElmUpdate(model, commands = setOf(Cmd.UpdateAnimationsVelocity(msg.key)))
 
-    private fun onModalSheetAnimationsVelocityDefaultClicked(model: Model): UpdateResult =
+    private fun onModalSheetAnimationsVelocityDefaultClicked(model: Model): Update =
         ElmUpdate(
             model = model,
             commands = setOf(Cmd.UpdateAnimationsVelocity(AppAnimationVelocity.Key.NORMAL))

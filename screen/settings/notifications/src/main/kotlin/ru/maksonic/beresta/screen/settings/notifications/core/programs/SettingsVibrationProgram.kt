@@ -1,7 +1,7 @@
 package ru.maksonic.beresta.screen.settings.notifications.core.programs
 
-import ru.maksonic.beresta.core.system.VibrationPerformer
-import ru.maksonic.beresta.elm.core.ElmProgram
+import ru.maksonic.beresta.common.core.VibrationPerformer
+import ru.maksonic.beresta.platform.elm.core.ElmProgram
 import ru.maksonic.beresta.screen.settings.notifications.core.Cmd
 import ru.maksonic.beresta.screen.settings.notifications.core.Msg
 
@@ -16,7 +16,6 @@ class SettingsVibrationProgram(
         when (cmd) {
             is Cmd.FetchVibrationState -> fetchVibrationState(consumer)
             is Cmd.UpdateVibrationState -> updateVibrationState(cmd.isEnabled)
-            else -> {}
         }
     }
 

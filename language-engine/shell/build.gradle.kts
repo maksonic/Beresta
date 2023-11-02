@@ -1,23 +1,21 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinPluginSerialization)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 android {
-    namespace = module.primary.languageEngine.shell.namespace
-    compileSdk = AndroidConfig.compileSdk
+    namespace = module.LanguageEngine.Shell.namespace
+    compileSdk = AndroidConfig.COMPILE_SDK
 
     defaultConfig {
-        minSdk = AndroidConfig.minSdk
-        targetSdk = AndroidConfig.targetSdk
-
-        testInstrumentationRunner = AndroidConfig.testInstrumentationRunner
+        minSdk = AndroidConfig.MIN_SDK
+        testInstrumentationRunner = AndroidConfig.TEST_RUNNER
     }
 
     buildTypes {
-        getByName(BuildConfig.Type.current) {
-            isMinifyEnabled = AndroidConfig.isMinifyEnabled
+        getByName(BuildConfig.Type.CURRENT) {
+            isMinifyEnabled = AndroidConfig.IS_MINIFY
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -26,12 +24,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = AndroidConfig.javaVersion
-        targetCompatibility = AndroidConfig.javaVersion
+        sourceCompatibility = AndroidConfig.JAVA_VERSION
+        targetCompatibility = AndroidConfig.JAVA_VERSION
     }
 
     kotlinOptions {
-        jvmTarget = AndroidConfig.jvmTarget
+        jvmTarget = AndroidConfig.JVM_TARGET
     }
 
     buildFeatures {
@@ -39,7 +37,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = AndroidConfig.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion = AndroidConfig.KOTLIN_COMPILER_EXT
     }
 
     packaging {
@@ -50,9 +48,7 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
-    implementation(libs.gson)
     implementation(libs.json)
-    implementation(libs.coroutinesAndroid)
+    implementation(libs.coroutines.android)
 }

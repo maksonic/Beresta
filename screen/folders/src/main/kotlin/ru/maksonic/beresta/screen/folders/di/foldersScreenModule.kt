@@ -1,9 +1,7 @@
 package ru.maksonic.beresta.screen.folders.di
 
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ru.maksonic.beresta.common.coroutine_dispatchers.CoroutineDispatchers
 import ru.maksonic.beresta.screen.folders.core.FoldersListProgram
 import ru.maksonic.beresta.screen.folders.core.FoldersScreenSandbox
 
@@ -13,16 +11,16 @@ import ru.maksonic.beresta.screen.folders.core.FoldersScreenSandbox
 val foldersScreenModule = module {
     single {
         FoldersListProgram(
-            foldersMapper = get(),
+            fetchFoldersUseCase = get(),
+            fetchFoldersSortUseCase = get(),
             foldersInteractor = get(),
+            foldersMapper = get(),
+            fetchNotesUseCase = get(),
             notesInteractor = get(),
             notesMapper = get(),
+            foldersSortUiMapper = get(),
             navigator = get(),
-            appLanguageEngineApi = get(),
-            stickyFoldersTitleFormatter = get(),
-            chipsRowApi = get(),
-            ioDispatcher = get(named(CoroutineDispatchers.IO))
-
+            currentFolderStoreUiApi = get()
         )
     }
     viewModel { FoldersScreenSandbox(program = get()) }

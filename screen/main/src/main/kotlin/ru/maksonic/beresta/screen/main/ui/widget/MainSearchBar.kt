@@ -4,41 +4,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
 import org.koin.compose.koinInject
-import ru.maksonic.beresta.feature.folders_chips.api.ui.ChipFeature
-import ru.maksonic.beresta.feature.search_bar.api.SearchBarApi
-import ru.maksonic.beresta.feature.sorting_sheet.api.listUiSortState
+import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
+import ru.maksonic.beresta.feature.sorting_sheet.ui.api.listNotesSortState
+import ru.maksonic.beresta.feature.ui.search_bar.api.SearchBarUiApi
 import ru.maksonic.beresta.screen.main.core.Model
 import ru.maksonic.beresta.screen.main.core.Msg
-import ru.maksonic.beresta.screen.main.ui.SendMessage
+import ru.maksonic.beresta.screen.main.ui.screen.Send
 
 /**
  * @Author maksonic on 02.07.2023
  */
 @Composable
 internal fun MainSearchBar(
-    model: State<Model>,
-    send: SendMessage,
+    model: Model,
+    send: Send,
     isColoredBackplate: State<Boolean>,
-    searchBarApi: SearchBarApi.Ui = koinInject()
+    searchBarApi: SearchBarUiApi = koinInject()
 ) {
-    val searchBarState = rememberUpdatedState(model.value.searchBarState)
-    val gridCount = rememberUpdatedState(if (listUiSortState.gridNotesCount == 1) 2 else 1)
-    val currentFolderId = rememberUpdatedState(ChipFeature.currentSelectedFolder)
+    val gridCount = rememberUpdatedState(if (listNotesSortState.gridCount == 1) 2 else 1)
+    val currentFolderId = FoldersFeature.currentSelected
     val actions = mapOf(
-        SearchBarApi.ActionKey.OnCollapseBar to { send(Msg.Ui.OnCollapseSearchBar) },
-        SearchBarApi.ActionKey.OnExpandBar to { send(Msg.Ui.OnExpandSearchBar) },
-        SearchBarApi.ActionKey.OnCancelClicked to { send(Msg.Ui.CancelNotesSelection) },
-        SearchBarApi.ActionKey.OnShareClicked to { send(Msg.Ui.OnCounterBarShareClicked) },
-        SearchBarApi.ActionKey.OnSelectAllClicked to {
-            send(Msg.Ui.OnCounterBarSelectAllClicked(currentFolderId.value))
+        SearchBarUiApi.ActionKey.OnCollapseBar to { send(Msg.Ui.OnCollapseSearchBar) },
+        SearchBarUiApi.ActionKey.OnExpandBar to { send(Msg.Ui.OnExpandSearchBar) },
+        SearchBarUiApi.ActionKey.OnCancelClicked to { send(Msg.Ui.OnCancelSelectionClicked) },
+        SearchBarUiApi.ActionKey.OnShareClicked to { send(Msg.Ui.OnCounterBarShareClicked) },
+        SearchBarUiApi.ActionKey.OnSelectAllClicked to {
+            send(Msg.Ui.OnCounterBarSelectAllClicked(currentFolderId))
         },
-        SearchBarApi.ActionKey.OnChangeGridClicked to {
+        SearchBarUiApi.ActionKey.OnChangeGridClicked to {
             send(Msg.Ui.OnChangeGridViewClicked(gridCount.value))
         },
     )
 
     searchBarApi.Widget(
-        state = searchBarState,
+        state = model.searchBarState,
         isColoredBackplate = isColoredBackplate,
         actions = actions,
         onSearchResultNoteClicked = { send(Msg.Ui.OnNoteClicked(it)) },

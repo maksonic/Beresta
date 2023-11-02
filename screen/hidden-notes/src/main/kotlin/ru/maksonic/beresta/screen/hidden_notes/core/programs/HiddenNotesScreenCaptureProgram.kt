@@ -2,8 +2,8 @@ package ru.maksonic.beresta.screen.hidden_notes.core.programs
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import ru.maksonic.beresta.core.secure.ScreenCaptureManager
-import ru.maksonic.beresta.elm.core.ElmProgram
+import ru.maksonic.beresta.common.core.ScreenCaptureManager
+import ru.maksonic.beresta.platform.elm.core.ElmProgram
 import ru.maksonic.beresta.screen.hidden_notes.core.Cmd
 import ru.maksonic.beresta.screen.hidden_notes.core.Msg
 

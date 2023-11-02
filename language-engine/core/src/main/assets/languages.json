@@ -7,55 +7,85 @@
       "chinese": "Упрощённый китайский",
       "chinese_tr": "Традиционный китайский"
     },
-    "onboarding": {
-      "btn_title_next": "Продолжить",
-      "btn_title_sync": "Синхронизировать",
-      "btn_title_skip_sync": "Не сейчас",
-      "onboarding_data": [
-        {
-          "id": 0,
-          "title": "Заголовок 1 на русском",
-          "description": "1 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
-        },
-        {
-          "id": 1,
-          "title": "Заголовок 2 на русском",
-          "description": "2 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
-        },
-        {
-          "id": 2,
-          "title": "Заголовок 3 на русском",
-          "description": "3 Важно заботиться о пациенте, следить за врачом, но это время великой боли и страданий. Ибо, говоря в мельчайших подробностях, никто не должен заниматься какой-либо работой, если он не извлечет из нее какой-либо пользы."
-        },
-        {
-          "id": 3,
-          "title": "Синхронизируйте данные с облаком",
-          "description": "Подключите свой Google аккаунт, чтобы иметь возможность восстановить заметки, а так же использовать их на других устройствах."
-        }
-      ]
+    "editor": {
+      "hint_input_title": "Заголовок",
+      "hint_input_message": "Написать:",
+      "snack_message_note_updated": "Заметка была обновлена",
+      "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан.",
+      "message_note_wallpaper_is_not_selected": "Вы не выбрали фон для заметки.",
+      "top_bar_select_note_wallpaper": "Установить фон",
+      "note_wallpaper_category_color": "Цвет",
+      "note_wallpaper_category_gradient": "Градиенты",
+      "note_wallpaper_category_texture": "Текстура",
+      "note_wallpaper_category_image": "Обои",
+      "dialog_title_marker_color_picker": "Выбрать цвет маркера",
+      "dialog_title_wallpaper_picker": "Выбрать фон",
+      "dialog_title_wallpaper_texture_style_picker": "Цвет текстуры",
+      "hint_wallpaper_picker_background": "Фон",
+      "hint_wallpaper_picker_style": "Готовый стиль",
+      "tab_title_marker_color_category_bright": "Яркий",
+      "tab_title_marker_color_category_normal": "Нормальный",
+      "tab_title_marker_color_category_neutral": "Нейтральный"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "Не удалось загрузить папки",
+      "error_ui_fail_pin_creation": "Ошибка. ПИН-коды не совпали.",
+      "error_ui_fail_pin_verification": "Ошибка. Неверный ПИН-код."
+    },
+    "folders": {
+      "top_bar_title": "Управление папками",
+      "dialog_title_create_new_folder": "Создать папку",
+      "dialog_title_edit_folder": "Изменить папку",
+      "title_pinned_start_notes_folder": "Все заметки",
+      "title_pinned_end_notes_folder": "Без категории",
+      "hint_error_empty_folder_name": "Название не может быть пустым.",
+      "hint_removed_folders_count": "Удалено папок:",
+      "btn_title_crete_folder": "Создать папку",
+      "btn_title_select_folder": "Выбрать папку"
+    },
+    "hidden_notes": {
+      "top_bar_title": "Скрытые заметки",
+      "dialog_title": "Установить ПИН-код",
+      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
+      "hint_cool_down_verification": "Слишком много попыток. Пожалуйста повторите ввод ПИН-кода через:",
+      "hint_create_code": "Введите 5-значный код",
+      "hint_create_repeat_code": "Повторите код ещё раз",
+      "hint_verify_code": "Введите ПИН-код",
+      "hint_forget_pin_code": "Создать новый ПИН-код?",
+      "dialog_title_reset_pin": "Вы действительно хотите создать новый ПИН-код?",
+      "dialog_message_reset_pin": "Внимание! Все текущие скрытые заметки будут безвозвратно удалены.",
+      "title_sign_up_biometric_dialog": "Использовать сканер?",
+      "title_auth_biometric_dialog": "Показать скрытые заметки",
+      "description_biometric_dialog": "Для быстрого доступа к папке со скрытыми заметками.",
+      "btn_title_negative_biometric_dialog": "Не использовать"
     },
     "shared": {
       "note": "Заметка",
       "note_title": "Заголовок",
-      "btn_title_save": "Сохранить",
-      "btn_title_cancel": "Отменить",
       "btn_title_accept": "Ок",
-      "btn_title_close": "Закрыть",
-      "btn_title_hide": "Скрыть",
-      "btn_title_unhide": "Отменить скрытие",
-      "btn_title_pin": "Закрепить",
-      "btn_title_unpin": "Открепить",
-      "btn_title_replace": "Переместить",
-      "btn_title_remove": "Удалить",
-      "btn_title_delete": "Удалить",
-      "btn_title_create": "Создать",
+      "btn_title_back": "Назад",
+      "btn_title_by_default": "По умолчанию",
+      "btn_title_cancel": "Отменить",
       "btn_title_change": "Изменить",
+      "btn_title_close": "Закрыть",
+      "btn_title_create": "Создать",
+      "btn_title_delete": "Удалить",
+      "btn_title_hide": "Скрыть",
+      "btn_title_next": "Продолжить",
+      "btn_title_pin": "Закрепить",
+      "btn_title_remove": "Удалить",
+      "btn_title_replace": "Переместить",
       "btn_title_restore": "Восстановить",
       "btn_title_retry": "Повторить",
-      "btn_title_by_default": "По умолчанию",
+      "btn_title_save": "Сохранить",
+      "btn_title_skip_sync": "Не сейчас",
+      "btn_title_sync": "Синхронизировать",
+      "btn_title_unhide": "Отменить скрытие",
+      "btn_title_unpin": "Открепить",
       "hint_find_note_search_bar": "Найти заметку",
       "hint_selected_items_count": "Выбрано:",
       "hint_removed_notes_count": "Удалено заметок:",
+      "hint_no_folders": "Нет папок",
       "hint_no_notes": "Нет заметок",
       "hint_nothing_found": "Ничего не найдено",
       "hint_an_error_has_occurred": "Произошла ошибка",
@@ -64,7 +94,7 @@
     },
     "settings": {
       "top_bar_title": "Настройки",
-      "title_general": "Основное",
+      "title_general": "Основные",
       "title_account": "Аккаунт",
       "title_support": "Помощь",
       "item_switch_language": "Язык",
@@ -77,7 +107,9 @@
       "title_theme_system": "Системная",
       "title_theme_light": "Светлая",
       "title_theme_night": "Тёмная",
-      "title_theme_high_contrast": "Высококонтрастная"
+      "title_theme_dark": "Чёрная",
+      "dialog_language_picker_title": "Выбрать язык",
+      "dialog_theme_picker_title": "Выбрать тему"
     },
     "settings_appearance": {
       "top_bar_title": "Внешний вид",
@@ -104,38 +136,23 @@
     "settings_security": {
       "top_bar_title": "Безопасность",
       "hint_pin_code": "ПИН-код",
+      "title_hidden_notes_biometric_visibility": "Скрытые заметки",
+      "item_hidden_notes_biometric_visibility": "Разблокировка по сканеру",
       "item_pin_code_visibility": "Показывать при вводе",
       "item_key_tap_visibility": "Эффект нажатия на кнопку",
-      "description_key_tap_visibility": "Используется для цифровой клавиатуры при вводе ПИН-кода."
+      "description_key_tap_visibility": "Используется для цифровой клавиатуры при вводе ПИН-кода.",
+      "description_hidden_notes_biometric": "Использовать сканер для доступа к скрытым заметкам"
     },
-    "editor": {
-      "hint_input_title": "Заголовок",
-      "hint_input_message": "Написать:",
-      "snack_message_note_updated": "Заметка была обновлена",
-      "message_max_note_length_warning": "Заметка слишком длинная. Текст в конце был обрезан.",
-      "message_note_wallpaper_is_not_selected": "Вы не выбрали фон для заметки.",
-      "top_bar_select_note_wallpaper": "Установить фон",
-      "note_wallpaper_category_new": "Новинки",
-      "note_wallpaper_category_soft_colors": "Цвета",
-      "note_wallpaper_category_bright_colors": "Яркие цвета",
-      "note_wallpaper_category_gradients": "Градиенты",
-      "note_wallpaper_category_grids": "Сетка",
-      "note_wallpaper_category_best": "Лучшее",
-      "dialog_title_marker_color_picker": "Выбрать цвет маркера",
-      "tab_title_marker_color_category_bright": "Яркий",
-      "tab_title_marker_color_category_normal": "Нормальный",
-      "tab_title_marker_color_category_neutral": "Нейтральный"
-    },
-    "folders": {
-      "top_bar_title": "Управление папками",
-      "dialog_title_create_new_folder": "Новая папка",
-      "dialog_title_edit_folder": "Изменить папку",
-      "title_pinned_start_notes_folder": "Все заметки",
-      "title_pinned_end_notes_folder": "Без категории",
-      "hint_error_empty_folder_name": "Название не может быть пустым.",
-      "hint_removed_folders_count": "Удалено папок:",
-      "btn_title_crete_folder": "Создать папку",
-      "btn_title_select_folder": "Выбрать папку"
+    "sorting_sheet": {
+      "title_sheet_notes": "Сортировать заметки",
+      "title_sheet_folders": "Сортировать папки",
+      "hint_sort_by_ascending": "По возрастанию",
+      "hint_sort_by_descending": "По убыванию",
+      "hint_sort_category_alphabet": "Алфавит",
+      "hint_sort_category_date_creation": "Дата создания",
+      "hint_sort_category_date_update": "Дата изменения",
+      "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки",
+      "hint_checkbox_sort_pinned_folders": "Учитывать закрепленные папки"
     },
     "trash": {
       "top_bar_title": "Корзина",
@@ -151,34 +168,6 @@
       "dialog_body_delete_folders_list": "После удаления выбранных папок с заметками из корзины их будет невозможно восстановить.",
       "message_empty_folders_list": "Нет удалённых папок",
       "hint_moved_to_trash_date_prefix": "удалено"
-    },
-    "sort_notes_sheet": {
-      "title_sheet_notes": "Сортировать заметки",
-      "title_sheet_folders": "Сортировать папки",
-      "hint_sort_by_ascending": "По возрастанию",
-      "hint_sort_by_descending": "По убыванию",
-      "hint_sort_category_alphabet": "Алфавит",
-      "hint_sort_category_date_creation": "Дата создания",
-      "hint_sort_category_date_update": "Дата изменения",
-      "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки",
-      "hint_checkbox_sort_pinned_folders": "Учитывать закрепленные папки"
-    },
-    "hidden_notes": {
-      "top_bar_title": "Скрытые заметки",
-      "dialog_title": "Установить ПИН-код",
-      "dialog_message": "ПИН-код служит для доступа к папке со скрытыми заметками.\n\nПИН-код невозможно восстановить.\n\nЕсли вы забыли ПИН-код, то вы можете установить новый, но все скрытые заметки будут безвозвратно удалены.",
-      "hint_cool_down_verification": "Слишком много попыток. Пожалуйста повторите ввод ПИН-кода через:",
-      "hint_create_code": "Введите 6-значный код",
-      "hint_create_repeat_code": "Повторите код ещё раз",
-      "hint_verify_code": "Введите ПИН-код",
-      "hint_forget_pin_code": "Создать новый ПИН-код?",
-      "dialog_title_reset_pin": "Вы действительно хотите создать новый ПИН-код?",
-      "dialog_message_reset_pin": "Внимание! Все текущие скрытые заметки будут безвозвратно удалены."
-    },
-    "error_ui": {
-      "error_ui_fetched_chips_not_found": "Не удалось загрузить папки",
-      "error_ui_fail_pin_creation": "Ошибка. ПИН-коды не совпали.",
-      "error_ui_fail_pin_verification": "Ошибка. Неверный ПИН-код."
     }
   },
   "english": {
@@ -189,55 +178,85 @@
       "chinese": "Simplified Chinese",
       "chinese_tr": "Traditional Chinese"
     },
-    "onboarding": {
-      "btn_title_next": "Next",
-      "btn_title_sync": "Synchronize",
-      "btn_title_skip_sync": "Not now",
-      "onboarding_data": [
-        {
-          "id": 0,
-          "title": "Title 1 on english",
-          "description": "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        },
-        {
-          "id": 1,
-          "title": "Title 2 on english",
-          "description": "2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        },
-        {
-          "id": 2,
-          "title": "Title 3 on english",
-          "description": "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        },
-        {
-          "id": 3,
-          "title": "Sync your data to the cloud",
-          "description": "Connect your Google account to be able to restore notes and use them on other devices."
-        }
-      ]
+    "editor": {
+      "hint_input_title": "Title",
+      "hint_input_message": "Write:",
+      "snack_message_note_updated": "Note has been updated",
+      "message_max_note_length_warning": "The note is too long. The text at the end was cut off.",
+      "message_note_wallpaper_is_not_selected": "You have not selected a background for your note.",
+      "top_bar_select_note_wallpaper": "Set note background",
+      "note_wallpaper_category_color": "Color",
+      "note_wallpaper_category_gradient": "Gradient",
+      "note_wallpaper_category_texture": "Texture",
+      "note_wallpaper_category_image": "Wallpaper",
+      "dialog_title_marker_color_picker": "Select marker color",
+      "dialog_title_wallpaper_picker": "Select background",
+      "dialog_title_wallpaper_texture_style_picker": "Texture color",
+      "hint_wallpaper_picker_background": "Background",
+      "hint_wallpaper_picker_style": "Ready style",
+      "tab_title_marker_color_category_bright": "Bright",
+      "tab_title_marker_color_category_normal": "Normal",
+      "tab_title_marker_color_category_neutral": "Neutral"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "Failed to load folders",
+      "error_ui_fail_pin_creation": "Error. PIN codes did not match.",
+      "error_ui_fail_pin_verification": "Error. Invalid PIN."
+    },
+    "folders": {
+      "top_bar_title": "Folder Management",
+      "dialog_title_create_new_folder": "Create a new folder",
+      "dialog_title_edit_folder": "Edit folder",
+      "title_pinned_start_notes_folder": "All",
+      "title_pinned_end_notes_folder": "Uncategorized",
+      "hint_error_empty_folder_name": "Folder name cannot be empty.",
+      "hint_removed_folders_count": "Removed folders:",
+      "btn_title_crete_folder": "Create new folder",
+      "btn_title_select_folder": "Select folder"
+    },
+    "hidden_notes": {
+      "top_bar_title": "Hidden notes",
+      "dialog_title": "Set PIN",
+      "dialog_message": "The PIN code is used to access the hidden notes folder.\n\nThe PIN cannot be restored.\n\nIf you have forgotten your PIN, you can set a new one, but all hidden notes will be permanently deleted.",
+      "hint_cool_down_verification": "Too many tries. Please re-enter the PIN code via:",
+      "hint_create_code": "Enter 5 digit code",
+      "hint_create_repeat_code": "Repeat the code again",
+      "hint_verify_code": "Enter your PIN",
+      "hint_forget_pin_code": "Create a new PIN?",
+      "dialog_title_reset_pin": "Are you sure you want to create a new PIN?",
+      "dialog_message_reset_pin": "Attention! All current hidden notes will be permanently deleted.",
+      "title_sign_up_biometric_dialog": "Use a scanner?",
+      "title_auth_biometric_dialog": "Show hidden notes",
+      "description_biometric_dialog": "For quick access to a folder with hidden notes.",
+      "btn_title_negative_biometric_dialog": "Do not use"
     },
     "shared": {
       "note": "Note",
       "note_title": "Title",
-      "btn_title_save": "Save",
-      "btn_title_cancel": "Cancel",
       "btn_title_accept": "Ok",
-      "btn_title_close": "Close",
-      "btn_title_hide": "Hide",
-      "btn_title_unhide": "Unhide",
-      "btn_title_pin": "Pin",
-      "btn_title_unpin": "Unpin",
-      "btn_title_replace": "Move",
-      "btn_title_remove": "Remove",
-      "btn_title_delete": "Delete",
-      "btn_title_create": "Create",
+      "btn_title_back": "Back",
+      "btn_title_by_default": "Default",
+      "btn_title_cancel": "Cancel",
       "btn_title_change": "Edit",
+      "btn_title_close": "Close",
+      "btn_title_create": "Create",
+      "btn_title_delete": "Delete",
+      "btn_title_hide": "Hide",
+      "btn_title_next": "Next",
+      "btn_title_pin": "Pin",
+      "btn_title_remove": "Remove",
+      "btn_title_replace": "Replace",
       "btn_title_restore": "Restore",
       "btn_title_retry": "Retry",
-      "btn_title_by_default": "Default",
+      "btn_title_save": "Save",
+      "btn_title_sync": "Synchronize",
+      "btn_title_unhide": "Unhide",
+      "btn_title_unpin": "Unpin",
+      "btn_title_skip_sync": "Not now",
       "hint_find_note_search_bar": "Find note",
       "hint_selected_items_count": "Selected: ",
       "hint_removed_notes_count": "Removed notes:",
+      "hint_no_folders": "No folders",
       "hint_no_notes": "No notes",
       "hint_nothing_found": "Nothing found",
       "hint_an_error_has_occurred": "An error has occurred",
@@ -259,7 +278,9 @@
       "title_theme_system": "System",
       "title_theme_light": "Light",
       "title_theme_night": "Night",
-      "title_theme_high_contrast": "High contrast"
+      "title_theme_dark": "Dark",
+      "dialog_language_picker_title": "Select an app language",
+      "dialog_theme_picker_title": "Select an app theme"
     },
     "settings_appearance": {
       "top_bar_title": "Appearance",
@@ -286,38 +307,23 @@
     "settings_security": {
       "top_bar_title": "Safety",
       "hint_pin_code": "PIN code",
+      "title_hidden_notes_biometric_visibility": "Hidden notes",
+      "item_hidden_notes_biometric_visibility": "Unlocking by scanner",
       "item_pin_code_visibility": "Show as you type",
       "item_key_tap_visibility": "Button click effect",
-      "description_key_tap_visibility": "Used for the numeric keypad when entering a PIN."
+      "description_key_tap_visibility": "Used for the numeric keypad when entering a PIN.",
+      "description_hidden_notes_biometric": "Use the scanner to access hidden notes"
     },
-    "editor": {
-      "hint_input_title": "Title",
-      "hint_input_message": "Write:",
-      "snack_message_note_updated": "Note has been updated",
-      "message_max_note_length_warning": "The note is too long. The text at the end was cut off.",
-      "message_note_wallpaper_is_not_selected": "You have not selected a background for your note.",
-      "top_bar_select_note_wallpaper": "Set note background",
-      "note_wallpaper_category_new": "New",
-      "note_wallpaper_category_soft_colors": "Colors",
-      "note_wallpaper_category_bright_colors": "Bright Colors",
-      "note_wallpaper_category_gradients": "Gradients",
-      "note_wallpaper_category_grids": "Grid",
-      "note_wallpaper_category_best": "Best",
-      "dialog_title_marker_color_picker": "Select marker color",
-      "tab_title_marker_color_category_bright": "Bright",
-      "tab_title_marker_color_category_normal": "Normal",
-      "tab_title_marker_color_category_neutral": "Neutral"
-    },
-    "folders": {
-      "top_bar_title": "Folder Management",
-      "dialog_title_create_new_folder": "New folder",
-      "dialog_title_edit_folder": "Edit folder",
-      "title_pinned_start_notes_folder": "All",
-      "title_pinned_end_notes_folder": "Uncategorized",
-      "hint_error_empty_folder_name": "Folder name cannot be empty.",
-      "hint_removed_folders_count": "Removed folders:",
-      "btn_title_crete_folder": "Create new folder",
-      "btn_title_select_folder": "Select folder"
+    "sorting_sheet": {
+      "title_sheet_notes": "Sort notes",
+      "title_sheet_folders": "Sort folders",
+      "hint_sort_by_ascending": "Ascending",
+      "hint_sort_by_descending": "Descending",
+      "hint_sort_category_alphabet": "Alphabet",
+      "hint_sort_category_date_creation": "Date of creation",
+      "hint_sort_category_date_update": "Date of change",
+      "hint_checkbox_sort_pinned_notes": "Consider pinned notes",
+      "hint_checkbox_sort_pinned_folders": "Consider pinned folders"
     },
     "trash": {
       "top_bar_title": "Trash",
@@ -333,34 +339,6 @@
       "dialog_body_delete_folders_list": "Once the selected notes folders are deleted from the trash, they cannot be restored.",
       "message_empty_folders_list": "No deleted folders",
       "hint_moved_to_trash_date_prefix": "removed"
-    },
-    "sort_notes_sheet": {
-      "title_sheet_notes": "Sort notes",
-      "title_sheet_folders": "Sort folders",
-      "hint_sort_by_ascending": "Ascending",
-      "hint_sort_by_descending": "Descending",
-      "hint_sort_category_alphabet": "Alphabet",
-      "hint_sort_category_date_creation": "Date of creation",
-      "hint_sort_category_date_update": "Date of change",
-      "hint_checkbox_sort_pinned_notes": "Consider pinned notes",
-      "hint_checkbox_sort_pinned_folders": "Consider pinned folders"
-    },
-    "hidden_notes": {
-      "top_bar_title": "Hidden notes",
-      "dialog_title": "Set PIN",
-      "dialog_message": "The PIN code is used to access the hidden notes folder.\n\nThe PIN cannot be restored.\n\nIf you have forgotten your PIN, you can set a new one, but all hidden notes will be permanently deleted.",
-      "hint_cool_down_verification": "Too many tries. Please re-enter the PIN code via:",
-      "hint_create_code": "Enter 6 digit code",
-      "hint_create_repeat_code": "Repeat the code again",
-      "hint_verify_code": "Enter your PIN",
-      "hint_forget_pin_code": "Create a new PIN?",
-      "dialog_title_reset_pin": "Are you sure you want to create a new PIN?",
-      "dialog_message_reset_pin": "Attention! All current hidden notes will be permanently deleted."
-    },
-    "error_ui": {
-      "error_ui_fetched_chips_not_found": "Failed to load folders",
-      "error_ui_fail_pin_creation": "Error. PIN codes did not match.",
-      "error_ui_fail_pin_verification": "Error. Invalid PIN."
     }
   },
   "chinese": {
@@ -371,55 +349,85 @@
       "chinese": "简体中文",
       "chinese_tr": "繁体中文"
     },
-    "onboarding": {
-      "btn_title_next": "继续",
-      "btn_title_sync": "同步",
-      "btn_title_skip_sync": "现在不要",
-      "onboarding_data": [
-        {
-          "id": 0,
-          "title": "标头 1 用中文表达",
-          "description": "1 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
-        },
-        {
-          "id": 1,
-          "title": "标头 2 用中文表达",
-          "description": "2 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
-        },
-        {
-          "id": 2,
-          "title": "标头 3 用中文表达",
-          "description": "3 照顾病人很重要，医生会跟进，但这是一个充满痛苦和痛苦的时期。 就最小的细节而言，任何人都不应从事任何一种工作，除非他从中得到一些好处。"
-        },
-        {
-          "id": 3,
-          "title": "将您的数据同步到云端",
-          "description": "连接您的 Google 帐户，以便能够恢复笔记并在其他设备上使用它们。"
-        }
-      ]
+    "editor": {
+      "hint_input_title": "标题",
+      "hint_input_message": "写:",
+      "snack_message_note_updated": "注释已更新",
+      "message_max_note_length_warning": "注释太长。 最后的文字被截断了。",
+      "message_note_wallpaper_is_not_selected": "您尚未为笔记选择背景。",
+      "top_bar_select_note_wallpaper": "设置备注背景",
+      "note_wallpaper_category_color": "背景颜色",
+      "note_wallpaper_category_gradient": "渐变背景",
+      "note_wallpaper_category_texture": "带纹理的背景",
+      "note_wallpaper_category_image": "墙纸",
+      "dialog_title_marker_color_picker": "选择标记颜色",
+      "dialog_title_wallpaper_picker": "选择背景",
+      "dialog_title_wallpaper_texture_style_picker": "纹理颜色",
+      "hint_wallpaper_picker_background": "纹理背景",
+      "hint_wallpaper_picker_style": "准备好纹理样式",
+      "tab_title_marker_color_category_bright": "色泽鲜艳",
+      "tab_title_marker_color_category_normal": "正常颜色",
+      "tab_title_marker_color_category_neutral": "中性色"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "无法加载文件夹",
+      "error_ui_fail_pin_creation": "错误。 PIN 码不匹配。",
+      "error_ui_fail_pin_verification": "错误。 PIN 码无效。"
+    },
+    "folders": {
+      "top_bar_title": "文件夹管理",
+      "dialog_title_create_new_folder": "新建一个文件夹",
+      "dialog_title_edit_folder": "编辑文件夹",
+      "title_pinned_start_notes_folder": "所有笔记",
+      "title_pinned_end_notes_folder": "未分类",
+      "hint_error_empty_folder_name": "文件夹名称不能为空。",
+      "hint_removed_folders_count": "删除的文件夹:",
+      "btn_title_crete_folder": "创建新文件夹",
+      "btn_title_select_folder": "选择文件夹"
+    },
+    "hidden_notes": {
+      "top_bar_title": "隐藏笔记",
+      "dialog_title": "设置密码",
+      "dialog_message": "PIN 码用于访问包含隐藏笔记的文件夹。\n\nPIN 码无法恢复。\n\n如果您忘记了 PIN 码，可以设置新的 PIN 码，但所有隐藏的笔记将被永久删除。",
+      "hint_cool_down_verification": "尝试太多了。 请通过以下方式重新输入 PIN 码：",
+      "hint_create_code": "输入5位数字代码",
+      "hint_create_repeat_code": "再次重复代码",
+      "hint_verify_code": "输入您的 PIN 码",
+      "hint_forget_pin_code": "创建新的 PIN 码？",
+      "dialog_title_reset_pin": "您确定要创建新的 PIN 码吗？",
+      "dialog_message_reset_pin": "注意力！ 所有当前隐藏的笔记将被永久删除。",
+      "title_sign_up_biometric_dialog": "使用扫描仪？",
+      "title_auth_biometric_dialog": "显示隐藏的笔记",
+      "description_biometric_dialog": "用于快速访问包含隐藏笔记的文件夹。",
+      "btn_title_negative_biometric_dialog": "不使用"
     },
     "shared": {
       "note": "笔记",
       "note_title": "标题",
-      "btn_title_save": "节省",
-      "btn_title_cancel": "取消",
       "btn_title_accept": "好的",
-      "btn_title_close": "关闭",
-      "btn_title_hide": "隐藏",
-      "btn_title_unhide": "取消隐藏",
-      "btn_title_pin": "修理",
-      "btn_title_unpin": "取消固定",
-      "btn_title_replace": "移动",
-      "btn_title_remove": "消除",
-      "btn_title_delete": "删除",
-      "btn_title_create": "创造",
+      "btn_title_back": "后退",
+      "btn_title_by_default": "默认",
+      "btn_title_cancel": "取消",
       "btn_title_change": "编辑",
+      "btn_title_close": "关闭",
+      "btn_title_create": "创造",
+      "btn_title_delete": "删除",
+      "btn_title_hide": "隐藏",
+      "btn_title_next": "继续",
+      "btn_title_pin": "修理",
+      "btn_title_remove": "消除",
+      "btn_title_replace": "代替",
       "btn_title_restore": "恢复",
       "btn_title_retry": "重试",
-      "btn_title_by_default": "默认",
+      "btn_title_save": "节省",
+      "btn_title_sync": "同步",
+      "btn_title_unhide": "取消隐藏",
+      "btn_title_unpin": "取消固定",
+      "btn_title_skip_sync": "现在不要",
       "hint_find_note_search_bar": "查找笔记",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "删除的注释:",
+      "hint_no_folders": "没有文件夹",
       "hint_no_notes": "没有笔记",
       "hint_nothing_found": "什么都没找到",
       "hint_an_error_has_occurred": "发生了错误",
@@ -441,7 +449,9 @@
       "title_theme_system": "系统",
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
-      "title_theme_high_contrast": "高对比度"
+      "title_theme_dark": "高对比度",
+      "dialog_language_picker_title": "选择应用程序语言",
+      "dialog_theme_picker_title": "选择应用程序主题"
     },
     "settings_appearance": {
       "top_bar_title": "外貌",
@@ -468,38 +478,23 @@
     "settings_security": {
       "top_bar_title": "安全",
       "hint_pin_code": "PIN码",
+      "title_hidden_notes_biometric_visibility": "隐藏笔记",
+      "item_hidden_notes_biometric_visibility": "通过扫描仪解锁",
       "item_pin_code_visibility": "显示您的打字方式",
       "item_key_tap_visibility": "按钮点击效果",
-      "description_key_tap_visibility": "输入 PIN 码时用于数字键盘。"
+      "description_key_tap_visibility": "输入 PIN 码时用于数字键盘。",
+      "description_hidden_notes_biometric": "使用扫描仪访问隐藏的笔记"
     },
-    "editor": {
-      "hint_input_title": "标题",
-      "hint_input_message": "写:",
-      "snack_message_note_updated": "注释已更新",
-      "message_max_note_length_warning": "注释太长。 最后的文字被截断了。",
-      "message_note_wallpaper_is_not_selected": "您尚未为笔记选择背景。",
-      "top_bar_select_note_wallpaper": "设置备注背景",
-      "note_wallpaper_category_new": "新",
-      "note_wallpaper_category_soft_colors": "颜色",
-      "note_wallpaper_category_bright_colors": "明亮的颜色",
-      "note_wallpaper_category_gradients": "渐变",
-      "note_wallpaper_category_grids": "网格",
-      "note_wallpaper_category_best": "最佳",
-      "dialog_title_marker_color_picker": "选择标记颜色",
-      "tab_title_marker_color_category_bright": "色泽鲜艳",
-      "tab_title_marker_color_category_normal": "正常颜色",
-      "tab_title_marker_color_category_neutral": "中性色"
-    },
-    "folders": {
-      "top_bar_title": "文件夹管理",
-      "dialog_title_create_new_folder": "新建文件夹",
-      "dialog_title_edit_folder": "编辑文件夹",
-      "title_pinned_start_notes_folder": "所有笔记",
-      "title_pinned_end_notes_folder": "未分类",
-      "hint_error_empty_folder_name": "文件夹名称不能为空。",
-      "hint_removed_folders_count": "删除的文件夹:",
-      "btn_title_crete_folder": "创建新文件夹",
-      "btn_title_select_folder": "选择文件夹"
+    "sorting_sheet": {
+      "title_sheet_notes": "整理笔记",
+      "title_sheet_folders": "对文件夹进行排序",
+      "hint_sort_by_ascending": "升序",
+      "hint_sort_by_descending": "降序",
+      "hint_sort_category_alphabet": "字母",
+      "hint_sort_category_date_creation": "创建日期",
+      "hint_sort_category_date_update": "变更日期",
+      "hint_checkbox_sort_pinned_notes": "考虑固定笔记",
+      "hint_checkbox_sort_pinned_folders": "考虑固定文件夹"
     },
     "trash": {
       "top_bar_title": "垃圾",
@@ -515,34 +510,6 @@
       "dialog_body_delete_folders_list": "选定的笔记文件夹一旦从垃圾桶中删除，便无法恢复。",
       "message_empty_folders_list": "没有删除的文件夹",
       "hint_moved_to_trash_date_prefix": "删除"
-    },
-    "sort_notes_sheet": {
-      "title_sheet_notes": "整理笔记",
-      "title_sheet_folders": "对文件夹进行排序",
-      "hint_sort_by_ascending": "升序",
-      "hint_sort_by_descending": "降序",
-      "hint_sort_category_alphabet": "字母",
-      "hint_sort_category_date_creation": "创建日期",
-      "hint_sort_category_date_update": "变更日期",
-      "hint_checkbox_sort_pinned_notes": "考虑固定笔记",
-      "hint_checkbox_sort_pinned_folders": "考虑固定文件夹"
-    },
-    "hidden_notes": {
-      "top_bar_title": "隐藏笔记",
-      "dialog_title": "设置密码",
-      "dialog_message": "PIN 码用于访问包含隐藏笔记的文件夹。\n\nPIN 码无法恢复。\n\n如果您忘记了 PIN 码，可以设置新的 PIN 码，但所有隐藏的笔记将被永久删除。",
-      "hint_cool_down_verification": "尝试太多了。 请通过以下方式重新输入 PIN 码：",
-      "hint_create_code": "输入6位数字代码",
-      "hint_create_repeat_code": "再次重复代码",
-      "hint_verify_code": "输入您的 PIN 码",
-      "hint_forget_pin_code": "创建新的 PIN 码？",
-      "dialog_title_reset_pin": "您确定要创建新的 PIN 码吗？",
-      "dialog_message_reset_pin": "注意力！ 所有当前隐藏的笔记将被永久删除。"
-    },
-    "error_ui": {
-      "error_ui_fetched_chips_not_found": "无法加载文件夹",
-      "error_ui_fail_pin_creation": "错误。 PIN 码不匹配。",
-      "error_ui_fail_pin_verification": "错误。 PIN 码无效。"
     }
   },
   "chinese_tr": {
@@ -553,55 +520,86 @@
       "chinese": "簡體中文",
       "chinese_tr": "繁體中文"
     },
-    "onboarding": {
-      "btn_title_next": "繼續",
-      "btn_title_sync": "同步",
-      "btn_title_skip_sync": "現在不行",
-      "onboarding_data": [
-        {
-          "id": 0,
-          "title": "俄語標題 1",
-          "description": "1 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
-        },
-        {
-          "id": 1,
-          "title": "俄語標題 2",
-          "description": "2 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
-        },
-        {
-          "id": 2,
-          "title": "俄語標題 3",
-          "description": "3 照顧病人、照顧醫生很重要，但這是一個充滿痛苦和煎熬的時期。因為，說得再詳細一點，任何人都不應做任何工作，除非他從中得到了一些好處。"
-        },
-        {
-          "id": 3,
-          "title": "將您的數據同步到雲端",
-          "description": "連接您的 Google 帳戶以便能夠恢復筆記並在其他設備上使用它們。"
-        }
-      ]
+    "editor": {
+      "hint_input_title": "標題",
+      "hint_input_message": "寫:",
+      "snack_message_note_updated": "註釋已更新",
+      "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。",
+      "message_note_wallpaper_is_not_selected": "您尚未為筆記選擇背景。",
+      "top_bar_select_note_wallpaper": "設置備註背景",
+      "note_wallpaper_category_new": "新",
+      "note_wallpaper_category_color": "背景顏色",
+      "note_wallpaper_category_gradient": "漸層背景",
+      "note_wallpaper_category_texture": "帶有紋理的背景",
+      "note_wallpaper_category_image": "壁紙",
+      "dialog_title_marker_color_picker": "選擇標記顏色",
+      "dialog_title_wallpaper_picker": "選擇背景",
+      "dialog_title_wallpaper_texture_style_picker": "紋理顏色",
+      "hint_wallpaper_picker_background": "紋理背景",
+      "hint_wallpaper_picker_style": "準備好紋理樣式",
+      "tab_title_marker_color_category_bright": "色澤鮮豔",
+      "tab_title_marker_color_category_normal": "正常顏色",
+      "tab_title_marker_color_category_neutral": "中性色"
+    },
+    "error_ui": {
+      "error_ui_fetched_chips_not_found": "無法加載文件夾",
+      "error_ui_fail_pin_creation": "錯誤。 PIN 碼不匹配。",
+      "error_ui_fail_pin_verification": "錯誤。 PIN 碼無效。"
+    },
+    "folders": {
+      "top_bar_title": "文件夾管理",
+      "dialog_title_create_new_folder": "新建一個資料夾",
+      "dialog_title_edit_folder": "編輯文件夾",
+      "title_pinned_start_notes_folder": "所有筆記",
+      "title_pinned_end_notes_folder": "未分類",
+      "hint_error_empty_folder_name": "文件夾名稱不能為空。",
+      "hint_removed_folders_count": "刪除的文件夾:",
+      "btn_title_crete_folder": "創建新文件夾",
+      "btn_title_select_folder": "選擇文件夾"
+    },
+    "hidden_notes": {
+      "top_bar_title": "隱藏筆記",
+      "dialog_title": "設置密碼",
+      "dialog_message": "PIN 碼用於訪問包含隱藏筆記的文件夾。\n\nPIN 碼無法恢復。\n\n如果您忘記了 PIN 碼，可以設置新的 PIN 碼，但所有隱藏的筆記將被永久刪除。",
+      "hint_cool_down_verification": "嘗試太多了。 請通過以下方式重新輸入 PIN 碼：",
+      "hint_create_code": "輸入5位數字代碼",
+      "hint_create_repeat_code": "再次重複代碼",
+      "hint_verify_code": "輸入您的 PIN 碼",
+      "hint_forget_pin_code": "創建新的 PIN 碼？",
+      "dialog_title_reset_pin": "您確定要創建新的 PIN 碼嗎？",
+      "dialog_message_reset_pin": "注意力！ 所有當前隱藏的筆記將被永久刪除。",
+      "title_sign_up_biometric_dialog": "使用掃描器？",
+      "title_auth_biometric_dialog": "顯示隱藏的註釋",
+      "description_biometric_dialog": "用於快速存取包含隱藏筆記的資料夾。",
+      "btn_title_negative_biometric_dialog": "不使用"
     },
     "shared": {
       "note": "筆記",
       "note_title": "標題",
-      "btn_title_save": "保存",
-      "btn_title_cancel": "取消",
       "btn_title_accept": "好的",
-      "btn_title_close": "關閉",
-      "btn_title_hide": "隱藏",
-      "btn_title_unhide": "取消隱藏",
-      "btn_title_pin": "修理",
-      "btn_title_unpin": "取消固定",
-      "btn_title_replace": "移動",
-      "btn_title_remove": "消除",
-      "btn_title_delete": "刪除",
-      "btn_title_create": "創造",
+      "btn_title_back": "後退",
+      "btn_title_by_default": "默認",
+      "btn_title_cancel": "取消",
       "btn_title_change": "編輯",
+      "btn_title_close": "關閉",
+      "btn_title_create": "創造",
+      "btn_title_delete": "刪除",
+      "btn_title_hide": "隱藏",
+      "btn_title_next": "繼續",
+      "btn_title_pin": "修理",
+      "btn_title_remove": "消除",
+      "btn_title_replace": "代替",
       "btn_title_restore": "恢復",
       "btn_title_retry": "重試",
-      "btn_title_by_default": "默認",
+      "btn_title_save": "保存",
+      "btn_title_sync": "同步",
+      "btn_title_unhide": "取消隱藏",
+      "btn_title_unpin": "取消固定",
+      "btn_title_skip_sync": "現在不行",
       "hint_find_note_search_bar": "查找筆記",
       "hint_selected_items_count": "已选： ",
       "hint_removed_notes_count": "刪除的筆記:",
+      "hint_no_folders": "沒有資料夾",
       "hint_no_notes": "沒有筆記",
       "hint_nothing_found": "什麼都沒找到",
       "hint_an_error_has_occurred": "發生了錯誤",
@@ -623,7 +621,9 @@
       "title_theme_system": "系統",
       "title_theme_light": "光",
       "title_theme_night": "黑暗",
-      "title_theme_high_contrast": "高對比度"
+      "title_theme_dark": "高對比度",
+      "dialog_language_picker_title": "選擇應用程式語言",
+      "dialog_theme_picker_title": "選擇應用程式主題"
     },
     "settings_appearance": {
       "top_bar_title": "外貌",
@@ -650,38 +650,23 @@
     "settings_security": {
       "top_bar_title": "安全",
       "hint_pin_code": "PIN碼",
+      "title_hidden_notes_biometric_visibility": "隱藏筆記",
+      "item_hidden_notes_biometric_visibility": "透過掃描器解鎖",
       "item_pin_code_visibility": "鍵入時顯示",
       "item_key_tap_visibility": "按鈕點擊效果",
-      "description_key_tap_visibility": "用於輸入 PIN 碼的數字鍵盤。"
+      "description_key_tap_visibility": "用於輸入 PIN 碼的數字鍵盤。",
+      "description_hidden_notes_biometric": "使用掃描器存取隱藏的筆記"
     },
-    "editor": {
-      "hint_input_title": "標題",
-      "hint_input_message": "寫:",
-      "snack_message_note_updated": "註釋已更新",
-      "message_max_note_length_warning": "註釋太長。 最後的文字被截斷了。",
-      "message_note_wallpaper_is_not_selected": "您尚未為筆記選擇背景。",
-      "top_bar_select_note_wallpaper": "設置備註背景",
-      "note_wallpaper_category_new": "新",
-      "note_wallpaper_category_soft_colors": "顏色",
-      "note_wallpaper_category_bright_colors": "明亮的顏色",
-      "note_wallpaper_category_gradients": "漸變",
-      "note_wallpaper_category_grids": "網格",
-      "note_wallpaper_category_best": "最佳",
-      "dialog_title_marker_color_picker": "選擇標記顏色",
-      "tab_title_marker_color_category_bright": "色澤鮮豔",
-      "tab_title_marker_color_category_normal": "正常顏色",
-      "tab_title_marker_color_category_neutral": "中性色"
-    },
-    "folders": {
-      "top_bar_title": "文件夾管理",
-      "dialog_title_create_new_folder": "新建文件夾",
-      "dialog_title_edit_folder": "編輯文件夾",
-      "title_pinned_start_notes_folder": "所有筆記",
-      "title_pinned_end_notes_folder": "未分類",
-      "hint_error_empty_folder_name": "文件夾名稱不能為空。",
-      "hint_removed_folders_count": "刪除的文件夾:",
-      "btn_title_crete_folder": "創建新文件夾",
-      "btn_title_select_folder": "選擇文件夾"
+    "sorting_sheet": {
+      "title_sheet_notes": "整理筆記",
+      "title_sheet_folders": "對文件夾進行排序",
+      "hint_sort_by_ascending": "升序",
+      "hint_sort_by_descending": "降序",
+      "hint_sort_category_alphabet": "字母",
+      "hint_sort_category_date_creation": "創建日期",
+      "hint_sort_category_date_update": "變更日期",
+      "hint_checkbox_sort_pinned_notes": "考慮固定筆記",
+      "hint_checkbox_sort_pinned_folders": "考慮固定文件夾"
     },
     "trash": {
       "top_bar_title": "垃圾",
@@ -697,34 +682,6 @@
       "dialog_body_delete_folders_list": "選定的筆記文件夾一旦從垃圾箱中刪除，便無法恢復。",
       "message_empty_folders_list": "沒有刪除的文件夾",
       "hint_moved_to_trash_date_prefix": "刪除"
-    },
-    "sort_notes_sheet": {
-      "title_sheet_notes": "整理筆記",
-      "title_sheet_folders": "對文件夾進行排序",
-      "hint_sort_by_ascending": "升序",
-      "hint_sort_by_descending": "降序",
-      "hint_sort_category_alphabet": "字母",
-      "hint_sort_category_date_creation": "創建日期",
-      "hint_sort_category_date_update": "變更日期",
-      "hint_checkbox_sort_pinned_notes": "考慮固定筆記",
-      "hint_checkbox_sort_pinned_folders": "考慮固定文件夾"
-    },
-    "hidden_notes": {
-      "top_bar_title": "隱藏筆記",
-      "dialog_title": "設置密碼",
-      "dialog_message": "PIN 碼用於訪問包含隱藏筆記的文件夾。\n\nPIN 碼無法恢復。\n\n如果您忘記了 PIN 碼，可以設置新的 PIN 碼，但所有隱藏的筆記將被永久刪除。",
-      "hint_cool_down_verification": "嘗試太多了。 請通過以下方式重新輸入 PIN 碼：",
-      "hint_create_code": "輸入6位數字代碼",
-      "hint_create_repeat_code": "再次重複代碼",
-      "hint_verify_code": "輸入您的 PIN 碼",
-      "hint_forget_pin_code": "創建新的 PIN 碼？",
-      "dialog_title_reset_pin": "您確定要創建新的 PIN 碼嗎？",
-      "dialog_message_reset_pin": "注意力！ 所有當前隱藏的筆記將被永久刪除。"
-    },
-    "error_ui": {
-      "error_ui_fetched_chips_not_found": "無法加載文件夾",
-      "error_ui_fail_pin_creation": "錯誤。 PIN 碼不匹配。",
-      "error_ui_fail_pin_verification": "錯誤。 PIN 碼無效。"
     }
   }
 }

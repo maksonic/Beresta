@@ -1,38 +1,36 @@
 package ru.maksonic.beresta.language_engine.shell.languages
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.maksonic.beresta.language_engine.shell.components.LangEditorData
-import ru.maksonic.beresta.language_engine.shell.components.LangFoldersListData
-import ru.maksonic.beresta.language_engine.shell.components.LangHiddenNotesData
-import ru.maksonic.beresta.language_engine.shell.components.LangOnboardingData
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsScreenData
-import ru.maksonic.beresta.language_engine.shell.components.LangSharedData
-import ru.maksonic.beresta.language_engine.shell.components.LangSortSheetData
-import ru.maksonic.beresta.language_engine.shell.components.LangTrashData
-import ru.maksonic.beresta.language_engine.shell.components.LangUiErrorData
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentEditor
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentHiddenNotes
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentShared
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentSortSheet
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentTrash
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentUiError
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentsFolders
 import ru.maksonic.beresta.language_engine.shell.components.TranslatedLanguage
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsAppearanceData
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsNotificationsData
-import ru.maksonic.beresta.language_engine.shell.components.settings.LangSettingsSecurityData
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangComponentSettings
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangComponentSettingsAppearance
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangComponentSettingsNotifications
+import ru.maksonic.beresta.language_engine.shell.components.settings.LangComponentSettingsSecurity
 
 /**
  * @Author maksonic on 17.02.2023
  */
 @Serializable
 data class Russian(
-    @SerializedName("language_title") val langTitle: String = "Русский",
-    @SerializedName("translated_language") val translatedLanguage: TranslatedLanguage,
-    @SerializedName("onboarding") val langOnboardingData: LangOnboardingData,
-    @SerializedName("shared") val shared: LangSharedData,
-    @SerializedName("settings") val settings: LangSettingsScreenData,
-    @SerializedName("settings_appearance") val settingsAppearance: LangSettingsAppearanceData,
-    @SerializedName("settings_notifications") val settingsNotifications: LangSettingsNotificationsData,
-    @SerializedName("settings_security") val settingsSecurity: LangSettingsSecurityData,
-    @SerializedName("editor") val editor: LangEditorData,
-    @SerializedName("folders") val folders: LangFoldersListData,
-    @SerializedName("trash") val trash: LangTrashData,
-    @SerializedName("sort_notes_sheet") val sortNotesSheet: LangSortSheetData,
-    @SerializedName("hidden_notes") val hiddenNotes: LangHiddenNotesData,
-    @SerializedName("error_ui") val errorUi: LangUiErrorData
+    @SerialName("language_title") val langTitle: String = "Русский",
+    @SerialName("translated_language") val translatedLanguage: TranslatedLanguage,
+    @SerialName("editor") val editor: LangComponentEditor,
+    @SerialName("error_ui") val errorUi: LangComponentUiError,
+    @SerialName("folders") val folders: LangComponentsFolders,
+    @SerialName("hidden_notes") val hiddenNotes: LangComponentHiddenNotes,
+    @SerialName("shared") val shared: LangComponentShared,
+    @SerialName("settings") val settings: LangComponentSettings,
+    @SerialName("settings_appearance") val settingsAppearance: LangComponentSettingsAppearance,
+    @SerialName("settings_notifications") val settingsNotifications: LangComponentSettingsNotifications,
+    @SerialName("settings_security") val settingsSecurity: LangComponentSettingsSecurity,
+    @SerialName("sorting_sheet") val sortingSheet: LangComponentSortSheet,
+    @SerialName("trash") val trash: LangComponentTrash
 )

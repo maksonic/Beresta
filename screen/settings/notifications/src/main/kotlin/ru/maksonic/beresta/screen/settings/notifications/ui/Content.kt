@@ -14,12 +14,12 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import ru.maksonic.beresta.common.ui_kit.bar.top.TopAppBarCollapsingLarge
+import ru.maksonic.beresta.common.ui_theme.colors.background
 import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.screen.settings.notifications.core.Model
 import ru.maksonic.beresta.screen.settings.notifications.core.Msg
 import ru.maksonic.beresta.screen.settings.notifications.ui.widget.items.SoundsItem
-import ru.maksonic.beresta.ui.theme.color.background
-import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
 
 /**
  * @Author maksonic on 07.07.2023
@@ -28,7 +28,7 @@ import ru.maksonic.beresta.ui.widget.bar.top.TopAppBarCollapsingLarge
 @Composable
 internal fun Content(
     model: Model,
-    send: SendMessage,
+    send: Send,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.BerestaAppCompatLight" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <style name="Theme.BerestaMaterialLight" parent="android:Theme.Material.NoActionBar" />
+
+    <style name="Theme.Beresta" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.BerestaMaterialLight</item>
+    </style>
+</resources>

@@ -1,43 +1,52 @@
 package ru.maksonic.beresta.screen.settings.core
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.maksonic.beresta.elm.core.ElmBaseModel
-import ru.maksonic.beresta.elm.core.ElmCommand
-import ru.maksonic.beresta.elm.core.ElmEffect
-import ru.maksonic.beresta.elm.core.ElmMessage
-import ru.maksonic.beresta.elm.core.ElmModel
-import ru.maksonic.beresta.screen.settings.ui.widget.ModalSheetContent
-import ru.maksonic.beresta.ui.theme.AppTheme
+import ru.maksonic.beresta.common.ui_theme.AppThemeUi
+import ru.maksonic.beresta.platform.elm.core.ElmBaseModel
+import ru.maksonic.beresta.platform.elm.core.ElmCommand
+import ru.maksonic.beresta.platform.elm.core.ElmEffect
+import ru.maksonic.beresta.platform.elm.core.ElmMessage
+import ru.maksonic.beresta.platform.elm.core.ElmModel
 
 /**
  * @Author maksonic on 23.01.2023
  */
-@OptIn(ExperimentalMaterial3Api::class)
+enum class ModalSheetContent {
+    NOTHING, LANGUAGE_PICKER, THEME_PICKER
+}
+
+
+@Stable
+@Immutable
+data class ModalSheet(
+    val isVisible: Boolean,
+    val skipPartiallyExpanded: Boolean,
+    val content: ModalSheetContent
+) {
+    companion object {
+        val Initial = ModalSheet(
+            isVisible = false,
+            skipPartiallyExpanded = true,
+            content = ModalSheetContent.NOTHING
+        )
+    }
+}
+
 @Stable
 @Immutable
 data class Model(
     val base: ElmBaseModel,
-    val currentSheetContent: ModalSheetContent,
-    val modalBottomSheetState: SheetState,
-    val currentTheme: AppTheme,
+    val modalSheet: ModalSheet,
+    val currentTheme: AppThemeUi,
     val isDarkTheme: Boolean,
-    val isVisibleModalSheet: Boolean
 ) : ElmModel {
     companion object {
         val Initial = Model(
             base = ElmBaseModel.Initial,
-            currentSheetContent = ModalSheetContent.NOTHING,
-            modalBottomSheetState = SheetState(
-                initialValue = SheetValue.Hidden,
-                skipPartiallyExpanded = true
-            ),
-            currentTheme = AppTheme.SYSTEM,
+            modalSheet = ModalSheet.Initial,
+            currentTheme = AppThemeUi.SYSTEM,
             isDarkTheme = false,
-            isVisibleModalSheet = false
         )
     }
 }
@@ -59,7 +68,7 @@ sealed class Msg : ElmMessage {
     }
 
     sealed class Inner : Msg() {
-        data class FetchedTheme(val theme: AppTheme, val isDark: Boolean) : Inner()
+        data class FetchedTheme(val theme: AppThemeUi, val isDark: Boolean) : Inner()
         data object HiddenModalBottomSheet : Inner()
     }
 }

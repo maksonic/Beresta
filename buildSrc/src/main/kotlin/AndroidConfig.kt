@@ -1,19 +1,19 @@
 import org.gradle.api.JavaVersion
 
 /**
- * @Author maksonic on 20.04.2023
+ * @Author maksonic on 27.09.2023
  */
 object AndroidConfig {
-    const val kotlinCompilerExtensionVersion = "1.5.1"
-    const val applicationId = "ru.maksonic.beresta"
-    const val compileSdk = 34
-    const val targetSdk = 34
-    const val minSdk = 26
-    const val versionName = "1.0"
-    const val versionCode = 1
-    const val testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    const val isMinifyEnabled: Boolean = false
-    const val isShrinkResources: Boolean = false
-    val javaVersion = JavaVersion.VERSION_17
-    const val jvmTarget = "17"
+    const val KOTLIN_COMPILER_EXT = "1.5.3"
+    const val APP_ID = "ru.maksonic.beresta"
+    const val COMPILE_SDK = 34
+    const val TARGET_SDK = 34
+    const val MIN_SDK = 26
+    const val VERSION_NAME = "1.0"
+    const val VERSION_CODE = 1
+    const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+    const val IS_MINIFY: Boolean = false
+    const val IS_SHRINK_RESOURCES: Boolean = false
+    val JAVA_VERSION = JavaVersion.VERSION_17
+    const val JVM_TARGET = "17"
 }
