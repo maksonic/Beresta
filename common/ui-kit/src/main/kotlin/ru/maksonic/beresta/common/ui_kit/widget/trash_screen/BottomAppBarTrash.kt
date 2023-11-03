@@ -9,6 +9,7 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -73,7 +74,7 @@ fun BottomAppBarTrash(
                 icon = AppIcon.Delete,
                 onClick = onDeleteAllClicked,
                 shape = Theme.shape.cornerRound,
-                modifier = modifier.padding(end = dp16, bottom = dp16)
+                modifier = modifier.navigationBarsPadding().padding(end = dp16, bottom = dp16)
             )
         }
 
