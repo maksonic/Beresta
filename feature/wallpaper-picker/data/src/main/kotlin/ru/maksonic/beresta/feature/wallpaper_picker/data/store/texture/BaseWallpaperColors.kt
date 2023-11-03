@@ -40,8 +40,8 @@ abstract class BaseWallpaperColors {
             BackgroundColor(112L, color112, false),
             BackgroundColor(113L, color113, false),
             BackgroundColor(114L, color114, false),
-            BackgroundColor(115L, color115, false),
-            BackgroundColor(116L, color116, false),
+            BackgroundColor(115L, color115, true),
+            BackgroundColor(116L, color116, true),
         )
     }
 

@@ -11,6 +11,8 @@ import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -27,6 +30,8 @@ import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
 import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.colors.inverseOnSurface
+import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
 import ru.maksonic.beresta.feature.folders_list.ui.api.LocalCurrentSelectedFolderState
@@ -41,7 +46,11 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteMessageInputFiel
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteTitleInputFieldWidget
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.TopControlBar
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.TopWithBottomBars
-import ru.maksonic.beresta.feature.ui.edit_note.core.widget.getWallpaperBackgroundColor
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperColor
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperGradient
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperImage
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperTexture
 import ru.maksonic.beresta.feature.wallpaper_picker.ui.api.WallpaperPickerUiApi
 
 /**
@@ -72,7 +81,9 @@ internal fun ContentExpanded(
         val backgroundColor = getWallpaperBackgroundColor(model.currentWallpaper)
         val defBackground = model.currentWallpaper.getParams().backgroundColorId == 100000L
         val defBackground2 = model.currentWallpaper.getParams().backgroundColorId == 0L
-        val isNoneWallpapers = with(model.currentWallpaper) { defBackground || defBackground2 }
+      //  val isNoneWallpapers = with(model.currentWallpaper) { defBackground || defBackground2 }
+        val isNoneWallpapers = isInitialByCategoryWallpaper(model.currentWallpaper)
+
         LaunchedEffect(Unit) {
             if (!model.isFetchedNote) {
                 send(Msg.Inner.FetchedPassedNote)
@@ -100,7 +111,7 @@ internal fun ContentExpanded(
                     .imePadding()
             ) {
                 val scrollState = rememberScrollState()
-                val isVisibleBottomBar = remember { mutableStateOf(true) }
+                val isVisibleBars = remember { mutableStateOf(true) }
                 val scrollOffset = remember { mutableFloatStateOf(0f) }
                 val canScrollBackward = rememberUpdatedState(scrollState.canScrollBackward)
                 val nestedScrollConnection = remember {
@@ -112,7 +123,7 @@ internal fun ContentExpanded(
                             scrollOffset.floatValue = delta
                             val newOffset = scrollOffset.floatValue + delta
 
-                            isVisibleBottomBar.value = when {
+                            isVisibleBars.value = when {
                                 !scrollState.canScrollBackward -> true
                                 !scrollState.canScrollForward -> true
                                 else -> newOffset > scrollOffset.floatValue
@@ -123,11 +134,10 @@ internal fun ContentExpanded(
                     }
                 }
 
-
                 CompositionLocalProvider(
                     LocalAppEditorColors provides provideEditorColors(
                         isDarkAppTheme = model.currentWallpaper.isDark,
-                        isNoneWallpapers = isNoneWallpapers
+                        isNoneWallpapers = isNoneWallpapers.value
                     )
                 ) {
                     Column(
@@ -151,10 +161,10 @@ internal fun ContentExpanded(
                     TopWithBottomBars(
                         model = model,
                         send = send,
-                        isHiddenNote = isHiddenNote,
-                        isVisibleBottomBar = isVisibleBottomBar,
+                        isVisibleBars = isVisibleBars,
                         canScrollBackward = canScrollBackward,
                         topBarColor = backgroundColor,
+                        isHiddenNote = isHiddenNote
                     )
                 }
 
@@ -189,4 +199,38 @@ internal fun ContentExpanded(
             }
         }
     }
+}
+
+@Composable
+private fun getWallpaperBackgroundColor(wallpaper: BaseWallpaper<Color>): State<Color> {
+    var color by remember { mutableStateOf(Color.Transparent) }
+
+    color = when (wallpaper) {
+        is WallpaperColor -> if (wallpaper.id == 100000L) surface else wallpaper.value
+        is WallpaperGradient -> wallpaper.value.first()
+        is WallpaperTexture -> {
+            if (wallpaper.backgroundColor.id == 0L) surface else wallpaper.backgroundColor.value
+        }
+
+        is WallpaperImage -> if (wallpaper.isDark) inverseOnSurface else surface
+        else -> surface
+    }
+
+    return remember { derivedStateOf { color } }
+}
+
+@Composable
+private fun isInitialByCategoryWallpaper(wallpaper: BaseWallpaper<Color>): State<Boolean> {
+    var state by remember { mutableStateOf(true) }
+
+    state = when (wallpaper) {
+        is WallpaperColor -> wallpaper.id == 100000L
+        is WallpaperGradient -> false
+        is WallpaperTexture -> wallpaper.backgroundColor.id == 100000L
+
+        is WallpaperImage -> true
+        else -> false
+    }
+
+    return remember { derivedStateOf { state } }
 }

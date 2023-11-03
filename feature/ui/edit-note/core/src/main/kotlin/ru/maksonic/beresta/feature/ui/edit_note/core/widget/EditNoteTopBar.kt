@@ -52,7 +52,7 @@ internal fun EditNoteTopBar(
             ButtonIcon(
                 icon = AppIcon.ArrowBack,
                 onClick = { send(Msg.Ui.OnTopBarBackPressed) },
-                tint = editorColors.tintX.value,
+                tint = editorColors.tint.value,
                 modifier = Modifier.padding(start = dp4)
             )
 
@@ -65,7 +65,7 @@ internal fun EditNoteTopBar(
 
                 ButtonIcon(
                     icon = AppIcon.Wallpaper,
-                    tint = editorColors.tintX.value,
+                    tint = editorColors.tint.value,
                     onClick = { send(Msg.Ui.UpdatedWallpaperPickerSheetVisibility(true)) })
 
                 DropdownMoreMenu(model, send)
@@ -79,7 +79,7 @@ private fun PinBtn(isPinSelected: Boolean, onPinClicked: () -> Unit) {
     Crossfade(isPinSelected, label = "") { isPinned ->
         ButtonIcon(
             if (isPinned) AppIcon.PinFilled else AppIcon.Pin,
-            tint = editorColors.tintX.value,
+            tint = editorColors.tint.value,
             onClick = onPinClicked
         )
     }

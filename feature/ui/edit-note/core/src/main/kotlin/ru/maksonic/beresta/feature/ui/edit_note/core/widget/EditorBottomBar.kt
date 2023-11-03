@@ -91,7 +91,6 @@ internal fun EditorBottomBar(
             }
         }
 
-
         ButtonFloatingIconFab(
             icon = AppIcon.Save,
             iconColor = fabIconColor.value,
@@ -133,13 +132,11 @@ private fun EditorBottomBarContent(
                 .height(Theme.size.bottomMainBarHeight),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val tint = if (editorColors.isNoneWallpaper) onSurface else editorColors.tint
-
             actions.forEach { panelItem ->
                 ButtonIcon(
                     icon = panelItem.icon,
                     onClick = panelItem.onClick,
-                    tint = tint
+                    tint = if (editorColors.isNoneWallpaper) onSurface else editorColors.tint.value
                 )
             }
         }
