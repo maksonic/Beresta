@@ -55,7 +55,7 @@
       "dialog_title_reset_pin": "Вы действительно хотите создать новый ПИН-код?",
       "dialog_message_reset_pin": "Внимание! Все текущие скрытые заметки будут безвозвратно удалены.",
       "title_sign_up_biometric_dialog": "Использовать сканер?",
-      "title_auth_biometric_dialog": "Показать скрытые заметки",
+      "title_auth_biometric_dialog": "Показать скрытые заметки?",
       "description_biometric_dialog": "Для быстрого доступа к папке со скрытыми заметками.",
       "btn_title_negative_biometric_dialog": "Не использовать"
     },
