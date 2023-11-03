@@ -15,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
@@ -96,19 +95,19 @@ internal fun DropdownFolderPicker(
                     )
                 },
                 trailingIcon = {
-                    Icon(
-                        imageVector = AppIcon.ExpandMore,
-                        contentDescription = "",
+                    IconBase(
+                        icon = AppIcon.ExpandMore,
+                        tint = editorColors.tint.value,
                         modifier = Modifier.rotate(iconRotation.value)
                     )
                 },
                 shape = Theme.shape.cornerNormal,
-                border = FilterChipDefaults.filterChipBorder(editorColors.tint.copy(0.7f)),
+                border = FilterChipDefaults.filterChipBorder(editorColors.tint.value.copy(0.7f)),
                 colors = FilterChipDefaults.filterChipColors(
                     containerColor = transparent,
                     selectedContainerColor = tertiaryContainer,
-                       labelColor = editorColors.tint,
-                        iconColor = editorColors.tint,
+                    labelColor = editorColors.tint.value,
+                    iconColor = editorColors.tint.value,
                     selectedLabelColor = onTertiaryContainer
                 ),
                 modifier = Modifier.padding(end = dp16)

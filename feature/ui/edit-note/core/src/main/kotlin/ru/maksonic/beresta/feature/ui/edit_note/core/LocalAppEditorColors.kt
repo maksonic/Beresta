@@ -29,8 +29,8 @@ val LocalAppEditorColors = staticCompositionLocalOf<EditorSurroundingColors> {
 
 data class EditorSurroundingColors(
     val isNoneWallpaper: Boolean,
-    val tint: Color,
-    val tintX: State<Color>,
+    val tint: State<Color>,
+    val tintMarkerColor: Color,
     val textTint: State<Color>,
     val onBarIconTint: Color,
     val captionTint: Color
@@ -47,6 +47,14 @@ internal fun provideEditorColors(
     val animDelay = Theme.animVelocity.common
     var isAnimated by remember { mutableStateOf(false) }
     val animVelocity = if (isAnimated) animDelay else 0
+    val tintColor = animateColorAsState(
+        if (isNoneWallpapers) onBackground
+        else if (isDarkAppTheme) inverseOnSurface else onTertiary,
+        tween(animVelocity), label = ""
+    )
+
+    val tintMarkerColor = if (isNoneWallpapers) onBackground.copy(0.7f)
+    else if (isDarkAppTheme) inverseOnSurface.copy(0.7f) else onTertiary.copy(0.7f)
 
     LaunchedEffect(isDarkAppTheme) {
         if (!isAnimated) {
@@ -57,20 +65,9 @@ internal fun provideEditorColors(
 
     return EditorSurroundingColors(
         isNoneWallpaper = isNoneWallpapers,
-        tint = if (isNoneWallpapers) onBackground
-        else if (isDarkAppTheme) inverseOnSurface else onTertiary,
-
-        tintX = animateColorAsState(
-            if (isNoneWallpapers) onBackground
-            else if (isDarkAppTheme) inverseOnSurface else onTertiary,
-            tween(animVelocity),
-            label = ""
-        ),
-        textTint = animateColorAsState(
-            if (isNoneWallpapers) onBackground
-            else if (isDarkAppTheme) inverseOnSurface else onTertiary,
-            tween(animVelocity), label = ""
-        ),
+        tint = tintColor,
+        textTint = tintColor,
+        tintMarkerColor = tintMarkerColor,
         onBarIconTint = if (isNoneWallpapers) onSurface
         else if (isDarkAppTheme) inverseOnSurface else onTertiary,
 
@@ -78,19 +75,3 @@ internal fun provideEditorColors(
         else if (isDarkAppTheme) Palette.chineseSilver else Palette.doveGray,
     )
 }
-
-/*@Composable
-internal fun provideEditorColors(
-    isDarkAppTheme: Boolean,
-    isNoneWallpapers: Boolean
-): EditorSurroundingColors = EditorSurroundingColors(
-    isNoneWallpaper = isNoneWallpapers,
-    tint = if (isNoneWallpapers) onBackground
-    else if (isDarkAppTheme) inverseOnSurface else onTertiary,
-
-    onBarIconTint = if (isNoneWallpapers) onSurface
-    else if (isDarkAppTheme) inverseOnSurface else onTertiary,
-
-    captionTint = if (isNoneWallpapers) outline
-    else if (isDarkAppTheme) Palette.chineseSilver else Palette.doveGray,
-)*/

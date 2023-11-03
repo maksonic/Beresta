@@ -2,10 +2,10 @@ package ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.DialogContent
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinFailInfo
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinPrivacy
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.DialogContent
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.biometric.BiometricState
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel
 import ru.maksonic.beresta.platform.elm.core.ElmCommand
@@ -27,7 +27,8 @@ data class Model(
     val pinFailInfo: PinFailInfo,
     val isFetchedPinInfo: Boolean,
     val isVisibleBiometricKeyboardButton: Boolean,
-    val isVisibleBiometricDialog: Boolean
+    val isVisibleBiometricDialog: Boolean,
+    val isValidPin: Boolean
 ) : ElmModel {
     companion object {
         val Initial = Model(
@@ -39,7 +40,8 @@ data class Model(
             pinFailInfo = PinFailInfo.INITIAL,
             isFetchedPinInfo = false,
             isVisibleBiometricKeyboardButton = false,
-            isVisibleBiometricDialog = false
+            isVisibleBiometricDialog = false,
+            isValidPin = false
         )
     }
 }
@@ -52,6 +54,7 @@ sealed class Msg : ElmMessage {
         data object OnResetPinClicked : Ui()
         data object OnPinVisibilityClicked : Ui()
         data object OnKeyTapVisibilityClicked : Ui()
+        data object OnKeyboardShowedBiometricDialog : Inner()
     }
 
     sealed class Inner : Msg() {
@@ -88,6 +91,7 @@ sealed class Cmd : ElmCommand {
     data class ShowPinCoolDownBlock(val failCount: Int, val endDate: Long) : Cmd()
     data object HidePinCoolDownBlock : Cmd()
     data class UpdateBiometricAuthState(val isEnabled: Boolean) : Cmd()
+    data object ShowBiometricDialogByPinStatus : Cmd()
 }
 
 sealed class Eff : ElmEffect {

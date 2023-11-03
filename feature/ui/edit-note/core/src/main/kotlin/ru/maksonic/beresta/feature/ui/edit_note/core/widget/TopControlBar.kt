@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,9 +35,7 @@ import ru.maksonic.beresta.common.ui_kit.helpers.modifier.rippledClick
 import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.icons.label.LabelOutlined
 import ru.maksonic.beresta.common.ui_theme.Theme
-import ru.maksonic.beresta.common.ui_theme.colors.inverseOnSurface
 import ru.maksonic.beresta.common.ui_theme.colors.primary
-import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.common.ui_theme.provide.dp12
 import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
@@ -47,11 +44,6 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.screen.Send
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperColor
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperGradient
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperImage
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperTexture
 import ru.maksonic.beresta.platform.core.ui.ColorSaver
 
 /**
@@ -69,9 +61,8 @@ internal fun TopControlBar(
     var isAnimated by remember { mutableStateOf(false) }
     val animVelocity = if (isAnimated) animDelay else 0
     val markerColorState = rememberUpdatedState(model.markerState.currentSelectedColorId)
-    val initialMarkerColor = editorColors.tint.copy(0.7f)
-    val markerColor =
-        rememberSaveable(saver = ColorSaver) { mutableStateOf(initialMarkerColor) }
+    val initialMarkerColor = editorColors.tintMarkerColor
+    val markerColor = rememberSaveable(saver = ColorSaver) { mutableStateOf(initialMarkerColor) }
 
     LaunchedEffect(Unit) {
         if (!isAnimated) {
@@ -110,7 +101,7 @@ internal fun TopControlBar(
                     .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
                     .size(Theme.size.minimumTouchTargetSize)
                     .padding(dp12)
-                    .border(1.dp, editorColors.tint, CircleShape),
+                    .border(1.dp, editorColors.tint.value, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
@@ -123,7 +114,7 @@ internal fun TopControlBar(
             }
             ButtonIcon(
                 icon = AppIcon.LabelOutlined,
-                tint = editorColors.tint,
+                tint = editorColors.tint.value,
                 onClick = {},
             )
 
@@ -149,22 +140,4 @@ private fun updateMarkerColor(
     } else {
         mutableColor.value = colorContainer.value
     }
-}
-
-@Composable
-internal fun getWallpaperBackgroundColor(wallpaper: BaseWallpaper<Color>): State<Color> {
-    var color by remember { mutableStateOf(Color.Transparent) }
-
-    color = when (wallpaper) {
-        is WallpaperColor -> if (wallpaper.id == 100000L) surface else wallpaper.value
-        is WallpaperGradient -> wallpaper.value.first()
-        is WallpaperTexture -> {
-            if (wallpaper.backgroundColor.id == 0L) surface else wallpaper.backgroundColor.value
-        }
-
-        is WallpaperImage -> if (wallpaper.isDark) inverseOnSurface else surface
-        else -> surface
-    }
-
-    return remember { derivedStateOf { color } }
 }

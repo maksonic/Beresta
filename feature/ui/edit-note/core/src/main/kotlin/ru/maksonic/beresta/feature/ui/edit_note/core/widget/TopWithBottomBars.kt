@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.common.ui_kit.animation.AnimateFadeInOut
 import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
+import ru.maksonic.beresta.common.ui_kit.bar.system.SystemStatusBarHeight
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.common.ui_theme.colors.surfaceVariant
@@ -37,12 +38,10 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.screen.Send
 internal fun TopWithBottomBars(
     model: Model,
     send: Send,
-    isVisibleBottomBar: State<Boolean>,
+    isVisibleBars: State<Boolean>,
     canScrollBackward: State<Boolean>,
-    isHiddenNote: Boolean,
     topBarColor: State<Color>,
-    // topBarOffset: State<Float>,
-    // bottomBarOffset: State<Float>,
+    isHiddenNote: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -58,35 +57,33 @@ internal fun TopWithBottomBars(
         }
     }
 
-    val topBarBackgroundColor = animateColorAsState(
-        if (canScrollBackward.value)
-            if (isInitialColor) {
-                surfaceVariant.copy(0.5f).compositeOver(topBarColor.value)
-            } else {
-                Color.Black.copy(0.15f).compositeOver(topBarColor.value)
-            }
-        else topBarColor.value, tween(animVelocity), label = ""
-    )
-
-    val bottomBarBackgroundColor = rememberUpdatedState(
-        if (isInitialColor) {
-            surfaceVariant.copy(0.5f).compositeOver(topBarColor.value)
-        } else {
-            Color.Black.copy(0.15f).compositeOver(topBarColor.value)
-        }
-    )
-
     Column(
         modifier = modifier.fillMaxHeight(),
         horizontalAlignment = Alignment.End,
     ) {
+        val topBarOffset = Theme.size.topBarNormalHeight.plus(SystemStatusBarHeight)
+        val topBarTransition = animateDpAsState(
+            if (isVisibleBars.value) 0.dp else -topBarOffset,
+            tween(Theme.animVelocity.common),
+            label = ""
+        )
+        val topBarBackgroundColor = animateColorAsState(
+            if (canScrollBackward.value)
+                if (isInitialColor) {
+                    surfaceVariant.copy(0.5f).compositeOver(topBarColor.value)
+                } else {
+                    Color.Black.copy(0.15f).compositeOver(topBarColor.value)
+                }
+            else topBarColor.value, tween(animVelocity), label = ""
+        )
+
         EditNoteTopBar(
             model = model,
             send = send,
             backgroundColor = topBarBackgroundColor,
-            /* modifier = modifier.graphicsLayer {
-                 translationY = topBarOffset.value
-             }*/
+            modifier = modifier.graphicsLayer {
+                translationY = topBarTransition.value.toPx()
+            }
         )
 
         Spacer(modifier.weight(1f))
@@ -94,14 +91,22 @@ internal fun TopWithBottomBars(
         AnimateFadeInOut(!model.isVisibleAddFolderDialog) {
             val offset = Theme.size.bottomMainBarHeight.plus(SystemNavigationBarHeight)
             val transition = animateDpAsState(
-                if (isVisibleBottomBar.value) 0.dp else offset,
+                if (isVisibleBars.value) 0.dp else offset,
                 tween(Theme.animVelocity.common),
                 label = ""
             )
 
+            val bottomBarBackgroundColor = rememberUpdatedState(
+                if (isInitialColor) {
+                    surfaceVariant.copy(0.5f).compositeOver(topBarColor.value)
+                } else {
+                    Color.Black.copy(0.15f).compositeOver(topBarColor.value)
+                }
+            )
+
             EditorBottomBar(
                 send = send,
-                isScrollUp = isVisibleBottomBar,
+                isScrollUp = isVisibleBars,
                 isBlankNote = model.editableNote.isBlank(),
                 isHiddenNote = isHiddenNote,
                 backgroundColor = bottomBarBackgroundColor,

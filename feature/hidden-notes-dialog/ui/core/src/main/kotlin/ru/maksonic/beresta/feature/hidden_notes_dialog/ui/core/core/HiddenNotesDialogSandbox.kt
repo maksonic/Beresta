@@ -43,6 +43,7 @@ class HiddenNotesDialogSandbox(
         is Msg.Ui.OnPinVisibilityClicked -> onPinVisibilityClicked(model)
         is Msg.Inner.FinishedCoolDown -> finishedCoolDownBlock(model)
         is Msg.Inner.ShowedBiometricDialog -> showedBiometricDialog(model, msg)
+        is Msg.Ui.OnKeyboardShowedBiometricDialog -> onKeyboardShowedBiometricDialog(model)
         is Msg.Inner.OnEnableBiometricAuthClicked -> onEnableBiometricAuthClicked(model)
         is Msg.Inner.BiometricAuthError -> ElmUpdate(model)
         is Msg.Inner.BiometricAuthSucceeded -> biometricAuthSucceeded(model)
@@ -178,6 +179,9 @@ class HiddenNotesDialogSandbox(
         model: Model,
         msg: Msg.Inner.ShowedBiometricDialog
     ): Update = ElmUpdate(model, effects = setOf(Eff.ShowBiometricDialog(msg.state)))
+
+    private fun onKeyboardShowedBiometricDialog(model: Model): Update =
+        ElmUpdate(model, commands = setOf(Cmd.ShowBiometricDialogByPinStatus))
 
     private fun onEnableBiometricAuthClicked(model: Model): Update = ElmUpdate(
         model = model.copy(

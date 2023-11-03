@@ -49,7 +49,7 @@ internal fun DropdownMoreMenu(
 
             ButtonIcon(
                 icon = AppIcon.MoreVertical,
-                tint = editorColors.tint,
+                tint = editorColors.tint.value,
                 onClick = { dropdownState.value = true })
 
             MaterialTheme(if (Theme.darkMode.value) darkColorScheme() else lightColorScheme()) {

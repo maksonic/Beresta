@@ -55,10 +55,9 @@ import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.DialogContent
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Send
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.Model
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.Msg
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.biometric.BiometricState
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.Send
 import ru.maksonic.beresta.language_engine.shell.provider.text
 
 /**
@@ -178,9 +177,7 @@ private fun Keyboard(
                 numericButtons.lastIndex - 2 -> {
                     if (model.isVisibleBiometricKeyboardButton) {
                         ActionButton(
-                            onClick = {
-                                send(Msg.Inner.ShowedBiometricDialog(BiometricState.LOGIN))
-                            },
+                            onClick = { send(Msg.Ui.OnKeyboardShowedBiometricDialog) },
                             icon = AppIcon.Fingerprint,
                             modifier = modifier.weight(1f),
                             vibrationPerformer = vibrationPerformer,

@@ -1,16 +1,21 @@
 package ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.program
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import ru.maksonic.beresta.common.core.security.BiometricEngine
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.HiddenNotesPinCreator
-import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinPrivacySettings
-import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinFailInfo
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinFailManager
+import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.PinPrivacySettings
+import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.api.ui.PinFailStatus
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.Cmd
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.Msg
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.core.biometric.BiometricState
@@ -27,7 +32,8 @@ class HiddenNotesPinProgram(
     private val deleteHiddenNotesUseCase: DeleteHiddenNotesUseCase,
     private val pinPrivacySettings: PinPrivacySettings,
     private val pinFailManager: PinFailManager,
-    private val biometricEngine: BiometricEngine
+    private val biometricEngine: BiometricEngine,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
     private companion object {
@@ -53,6 +59,7 @@ class HiddenNotesPinProgram(
             is Cmd.UpdateKeyTapVisibility -> updateKeyTapVisibility(cmd.isVisible)
             is Cmd.UpdateBiometricAuthState -> enableBiometricAuth(cmd.isEnabled)
             is Cmd.ResetCachePin -> _cachedPin.value = byteArrayOf()
+            is Cmd.ShowBiometricDialogByPinStatus -> showBiometricDialogByPinStatus(consumer)
             else -> {}
         }
     }
@@ -136,4 +143,14 @@ class HiddenNotesPinProgram(
 
     private suspend fun enableBiometricAuth(isEnabled: Boolean) =
         pinPrivacySettings.updateBiometricEnablement(isEnabled)
+
+    private suspend fun showBiometricDialogByPinStatus(consumer: (Msg) -> Unit) {
+        val verify = CoroutineScope(ioDispatcher).launch {
+            hiddenNotesPinCreator.state.cancellable().collect { isValid ->
+                val biometricState = if (isValid) BiometricState.LOGIN else BiometricState.SIGN_UP
+                consumer(Msg.Inner.ShowedBiometricDialog(biometricState))
+            }
+        }
+        verify.cancelAndJoin()
+    }
 }

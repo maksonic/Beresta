@@ -58,7 +58,7 @@ private fun HandleUiEffects(
 @Composable
 private fun rememberHiddenNotesBiometricPromptInfo(text: LangComponentHiddenNotes) = remember {
     BiometricPrompt.PromptInfo.Builder()
-        .setTitle(text.dialogTitle)
+        .setTitle(text.titleSignUpBiometricDialog)
         .setDescription(text.descriptionBiometricDialog)
         .setConfirmationRequired(false)
         .setNegativeButtonText(text.btnTitleNegativeBiometricDialog)

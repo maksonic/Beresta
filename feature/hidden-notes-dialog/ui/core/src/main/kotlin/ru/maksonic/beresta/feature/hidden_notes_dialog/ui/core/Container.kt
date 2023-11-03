@@ -66,14 +66,13 @@ internal fun Container(
     )
 
     val signUpPrompt = PromptInfo.Builder()
-        .setTitle(text.hiddenNotes.dialogTitle)
+        .setTitle(text.hiddenNotes.titleSignUpBiometricDialog)
         .setDescription(text.hiddenNotes.descriptionBiometricDialog)
         .setConfirmationRequired(false)
         .setNegativeButtonText(text.hiddenNotes.btnTitleNegativeBiometricDialog)
 
     val loginPrompt = PromptInfo.Builder()
-        .setTitle(text.hiddenNotes.dialogTitle)
-        .setDescription(text.hiddenNotes.descriptionBiometricDialog)
+        .setTitle(text.hiddenNotes.titleAuthBiometricDialog)
         .setConfirmationRequired(false)
         .setNegativeButtonText(text.shared.btnTitleBack)
 
