@@ -41,19 +41,19 @@ internal val editorColors: EditorSurroundingColors @Composable get() = LocalAppE
 @Composable
 internal fun provideEditorColors(
     isDarkAppTheme: Boolean,
-    isNoneWallpapers: Boolean
+    isNoneWallpaper: Boolean
 ): EditorSurroundingColors {
 
     val animDelay = Theme.animVelocity.common
     var isAnimated by remember { mutableStateOf(false) }
     val animVelocity = if (isAnimated) animDelay else 0
     val tintColor = animateColorAsState(
-        if (isNoneWallpapers) onBackground
+        if (isNoneWallpaper) onBackground
         else if (isDarkAppTheme) inverseOnSurface else onTertiary,
         tween(animVelocity), label = ""
     )
 
-    val tintMarkerColor = if (isNoneWallpapers) onBackground.copy(0.7f)
+    val tintMarkerColor = if (isNoneWallpaper) onBackground.copy(0.7f)
     else if (isDarkAppTheme) inverseOnSurface.copy(0.7f) else onTertiary.copy(0.7f)
 
     LaunchedEffect(isDarkAppTheme) {
@@ -64,14 +64,14 @@ internal fun provideEditorColors(
     }
 
     return EditorSurroundingColors(
-        isNoneWallpaper = isNoneWallpapers,
+        isNoneWallpaper = isNoneWallpaper,
         tint = tintColor,
         textTint = tintColor,
         tintMarkerColor = tintMarkerColor,
-        onBarIconTint = if (isNoneWallpapers) onSurface
+        onBarIconTint = if (isNoneWallpaper) onSurface
         else if (isDarkAppTheme) inverseOnSurface else onTertiary,
 
-        captionTint = if (isNoneWallpapers) outline
+        captionTint = if (isNoneWallpaper) outline
         else if (isDarkAppTheme) Palette.chineseSilver else Palette.doveGray,
     )
 }
