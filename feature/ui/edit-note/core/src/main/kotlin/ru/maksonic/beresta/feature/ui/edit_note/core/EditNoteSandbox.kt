@@ -82,7 +82,8 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     private fun fetchedFoldersSuccess(
         model: Model,
         msg: Msg.Inner.FetchedFoldersSuccess
-    ): Update = ElmUpdate(model.copy(folders = model.folders.copy(msg.folders)))
+    ): Update =
+        ElmUpdate(model.copy(folders = model.folders.copy(msg.folders), isFetchedFolders = true))
 
     private fun fetchedCurrentFolderId(
         model: Model,

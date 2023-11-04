@@ -120,8 +120,16 @@ internal fun ContentExpanded(
             }
         }
 
+        LaunchedEffect(model.isFetchedFolders) {
+            if (model.isFetchedFolders) {
+                send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            }
+        }
+
         LaunchedEffect(FoldersFeature.currentSelected) {
-            send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            if (model.isFetchedFolders) {
+                send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            }
         }
 
         Box(Modifier.fillMaxSize()) {
@@ -249,10 +257,9 @@ private fun isInitialByCategoryWallpaper(wallpaper: BaseWallpaper<Color>): State
     state = when (wallpaper) {
         is WallpaperColor -> wallpaper.id == 100000L
         is WallpaperGradient -> false
-        is WallpaperTexture -> wallpaper.backgroundColor.id == 100000L
-
-        is WallpaperImage -> true
-        else -> false
+        is WallpaperTexture -> wallpaper.backgroundColor.id == 0L
+        is WallpaperImage -> false
+        else -> true
     }
 
     return remember { derivedStateOf { state } }
