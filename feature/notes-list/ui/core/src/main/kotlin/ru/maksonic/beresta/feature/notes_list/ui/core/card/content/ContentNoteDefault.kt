@@ -46,7 +46,7 @@ internal fun ContentNoteDefault(
         NoteDate(date)
 
         if (isEmptyNoteTags) {
-            IndicationBottomPanel()
+            IndicationBottomPanel(note.tags)
         } else {
             Spacer(modifier.size(dp8))
         }

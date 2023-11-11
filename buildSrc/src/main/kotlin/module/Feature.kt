@@ -228,6 +228,30 @@ object Feature {
         }
     }
 
+    object TagsList {
+        object Data : AbstractModule(
+            path = ":feature:tags-list:data",
+            namespace = "ru.maksonic.beresta.feature.tags_list.data"
+        )
+
+        object Domain : AbstractModule(
+            path = ":feature:tags-list:domain",
+            namespace = "ru.maksonic.beresta.feature.tags_list.domain"
+        )
+
+        object Ui {
+            object Api : AbstractModule(
+                path = ":feature:tags-list:ui:api",
+                namespace = "ru.maksonic.beresta.feature.tags_list.ui.api"
+            )
+
+            object Core : AbstractModule(
+                path = ":feature:tags-list:ui:core",
+                namespace = "ru.maksonic.beresta.feature.tags_list.ui.core"
+            )
+        }
+    }
+
     object ThemePicker {
         object Ui {
             object Api : AbstractModule(

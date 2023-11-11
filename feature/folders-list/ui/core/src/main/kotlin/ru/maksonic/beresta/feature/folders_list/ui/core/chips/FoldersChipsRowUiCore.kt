@@ -23,6 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.constraintlayout.compose.ConstraintLayout
 import ru.maksonic.beresta.common.core.ui.sorting.FilterDataSorter
 import ru.maksonic.beresta.common.ui_kit.animation.OverscrollBehavior
+import ru.maksonic.beresta.common.ui_kit.button.ButtonCircle
+import ru.maksonic.beresta.common.ui_kit.icons.Add
+import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.surface.SurfacePro
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
@@ -32,7 +35,6 @@ import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
-import ru.maksonic.beresta.feature.folders_list.ui.core.widget.AddNewChipButton
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel
 
 /**
@@ -156,9 +158,10 @@ internal fun Content(
             }
         }
 
-        AddNewChipButton(
+        ButtonCircle(
             backgroundColor = addButtonBackgroundColor,
             onClick = onAddNewChipClicked,
+            icon = AppIcon.Add,
             modifier = modifier.constrainAs(addBtn) {
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)

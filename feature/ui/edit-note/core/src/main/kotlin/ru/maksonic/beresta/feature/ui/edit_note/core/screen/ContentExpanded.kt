@@ -2,14 +2,17 @@ package ru.maksonic.beresta.feature.ui.edit_note.core.screen
 
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -30,15 +33,18 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.inverseOnSurface
 import ru.maksonic.beresta.common.ui_theme.colors.surface
+import ru.maksonic.beresta.common.ui_theme.provide.dp24
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
 import ru.maksonic.beresta.feature.folders_list.ui.api.LocalCurrentSelectedFolderState
 import ru.maksonic.beresta.feature.marker_color_picker.ui.api.MarkerPickerUiApi
+import ru.maksonic.beresta.feature.tags_list.ui.api.TagsListUiApi
 import ru.maksonic.beresta.feature.ui.add_folder_dialog.api.AddFolderDialogUiApi
 import ru.maksonic.beresta.feature.ui.edit_note.core.LocalAppEditorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.Model
@@ -71,6 +77,7 @@ internal fun ContentExpanded(
     currentFolderStoreUiApi: FoldersChipsRowUiApi.CurrentSelectedFolderStore,
     addFolderDialogApi: AddFolderDialogUiApi,
     markerColorPickerUiApi: MarkerPickerUiApi = koinInject(),
+    tagsListUiApi: TagsListUiApi = koinInject(),
     wallpaperPickerUiApi: WallpaperPickerUiApi = koinInject(),
     wallpaper: WallpaperPickerUiApi.Wallpaper = koinInject(),
     isHiddenNote: Boolean,
@@ -80,39 +87,14 @@ internal fun ContentExpanded(
     CompositionLocalProvider(
         LocalCurrentSelectedFolderState provides currentFolderStoreUiApi.id.value
     ) {
-        val activity = LocalContext.current.findActivity()
         val currentFolder = FoldersFeature.currentSelected
         val backgroundColor = getWallpaperBackgroundColor(model.currentWallpaper)
         val isNoneWallpaper = isInitialByCategoryWallpaper(model.currentWallpaper)
-        val isDarkTheme = Theme.darkMode.value
+        val modalSheetShape = animateDpAsState(
+            if (modalBottomSheetState.targetValue == SheetValue.Expanded) 0.dp else dp24, label = ""
+        )
 
-        DisposableEffect(model.currentWallpaper) {
-            activity.enableEdgeToEdge(
-                statusBarStyle = setSystemBarColorByWallpaperColor(
-                    isNoneWallpaper = isNoneWallpaper.value,
-                    isDarkWallpaper = model.currentWallpaper.isDark,
-                    isDarkTheme = isDarkTheme
-                ),
-                navigationBarStyle = setSystemBarColorByWallpaperColor(
-                    isNoneWallpaper = isNoneWallpaper.value,
-                    isDarkWallpaper = model.currentWallpaper.isDark,
-                    isDarkTheme = isDarkTheme
-                )
-            )
-            onDispose {
-                val navigationBarStyle = if (isDarkTheme) SystemBarStyle.dark(TRANSPARENT_COLOR)
-                else SystemBarStyle.light(TRANSPARENT_COLOR, TRANSPARENT_COLOR)
-
-                activity.enableEdgeToEdge(
-                    statusBarStyle = SystemBarStyle.auto(
-                        lightScrim = TRANSPARENT_COLOR,
-                        darkScrim = TRANSPARENT_COLOR,
-                        detectDarkMode = { isDarkTheme }
-                    ),
-                    navigationBarStyle = navigationBarStyle
-                )
-            }
-        }
+        SystemBarColorEffect(model, isNoneWallpaper.value)
 
         LaunchedEffect(Unit) {
             if (!model.isFetchedNote) {
@@ -120,8 +102,16 @@ internal fun ContentExpanded(
             }
         }
 
+        LaunchedEffect(model.isFetchedFolders) {
+            if (model.isFetchedFolders) {
+                send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            }
+        }
+
         LaunchedEffect(FoldersFeature.currentSelected) {
-            send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            if (model.isFetchedFolders) {
+                send(Msg.Inner.FetchedCurrentFolderId(currentFolder))
+            }
         }
 
         Box(Modifier.fillMaxSize()) {
@@ -194,6 +184,11 @@ internal fun ContentExpanded(
                 if (model.modalSheet.isVisible) {
                     ModalBottomSheetContainer(
                         sheetState = modalBottomSheetState,
+                        isEnableDragHandle = false,
+                        shape = RoundedCornerShape(
+                            topStart = modalSheetShape.value,
+                            topEnd = modalSheetShape.value
+                        ),
                         onDismissRequest = { send(Msg.Inner.HiddenModalBottomSheet) },
                     ) {
                         MultipleModalBottomSheetContent(model, send)
@@ -206,6 +201,13 @@ internal fun ContentExpanded(
                         send(Msg.Inner.UpdatedCurrentNoteMarkerColor(it))
                     },
                     hideDialog = { send(Msg.Ui.HiddenMarkerColorPickerDialog) }
+                )
+
+                tagsListUiApi.SheetContent(
+                    isVisible = model.isVisibleTagPickerSheet,
+                    passedNoteTagsIds = model.editableNote.tags.data.map { it.id },
+                    updatedNoteTags = { tags -> send(Msg.Inner.UpdatedCurrentNoteTags(tags)) },
+                    hideSheet = { send(Msg.Inner.UpdatedTagPickerSheetState(false)) }
                 )
 
                 wallpaperPickerUiApi.SheetContent(
@@ -221,6 +223,55 @@ internal fun ContentExpanded(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SystemBarColorEffect(model: Model, isNoneWallpaper: Boolean) {
+    val activity = LocalContext.current.findActivity()
+    val isDarkTheme = Theme.darkMode.value
+
+    DisposableEffect(model.currentWallpaper) {
+        activity.enableEdgeToEdge(
+            statusBarStyle = setSystemBarColorByWallpaperColor(
+                isNoneWallpaper = isNoneWallpaper,
+                isDarkWallpaper = model.currentWallpaper.isDark,
+                isDarkTheme = isDarkTheme
+            ),
+            navigationBarStyle = setSystemBarColorByWallpaperColor(
+                isNoneWallpaper = isNoneWallpaper,
+                isDarkWallpaper = model.currentWallpaper.isDark,
+                isDarkTheme = isDarkTheme
+            )
+        )
+        onDispose {
+            val navigationBarStyle = if (isDarkTheme) SystemBarStyle.dark(TRANSPARENT_COLOR)
+            else SystemBarStyle.light(TRANSPARENT_COLOR, TRANSPARENT_COLOR)
+
+            activity.enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.auto(
+                    lightScrim = TRANSPARENT_COLOR,
+                    darkScrim = TRANSPARENT_COLOR,
+                    detectDarkMode = { isDarkTheme }
+                ),
+                navigationBarStyle = navigationBarStyle
+            )
+        }
+    }
+
+    LaunchedEffect(model.isVisibleTagPickerSheet) {
+        activity.enableEdgeToEdge(
+            statusBarStyle = setSystemBarColorByWallpaperColor(
+                isNoneWallpaper = isNoneWallpaper,
+                isDarkWallpaper = model.currentWallpaper.isDark,
+                isDarkTheme = isDarkTheme
+            ),
+            navigationBarStyle = setSystemBarColorByWallpaperColor(
+                isNoneWallpaper = isNoneWallpaper,
+                isDarkWallpaper = model.currentWallpaper.isDark,
+                isDarkTheme = isDarkTheme
+            )
+        )
     }
 }
 
@@ -249,10 +300,9 @@ private fun isInitialByCategoryWallpaper(wallpaper: BaseWallpaper<Color>): State
     state = when (wallpaper) {
         is WallpaperColor -> wallpaper.id == 100000L
         is WallpaperGradient -> false
-        is WallpaperTexture -> wallpaper.backgroundColor.id == 100000L
-
-        is WallpaperImage -> true
-        else -> false
+        is WallpaperTexture -> wallpaper.backgroundColor.id == 0L
+        is WallpaperImage -> false
+        else -> true
     }
 
     return remember { derivedStateOf { state } }

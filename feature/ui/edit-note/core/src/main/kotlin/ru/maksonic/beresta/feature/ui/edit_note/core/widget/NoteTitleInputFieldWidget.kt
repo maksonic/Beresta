@@ -39,11 +39,11 @@ internal fun NoteTitleInputFieldWidget(
     TextField(
         value = title,
         onValueChange = { send(Msg.Inner.UpdatedCurrentNoteTitle(it)) },
-        textStyle = TextDesign.titleMedium.copy(editorColors.textTint.value),
+        textStyle = TextDesign.titleLarge.copy(editorColors.textTint.value),
         placeholder = {
             Text(
                 text.editor.hintInputTitle,
-                style = TextDesign.titleMedium.copy(editorColors.textTint.value.copy(0.7f))
+                style = TextDesign.titleLarge.copy(editorColors.textTint.value.copy(0.7f))
             )
         },
         colors = NoteInputDefaultColors,
@@ -56,14 +56,15 @@ internal fun NoteTitleInputFieldWidget(
     )
 }
 
-internal val NoteInputDefaultColors @Composable get() = TextFieldDefaults.colors(
-    focusedTextColor = onBackground,
-    disabledTextColor = onBackground,
-    focusedContainerColor = transparent,
-    cursorColor = primary,
-    focusedIndicatorColor = transparent,
-    unfocusedIndicatorColor = transparent,
-    disabledIndicatorColor = transparent,
-    unfocusedContainerColor = transparent,
-    selectionColors = TextSelectionColors(handleColor = primary, onSurfaceVariant),
-)
+internal val NoteInputDefaultColors
+    @Composable get() = TextFieldDefaults.colors(
+        focusedTextColor = onBackground,
+        disabledTextColor = onBackground,
+        focusedContainerColor = transparent,
+        cursorColor = primary,
+        focusedIndicatorColor = transparent,
+        unfocusedIndicatorColor = transparent,
+        disabledIndicatorColor = transparent,
+        unfocusedContainerColor = transparent,
+        selectionColors = TextSelectionColors(handleColor = primary, onSurfaceVariant),
+    )

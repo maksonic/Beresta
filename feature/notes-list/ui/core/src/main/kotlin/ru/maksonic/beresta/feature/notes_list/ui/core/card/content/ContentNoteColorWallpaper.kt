@@ -60,7 +60,7 @@ internal fun ContentNoteColorWallpaper(
             NoteDate(date, tint = tint.copy(0.85f))
 
             if (isEmptyNoteTags) {
-                IndicationBottomPanel()
+                IndicationBottomPanel(note.tags)
             } else {
                 Spacer(modifier.size(dp8))
             }

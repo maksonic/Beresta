@@ -17,13 +17,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import ru.maksonic.beresta.common.ui_kit.button.ButtonCircle
 import ru.maksonic.beresta.common.ui_kit.helpers.modifier.rippledClick
+import ru.maksonic.beresta.common.ui_kit.icons.Add
+import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.onTertiaryContainer
 import ru.maksonic.beresta.common.ui_theme.colors.tertiaryContainer
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
-import ru.maksonic.beresta.feature.folders_list.ui.core.widget.AddNewChipButton
 import ru.maksonic.beresta.language_engine.shell.provider.text
 
 /**
@@ -45,7 +47,7 @@ internal fun ContentError(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "text.errorUi.fetchedChipsNotFoundError",
+            text = text.errorUi.fetchedChipsNotFoundError,
             style = TextDesign.labelSmall,
             textAlign = TextAlign.Start,
         )
@@ -71,7 +73,8 @@ internal fun ContentError(
         }
         Spacer(modifier.weight(1f))
 
-        AddNewChipButton(
+        ButtonCircle(
+            icon = AppIcon.Add,
             backgroundColor = backgroundColor,
             onClick = onAddNewChipClicked
         )

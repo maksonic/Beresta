@@ -19,4 +19,5 @@ val databaseModule = module {
     }
     single { get<AppDatabase.AppDatabase>().noteDao() }
     single { get<AppDatabase.AppDatabase>().noteFolderDao() }
+    single { get<AppDatabase.AppDatabase>().noteTagDao() }
 }

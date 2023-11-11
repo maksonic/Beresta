@@ -31,7 +31,8 @@ class NoteUiMapperImpl : NoteUiMapper {
             wallpaperBackgroundColorId = i.wallpaperBackgroundColorId,
             isTextureStyle = i.isTextureStyle,
             isDarkWallpaper = i.isDarkWallpaper
-        )
+        ),
+        tagsIds = i.tagsIds
     )
 
     override fun mapFrom(o: NoteUi) = NoteDomain(
@@ -52,6 +53,7 @@ class NoteUiMapperImpl : NoteUiMapper {
         wallpaperTintId = o.style.wallpaperTintId,
         wallpaperBackgroundColorId = o.style.wallpaperBackgroundColorId,
         isTextureStyle = o.style.isTextureStyle,
-        isDarkWallpaper = o.style.isDarkWallpaper
+        isDarkWallpaper = o.style.isDarkWallpaper,
+        tagsIds = o.tags.data.map { it.id }
     )
 }

@@ -1,18 +1,32 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core.widget
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
@@ -27,19 +41,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.common.ui_kit.bar.system.SystemStatusBarHeight
 import ru.maksonic.beresta.common.ui_kit.button.ButtonIcon
+import ru.maksonic.beresta.common.ui_kit.button.ButtonTertiary
 import ru.maksonic.beresta.common.ui_kit.helpers.modifier.rippledClick
+import ru.maksonic.beresta.common.ui_kit.icons.Add
 import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.icons.label.LabelOutlined
 import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.colors.onBackground
 import ru.maksonic.beresta.common.ui_theme.colors.primary
+import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
+import ru.maksonic.beresta.common.ui_theme.provide.NoRipple
 import ru.maksonic.beresta.common.ui_theme.provide.dp12
+import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.feature.marker_color_picker.ui.api.findColor
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
 import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
@@ -82,48 +104,129 @@ internal fun TopControlBar(
     Box {
         val background =
             animateColorAsState(backgroundColor.value, tween(animVelocity), label = "")
-        Row(
-            modifier
-                .drawBehind { drawRect(background.value) }
-                .fillMaxWidth()
-                .padding(
-                    top = Theme.size.topBarNormalHeight
-                        .plus(SystemStatusBarHeight)
-                        .plus(dp8),
-                    bottom = dp8
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
+        Column {
+            var isExpanded by remember { mutableStateOf(false) }
+            Row(
                 modifier
-                    .padding(start = dp4)
-                    .clip(CircleShape)
-                    .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
-                    .size(Theme.size.minimumTouchTargetSize)
-                    .padding(dp12)
-                    .border(1.dp, editorColors.tint.value, CircleShape),
-                contentAlignment = Alignment.Center
+                    .drawBehind { drawRect(background.value) }
+                    .fillMaxWidth()
+                    .padding(
+                        top = Theme.size.topBarNormalHeight
+                            .plus(SystemStatusBarHeight)
+                            .plus(dp8),
+                        bottom = dp8
+                    ),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier
-                        .fillMaxSize()
-                        .padding(dp4)
+                        .padding(start = dp4)
                         .clip(CircleShape)
-                        .background(markerColor.value)
+                        .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
+                        .size(Theme.size.minimumTouchTargetSize)
+                        .padding(dp12)
+                        .border(1.dp, editorColors.tint.value, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier
+                            .fillMaxSize()
+                            .padding(dp4)
+                            .clip(CircleShape)
+                            .background(markerColor.value)
+                    )
+                }
+                ButtonIcon(
+                    icon = AppIcon.LabelOutlined,
+                    tint = editorColors.tint.value,
+                    onClick = { isExpanded = !isExpanded },
                 )
+
+                Spacer(modifier.weight(1f))
+
+                if (!isHiddenNote) {
+                    DropdownFolderPicker(model, send)
+                }
             }
-            ButtonIcon(
-                icon = AppIcon.LabelOutlined,
-                tint = editorColors.tint.value,
-                onClick = {},
+            ExpandableTagsContainer(
+                tags = model.editableNote.tags,
+                isExpanded = isExpanded,
+                onAddNoteTagClicked = { send(Msg.Inner.UpdatedTagPickerSheetState(true)) }
             )
+        }
+    }
+}
 
-            Spacer(modifier.weight(1f))
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun ExpandableTagsContainer(
+    tags: NoteTagUi.Collection,
+    isExpanded: Boolean,
+    onAddNoteTagClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val height = if (isExpanded) Modifier.wrapContentHeight() else Modifier.height(0.dp)
 
-            if (!isHiddenNote) {
-                DropdownFolderPicker(model, send)
+    Box(
+        modifier
+            .animateContentSize()
+            .fillMaxWidth()
+            .then(height)
+    ) {
+        if (tags.data.isEmpty()) {
+            ButtonTertiary(
+                onClick = onAddNoteTagClicked,
+                title = "Добавить теги",
+                icon = AppIcon.Add,
+                modifier = Modifier.padding(start = dp16)
+            )
+        } else {
+            FlowRow(
+                modifier = modifier.padding(start = dp8, end = dp8),
+                horizontalArrangement = Arrangement.spacedBy(dp8),
+                verticalArrangement = Arrangement.Center
+            ) {
+                CompositionLocalProvider(LocalRippleTheme provides NoRipple) {
+
+                    ButtonAddTagCircle(
+                        AppIcon.Add,
+                        onClick = onAddNoteTagClicked,
+                        modifier = Modifier.padding(top = dp8, start = dp4)
+                    )
+
+                    tags.data.forEach {
+                        FilterChip(
+                            selected = true,
+                            enabled = false,
+                            onClick = {},
+                            label = { Text(it.title) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                disabledSelectedContainerColor = secondaryContainer,
+                                disabledLabelColor = onBackground
+                            )
+                        )
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun ButtonAddTagCircle(
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier
+            .size(Theme.size.chipHeight)
+            .clip(CircleShape)
+            .background(secondaryContainer)
+            .rippledClick(primary, onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(imageVector = icon, tint = onBackground, contentDescription = "")
     }
 }
 
@@ -141,3 +244,4 @@ private fun updateMarkerColor(
         mutableColor.value = colorContainer.value
     }
 }
+

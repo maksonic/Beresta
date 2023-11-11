@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import ru.maksonic.beresta.common.ui_kit.button.ButtonIcon
@@ -23,6 +24,7 @@ import ru.maksonic.beresta.common.ui_theme.colors.onBackground
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarNormal(
+    modifier: Modifier = Modifier,
     title: String = "",
     scrollBehavior: TopAppBarScrollBehavior? = null,
     tonal: Dp? = null,
@@ -46,7 +48,8 @@ fun TopAppBarNormal(
                 containerColor = color,
                 scrolledContainerColor = color,
                 titleContentColor = onBackground
-            )
+            ),
+            modifier = modifier
         )
     }
 }

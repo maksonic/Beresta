@@ -53,6 +53,7 @@ dependencies {
     implementation(project(module.Platform.Navigation.Router.path))
     implementation(project(module.Feature.NotesList.Domain.path))
     implementation(project(module.Feature.SortingSheet.Domain.path))
+    implementation(project(module.Feature.TagsList.Ui.Api.path))
     implementation(project(module.Feature.WallpaperPicker.Domain.path))
 
     implementation(libs.compose.foundation)

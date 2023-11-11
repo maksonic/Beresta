@@ -61,6 +61,7 @@ dependencies {
     implementation(project(module.Screen.Trash.Notes.path))
     implementation(project(module.Feature.Onboarding.Ui.Api.path))
     implementation(project(module.Feature.EditNote.Ui.Api.path))
+    implementation(project(module.Feature.TagsList.Ui.Api.path))
     implementation(libs.compose.navigation)
     implementation(libs.koin.android)
 }

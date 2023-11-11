@@ -76,6 +76,11 @@ include(":feature:sorting-sheet:domain")
 include(":feature:sorting-sheet:ui:api")
 include(":feature:sorting-sheet:ui:core")
 
+include(":feature:tags-list:data")
+include(":feature:tags-list:domain")
+include(":feature:tags-list:ui:api")
+include(":feature:tags-list:ui:core")
+
 include(":feature:wallpaper-picker:data")
 include(":feature:wallpaper-picker:domain")
 include(":feature:wallpaper-picker:ui:api")

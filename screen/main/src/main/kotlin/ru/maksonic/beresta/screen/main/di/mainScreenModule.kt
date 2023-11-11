@@ -18,10 +18,12 @@ val mainScreenModule = module {
         NotesDataProgram(
             fetchNotesUseCase = get(),
             fetchHiddenNotesPinStatusUseCase = get(),
+            fetchNoteTagsUseCase = get(),
             findMarkerColorByIdUseCase = get(),
             findWallpaperByParamsUseCase = get(),
             notesInteractor = get(),
             mapper = get(),
+            tagUiMapper = get(),
             ioDispatcher = get(named(CoroutineDispatchers.IO))
         )
     }

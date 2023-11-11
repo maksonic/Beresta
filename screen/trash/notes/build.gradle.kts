@@ -58,6 +58,7 @@ dependencies {
     implementation(project(module.Feature.NotesList.Ui.Api.path))
     implementation(project(module.Feature.SortingSheet.Ui.Api.path))
     implementation(project(module.Feature.MarkerColorPicker.Domain.path))
+    implementation(project(module.Feature.TagsList.Ui.Api.path))
     implementation(project(module.Feature.WallpaperPicker.Domain.path))
     implementation(project(module.Feature.WallpaperPicker.Ui.Api.path))
     implementation(libs.activity.compose)
