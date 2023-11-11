@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.database.notes
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.coroutines.flow.Flow
@@ -31,5 +32,6 @@ data class NoteCache(
     val wallpaperTintId: Long = 0L,
     val wallpaperBackgroundColorId: Long = 0L,
     val isTextureStyle: Boolean = false,
-    val isDarkWallpaper: Boolean = false
+    val isDarkWallpaper: Boolean = false,
+    @ColumnInfo(name = "tags") val tagsIds: List<Long> = emptyList()
 )

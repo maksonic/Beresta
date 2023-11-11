@@ -20,13 +20,13 @@ import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
 import ru.maksonic.beresta.feature.notes_list.ui.api.card.isSquare
 import ru.maksonic.beresta.feature.notes_list.ui.api.card.noteUiCardState
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
 
 /**
  * @Author maksonic on 31.10.2023
  */
 @Composable
-fun NoteTagsRow(modifier: Modifier = Modifier) {
-    val tags = listOf("maksonic", "Work", "Метка", "Работа", "Продукты", "Телефон")
+fun NoteTagsRow(tags: NoteTagUi.Collection, modifier: Modifier = Modifier) {
 
     Row(
         modifier
@@ -34,17 +34,17 @@ fun NoteTagsRow(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
     ) {
-        tags.forEachIndexed { index, title ->
-            val pModifier = if (index == tags.lastIndex) Modifier.padding(end = dp8) else Modifier
+        tags.data.forEachIndexed { index, tag ->
+            val pModifier = if (index == tags.data.lastIndex) Modifier.padding(end = dp8) else Modifier
 
-            NoteTag(title, pModifier)
+            NoteTag(tag.title, pModifier)
         }
     }
 }
 
 @Composable
 private fun NoteTag(title: String, modifier: Modifier = Modifier) {
-    val shape = if (noteUiCardState.shape.isSquare) Theme.shape.cornerNormal else CircleShape
+    val shape = if (noteUiCardState.shape.isSquare) Theme.shape.cornerSmall else CircleShape
 
     SurfacePro(
         modifier.padding(start = dp8).clip(shape),

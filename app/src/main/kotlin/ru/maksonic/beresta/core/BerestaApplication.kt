@@ -22,6 +22,8 @@ import ru.maksonic.beresta.feature.onboarding.data.di.onboardingDataFeatureModul
 import ru.maksonic.beresta.feature.onboarding.ui.core.onboardingUiFeatureModule
 import ru.maksonic.beresta.feature.sorting_sheet.data.di.sortingSheetDataFeatureModule
 import ru.maksonic.beresta.feature.sorting_sheet.ui.core.di.sortingSheetUiFeatureModule
+import ru.maksonic.beresta.feature.tags_list.data.di.tagsListDataFeatureModule
+import ru.maksonic.beresta.feature.tags_list.ui.core.di.tagsListUiFeatureModule
 import ru.maksonic.beresta.feature.ui.add_folder_dialog.core.di.addFolderDialogUiFeatureModule
 import ru.maksonic.beresta.feature.ui.edit_note.core.di.editNoteUiFeatureModule
 import ru.maksonic.beresta.feature.ui.language_picker.core.di.languagePickerUiFeatureModule
@@ -82,6 +84,8 @@ class BerestaApplication : Application() {
         notesListUiFeatureModule,
         onboardingDataFeatureModule,
         onboardingUiFeatureModule,
+        tagsListDataFeatureModule,
+        tagsListUiFeatureModule,
         themePickerUiFeatureModule,
         searchBarUiFeatureModule,
         sortingSheetDataFeatureModule,

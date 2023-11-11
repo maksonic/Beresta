@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUi
 import ru.maksonic.beresta.feature.marker_color_picker.ui.api.MarkerPickerUiState
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel
 import ru.maksonic.beresta.platform.elm.core.ElmCommand
@@ -22,12 +23,14 @@ enum class CurrentSheetContent { NOTHING }
 @Immutable
 data class ModalSheet(
     val isVisible: Boolean,
+    val isVisibleDragHandle: Boolean,
     val skipPartiallyExpanded: Boolean,
     val content: CurrentSheetContent
 ) {
     companion object {
         val Initial = ModalSheet(
             isVisible = false,
+            isVisibleDragHandle = true,
             skipPartiallyExpanded = false,
             content = CurrentSheetContent.NOTHING
         )
@@ -51,6 +54,7 @@ data class Model(
     val isPinNoteSelected: Boolean,
     val isVisibleAddFolderDialog: Boolean,
     val isVisibleWallpaperPickerSheet: Boolean,
+    val isVisibleTagPickerSheet: Boolean,
     val markerState: MarkerPickerUiState,
     val currentWallpaper: BaseWallpaper<Color>
 ) : ElmModel {
@@ -70,6 +74,7 @@ data class Model(
             isPinNoteSelected = false,
             isVisibleAddFolderDialog = false,
             isVisibleWallpaperPickerSheet = false,
+            isVisibleTagPickerSheet = false,
             markerState = MarkerPickerUiState.Initial,
             currentWallpaper = BaseWallpaper.empty()
         )
@@ -87,8 +92,6 @@ sealed class Msg : ElmMessage {
         data object OnStartRecordVoiceClicked : Ui()
         data object OnAddImagesClicked : Ui()
         data object OnAddCameraSnapshotClicked : Ui()
-        // data class OnSelectNoteFolderClicked(val folder: FolderUi) : Ui()
-
         // Top bar actions
         data object OnPinClicked : Ui()
         data object OnAddNewFolderClicked : Ui()
@@ -118,6 +121,8 @@ sealed class Msg : ElmMessage {
         data class UpdatedCurrentNoteTitle(val text: String) : Inner()
         data class UpdatedCurrentNoteMessage(val text: String) : Inner()
         data class UpdatedCurrentNoteMarkerColor(val colorId: Long) : Inner()
+        data class UpdatedCurrentNoteTags(val tags: List<NoteTagUi>) : Inner()
+        data class UpdatedTagPickerSheetState(val isVisible: Boolean) : Inner()
         data object HiddenModalBottomSheet : Inner()
         data class UpdatedNoteWallpaper(val wallpaper: BaseWallpaper<Color>) : Inner()
         data class FetchedNoteWallpaperResult(val value: BaseWallpaper<Color>) : Inner()

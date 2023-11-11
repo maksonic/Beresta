@@ -21,7 +21,6 @@ import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.provide.dp10
 import ru.maksonic.beresta.common.ui_theme.provide.dp12
-import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.feature.notes_list.ui.api.list.NotesListUiApi
 import ru.maksonic.beresta.feature.sorting_sheet.ui.api.listHiddenNotesSortState
 import ru.maksonic.beresta.feature.wallpaper_picker.ui.api.WallpaperPickerUiApi
@@ -74,7 +73,7 @@ internal fun NotesList(
                 .padding(top = Theme.size.topBarSmallHeight),
             loadingModifier = modifier
                 .systemBarsPadding()
-                .padding(top = Theme.size.topBarSmallHeight.plus(dp16)),
+                .padding(top = Theme.size.topBarSmallHeight.plus(dp12)),
             cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
         )
 

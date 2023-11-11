@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes_list.ui.api
 
 import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.common.ui_theme.colors.ColorContainer
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperColor
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperGradient
@@ -54,7 +55,9 @@ data class NoteUi(
     val isMovedToTrash: Boolean,
     val isSelected: Boolean = false,
     val style: Style = Style.Initial,
-    val wallpaper: BaseWallpaper<Color> = BaseWallpaper.empty()
+    val wallpaper: BaseWallpaper<Color> = BaseWallpaper.empty(),
+    val tagsIds: List<Long> = emptyList(),
+    val tags: NoteTagUi.Collection = NoteTagUi.Collection.Empty,
 ) {
 
     companion object {
@@ -72,7 +75,9 @@ data class NoteUi(
             isMovedToTrash = false,
             isSelected = false,
             style = Style.Initial,
-            wallpaper = BaseWallpaper.empty()
+            wallpaper = BaseWallpaper.empty(),
+            tagsIds = emptyList(),
+            tags = NoteTagUi.Collection.Empty
         )
 
         val Preview = Default.copy(

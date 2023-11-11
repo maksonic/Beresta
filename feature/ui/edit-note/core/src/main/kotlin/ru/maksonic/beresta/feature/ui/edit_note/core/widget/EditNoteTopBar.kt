@@ -37,15 +37,13 @@ internal fun EditNoteTopBar(
     backgroundColor: State<Color>,
     modifier: Modifier = Modifier
 ) {
-    val barHeight = Theme.size.topBarNormalHeight
-
     Column {
         SystemStatusBar(backgroundColor = backgroundColor)
 
         Row(
             modifier
                 .fillMaxWidth()
-                .height(barHeight)
+                .height(Theme.size.topBarSmallHeight)
                 .drawBehind { drawRect(backgroundColor.value) },
             verticalAlignment = Alignment.CenterVertically,
         ) {

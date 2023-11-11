@@ -5,7 +5,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ru.maksonic.beresta.common.ui_theme.colors.ColorContainer
 import ru.maksonic.beresta.feature.hidden_notes_dialog.domain.usecase.FetchHiddenNotesPinStatusUseCase
@@ -15,6 +17,9 @@ import ru.maksonic.beresta.feature.notes_list.domain.list.usecase.FetchNotesUseC
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUiMapper
 import ru.maksonic.beresta.feature.notes_list.ui.api.Style
+import ru.maksonic.beresta.feature.tags_list.domain.FetchNoteTagsUseCase
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
+import ru.maksonic.beresta.feature.tags_list.ui.api.TagUiMapper
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperParams
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperType
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.usecase.FindWallpaperByParamsUseCase
@@ -30,10 +35,12 @@ import java.time.LocalDateTime
 class NotesDataProgram(
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val fetchHiddenNotesPinStatusUseCase: FetchHiddenNotesPinStatusUseCase,
+    private val fetchNoteTagsUseCase: FetchNoteTagsUseCase,
     private val findMarkerColorByIdUseCase: FindMarkerColorByIdUseCase<ColorContainer>,
     private val findWallpaperByParamsUseCase: FindWallpaperByParamsUseCase<Color>,
     private val notesInteractor: NotesInteractor,
     private val mapper: NoteUiMapper,
+    private val tagUiMapper: TagUiMapper,
     private val ioDispatcher: CoroutineDispatcher
 ) : ElmProgram<Msg, Cmd> {
 
@@ -50,16 +57,20 @@ class NotesDataProgram(
     }
 
     private suspend fun fetchNotesList(consumer: (Msg) -> Unit) = runCatching {
-        fetchNotesUseCase().collect { notesDomain ->
+        combine(fetchNotesUseCase(), fetchNoteTagsUseCase()) { notesDomain, tagsDomain ->
             val notes = mapper.mapListTo(notesDomain).map { note ->
                 val markerColor = findMarkerColorByIdUseCase(note.style.markerColorId)
+                val tags = tagsDomain.filter { tag -> note.tagsIds.any { tag.id == it } }
                 val wallpaper = fetchWallpaperByStyle(note.style)
 
-                note.copy(style = note.style.copy(markerColor = markerColor), wallpaper = wallpaper)
+                note.copy(
+                    tags = NoteTagUi.Collection(tagUiMapper.mapListTo(tags)),
+                    style = note.style.copy(markerColor = markerColor),
+                    wallpaper = wallpaper
+                )
             }
-
             consumer(Msg.Inner.FetchedNotesSuccess(NoteUi.Collection(notes)))
-        }
+        }.collect()
 
     }.onFailure { throwable ->
         consumer(Msg.Inner.FetchedNotesFail(throwable.localizedMessage ?: "Failure"))

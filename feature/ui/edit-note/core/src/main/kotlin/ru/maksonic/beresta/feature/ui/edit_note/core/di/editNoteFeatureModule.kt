@@ -15,11 +15,13 @@ val editNoteUiFeatureModule = module {
         EditNoteProgram(
             fetchFoldersUseCase = get(),
             fetchNoteByIdUseCase = get(),
+            fetchNoteTagsUseCase = get(),
             fetchMarkerColorsUseCase = get(),
             wallpaperRepository = get(),
             foldersChipsRowUiApi = get(),
             notesInteractor = get(),
             mapper = get(),
+            tagUiMapper = get(),
             foldersMapper = get(),
             navigator = get()
         )

@@ -9,7 +9,9 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
+import ru.maksonic.beresta.common.ui_kit.animation.AnimateFadeInOut
 import ru.maksonic.beresta.common.ui_theme.colors.onSecondaryContainer
 import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
 
@@ -20,6 +22,8 @@ import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
 @Composable
 fun ModalBottomSheetContainer(
     sheetState: SheetState,
+    isEnableDragHandle: Boolean = true,
+    shape: Shape = BottomSheetDefaults.ExpandedShape,
     onDismissRequest: () -> Unit,
     sheetContent: @Composable () -> Unit
 ) {
@@ -31,7 +35,12 @@ fun ModalBottomSheetContainer(
     ModalBottomSheet(
         sheetState = sheetState,
         containerColor = secondaryContainer,
-        dragHandle = { BottomSheetDefaults.DragHandle(color = onSecondaryContainer) },
+        shape = shape,
+        dragHandle = {
+            AnimateFadeInOut(isEnableDragHandle) {
+                BottomSheetDefaults.DragHandle(color = onSecondaryContainer)
+            }
+        },
         windowInsets = WindowInsets(0, 0, 0, 0),
         onDismissRequest = onDismissRequest,
     ) {

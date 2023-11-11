@@ -29,5 +29,6 @@ data class NoteDomain(
     val wallpaperTintId: Long = 0L,
     val wallpaperBackgroundColorId: Long = 0L,
     val isTextureStyle: Boolean = false,
-    val isDarkWallpaper: Boolean = false
+    val isDarkWallpaper: Boolean = false,
+    val tagsIds: List<Long> = emptyList()
 )

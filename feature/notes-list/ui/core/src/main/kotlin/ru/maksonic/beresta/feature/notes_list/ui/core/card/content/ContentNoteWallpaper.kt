@@ -102,7 +102,7 @@ fun ContentNoteWallpaper(
             }
 
             if (isEmptyNoteTags) {
-                IndicationBottomPanel()
+                IndicationBottomPanel(note.tags)
             } else {
                 Spacer(modifier.size(dp8))
             }

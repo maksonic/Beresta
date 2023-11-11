@@ -1,0 +1,410 @@
+{
+  "russian": [
+    {
+      "id": 0,
+      "title": "Работа"
+    },
+    {
+      "id": 1,
+      "title": "Личное"
+    },
+    {
+      "id": 2,
+      "title": "Планы"
+    },
+    {
+      "id": 3,
+      "title": "Важное"
+    },
+    {
+      "id": 4,
+      "title": "Дела"
+    },
+    {
+      "id": 5,
+      "title": "Идеи"
+    },
+    {
+      "id": 6,
+      "title": "Список"
+    },
+    {
+      "id": 7,
+      "title": "Встречи"
+    },
+    {
+      "id": 8,
+      "title": "Проекты"
+    },
+    {
+      "id": 9,
+      "title": "Здоровье"
+    },
+    {
+      "id": 10,
+      "title": "Финансы"
+    },
+    {
+      "id": 11,
+      "title": "Семья"
+    },
+    {
+      "id": 12,
+      "title": "Путешествия"
+    },
+    {
+      "id": 13,
+      "title": "Учеба"
+    },
+    {
+      "id": 14,
+      "title": "События"
+    },
+    {
+      "id": 15,
+      "title": "Сроки"
+    },
+    {
+      "id": 16,
+      "title": "Вдохновение"
+    },
+    {
+      "id": 17,
+      "title": "Спорт"
+    },
+    {
+      "id": 18,
+      "title": "Рецепты"
+    },
+    {
+      "id": 19,
+      "title": "Покупки"
+    },
+    {
+      "id": 20,
+      "title": "Книги"
+    },
+    {
+      "id": 21,
+      "title": "Фильмы"
+    },
+    {
+      "id": 22,
+      "title": "Музыка"
+    },
+    {
+      "id": 23,
+      "title": "Технологии"
+    },
+    {
+      "id": 24,
+      "title": "Искусство"
+    }
+  ],
+  "english": [
+    {
+      "id": 0,
+      "title": "Work"
+    },
+    {
+      "id": 1,
+      "title": "Personal"
+    },
+    {
+      "id": 2,
+      "title": "Plans"
+    },
+    {
+      "id": 3,
+      "title": "Important"
+    },
+    {
+      "id": 4,
+      "title": "Tasks"
+    },
+    {
+      "id": 5,
+      "title": "Ideas"
+    },
+    {
+      "id": 6,
+      "title": "List"
+    },
+    {
+      "id": 7,
+      "title": "Meetings"
+    },
+    {
+      "id": 8,
+      "title": "Projects"
+    },
+    {
+      "id": 9,
+      "title": "Health"
+    },
+    {
+      "id": 10,
+      "title": "Finances"
+    },
+    {
+      "id": 11,
+      "title": "Family"
+    },
+    {
+      "id": 12,
+      "title": "Travel"
+    },
+    {
+      "id": 13,
+      "title": "Education"
+    },
+    {
+      "id": 14,
+      "title": "Events"
+    },
+    {
+      "id": 15,
+      "title": "Deadlines"
+    },
+    {
+      "id": 16,
+      "title": "Inspiration"
+    },
+    {
+      "id": 17,
+      "title": "Sports"
+    },
+    {
+      "id": 18,
+      "title": "Recipes"
+    },
+    {
+      "id": 19,
+      "title": "Shopping"
+    },
+    {
+      "id": 20,
+      "title": "Books"
+    },
+    {
+      "id": 21,
+      "title": "Movies"
+    },
+    {
+      "id": 22,
+      "title": "Music"
+    },
+    {
+      "id": 23,
+      "title": "Technology"
+    },
+    {
+      "id": 24,
+      "title": "Art"
+    }
+  ],
+  "chinese": [
+    {
+      "id": 0,
+      "title": "工作"
+    },
+    {
+      "id": 1,
+      "title": "个人"
+    },
+    {
+      "id": 2,
+      "title": "计划"
+    },
+    {
+      "id": 3,
+      "title": "重要"
+    },
+    {
+      "id": 4,
+      "title": "任务"
+    },
+    {
+      "id": 5,
+      "title": "想法"
+    },
+    {
+      "id": 6,
+      "title": "清单"
+    },
+    {
+      "id": 7,
+      "title": "会议"
+    },
+    {
+      "id": 8,
+      "title": "项目"
+    },
+    {
+      "id": 9,
+      "title": "健康"
+    },
+    {
+      "id": 10,
+      "title": "财务"
+    },
+    {
+      "id": 11,
+      "title": "家庭"
+    },
+    {
+      "id": 12,
+      "title": "旅行"
+    },
+    {
+      "id": 13,
+      "title": "教育"
+    },
+    {
+      "id": 14,
+      "title": "活动"
+    },
+    {
+      "id": 15,
+      "title": "截止日期"
+    },
+    {
+      "id": 16,
+      "title": "灵感"
+    },
+    {
+      "id": 17,
+      "title": "体育"
+    },
+    {
+      "id": 18,
+      "title": "食谱"
+    },
+    {
+      "id": 19,
+      "title": "购物"
+    },
+    {
+      "id": 20,
+      "title": "书籍"
+    },
+    {
+      "id": 21,
+      "title": "电影"
+    },
+    {
+      "id": 22,
+      "title": "音乐"
+    },
+    {
+      "id": 23,
+      "title": "技术"
+    },
+    {
+      "id": 24,
+      "title": "艺术"
+    }
+  ],
+  "chinese_tr": [
+    {
+      "id": 0,
+      "title": "工作"
+    },
+    {
+      "id": 1,
+      "title": "個人"
+    },
+    {
+      "id": 2,
+      "title": "計劃"
+    },
+    {
+      "id": 3,
+      "title": "重要"
+    },
+    {
+      "id": 4,
+      "title": "任務"
+    },
+    {
+      "id": 5,
+      "title": "想法"
+    },
+    {
+      "id": 6,
+      "title": "清單"
+    },
+    {
+      "id": 7,
+      "title": "會議"
+    },
+    {
+      "id": 8,
+      "title": "項目"
+    },
+    {
+      "id": 9,
+      "title": "健康"
+    },
+    {
+      "id": 10,
+      "title": "財務"
+    },
+    {
+      "id": 11,
+      "title": "家庭"
+    },
+    {
+      "id": 12,
+      "title": "旅行"
+    },
+    {
+      "id": 13,
+      "title": "教育"
+    },
+    {
+      "id": 14,
+      "title": "活動"
+    },
+    {
+      "id": 15,
+      "title": "截止日期"
+    },
+    {
+      "id": 16,
+      "title": "靈感"
+    },
+    {
+      "id": 17,
+      "title": "運動"
+    },
+    {
+      "id": 18,
+      "title": "食譜"
+    },
+    {
+      "id": 19,
+      "title": "購物"
+    },
+    {
+      "id": 20,
+      "title": "書籍"
+    },
+    {
+      "id": 21,
+      "title": "電影"
+    },
+    {
+      "id": 22,
+      "title": "音樂"
+    },
+    {
+      "id": 23,
+      "title": "科技"
+    },
+    {
+      "id": 24,
+      "title": "藝術"
+    }
+  ]
+}

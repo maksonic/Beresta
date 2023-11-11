@@ -1,7 +1,8 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core
 
 import androidx.compose.ui.graphics.Color
-import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import ru.maksonic.beresta.common.ui_theme.colors.ColorContainer
 import ru.maksonic.beresta.feature.folders_list.domain.usecase.FetchFoldersUseCase
 import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUiMapper
@@ -14,6 +15,9 @@ import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUiMapper
 import ru.maksonic.beresta.feature.notes_list.ui.api.Style
 import ru.maksonic.beresta.feature.notes_list.ui.api.isDefaultId
+import ru.maksonic.beresta.feature.tags_list.domain.FetchNoteTagsUseCase
+import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
+import ru.maksonic.beresta.feature.tags_list.ui.api.TagUiMapper
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperParams
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperRepository
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperType
@@ -28,12 +32,14 @@ import java.time.LocalDateTime
  */
 class EditNoteProgram(
     private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
+    private val fetchNoteTagsUseCase: FetchNoteTagsUseCase,
     private val fetchFoldersUseCase: FetchFoldersUseCase,
     private val fetchMarkerColorsUseCase: FetchMarkerColorsUseCase<ColorContainer>,
     private val wallpaperRepository: WallpaperRepository<Color>,
     private val foldersChipsRowUiApi: FoldersChipsRowUiApi.CurrentSelectedFolderStore,
     private val notesInteractor: NotesInteractor,
     private val mapper: NoteUiMapper,
+    private val tagUiMapper: TagUiMapper,
     private val foldersMapper: FolderUiMapper,
     private val navigator: AbstractNavigator,
 ) : ElmProgram<Msg, Cmd> {
@@ -53,8 +59,13 @@ class EditNoteProgram(
         val markerColorsList = fetchMarkerColorsUseCase()
 
         runCatching {
-            fetchNoteByIdUseCase(args.second).cancellable().collect { noteDomain ->
-                val note = mapper.mapTo(noteDomain)
+            combine(
+                fetchNoteByIdUseCase(args.second),
+                fetchNoteTagsUseCase()
+            ) { noteDomain, tagsDomain ->
+                val tags = tagsDomain.filter { tag -> noteDomain.tagsIds.any { tag.id == it } }
+                val tagsUi = NoteTagUi.Collection(tagUiMapper.mapListTo(tags))
+                val note = mapper.mapTo(noteDomain).copy(tags = tagsUi)
                 val markerState = MarkerPickerUiState(
                     currentSelectedColorId = note.style.markerColorId,
                     isVisibleDialog = false,
@@ -69,7 +80,8 @@ class EditNoteProgram(
                         wallpaper = fetchWallpaperByStyle(note.style)
                     )
                 )
-            }
+            }.collect()
+
         }.onFailure {
             consumer(
                 Msg.Inner.FetchedPassedNoteResult(

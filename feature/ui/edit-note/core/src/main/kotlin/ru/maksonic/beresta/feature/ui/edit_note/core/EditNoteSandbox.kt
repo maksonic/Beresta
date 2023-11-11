@@ -47,6 +47,8 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         is Msg.Ui.OnSelectColorMarkerClicked -> onSelectColorMarkerClicked(model)
         is Msg.Ui.HiddenMarkerColorPickerDialog -> hiddenMarkerColorPickerDialog(model)
         is Msg.Inner.UpdatedCurrentNoteMarkerColor -> updatedCurrentNoteMarkerColor(model, msg)
+        is Msg.Inner.UpdatedCurrentNoteTags -> updatedCurrentNoteTags(model, msg)
+        is Msg.Inner.UpdatedTagPickerSheetState -> updatedTagPickerSheetState(model, msg)
         is Msg.Ui.UpdatedWallpaperPickerSheetVisibility -> {
             updatedWallpaperPickerSheetVisibility(model, msg)
         }
@@ -222,6 +224,23 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         model = model.copy(
             markerState = model.markerState.copy(currentSelectedColorId = msg.colorId)
         )
+    )
+
+    private fun updatedCurrentNoteTags(
+        model: Model,
+        msg: Msg.Inner.UpdatedCurrentNoteTags
+    ): Update = ElmUpdate(
+        model.copy(
+            editableNote = model.editableNote.copy(tags = model.editableNote.tags.copy(msg.tags))
+        )
+    )
+
+    private fun updatedTagPickerSheetState(
+        model: Model,
+        msg: Msg.Inner.UpdatedTagPickerSheetState
+    ): Update = ElmUpdate(
+        model = model.copy(isVisibleTagPickerSheet = msg.isVisible),
+        effects = setOf(Eff.HideKeyboard)
     )
 
     private fun updatedWallpaperPickerSheetVisibility(

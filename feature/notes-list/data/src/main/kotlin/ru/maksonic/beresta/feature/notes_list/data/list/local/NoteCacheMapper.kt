@@ -26,7 +26,8 @@ class NoteCacheMapper : Mapper<NoteCache, NoteDomain> {
         wallpaperTintId = i.wallpaperTintId,
         wallpaperBackgroundColorId = i.wallpaperBackgroundColorId,
         isTextureStyle = i.isTextureStyle,
-        isDarkWallpaper = i.isDarkWallpaper
+        isDarkWallpaper = i.isDarkWallpaper,
+        tagsIds = i.tagsIds
     )
 
     override fun mapFrom(o: NoteDomain) = NoteCache(
@@ -47,6 +48,7 @@ class NoteCacheMapper : Mapper<NoteCache, NoteDomain> {
         wallpaperTintId = o.wallpaperTintId,
         wallpaperBackgroundColorId = o.wallpaperBackgroundColorId,
         isTextureStyle = o.isTextureStyle,
-        isDarkWallpaper = o.isDarkWallpaper
+        isDarkWallpaper = o.isDarkWallpaper,
+        tagsIds = o.tagsIds
     )
 }
