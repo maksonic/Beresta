@@ -8,4 +8,5 @@ data class SettingsScreenRouter(
     val toAppearance: () -> Unit,
     val toNotifications: () -> Unit,
     val toSecurity: () -> Unit,
+    val toTags: () -> Unit,
 )

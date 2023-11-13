@@ -29,6 +29,7 @@ class SettingsSandbox(
         is Msg.Ui.OnUserAccountClicked -> onUserAccountClicked(model)
         is Msg.Ui.OnUserAgreementClicked -> onUserAgreementClicked(model)
         is Msg.Ui.OnWriteEmailClicked -> onWriteEmailClicked(model)
+        is Msg.Ui.OnTagsManagementClicked -> onTagsManagementClicked(model)
         is Msg.Inner.HiddenModalBottomSheet -> hiddenModalBottomSheet(model)
     }
 
@@ -78,6 +79,9 @@ class SettingsSandbox(
     private fun onUserAgreementClicked(model: Model): Update = ElmUpdate(model)
 
     private fun onWriteEmailClicked(model: Model): Update = ElmUpdate(model)
+
+    private fun onTagsManagementClicked(model: Model): Update =
+        ElmUpdate(model, effects = setOf(Eff.NavigateToTags))
 
     private fun hiddenModalBottomSheet(model: Model): Update = ElmUpdate(
         model = model.copy(

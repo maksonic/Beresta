@@ -9,7 +9,7 @@ import ru.maksonic.beresta.common.data.BaseDao
  */
 @Dao
 abstract class NoteTagDao : BaseDao<NoteTagCache>() {
-    @Query("SELECT * FROM note_tags")
+    @Query("SELECT * FROM note_tags WHERE id != 25")
     abstract fun fetchList(): NoteTagsCacheList
 
     @Query("SELECT * FROM note_tags WHERE id = :itemId")

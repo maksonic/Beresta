@@ -94,7 +94,7 @@ internal fun Content(
             onDeleteAllClicked = { send(Msg.Ui.OnDeleteAllFoldersClicked) },
         )
 
-        if (model.isVisibleModalSheet) {
+        if (model.modalSheet.isVisible) {
             ModalBottomSheetContainer(
                 sheetState = modalBottomSheetState,
                 onDismissRequest = { send(Msg.Inner.UpdatedModalSheetState(false)) },

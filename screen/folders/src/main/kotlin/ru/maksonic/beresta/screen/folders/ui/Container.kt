@@ -1,6 +1,5 @@
 package ru.maksonic.beresta.screen.folders.ui
 
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -97,11 +96,7 @@ private fun HandleUiEffects(
         when (eff) {
             is Eff.NavigateBack -> router.onBack()
             is Eff.AddNewFolder -> addFolderDialogApi.addFolder()
-            is Eff.UpdateFolder -> {
-                Log.e("AAA", "${eff.id}")
-
-                addFolderDialogApi.updateFolder(eff.id)
-            }
+            is Eff.UpdateFolder -> addFolderDialogApi.updateFolder(eff.id)
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {
                     if (!modalBottomSheetState.isVisible) {

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(module.Platform.Elm.path))
     implementation(project(module.Platform.Navigation.Router.path))
     implementation(project(module.Feature.NotesList.Ui.Api.path))
+    implementation(project(module.Feature.AddTagDialog.Ui.Api.path))
     implementation(project(module.Feature.TagsList.Domain.path))
     implementation(project(module.Feature.TagsList.Ui.Api.path))
     implementation(libs.activity.compose)

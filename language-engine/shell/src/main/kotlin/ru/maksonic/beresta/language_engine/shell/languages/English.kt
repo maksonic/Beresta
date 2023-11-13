@@ -6,6 +6,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangComponentEditor
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentHiddenNotes
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentShared
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentSortSheet
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentTags
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentTrash
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentUiError
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentsFolders
@@ -32,5 +33,6 @@ data class English(
     @SerialName("settings_notifications") val settingsNotifications: LangComponentSettingsNotifications,
     @SerialName("settings_security") val settingsSecurity: LangComponentSettingsSecurity,
     @SerialName("sorting_sheet") val sortingSheet: LangComponentSortSheet,
+    @SerialName("tags") val tags: LangComponentTags,
     @SerialName("trash") val trash: LangComponentTrash
 )

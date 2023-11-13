@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,11 +34,14 @@ private const val FAIL_MESSAGE_MAX_LINES = 3
 
 @Composable
 fun PlaceholderErrorState(
-    imageVector: ImageVector,
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector? = null,
+    painter: Painter? = null,
+    contentDescriptionImage: String = "",
     message: String,
     onErrorRetryClicked: () -> Unit,
-    modifier: Modifier = Modifier,
     backgroundColor: Color = background,
+    btnTitle: String = text.shared.btnTitleRetry
 ) {
     Box(
         modifier
@@ -48,13 +52,25 @@ fun PlaceholderErrorState(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.weight(0.3f))
-            Image(
-                imageVector = imageVector,
-                contentDescription = "",
-                modifier = Modifier
-                    .weight(0.2f)
-                    .aspectRatio(1f)
-            )
+            if (imageVector != null) {
+                Image(
+                    imageVector = imageVector,
+                    contentDescription = contentDescriptionImage,
+                    modifier = Modifier
+                        .weight(0.15f)
+                        .aspectRatio(1f)
+                )
+            }
+
+            if (painter != null) {
+                Image(
+                    painter = painter,
+                    contentDescription = contentDescriptionImage,
+                    modifier = Modifier
+                        .weight(0.15f)
+                        .aspectRatio(1f)
+                )
+            }
 
             Text(
                 text = message,
@@ -65,7 +81,7 @@ fun PlaceholderErrorState(
                 modifier = Modifier.padding(dp16)
             )
             
-            ButtonDialogPrimary(onClick = onErrorRetryClicked, title = text.shared.btnTitleRetry)
+            ButtonDialogPrimary(onClick = onErrorRetryClicked, title = btnTitle)
 
             Spacer(Modifier.weight(0.3f))
         }

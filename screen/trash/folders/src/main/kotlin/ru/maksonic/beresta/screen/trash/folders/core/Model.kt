@@ -30,7 +30,6 @@ data class Model(
     val isSelection: Boolean,
     val currentClickedFolderId: Long?,
     val isVisibleAcceptDeleteFoldersDialog: Boolean,
-    val isVisibleModalSheet: Boolean,
     val isSingleSelection: Boolean
 ) : ElmModel {
     companion object {
@@ -41,7 +40,6 @@ data class Model(
             isSelection = false,
             currentClickedFolderId = null,
             isVisibleAcceptDeleteFoldersDialog = false,
-            isVisibleModalSheet = false,
             isSingleSelection = true,
         )
     }

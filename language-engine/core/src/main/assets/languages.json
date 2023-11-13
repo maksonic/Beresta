@@ -66,7 +66,7 @@
       "btn_title_back": "Назад",
       "btn_title_by_default": "По умолчанию",
       "btn_title_cancel": "Отменить",
-      "btn_title_change": "Изменить",
+      "btn_title_edit": "Изменить",
       "btn_title_close": "Закрыть",
       "btn_title_create": "Создать",
       "btn_title_delete": "Удалить",
@@ -154,6 +154,16 @@
       "hint_checkbox_sort_pinned_notes": "Учитывать закрепленные заметки",
       "hint_checkbox_sort_pinned_folders": "Учитывать закрепленные папки"
     },
+    "tags": {
+      "top_bar_title_tags": "Теги",
+      "top_bar_title_select_tags": "Выбрать теги",
+      "top_bar_title_tags_management": "Управление тегами",
+      "btn_title_add_tags": "Добавить теги",
+      "btn_title_create_new_tag": "Создать новый тег",
+      "btn_title_edit_tag": "Редактировать тег",
+      "hint_empty_tag_list": "Список тегов пуст",
+      "hint_error_empty_tag_name": "Название тега не может быть пустым"
+    },
     "trash": {
       "top_bar_title": "Корзина",
       "title_trashed_folders": "Удалённые папки",
@@ -237,7 +247,7 @@
       "btn_title_back": "Back",
       "btn_title_by_default": "Default",
       "btn_title_cancel": "Cancel",
-      "btn_title_change": "Edit",
+      "btn_title_edit": "Edit",
       "btn_title_close": "Close",
       "btn_title_create": "Create",
       "btn_title_delete": "Delete",
@@ -325,6 +335,16 @@
       "hint_checkbox_sort_pinned_notes": "Consider pinned notes",
       "hint_checkbox_sort_pinned_folders": "Consider pinned folders"
     },
+    "tags": {
+      "top_bar_title_tags": "Note tags",
+      "top_bar_title_select_tags": "Select tags",
+      "top_bar_title_tags_management": "Tag management",
+      "btn_title_add_tags": "Add tags",
+      "btn_title_create_new_tag": "Create a new tag",
+      "btn_title_edit_tag": "Edit tag",
+      "hint_empty_tag_list": "Tag list is empty",
+      "hint_error_empty_tag_name": "Tag name cannot be empty"
+    },
     "trash": {
       "top_bar_title": "Trash",
       "title_trashed_folders": "Removed folders",
@@ -408,7 +428,7 @@
       "btn_title_back": "后退",
       "btn_title_by_default": "默认",
       "btn_title_cancel": "取消",
-      "btn_title_change": "编辑",
+      "btn_title_edit": "编辑",
       "btn_title_close": "关闭",
       "btn_title_create": "创造",
       "btn_title_delete": "删除",
@@ -496,6 +516,16 @@
       "hint_checkbox_sort_pinned_notes": "考虑固定笔记",
       "hint_checkbox_sort_pinned_folders": "考虑固定文件夹"
     },
+    "tags": {
+      "top_bar_title_tags": "标签",
+      "top_bar_title_select_tags": "选择标签",
+      "top_bar_title_tags_management": "标签管理",
+      "btn_title_add_tags": "添加标签",
+      "btn_title_create_new_tag": "创建一个新标签",
+      "btn_title_edit_tag": "编辑标签",
+      "hint_empty_tag_list": "标签列表为空",
+      "hint_error_empty_tag_name": "标签名称不能为空"
+    },
     "trash": {
       "top_bar_title": "垃圾",
       "title_trashed_folders": "删除的文件夹",
@@ -580,7 +610,7 @@
       "btn_title_back": "後退",
       "btn_title_by_default": "默認",
       "btn_title_cancel": "取消",
-      "btn_title_change": "編輯",
+      "btn_title_edit": "編輯",
       "btn_title_close": "關閉",
       "btn_title_create": "創造",
       "btn_title_delete": "刪除",
@@ -667,6 +697,16 @@
       "hint_sort_category_date_update": "變更日期",
       "hint_checkbox_sort_pinned_notes": "考慮固定筆記",
       "hint_checkbox_sort_pinned_folders": "考慮固定文件夾"
+    },
+    "tags": {
+      "top_bar_title_tags": "標籤",
+      "top_bar_title_select_tags": "選擇標籤",
+      "top_bar_title_tags_management": "標籤管理",
+      "btn_title_add_tags": "添加標籤",
+      "btn_title_create_new_tag": "建立一個新標籤",
+      "btn_title_edit_tag": "編輯標籤",
+      "hint_empty_tag_list": "標籤列表為空",
+      "hint_error_empty_tag_name": "標籤名稱不能為空"
     },
     "trash": {
       "top_bar_title": "垃圾",

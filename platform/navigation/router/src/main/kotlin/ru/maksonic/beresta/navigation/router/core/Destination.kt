@@ -31,6 +31,7 @@ object Destination : AbstractDestination(route = "root") {
         object Appearance : AbstractDestination(route = "settings.appearance")
         object Notifications : AbstractDestination(route = "settings.notifications")
         object Security : AbstractDestination(route = "settings.security")
+        object Tags : AbstractDestination(route = "settings.tags")
     }
 
     object Splash : AbstractDestination(route = "splash")

@@ -12,6 +12,7 @@ import ru.maksonic.beresta.navigation.graph_builder.destination.settings.setting
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsNotificationsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsSecurityScreen
+import ru.maksonic.beresta.navigation.graph_builder.destination.settings.settingsTagsScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.splashDestination
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashFoldersScreen
 import ru.maksonic.beresta.navigation.graph_builder.destination.trash.trashNotesScreen
@@ -47,6 +48,7 @@ interface GraphBuilder {
                     settingsAppearanceScreen(this)
                     settingsNotificationsScreen(this)
                     settingsSecurityScreen(this)
+                    settingsTagsScreen(this)
                     trashFoldersScreen(this, animator, velocity)
                     trashNotesScreen(this, animator, velocity)
                 }

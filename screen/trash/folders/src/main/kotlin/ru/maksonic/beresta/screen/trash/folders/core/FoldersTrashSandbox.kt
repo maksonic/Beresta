@@ -69,7 +69,7 @@ class FoldersTrashSandbox(program: FoldersTrashProgram) : Sandbox<Model, Msg, Cm
         else
             ElmUpdate(
                 model = model.copy(
-                    isVisibleModalSheet = !model.isVisibleModalSheet,
+                    modalSheet = model.modalSheet.copy(isVisible = !model.modalSheet.isVisible),
                     currentClickedFolderId = msg.id
                 ),
             )
@@ -102,7 +102,7 @@ class FoldersTrashSandbox(program: FoldersTrashProgram) : Sandbox<Model, Msg, Cm
         model: Model,
         msg: Msg.Inner.UpdatedModalSheetState
     ): Update =
-        ElmUpdate(model.copy(isVisibleModalSheet = msg.isVisible))
+        ElmUpdate(model.copy(modalSheet = model.modalSheet.copy(isVisible = msg.isVisible)))
 
     private fun hideModalBottomSheet(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))

@@ -37,6 +37,7 @@ include(":screen:settings")
 include(":screen:settings:appearance")
 include(":screen:settings:notifications")
 include(":screen:settings:security")
+include(":screen:settings:tags")
 include(":screen:trash:notes")
 include(":screen:trash:folders")
 // Feature
@@ -88,6 +89,9 @@ include(":feature:wallpaper-picker:ui:core")
 // Feature ui
 include(":feature:ui:add-folder-dialog:api")
 include(":feature:ui:add-folder-dialog:core")
+
+include(":feature:ui:add-tag-dialog:api")
+include(":feature:ui:add-tag-dialog:core")
 
 include(":feature:ui:edit-note:api")
 include(":feature:ui:edit-note:core")

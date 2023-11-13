@@ -30,6 +30,20 @@ object Feature {
         }
     }
 
+    object AddTagDialog {
+        object Ui {
+            object Api : AbstractModule(
+                path = ":feature:ui:add-tag-dialog:api",
+                namespace = "ru.maksonic.beresta.feature.ui.add_tag_dialog.api"
+            )
+
+            object Core : AbstractModule(
+                path = ":feature:ui:add-tag-dialog:core",
+                namespace = "ru.maksonic.beresta.feature.ui.add_tag_dialog.core"
+            )
+        }
+    }
+
     object AppTheme {
         object Data : AbstractModule(
             path = ":feature:app-theme:data",

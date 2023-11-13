@@ -39,6 +39,11 @@ object Screen {
             path = ":screen:settings:security",
             namespace = "ru.maksonic.beresta.screen.settings.security"
         )
+
+        object Tags : AbstractModule(
+            path = ":screen:settings:tags",
+            namespace = "ru.maksonic.beresta.screen.settings.tags"
+        )
     }
 
     object Splash : AbstractModule(
