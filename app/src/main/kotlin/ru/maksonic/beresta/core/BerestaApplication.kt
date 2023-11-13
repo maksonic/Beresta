@@ -25,6 +25,7 @@ import ru.maksonic.beresta.feature.sorting_sheet.ui.core.di.sortingSheetUiFeatur
 import ru.maksonic.beresta.feature.tags_list.data.di.tagsListDataFeatureModule
 import ru.maksonic.beresta.feature.tags_list.ui.core.di.tagsListUiFeatureModule
 import ru.maksonic.beresta.feature.ui.add_folder_dialog.core.di.addFolderDialogUiFeatureModule
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.core.di.addTagDialogUiFeatureModule
 import ru.maksonic.beresta.feature.ui.edit_note.core.di.editNoteUiFeatureModule
 import ru.maksonic.beresta.feature.ui.language_picker.core.di.languagePickerUiFeatureModule
 import ru.maksonic.beresta.feature.ui.search_bar.core.di.searchBarUiFeatureModule
@@ -41,6 +42,7 @@ import ru.maksonic.beresta.screen.settings.appearance.di.settingsAppearanceScree
 import ru.maksonic.beresta.screen.settings.di.settingsScreenModule
 import ru.maksonic.beresta.screen.settings.notifications.di.settingsNotificationsScreenModule
 import ru.maksonic.beresta.screen.settings.security.di.settingsSecurityScreenModule
+import ru.maksonic.beresta.screen.settings.tags.di.settingsTagsScreenModule
 import ru.maksonic.beresta.screen.splash.di.splashScreenModule
 import ru.maksonic.beresta.screen.trash.folders.di.trashFoldersScreenModule
 import ru.maksonic.beresta.screen.trash.notes.di.trashNotesScreenModule
@@ -63,11 +65,13 @@ class BerestaApplication : Application() {
         settingsAppearanceScreenModule,
         settingsSecurityScreenModule,
         settingsNotificationsScreenModule,
+        settingsTagsScreenModule,
         splashScreenModule,
         trashFoldersScreenModule,
         trashNotesScreenModule,
         // Feature
         addFolderDialogUiFeatureModule,
+        addTagDialogUiFeatureModule,
         appThemeDataFeatureModule,
         appLangDataFeatureModule,
         editNoteUiFeatureModule,

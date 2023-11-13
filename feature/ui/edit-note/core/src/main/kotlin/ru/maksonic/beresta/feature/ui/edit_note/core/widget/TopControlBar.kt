@@ -66,6 +66,7 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.screen.Send
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.platform.core.ui.ColorSaver
 
 /**
@@ -176,7 +177,7 @@ fun ExpandableTagsContainer(
         if (tags.data.isEmpty()) {
             ButtonTertiary(
                 onClick = onAddNoteTagClicked,
-                title = "Добавить теги",
+                title = text.tags.btnTitleAddTags,
                 icon = AppIcon.Add,
                 modifier = Modifier.padding(start = dp16)
             )

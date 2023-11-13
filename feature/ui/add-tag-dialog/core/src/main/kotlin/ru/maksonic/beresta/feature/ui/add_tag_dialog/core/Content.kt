@@ -1,4 +1,4 @@
-package ru.maksonic.beresta.feature.tags_list.ui.core.dialog
+package ru.maksonic.beresta.feature.ui.add_tag_dialog.core
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,15 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
-import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.delay
-import ru.maksonic.beresta.common.ui_kit.dialog.DialogBase
 import ru.maksonic.beresta.common.ui_kit.text.TextHeadlineSmall
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.errorContainer
@@ -31,49 +27,35 @@ import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
 import ru.maksonic.beresta.common.ui_theme.colors.tertiaryContainer
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
-import ru.maksonic.beresta.feature.tags_list.ui.core.Model
-import ru.maksonic.beresta.feature.tags_list.ui.core.Msg
-import ru.maksonic.beresta.feature.tags_list.ui.core.Send
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.api.AddTagDialogState
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.core.core.Model
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.core.core.Msg
 import ru.maksonic.beresta.language_engine.shell.provider.text
 
 /**
- * @Author maksonic on 05.11.2023
+ * @Author maksonic on 13.11.2023
  */
 @Composable
-internal fun AddTagDialog(model: Model, send: Send) {
-    DialogBase(
-        isVisible = model.isVisibleAddTagDialog,
-        alignment = Alignment.BottomCenter,
-        onCancelClicked = { send(Msg.Inner.UpdatedAddTagDialogVisibility(false)) },
-        onAcceptClicked = { send(Msg.Ui.OnAcceptTagCreationClicked) }
-    ) {
-
-        val focusRequester = remember { FocusRequester() }
-
-        LaunchedEffect(model.isVisibleAddTagDialog) {
-            if (model.isVisibleAddTagDialog) {
-                delay(100)
-                awaitFrame()
-                focusRequester.requestFocus()
-            }
-        }
-
-        Content(model, send, focusRequester)
-    }
-}
-
-@Composable
-private fun Content(
+internal fun Content(
+    state: AddTagDialogState,
     model: Model,
     send: Send,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(state.isVisible) {
+        if (!model.isFetchedTag && state.isVisible) {
+            send(Msg.Inner.FetchedPassedTagId(state.passedTagId))
+        }
+    }
+
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val dialogTitle = "Создать новый тег"
+        val dialogTitle = with(text.tags) {
+            if (state.isNewTag) btnTitleCreateNewTag else btnTitleEditTag
+        }
 
         TextHeadlineSmall(dialogTitle, modifier.padding(bottom = dp16))
 
@@ -89,7 +71,7 @@ private fun InputFolderName(
     modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
-        value = model.newTagInputField,
+        value = model.inputFiled,
         onValueChange = { send(Msg.Inner.UpdatedInputField(it)) },
         textStyle = TextDesign.bodyMedium,
         singleLine = true,
@@ -100,7 +82,7 @@ private fun InputFolderName(
             )
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { send(Msg.Ui.OnAcceptTagCreationClicked) }),
+        keyboardActions = KeyboardActions(onDone = { send(Msg.Ui.OnAcceptClicked) }),
         colors = TextFieldDefaults.colors(
             focusedTextColor = onBackground,
             disabledTextColor = outline,
@@ -129,8 +111,8 @@ private fun InputFolderName(
 
 @Composable
 private fun InputCounterHint(counterValue: String, isError: Boolean) {
-    val caption = if (isError) text.folders.hintErrorEmptyFolderName else counterValue
-    val color = if (isError) Theme.color.error else onBackground
+    val caption = if (isError) text.tags.hintErrorEmptyTagName else counterValue
+    val color = if (isError) ru.maksonic.beresta.common.ui_theme.colors.error else onBackground
 
     Text(text = caption, style = TextDesign.labelSmall.copy(color = color))
 }

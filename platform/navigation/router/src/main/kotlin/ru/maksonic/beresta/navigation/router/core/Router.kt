@@ -11,6 +11,7 @@ import ru.maksonic.beresta.navigation.router.routes.settings.SettingsAppearanceS
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsNotificationsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsSecurityScreenRouter
+import ru.maksonic.beresta.navigation.router.routes.settings.SettingsTagsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.trash.TrashFoldersRouter
 import ru.maksonic.beresta.navigation.router.routes.trash.TrashNotesRouter
 
@@ -28,6 +29,7 @@ interface Router {
     fun settingsAppearanceRouter(entry: NavBackStackEntry): SettingsAppearanceScreenRouter
     fun settingsNotificationsRouter(entry: NavBackStackEntry): SettingsNotificationsScreenRouter
     fun settingsSecurityRouter(entry: NavBackStackEntry): SettingsSecurityScreenRouter
+    fun settingsTagsRouter(entry: NavBackStackEntry): SettingsTagsScreenRouter
     fun trashNotesRouter(entry: NavBackStackEntry): TrashNotesRouter
     fun trashFoldersRouter(entry: NavBackStackEntry): TrashFoldersRouter
 }

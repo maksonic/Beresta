@@ -79,7 +79,7 @@ private fun SelectedStateBarContent(model: Model, send: Send) {
                 send(Msg.Ui.OnBottomBarPinSelectedClicked).run { send(Msg.Ui.CancelSelectionState) }
             }),
         BottomBarItem(
-            label = text.shared.btnTitleChange,
+            label = text.shared.btnTitleEdit,
             icon = AppIcon.Edit,
             onClick = {
                 send(Msg.Ui.OnBottomBarEditSelectedClicked)

@@ -16,7 +16,6 @@ class TagsListProgram(
     override suspend fun executeProgram(cmd: Cmd, consumer: (Msg) -> Unit) {
         when (cmd) {
             is Cmd.FetchTags -> fetchTags(cmd.noteTagsIds, consumer)
-            is Cmd.SaveNewTag -> saveTag(cmd.tag)
         }
     }
 
@@ -32,7 +31,4 @@ class TagsListProgram(
             consumer(Msg.Inner.FetchedTagsResult(NoteTagUi.Collection(tagsList)))
         }
     }
-
-    private suspend fun saveTag(noteTagUi: NoteTagUi) =
-        tagsRepository.add(mapper.mapFrom(noteTagUi))
 }

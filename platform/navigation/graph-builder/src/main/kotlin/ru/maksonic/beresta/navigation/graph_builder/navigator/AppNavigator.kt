@@ -13,6 +13,7 @@ import ru.maksonic.beresta.navigation.router.routes.settings.SettingsAppearanceS
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsNotificationsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.settings.SettingsSecurityScreenRouter
+import ru.maksonic.beresta.navigation.router.routes.settings.SettingsTagsScreenRouter
 import ru.maksonic.beresta.navigation.router.routes.trash.TrashFoldersRouter
 import ru.maksonic.beresta.navigation.router.routes.trash.TrashNotesRouter
 
@@ -61,7 +62,8 @@ class AppNavigator : AbstractNavigator() {
         onBack = ::backPressed,
         toAppearance = { navigate(entry, Destination.Settings.Appearance.route) },
         toNotifications = { navigate(entry, Destination.Settings.Notifications.route) },
-        toSecurity = { navigate(entry, Destination.Settings.Security.route) }
+        toSecurity = { navigate(entry, Destination.Settings.Security.route) },
+        toTags = { navigate(entry, Destination.Settings.Tags.route) },
     )
 
     override fun settingsAppearanceRouter(entry: NavBackStackEntry) =
@@ -72,6 +74,9 @@ class AppNavigator : AbstractNavigator() {
 
     override fun settingsSecurityRouter(entry: NavBackStackEntry) =
         SettingsSecurityScreenRouter(onBack = ::backPressed)
+
+    override fun settingsTagsRouter(entry: NavBackStackEntry) =
+        SettingsTagsScreenRouter(onBack = ::backPressed)
 
     override fun trashNotesRouter(entry: NavBackStackEntry) = TrashNotesRouter(
         onBack = ::backPressed,

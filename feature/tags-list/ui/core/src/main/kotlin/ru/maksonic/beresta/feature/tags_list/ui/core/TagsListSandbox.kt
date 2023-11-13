@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.tags_list.ui.core
 
-import androidx.compose.ui.text.input.TextFieldValue
-import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.api.AddTagDialogState
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.Loading
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedSuccess
 import ru.maksonic.beresta.platform.elm.core.ElmUpdate
@@ -16,18 +15,12 @@ class TagsListSandbox(program: TagsListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
     initialModel = Model.Initial,
     subscriptions = listOf(program)
 ) {
-    companion object {
-        private const val TAG_NAME_MAX_LENGTH = 50
-    }
-
     override fun update(msg: Msg, model: Model): Update = when (msg) {
         is Msg.Inner.FetchedTags -> fetchedTags(model, msg)
         is Msg.Inner.FetchedTagsResult -> fetchedTagsResult(model, msg)
-        //  is Msg.Inner.FetchedNoteTagsResult -> fetchedNoteTagsResult(model, msg)
         is Msg.Ui.OnTagClicked -> onTagClicked(model, msg)
-        is Msg.Inner.UpdatedAddTagDialogVisibility -> updatedAddTagDialogVisibility(model, msg)
-        is Msg.Inner.UpdatedInputField -> updatedInputField(model, msg)
-        is Msg.Ui.OnAcceptTagCreationClicked -> onAcceptTagCreationClicked(model)
+        is Msg.Ui.OnCreateNewTagClicked -> onCreateNewTagClicked(model)
+        is Msg.Inner.HiddenAddTagDialog -> hiddenAddTagDialog(model)
     }
 
     private fun fetchedTags(model: Model, msg: Msg.Inner.FetchedTags): Update = ElmUpdate(
@@ -49,55 +42,10 @@ class TagsListSandbox(program: TagsListProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         )
     }
 
-    private fun onTagLongClicked(model: Model, msg: Msg.Ui.OnTagClicked): Update {
-        val tags = model.tags.data.map { tag ->
-            val isSelected = if (tag.id == msg.id) !tag.isSelected else tag.isSelected
+    private fun onCreateNewTagClicked(model: Model): Update = ElmUpdate(
+        model.copy(addTagDialogState = AddTagDialogState.Initial.copy(isVisible = true))
+    )
 
-            tag.copy(isSelected = isSelected)
-        }
-
-        val noteTags = tags.filter { it.isSelected }
-
-        return ElmUpdate(
-            model = model.copy(tags = model.tags.copy(tags)),
-            effects = setOf(Eff.UpdateNoteTags(noteTags))
-        )
-    }
-
-    private fun updatedAddTagDialogVisibility(
-        model: Model,
-        msg: Msg.Inner.UpdatedAddTagDialogVisibility
-    ): Update =
-        ElmUpdate(model.copy(isVisibleAddTagDialog = msg.isVisible))
-
-
-    private fun updatedInputField(model: Model, msg: Msg.Inner.UpdatedInputField): Update {
-        val croppedInput = msg.value.copy(msg.value.text.take(TAG_NAME_MAX_LENGTH))
-
-        return ElmUpdate(
-            model.copy(
-                newTagInputField = croppedInput,
-                hintSymbolsCount = updatedHintCounter(croppedInput.text.count()),
-                isEmptyFieldError = false
-            )
-        )
-    }
-
-    private fun onAcceptTagCreationClicked(model: Model): Update =
-        if (model.newTagInputField.text.isBlank()) {
-            ElmUpdate(model.copy(isEmptyFieldError = true))
-        } else {
-            val tag =
-                NoteTagUi.Default.copy(title = model.newTagInputField.text.take(TAG_NAME_MAX_LENGTH))
-
-            ElmUpdate(
-                model = model.copy(
-                    newTagInputField = TextFieldValue(),
-                    isVisibleAddTagDialog = false
-                ),
-                commands = setOf(Cmd.SaveNewTag(tag)),
-            )
-        }
-
-    private fun updatedHintCounter(count: Int) = "${count}/$TAG_NAME_MAX_LENGTH"
+    private fun hiddenAddTagDialog(model: Model): Update =
+        ElmUpdate(model.copy(addTagDialogState = model.addTagDialogState.copy(isVisible = false)))
 }

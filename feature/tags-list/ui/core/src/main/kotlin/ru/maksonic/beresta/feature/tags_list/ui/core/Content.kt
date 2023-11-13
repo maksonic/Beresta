@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.tags_list.ui.core
 import android.graphics.Color
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,10 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import org.koin.compose.koinInject
 import ru.maksonic.beresta.common.ui_kit.bar.top.TopAppBarNormal
 import ru.maksonic.beresta.common.ui_kit.button.ButtonPrimary
 import ru.maksonic.beresta.common.ui_kit.helpers.modifier.noRippleClick
 import ru.maksonic.beresta.common.ui_kit.icon.IconBase
+import ru.maksonic.beresta.common.ui_kit.icons.Add
 import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.icons.Done
 import ru.maksonic.beresta.common.ui_kit.placeholder.PlaceholderLoading
@@ -42,7 +45,8 @@ import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.common.ui_theme.colors.surfaceVariant
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
-import ru.maksonic.beresta.feature.tags_list.ui.core.dialog.AddTagDialog
+import ru.maksonic.beresta.feature.ui.add_tag_dialog.api.AddTagDialogUiApi
+import ru.maksonic.beresta.language_engine.shell.provider.text
 import ru.maksonic.beresta.platform.core.ui.findActivity
 
 /**
@@ -50,9 +54,15 @@ import ru.maksonic.beresta.platform.core.ui.findActivity
  */
 private const val COLOR_TRANSPARENT = Color.TRANSPARENT
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun Content(model: Model, send: Send, onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun Content(
+    model: Model,
+    send: Send,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    addTagDialogUiApi: AddTagDialogUiApi = koinInject()
+) {
     val scrollBehavior =
         TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val activity = LocalContext.current.findActivity()
@@ -84,7 +94,7 @@ internal fun Content(model: Model, send: Send, onBack: () -> Unit, modifier: Mod
         Scaffold(
             topBar = {
                 TopAppBarNormal(
-                    title = "Список тегов",
+                    title = text.tags.topBarTitleSelectTags,
                     navIconAction = onBack,
                     scrollBehavior = scrollBehavior
                 )
@@ -93,29 +103,32 @@ internal fun Content(model: Model, send: Send, onBack: () -> Unit, modifier: Mod
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { paddings ->
             Box(modifier.padding(paddings), contentAlignment = Alignment.BottomEnd) {
-               when {
-                   model.base.isLoading -> PlaceholderLoading()
-                   model.base.successAfterLoading -> SuccessContent(model, send, modifier)
-               }
+                when {
+                    model.base.isLoading -> PlaceholderLoading()
+                    model.base.successAfterLoading -> SuccessContent(model, send, modifier)
+                }
             }
         }
 
         ButtonPrimary(
-            onClick = { send(Msg.Inner.UpdatedAddTagDialogVisibility(true)) },
-            title = "Создать тег",
+            onClick = { send(Msg.Ui.OnCreateNewTagClicked) },
+            title = text.tags.btnTitleCreateNewTag,
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
                 .padding(dp16)
         )
 
-        AddTagDialog(model, send)
+        addTagDialogUiApi.Widget(
+            sharedState = model.addTagDialogState,
+            hideDialog = { send(Msg.Inner.HiddenAddTagDialog) }
+        )
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SuccessContent(model: Model, send: Send, modifier: Modifier) {
+private fun SuccessContent(model: Model, send: Send, modifier: Modifier) {
     FlowRow(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -140,10 +153,10 @@ fun SuccessContent(model: Model, send: Send, modifier: Modifier) {
                     selectedContainerColor = surfaceVariant,
                     selectedLabelColor = onBackground
                 ),
-                leadingIcon = {
-                    if (tag.isSelected) {
+                trailingIcon = {
+                    Crossfade(tag.isSelected, label = "") {
                         IconBase(
-                            icon = AppIcon.Done,
+                            icon = if (it) AppIcon.Done else AppIcon.Add,
                             tint = onBackground,
                             modifier = Modifier.size(dp16)
                         )

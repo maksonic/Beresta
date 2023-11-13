@@ -7,6 +7,7 @@ import ru.maksonic.beresta.language_engine.shell.components.LangComponentEditor
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentHiddenNotes
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentShared
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentSortSheet
+import ru.maksonic.beresta.language_engine.shell.components.LangComponentTags
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentTrash
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentUiError
 import ru.maksonic.beresta.language_engine.shell.components.LangComponentsFolders
@@ -45,6 +46,7 @@ data class LanguageModel(
     val settingsSecurity: LangComponentSettingsSecurity,
     val shared: LangComponentShared,
     val sortingSheet: LangComponentSortSheet,
+    val tags: LangComponentTags,
     val trash: LangComponentTrash,
 ) {
     companion object {
@@ -61,6 +63,7 @@ data class LanguageModel(
             settingsSecurity = LangComponentSettingsSecurity.Default,
             shared = LangComponentShared.Default,
             sortingSheet = LangComponentSortSheet.Default,
+            tags = LangComponentTags.Default,
             trash = LangComponentTrash.Default
         )
 
@@ -78,6 +81,7 @@ data class LanguageModel(
                 settingsSecurity = settingsSecurity,
                 shared = shared,
                 sortingSheet = sortingSheet,
+                tags = tags,
                 trash = trash
             )
         }
@@ -96,6 +100,7 @@ data class LanguageModel(
                 settingsSecurity = settingsSecurity,
                 shared = shared,
                 sortingSheet = sortingSheet,
+                tags = tags,
                 trash = trash
             )
         }
@@ -114,6 +119,7 @@ data class LanguageModel(
                 settingsSecurity = settingsSecurity,
                 shared = shared,
                 sortingSheet = sortingSheet,
+                tags = tags,
                 trash = trash
             )
         }
@@ -132,6 +138,7 @@ data class LanguageModel(
                 settingsSecurity = settingsSecurity,
                 shared = shared,
                 sortingSheet = sortingSheet,
+                tags = tags,
                 trash = trash
             )
         }

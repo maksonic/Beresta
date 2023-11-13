@@ -5,4 +5,6 @@ import ru.maksonic.beresta.common.domain.Repository
 /**
  * @Author maksonic on 05.11.2023
  */
-interface TagsRepository: Repository<NoteDefaultTagDomain>
+interface TagsRepository: Repository<NoteDefaultTagDomain> {
+    fun fetchUserSavedTags(): TagsList
+}

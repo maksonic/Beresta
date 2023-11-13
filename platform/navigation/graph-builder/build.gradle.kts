@@ -56,6 +56,7 @@ dependencies {
     implementation(project(module.Screen.Settings.Main.path))
     implementation(project(module.Screen.Settings.Notifications.path))
     implementation(project(module.Screen.Settings.Security.path))
+    implementation(project(module.Screen.Settings.Tags.path))
     implementation(project(module.Screen.Splash.path))
     implementation(project(module.Screen.Trash.Folders.path))
     implementation(project(module.Screen.Trash.Notes.path))

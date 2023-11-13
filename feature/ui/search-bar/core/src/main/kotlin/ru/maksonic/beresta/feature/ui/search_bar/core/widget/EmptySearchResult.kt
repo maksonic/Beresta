@@ -11,8 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
-import ru.maksonic.beresta.common.ui_kit.icons.Colors
+import androidx.compose.ui.res.painterResource
+import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
 import ru.maksonic.beresta.language_engine.shell.provider.text
@@ -31,7 +31,7 @@ internal fun EmptySearchResult(modifier: Modifier) {
     ) {
         Spacer(Modifier.weight(0.2f))
         Image(
-            imageVector = AppIcon.Colors,
+            painter = painterResource(Theme.image.imageEmptySearchResult),
             contentDescription = "",
             modifier = modifier
                 .weight(0.2f)

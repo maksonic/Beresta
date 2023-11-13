@@ -10,6 +10,7 @@ data class NoteTagUi(
 ) {
     companion object {
         val Default = NoteTagUi(0, "Default", false)
+        val Empty = NoteTagUi(0, "", false)
     }
 
     data class Collection(val data: List<NoteTagUi>) {

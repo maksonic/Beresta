@@ -32,7 +32,6 @@ data class Model(
     val isSelection: Boolean,
     val currentClickedNoteId: Long?,
     val isVisibleAcceptDeleteNotesDialog: Boolean,
-    val isVisibleModalSheet: Boolean,
     val isSingleSelection: Boolean,
 ) : ElmModel {
 
@@ -44,7 +43,6 @@ data class Model(
             isSelection = false,
             currentClickedNoteId = null,
             isVisibleAcceptDeleteNotesDialog = false,
-            isVisibleModalSheet = false,
             isSingleSelection = true
         )
     }

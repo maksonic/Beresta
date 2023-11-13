@@ -67,10 +67,10 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
     private fun onTrashedFoldersBtnClicked(model: Model): Update = ElmUpdate(
         model = model.copy(
             isSelection = false,
-            isVisibleModalSheet = false,
+            modalSheet = model.modalSheet.copy(isVisible = false),
             notes = model.notes.unselectAll(),
         ),
-        effects = if (model.isVisibleModalSheet) emptySet()
+        effects = if (model.modalSheet.isVisible) emptySet()
         else setOf(Eff.NavigateToTrashedFoldersList)
     )
 
@@ -80,9 +80,9 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
         else
             ElmUpdate(
                 model = model.copy(
-                    isVisibleModalSheet = !model.isVisibleModalSheet,
+                    modalSheet = model.modalSheet.copy(isVisible = !model.modalSheet.isVisible),
                     currentClickedNoteId = msg.id
-                ),
+                )
             )
 
 
@@ -114,7 +114,7 @@ class NotesTrashSandbox(program: NotesTrashProgram) : Sandbox<Model, Msg, Cmd, E
         model: Model,
         msg: Msg.Inner.UpdatedModalSheetState
     ): Update =
-        ElmUpdate(model.copy(isVisibleModalSheet = msg.isVisible))
+        ElmUpdate(model.copy(modalSheet = model.modalSheet.copy(isVisible = msg.isVisible)))
 
     private fun hideModalBottomSheet(model: Model): Update =
         ElmUpdate(model, effects = setOf(Eff.HideModalSheet))

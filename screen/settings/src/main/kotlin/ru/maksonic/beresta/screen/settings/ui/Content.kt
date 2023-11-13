@@ -27,6 +27,7 @@ import ru.maksonic.beresta.screen.settings.ui.widget.MultipleModalBottomSheetCon
 import ru.maksonic.beresta.screen.settings.ui.widget.items.AccountSettingsItem
 import ru.maksonic.beresta.screen.settings.ui.widget.items.GeneralSettingsItem
 import ru.maksonic.beresta.screen.settings.ui.widget.items.SupportSettingsItem
+import ru.maksonic.beresta.screen.settings.ui.widget.items.TagsSettingsItem
 
 /**
  * @Author maksonic on 26.07.2023
@@ -63,6 +64,7 @@ internal fun Content(
             ) {
                 GeneralSettingsItem(send, model.currentTheme, model.isDarkTheme)
                 AccountSettingsItem(send)
+                TagsSettingsItem(send)
                 SupportSettingsItem(send)
                 Spacer(modifier.size(dp16))
             }

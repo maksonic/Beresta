@@ -8,7 +8,7 @@ import ru.maksonic.beresta.feature.tags_list.ui.api.TagsListUiApi
 /**
  * @Author maksonic on 05.11.2023
  */
-class TagsListUiCore : TagsListUiApi {
+class TagsListSheetUiCore : TagsListUiApi {
     @Composable
     override fun SheetContent(
         isVisible: Boolean,

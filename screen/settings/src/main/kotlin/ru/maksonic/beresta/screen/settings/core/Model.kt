@@ -61,6 +61,7 @@ sealed class Msg : ElmMessage {
         data object OnNotificationsClicked : Ui()
         data object OnSecurityClicked : Ui()
         data object OnUserAccountClicked : Ui()
+        data object OnTagsManagementClicked : Ui()
         data object OnWriteEmailClicked : Ui()
         data object OnPrivacyPolicyClicked : Ui()
         data object OnUserAgreementClicked : Ui()
@@ -82,5 +83,6 @@ sealed class Eff : ElmEffect {
     data object NavigateToAppearance : Eff()
     data object NavigateToNotifications : Eff()
     data object NavigateToSecurity : Eff()
+    data object NavigateToTags : Eff()
     data object HideModalSheet : Eff()
 }
