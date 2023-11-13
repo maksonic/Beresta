@@ -20,8 +20,6 @@ class SettingsTagsSandbox(program: SettingsTagsProgram) : Sandbox<Model, Msg, Cm
         is Msg.Ui.OnTopBarBackPressed -> onTopBarBackPressed(model)
         is Msg.Inner.FetchedDataResult -> fetchedDataResult(model, msg)
         is Msg.Ui.OnTagClicked -> onTagClicked(model, msg)
-        is Msg.Ui.OnSelectAllTagsClicked -> onSelectAllTagsClicked(model)
-        is Msg.Ui.CancelSelectionState -> onCancelSelectionClicked(model)
         is Msg.Ui.HideModalBottomSheet -> hideModalBottomSheet(model)
         is Msg.Inner.UpdatedModalSheetState -> updatedModalSheetState(model, msg)
         is Msg.Ui.OnModalSheetRenameTagClicked -> onModalSheetRenameTagClicked(model)
@@ -36,39 +34,10 @@ class SettingsTagsSandbox(program: SettingsTagsProgram) : Sandbox<Model, Msg, Cm
     private fun fetchedDataResult(model: Model, msg: Msg.Inner.FetchedDataResult): Update =
         ElmUpdate(model.copy(base = model.base.loadedSuccess, tags = msg.tags))
 
-    private fun onTagClicked(model: Model, msg: Msg.Ui.OnTagClicked): Update =
-        if (model.isSelection)
-            baseOnTagAction(model, msg.tag.id)
-        else
-            ElmUpdate(
-                model = model.copy(
-                    modalSheet = model.modalSheet.copy(isVisible = true),
-                    currentClickedTag = msg.tag
-                ),
-            )
-
-
-    private fun baseOnTagAction(model: Model, tagId: Long): Update {
-        val tags = model.tags.copy(model.tags.data.map { note ->
-            val isSelected = if (note.id == tagId) !note.isSelected else note.isSelected
-            note.copy(isSelected = isSelected)
-        })
-
-        return ElmUpdate(model.copy(tags = tags, isSelection = true))
-    }
-
-    private fun onSelectAllTagsClicked(model: Model): Update {
-        val tags = model.tags.data.map {
-            it.copy(isSelected = !model.tags.data.all { item -> item.isSelected })
-        }
-
-        return ElmUpdate(model.copy(tags = model.tags.copy(tags)))
-    }
-
-    private fun onCancelSelectionClicked(model: Model): Update = ElmUpdate(
-        model.copy(
-            tags = model.tags.copy(model.tags.data.map { it.copy(isSelected = false) }),
-            isSelection = false
+    private fun onTagClicked(model: Model, msg: Msg.Ui.OnTagClicked): Update = ElmUpdate(
+        model = model.copy(
+            modalSheet = model.modalSheet.copy(isVisible = true),
+            currentClickedTag = msg.tag
         )
     )
 
@@ -99,7 +68,8 @@ class SettingsTagsSandbox(program: SettingsTagsProgram) : Sandbox<Model, Msg, Cm
         val delete = model.tags.data.find { it.id == model.currentClickedTag?.id }
         val cmd = if (delete == null) emptySet() else setOf(Cmd.DeleteTag(delete))
 
-        return ElmUpdate(model.copy(currentClickedTag = null),
+        return ElmUpdate(
+            model.copy(currentClickedTag = null),
             commands = cmd,
             effects = setOf(Eff.HideModalSheet)
         )

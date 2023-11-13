@@ -31,7 +31,6 @@ data class Model(
     val tags: NoteTagUi.Collection,
     val modalSheet: ModalSheet,
     val addTagDialogState: AddTagDialogState,
-    val isSelection: Boolean,
     val currentClickedTag: NoteTagUi?
 
 ) : ElmModel {
@@ -42,7 +41,6 @@ data class Model(
             tags = NoteTagUi.Collection.Empty,
             modalSheet = ModalSheet.Initial,
             addTagDialogState = AddTagDialogState.Initial.copy(isNewTag = false),
-            isSelection = false,
             currentClickedTag = null
         )
     }
@@ -52,8 +50,6 @@ sealed class Msg : ElmMessage {
     sealed class Ui : Msg() {
         data object OnTopBarBackPressed : Ui()
         data class OnTagClicked(val tag: NoteTagUi) : Ui()
-        data object OnSelectAllTagsClicked : Ui()
-        data object CancelSelectionState : Ui()
         data object HideModalBottomSheet : Ui()
         data object OnModalSheetRenameTagClicked : Ui()
         data object OnModalSheetDeleteTagClicked : Ui()
