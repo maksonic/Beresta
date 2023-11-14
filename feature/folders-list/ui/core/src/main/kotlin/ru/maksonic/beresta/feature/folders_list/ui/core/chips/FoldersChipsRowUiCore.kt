@@ -13,7 +13,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberUpdatedState
@@ -28,6 +30,7 @@ import ru.maksonic.beresta.common.ui_kit.icons.Add
 import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.surface.SurfacePro
 import ru.maksonic.beresta.common.ui_theme.Theme
+import ru.maksonic.beresta.common.ui_theme.provide.AppRipple
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp24
 import ru.maksonic.beresta.common.ui_theme.provide.dp32
@@ -110,7 +113,7 @@ private fun Container(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun Content(
+private fun Content(
     sorter: State<FilterDataSorter<FolderUi>>,
     addButtonBackgroundColor: Color,
     onAddNewChipClicked: () -> Unit,
@@ -134,26 +137,29 @@ internal fun Content(
         val (chipsRow, addBtn) = createRefs()
 
         OverscrollBehavior {
-            LazyRow(
-                state = lazyRowState,
-                horizontalArrangement = Arrangement.spacedBy(dp8),
-                contentPadding = PaddingValues(start = dp16, end = dp24),
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.constrainAs(chipsRow) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                }
-            ) {
-                items(
-                    items = sorter.value.sortedByFilterList,
-                    key = { chip -> chip.id }) { item ->
-                    ChipItem(
-                        item = item,
-                        isSelected = item.id == currentSelectedId.value,
-                        onChipClicked = { onChipClicked(item.id) },
-                        modifier = modifier.animateItemPlacement()
-                    )
+            CompositionLocalProvider(LocalRippleTheme provides AppRipple) {
+
+                LazyRow(
+                    state = lazyRowState,
+                    horizontalArrangement = Arrangement.spacedBy(dp8),
+                    contentPadding = PaddingValues(start = dp16, end = dp24),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.constrainAs(chipsRow) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }
+                ) {
+                    items(
+                        items = sorter.value.sortedByFilterList,
+                        key = { chip -> chip.id }) { item ->
+                        ChipItem(
+                            item = item,
+                            isSelected = item.id == currentSelectedId.value,
+                            onChipClicked = { onChipClicked(item.id) },
+                            modifier = modifier.animateItemPlacement()
+                        )
+                    }
                 }
             }
         }
