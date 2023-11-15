@@ -27,7 +27,10 @@ internal fun Content(model: Model, send: Send, modifier: Modifier = Modifier) {
             .verticalScroll(ScrollState(0)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TextHeadlineSmall(text.settings.dialogThemePickerTitle)
+        TextHeadlineSmall(
+            text = text.settings.dialogThemePickerTitle,
+            modifier = modifier.padding(bottom = dp16)
+        )
 
         PaletteColorPicker(model) { send(Msg.Ui.OnPaletteColorClicked(it)) }
 
