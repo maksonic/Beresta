@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -56,7 +55,6 @@ import ru.maksonic.beresta.common.ui_theme.colors.onBackground
 import ru.maksonic.beresta.common.ui_theme.colors.primary
 import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
 import ru.maksonic.beresta.common.ui_theme.provide.NoRipple
-import ru.maksonic.beresta.common.ui_theme.provide.dp12
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
@@ -103,8 +101,8 @@ internal fun TopControlBar(
     }
 
     Box {
-        val background =
-            animateColorAsState(backgroundColor.value, tween(animVelocity), label = "")
+        val background = animateColorAsState(backgroundColor.value, tween(animVelocity), label = "")
+
         Column {
             var isExpanded by remember { mutableStateOf(false) }
             Row(
@@ -125,8 +123,8 @@ internal fun TopControlBar(
                         .clip(CircleShape)
                         .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
                         .size(Theme.size.minimumTouchTargetSize)
-                        .padding(dp12)
-                        .border(1.dp, editorColors.tint.value, CircleShape),
+                        .padding(14.dp)
+                        .border(2.dp, editorColors.tint.value, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
@@ -158,7 +156,7 @@ internal fun TopControlBar(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExpandableTagsContainer(
     tags: NoteTagUi.Collection,

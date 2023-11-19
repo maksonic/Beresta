@@ -285,8 +285,8 @@ private fun getWallpaperBackgroundColor(wallpaper: BaseWallpaper<Color>): State<
         is WallpaperTexture -> {
             if (wallpaper.backgroundColor.id == 0L) surface else wallpaper.backgroundColor.value
         }
-
         is WallpaperImage -> if (wallpaper.isDark) inverseOnSurface else surface
+
         else -> surface
     }
 

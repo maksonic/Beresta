@@ -2,7 +2,6 @@ package ru.maksonic.beresta.feature.folders_list.ui.core.chips
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -23,7 +22,6 @@ import ru.maksonic.beresta.feature.folders_list.ui.api.isDefaultId
 /**
  * @Author maksonic on 03.10.2023
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChipItem(
     item: FolderUi,
@@ -48,7 +46,11 @@ internal fun ChipItem(
                 )
         },
         shape = Theme.shape.cornerRound,
-        border = FilterChipDefaults.filterChipBorder(borderColor = outline),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = isSelected,
+            borderColor = outline
+        ),
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = tertiaryContainer,
             labelColor = onBackground,

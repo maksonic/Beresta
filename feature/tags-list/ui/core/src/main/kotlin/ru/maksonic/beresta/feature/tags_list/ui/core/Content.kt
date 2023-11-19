@@ -110,14 +110,16 @@ internal fun Content(
             }
         }
 
-        ButtonPrimary(
-            onClick = { send(Msg.Ui.OnCreateNewTagClicked) },
-            title = text.tags.btnTitleCreateNewTag,
-            modifier = Modifier
-                .fillMaxWidth()
-                .navigationBarsPadding()
-                .padding(dp16)
-        )
+        if(!model.addTagDialogState.isVisible) {
+            ButtonPrimary(
+                onClick = { send(Msg.Ui.OnCreateNewTagClicked) },
+                title = text.tags.btnTitleCreateNewTag,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(dp16)
+            )
+        }
 
         addTagDialogUiApi.Widget(
             sharedState = model.addTagDialogState,

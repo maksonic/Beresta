@@ -19,6 +19,7 @@ import ru.maksonic.beresta.common.ui_theme.colors.onBackground
 import ru.maksonic.beresta.common.ui_theme.colors.onSurface
 import ru.maksonic.beresta.common.ui_theme.colors.onTertiary
 import ru.maksonic.beresta.common.ui_theme.colors.outline
+import ru.maksonic.beresta.common.ui_theme.colors.transparent
 
 /**
  * @Author maksonic on 01.11.2023
@@ -53,7 +54,7 @@ internal fun provideEditorColors(
         tween(animVelocity), label = ""
     )
 
-    val tintMarkerColor = if (isNoneWallpaper) onBackground.copy(0.7f)
+    val tintMarkerColor = if (isNoneWallpaper) transparent
     else if (isDarkAppTheme) inverseOnSurface.copy(0.7f) else onTertiary.copy(0.7f)
 
     LaunchedEffect(isDarkAppTheme) {
