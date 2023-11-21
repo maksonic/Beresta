@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.marker_color_picker.ui.core.widget
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -20,6 +21,7 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 /**
  * @Author maksonic on 11.09.2023
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ColorPickerTabRow(
     selectedTabIndex: Int,

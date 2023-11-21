@@ -30,7 +30,9 @@ data class NoteCache(
     val wallpaperTypeId: Int = 0,
     val wallpaperId: Long = 0L,
     val wallpaperTintId: Long = 0L,
+    val wallpaperTintAlpha: Float = 1f,
     val wallpaperBackgroundColorId: Long = 0L,
+    val wallpaperBackgroundColorAlpha: Float = 1f,
     val isTextureStyle: Boolean = false,
     val isDarkWallpaper: Boolean = false,
     @ColumnInfo(name = "tags") val tagsIds: List<Long> = emptyList()

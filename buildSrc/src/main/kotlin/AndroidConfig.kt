@@ -4,7 +4,7 @@ import org.gradle.api.JavaVersion
  * @Author maksonic on 27.09.2023
  */
 object AndroidConfig {
-    const val KOTLIN_COMPILER_EXT = "1.5.3"
+    const val KOTLIN_COMPILER_EXT = "1.5.4"
     const val APP_ID = "ru.maksonic.beresta"
     const val COMPILE_SDK = 34
     const val TARGET_SDK = 34

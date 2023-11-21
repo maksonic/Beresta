@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -62,7 +61,6 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 /**
  * @Author maksonic on 08.09.2023
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DropdownFolderPicker(
     model: Model,
@@ -102,7 +100,11 @@ internal fun DropdownFolderPicker(
                     )
                 },
                 shape = Theme.shape.cornerNormal,
-                border = FilterChipDefaults.filterChipBorder(editorColors.tint.value.copy(0.7f)),
+                border = FilterChipDefaults.filterChipBorder(
+                    enabled = true,
+                    selected = false,
+                    borderColor = editorColors.tint.value.copy(0.7f)
+                ),
                 colors = FilterChipDefaults.filterChipColors(
                     containerColor = transparent,
                     selectedContainerColor = tertiaryContainer,

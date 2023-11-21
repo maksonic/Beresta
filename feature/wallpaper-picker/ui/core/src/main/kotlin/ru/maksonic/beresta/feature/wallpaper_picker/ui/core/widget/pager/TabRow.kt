@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -22,6 +23,7 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 /**
  * @Author maksonic on 16.09.2023
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun TabRow(
     selectedTabIndex: Int,

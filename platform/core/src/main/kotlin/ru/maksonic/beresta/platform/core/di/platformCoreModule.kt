@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.platform.core.di
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -10,6 +11,7 @@ import ru.maksonic.beresta.common.core.json.AssetsReader
 import ru.maksonic.beresta.common.core.json.JsonConverter
 import ru.maksonic.beresta.common.core.security.BiometricEngine
 import ru.maksonic.beresta.common.core.security.CryptoEngine
+import ru.maksonic.beresta.common.core.ui.ColorConverter
 import ru.maksonic.beresta.common.data.Datastore
 import ru.maksonic.beresta.platform.core.DatastoreCore
 import ru.maksonic.beresta.platform.core.json.AssetsReaderCore
@@ -19,6 +21,7 @@ import ru.maksonic.beresta.platform.core.security.CryptoEngineCore
 import ru.maksonic.beresta.platform.core.system.vibration.VibrationManagerCore
 import ru.maksonic.beresta.platform.core.system.vibration.VibrationPerformerCore
 import ru.maksonic.beresta.platform.core.ui.AnimationVelocity
+import ru.maksonic.beresta.platform.core.ui.ColorConverterCore
 import ru.maksonic.beresta.platform.core.ui.ScreenCaptureManagerCore
 
 /**
@@ -40,5 +43,6 @@ val platformCoreModule = module {
     single<ScreenCaptureManager> { ScreenCaptureManagerCore() }
     factory<CryptoEngine> { CryptoEngineCore() }
     factory<BiometricEngine> { BiometricEngineCore(context = androidContext()) }
+    factory<ColorConverter<Color>> { ColorConverterCore() }
 
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 android {
@@ -52,5 +53,8 @@ dependencies {
     implementation(project(module.Common.Domain.path))
     implementation(project(module.Common.UiTheme.path))
     implementation(project(module.Feature.WallpaperPicker.Domain.path))
+    implementation(libs.datastore)
+    implementation(libs.json)
     implementation(libs.koin.android)
+
 }

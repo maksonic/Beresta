@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -103,9 +103,10 @@ internal fun Content(
                 .fillMaxSize()
                 .nestedScroll(scrollConnection)
         ) {
-            itemsIndexed(
+            items(
                 items = sorter.value.sortedByFilterList,
-                key = { index, item -> if (index == 0) index else item.id }) { _, note ->
+                key = { it.id }
+            ) { note ->
 
                 CardContent(
                     note = note,

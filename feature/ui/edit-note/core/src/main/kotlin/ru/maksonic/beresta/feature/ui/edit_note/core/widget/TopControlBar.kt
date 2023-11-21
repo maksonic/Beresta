@@ -1,8 +1,6 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core.widget
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -52,16 +49,15 @@ import ru.maksonic.beresta.common.ui_kit.icons.Add
 import ru.maksonic.beresta.common.ui_kit.icons.AppIcon
 import ru.maksonic.beresta.common.ui_kit.icons.label.LabelOutlined
 import ru.maksonic.beresta.common.ui_theme.Theme
-import ru.maksonic.beresta.common.ui_theme.colors.onBackground
 import ru.maksonic.beresta.common.ui_theme.colors.primary
-import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
+import ru.maksonic.beresta.common.ui_theme.colors.transparent
 import ru.maksonic.beresta.common.ui_theme.provide.NoRipple
-import ru.maksonic.beresta.common.ui_theme.provide.dp12
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp4
 import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.feature.marker_color_picker.ui.api.findColor
 import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
+import ru.maksonic.beresta.feature.ui.edit_note.core.ColorByWallpaperCreator
 import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
@@ -74,18 +70,19 @@ import ru.maksonic.beresta.platform.core.ui.ColorSaver
  */
 @Composable
 internal fun TopControlBar(
-    isHiddenNote: Boolean,
     model: Model,
     send: Send,
-    backgroundColor: State<Color>,
+    isHiddenNote: Boolean,
+    colorCreator: State<ColorByWallpaperCreator>,
     modifier: Modifier = Modifier
 ) {
+    val markerColorState = rememberUpdatedState(model.markerState.currentSelectedColorId)
+    val initialMarkerColor = transparent
+    val markerColor = rememberSaveable(saver = ColorSaver) { mutableStateOf(initialMarkerColor) }
     val animDelay = Theme.animVelocity.common
     var isAnimated by remember { mutableStateOf(false) }
     val animVelocity = if (isAnimated) animDelay else 0
-    val markerColorState = rememberUpdatedState(model.markerState.currentSelectedColorId)
-    val initialMarkerColor = editorColors.tintMarkerColor
-    val markerColor = rememberSaveable(saver = ColorSaver) { mutableStateOf(initialMarkerColor) }
+    val backgroundColor = colorCreator.value.controlBarColor(animVelocity)
 
     LaunchedEffect(Unit) {
         if (!isAnimated) {
@@ -102,66 +99,63 @@ internal fun TopControlBar(
         updateMarkerColor(model, markerColor, initialMarkerColor, markerColorState.value)
     }
 
-    Box {
-        val background =
-            animateColorAsState(backgroundColor.value, tween(animVelocity), label = "")
-        Column {
-            var isExpanded by remember { mutableStateOf(false) }
-            Row(
+    Column(Modifier.drawBehind { drawRect(backgroundColor.value) }) {
+        var isExpanded by remember { mutableStateOf(false) }
+        Row(
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    top = Theme.size.topBarNormalHeight
+                        .plus(SystemStatusBarHeight)
+                        .plus(dp8),
+                    bottom = dp8
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
                 modifier
-                    .drawBehind { drawRect(background.value) }
-                    .fillMaxWidth()
-                    .padding(
-                        top = Theme.size.topBarNormalHeight
-                            .plus(SystemStatusBarHeight)
-                            .plus(dp8),
-                        bottom = dp8
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(start = dp4)
+                    .clip(CircleShape)
+                    .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
+                    .size(Theme.size.minimumTouchTargetSize)
+                    .padding(14.dp)
+                    .border(2.dp, editorColors.tint.value, CircleShape),
+                contentAlignment = Alignment.Center
             ) {
                 Box(
                     modifier
-                        .padding(start = dp4)
+                        .fillMaxSize()
+                        .padding(dp4)
                         .clip(CircleShape)
-                        .rippledClick(rippleColor = primary) { send(Msg.Ui.OnSelectColorMarkerClicked) }
-                        .size(Theme.size.minimumTouchTargetSize)
-                        .padding(dp12)
-                        .border(1.dp, editorColors.tint.value, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier
-                            .fillMaxSize()
-                            .padding(dp4)
-                            .clip(CircleShape)
-                            .background(markerColor.value)
-                    )
-                }
-                ButtonIcon(
-                    icon = AppIcon.LabelOutlined,
-                    tint = editorColors.tint.value,
-                    onClick = { isExpanded = !isExpanded },
+                        .background(markerColor.value)
                 )
-
-                Spacer(modifier.weight(1f))
-
-                if (!isHiddenNote) {
-                    DropdownFolderPicker(model, send)
-                }
             }
-            ExpandableTagsContainer(
-                tags = model.editableNote.tags,
-                isExpanded = isExpanded,
-                onAddNoteTagClicked = { send(Msg.Inner.UpdatedTagPickerSheetState(true)) }
+            ButtonIcon(
+                icon = AppIcon.LabelOutlined,
+                tint = editorColors.tint.value,
+                onClick = { isExpanded = !isExpanded },
             )
+
+            Spacer(modifier.weight(1f))
+
+            if (!isHiddenNote) {
+                DropdownFolderPicker(model, send)
+            }
         }
+        ExpandableTagsContainer(
+            tags = model.editableNote.tags,
+            colorCreator = colorCreator,
+            isExpanded = isExpanded,
+            onAddNoteTagClicked = { send(Msg.Inner.UpdatedTagPickerSheetState(true)) }
+        )
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ExpandableTagsContainer(
+private fun ExpandableTagsContainer(
     tags: NoteTagUi.Collection,
+    colorCreator: State<ColorByWallpaperCreator>,
     isExpanded: Boolean,
     onAddNoteTagClicked: () -> Unit,
     modifier: Modifier = Modifier
@@ -188,10 +182,12 @@ fun ExpandableTagsContainer(
                 verticalArrangement = Arrangement.Center
             ) {
                 CompositionLocalProvider(LocalRippleTheme provides NoRipple) {
+                    val backgroundColor = colorCreator.value.tagChipBarColor()
 
                     ButtonAddTagCircle(
-                        AppIcon.Add,
+                        icon = AppIcon.Add,
                         onClick = onAddNoteTagClicked,
+                        backgroundColor = backgroundColor,
                         modifier = Modifier.padding(top = dp8, start = dp4)
                     )
 
@@ -202,8 +198,8 @@ fun ExpandableTagsContainer(
                             onClick = {},
                             label = { Text(it.title) },
                             colors = FilterChipDefaults.filterChipColors(
-                                disabledSelectedContainerColor = secondaryContainer,
-                                disabledLabelColor = onBackground
+                                disabledSelectedContainerColor = backgroundColor.value,
+                                disabledLabelColor = editorColors.textTint.value
                             )
                         )
                     }
@@ -216,6 +212,7 @@ fun ExpandableTagsContainer(
 @Composable
 private fun ButtonAddTagCircle(
     icon: ImageVector,
+    backgroundColor: State<Color>,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
@@ -223,11 +220,11 @@ private fun ButtonAddTagCircle(
         modifier
             .size(Theme.size.chipHeight)
             .clip(CircleShape)
-            .background(secondaryContainer)
+            .drawBehind { drawRect(backgroundColor.value) }
             .rippledClick(primary, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Icon(imageVector = icon, tint = onBackground, contentDescription = "")
+        Icon(imageVector = icon, tint = editorColors.tint.value, contentDescription = "")
     }
 }
 

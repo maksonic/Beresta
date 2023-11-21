@@ -1,0 +1,260 @@
+[
+  {
+    "id": 200001,
+    "type": "VERTICAL",
+    "value": [
+      "FFCC95C0",
+      "FFDBD4B4",
+      "FF7AA1D2"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200002,
+    "type": "VERTICAL",
+    "value": [
+      "FFD4145A",
+      "FFFBB03B"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200003,
+    "type": "VERTICAL",
+    "value": [
+      "FFBFF098",
+      "FF6FD6FF"
+    ],
+    "is_dark": false
+  },
+  {
+    "id": 200004,
+    "type": "VERTICAL",
+    "value": [
+      "FFFF4A64",
+      "FF71244E"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200005,
+    "type": "VERTICAL",
+    "value": [
+      "FFFF2778",
+      "FFFF7582"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200006,
+    "type": "VERTICAL",
+    "value": [
+      "FF2FBDFF",
+      "FF0F2F40"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200007,
+    "type": "VERTICAL",
+    "value": [
+      "FF2FBDFF",
+      "FFFF7582"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200008,
+    "type": "VERTICAL",
+    "value": [
+      "FFFF8859",
+      "FF5F0B95"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200009,
+    "type": "VERTICAL",
+    "value": [
+      "FF460645",
+      "FFFF5450"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200010,
+    "type": "VERTICAL",
+    "value": [
+      "FF9D50BB",
+      "FF6E48AA"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200011,
+    "type": "VERTICAL",
+    "value": [
+      "FF000000",
+      "FFE74C3C"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200012,
+    "type": "VERTICAL",
+    "value": [
+      "FF11998E",
+      "FF38EF7D"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200013,
+    "type": "VERTICAL",
+    "value": [
+      "FFD8B5FF",
+      "FF1EAE98"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200014,
+    "type": "VERTICAL",
+    "value": [
+      "FF4E65FF",
+      "FF92EFFD"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200015,
+    "type": "VERTICAL",
+    "value": [
+      "FF3D7EAA",
+      "FFFFE47A"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200016,
+    "type": "VERTICAL",
+    "value": [
+      "FF12C2E9",
+      "FFC471ED",
+      "FFF64F59"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200017,
+    "type": "HORIZONTAL",
+    "value": [
+      "FFB92B27",
+      "FF1565C0"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200018,
+    "type": "HORIZONTAL",
+    "value": [
+      "FFFF0099",
+      "FF493240"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200019,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF8E2DE2",
+      "FF4A00E0"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200020,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF1F4037",
+      "FF99F2C8"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200021,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF659999",
+      "FFF4791F"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200022,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF009FFF",
+      "FFEC2F4B"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200023,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF1E9600",
+      "FFFFF200",
+      "FFFF0000"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200024,
+    "type": "HORIZONTAL",
+    "value": [
+      "FFFDC830",
+      "FFF37335"
+    ],
+    "is_dark": false
+  },
+  {
+    "id": 200025,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF59C173",
+      "FFA17FE0",
+      "FF5D26C1"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200026,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF108DC7",
+      "FFA17FE0",
+      "FF5D26C1"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200027,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF0F0C29",
+      "FF302B63",
+      "FF24243E"
+    ],
+    "is_dark": true
+  },
+  {
+    "id": 200028,
+    "type": "HORIZONTAL",
+    "value": [
+      "FF20002C",
+      "FFCBB4D4"
+    ],
+    "is_dark": true
+  }
+]

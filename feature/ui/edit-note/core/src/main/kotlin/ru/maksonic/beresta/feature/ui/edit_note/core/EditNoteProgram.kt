@@ -132,7 +132,9 @@ class EditNoteProgram(
                 type = WallpaperType.idToType(wallpaperTypeId),
                 id = wallpaperId,
                 tintColorId = wallpaperTintId,
+                tintColorAlpha = wallpaperTintAlpha,
                 backgroundColorId = wallpaperBackgroundColorId,
+                backgroundColorAlpha = wallpaperBackgroundColorAlpha,
                 isTextureStyle = isTextureStyle
             )
         )
