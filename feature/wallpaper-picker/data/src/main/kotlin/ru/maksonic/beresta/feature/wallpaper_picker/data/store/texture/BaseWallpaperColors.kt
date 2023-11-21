@@ -32,7 +32,7 @@ abstract class BaseWallpaperColors {
             BackgroundColor(104L, color104, true),
             BackgroundColor(105L, color105, true),
             BackgroundColor(106L, color106, true),
-            BackgroundColor(107L, color107, false),
+            BackgroundColor(107L, color107, true),
             BackgroundColor(108L, color108, false),
             BackgroundColor(109L, color109, false),
             BackgroundColor(110L, color110, false),
@@ -79,7 +79,7 @@ abstract class BaseWallpaperColors {
             BackgroundColor(213L, color213, false),
             BackgroundColor(214L, color214, false),
             BackgroundColor(215L, color215, false),
-            BackgroundColor(216L, color216, false)
+            BackgroundColor(216L, color216, true)
         )
     }
 
@@ -148,10 +148,10 @@ abstract class BaseWallpaperColors {
             BackgroundColor(408L, color408, false),
             BackgroundColor(409L, color409, false),
             BackgroundColor(410L, color410, false),
-            BackgroundColor(411L, color411, false),
+            BackgroundColor(411L, color411, true),
             BackgroundColor(412L, color412, false),
-            BackgroundColor(413L, color413, false),
-            BackgroundColor(414L, color414, false),
+            BackgroundColor(413L, color413, true),
+            BackgroundColor(414L, color414, true),
         )
     }
 

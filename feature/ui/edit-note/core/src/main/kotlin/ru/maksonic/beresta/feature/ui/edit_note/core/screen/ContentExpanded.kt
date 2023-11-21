@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -37,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
 import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
 import ru.maksonic.beresta.common.ui_theme.Theme
-import ru.maksonic.beresta.common.ui_theme.colors.inverseOnSurface
-import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.common.ui_theme.provide.dp24
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
@@ -50,6 +47,7 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.LocalAppEditorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.provideEditorColors
+import ru.maksonic.beresta.feature.ui.edit_note.core.rememberColorCreator
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteMessageInputFieldWidget
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteTitleInputFieldWidget
@@ -87,8 +85,12 @@ internal fun ContentExpanded(
     CompositionLocalProvider(
         LocalCurrentSelectedFolderState provides currentFolderStoreUiApi.id.value
     ) {
+        val scrollState = rememberScrollState()
+        val isVisibleBars = remember { mutableStateOf(true) }
+        val scrollOffset = remember { mutableFloatStateOf(0f) }
+        val canScrollBackward = remember { derivedStateOf { scrollState.canScrollBackward } }
+        val colorCreator = rememberColorCreator(model.currentWallpaper, canScrollBackward)
         val currentFolder = FoldersFeature.currentSelected
-        val backgroundColor = getWallpaperBackgroundColor(model.currentWallpaper)
         val isNoneWallpaper = isInitialByCategoryWallpaper(model.currentWallpaper)
         val modalSheetShape = animateDpAsState(
             if (modalBottomSheetState.targetValue == SheetValue.Expanded) 0.dp else dp24, label = ""
@@ -115,7 +117,6 @@ internal fun ContentExpanded(
         }
 
         Box(Modifier.fillMaxSize()) {
-
             wallpaper.Widget(model.currentWallpaper, Modifier.fillMaxSize())
 
             Box(
@@ -123,10 +124,6 @@ internal fun ContentExpanded(
                     .fillMaxSize()
                     .imePadding()
             ) {
-                val scrollState = rememberScrollState()
-                val isVisibleBars = remember { mutableStateOf(true) }
-                val scrollOffset = remember { mutableFloatStateOf(0f) }
-                val canScrollBackward = rememberUpdatedState(scrollState.canScrollBackward)
                 val nestedScrollConnection = remember {
                     object : NestedScrollConnection {
                         override fun onPreScroll(
@@ -160,10 +157,10 @@ internal fun ContentExpanded(
                             .verticalScroll(scrollState)
                     ) {
                         TopControlBar(
-                            isHiddenNote = isHiddenNote,
                             model = model,
                             send = send,
-                            backgroundColor = backgroundColor
+                            colorCreator = colorCreator,
+                            isHiddenNote = isHiddenNote
                         )
 
                         NoteTitleInputFieldWidget(model.editableNote.title, send, focusRequester)
@@ -174,9 +171,8 @@ internal fun ContentExpanded(
                     TopWithBottomBars(
                         model = model,
                         send = send,
+                        colorCreator = colorCreator,
                         isVisibleBars = isVisibleBars,
-                        canScrollBackward = canScrollBackward,
-                        topBarColor = backgroundColor,
                         isHiddenNote = isHiddenNote
                     )
                 }
@@ -276,24 +272,6 @@ private fun SystemBarColorEffect(model: Model, isNoneWallpaper: Boolean) {
 }
 
 @Composable
-private fun getWallpaperBackgroundColor(wallpaper: BaseWallpaper<Color>): State<Color> {
-    var color by remember { mutableStateOf(Color.Transparent) }
-
-    color = when (wallpaper) {
-        is WallpaperColor -> if (wallpaper.id == 100000L) surface else wallpaper.value
-        is WallpaperGradient -> wallpaper.value.first()
-        is WallpaperTexture -> {
-            if (wallpaper.backgroundColor.id == 0L) surface else wallpaper.backgroundColor.value
-        }
-        is WallpaperImage -> if (wallpaper.isDark) inverseOnSurface else surface
-
-        else -> surface
-    }
-
-    return remember { derivedStateOf { color } }
-}
-
-@Composable
 private fun isInitialByCategoryWallpaper(wallpaper: BaseWallpaper<Color>): State<Boolean> {
     var state by remember { mutableStateOf(true) }
 
@@ -304,7 +282,6 @@ private fun isInitialByCategoryWallpaper(wallpaper: BaseWallpaper<Color>): State
         is WallpaperImage -> false
         else -> true
     }
-
     return remember { derivedStateOf { state } }
 }
 
@@ -315,10 +292,9 @@ private fun setSystemBarColorByWallpaperColor(
 ): SystemBarStyle {
     val lightStatusBar = SystemBarStyle.light(TRANSPARENT_COLOR, TRANSPARENT_COLOR)
     val darkStatusBar = SystemBarStyle.dark(TRANSPARENT_COLOR)
+    val noneWallpaperSystemBarsColor = if (isDarkTheme) darkStatusBar else lightStatusBar
+    val hasWallpaperSystemBarsColor = if (isDarkWallpaper) darkStatusBar else lightStatusBar
 
-    return if (isNoneWallpaper) {
-        if (isDarkTheme) darkStatusBar else lightStatusBar
-    } else {
-        if (isDarkWallpaper) darkStatusBar else lightStatusBar
-    }
+    return if (isNoneWallpaper) noneWallpaperSystemBarsColor else hasWallpaperSystemBarsColor
+
 }

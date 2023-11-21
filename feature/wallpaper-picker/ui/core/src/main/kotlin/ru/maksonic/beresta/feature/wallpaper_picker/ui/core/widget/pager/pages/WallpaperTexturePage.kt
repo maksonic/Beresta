@@ -6,13 +6,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
+import kotlinx.coroutines.delay
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.outline
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
@@ -48,15 +54,31 @@ internal fun WallpaperTextureContent(
     modifier: Modifier = Modifier,
     isPicker: Boolean = false
 ) {
+    val animDelay = Theme.animVelocity.common
+    var isAnimated by remember { mutableStateOf(false) }
+    val animVelocity = if (isAnimated) animDelay else 0
     val animatedTextureBackground = animateColorAsState(
-        if (texture.backgroundColor.id == 0L) Color.Transparent else texture.backgroundColor.value,
-        tween(Theme.animVelocity.common), label = ""
+        if (texture.backgroundColor.id == 0L)
+            Color.Transparent
+        else
+            texture.backgroundColor.value.copy(texture.backgroundColorAlpha),
+        tween(animVelocity), label = ""
     )
+
+    LaunchedEffect(Unit) {
+        if (!isAnimated) {
+            delay(animDelay.toLong())
+            isAnimated = true
+        }
+    }
 
     Box(modifier.drawBehind { drawRect(animatedTextureBackground.value) }) {
         val animatedTint = animateColorAsState(
-            if (texture.tintColor.id == 0L) outline.copy(0.2f) else texture.tintColor.value,
-            tween(Theme.animVelocity.common), label = ""
+            if (texture.tintColor.id == 0L)
+                outline.copy(0.2f)
+            else
+                texture.tintColor.value.copy(texture.tintColorAlpha),
+            tween(animVelocity), label = ""
         )
 
         val tint = if (isPicker) rememberUpdatedState(outline) else animatedTint

@@ -24,7 +24,9 @@ class NoteCacheMapper : Mapper<NoteCache, NoteDomain> {
         wallpaperTypeId = i.wallpaperTypeId,
         wallpaperId = i.wallpaperId,
         wallpaperTintId = i.wallpaperTintId,
+        wallpaperTintAlpha = i.wallpaperTintAlpha,
         wallpaperBackgroundColorId = i.wallpaperBackgroundColorId,
+        wallpaperBackgroundColorAlpha = i.wallpaperBackgroundColorAlpha,
         isTextureStyle = i.isTextureStyle,
         isDarkWallpaper = i.isDarkWallpaper,
         tagsIds = i.tagsIds
@@ -46,7 +48,9 @@ class NoteCacheMapper : Mapper<NoteCache, NoteDomain> {
         wallpaperTypeId = o.wallpaperTypeId,
         wallpaperId = o.wallpaperId,
         wallpaperTintId = o.wallpaperTintId,
+        wallpaperTintAlpha = o.wallpaperTintAlpha,
         wallpaperBackgroundColorId = o.wallpaperBackgroundColorId,
+        wallpaperBackgroundColorAlpha = o.wallpaperBackgroundColorAlpha,
         isTextureStyle = o.isTextureStyle,
         isDarkWallpaper = o.isDarkWallpaper,
         tagsIds = o.tagsIds

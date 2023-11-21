@@ -19,7 +19,7 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import ru.maksonic.beresta.common.ui_kit.bar.bottom.BottomBarItem
 import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
@@ -32,14 +32,12 @@ import ru.maksonic.beresta.common.ui_kit.icons.Save
 import ru.maksonic.beresta.common.ui_kit.icons.VoiceEnter
 import ru.maksonic.beresta.common.ui_kit.surface.SurfacePro
 import ru.maksonic.beresta.common.ui_theme.Theme
-import ru.maksonic.beresta.common.ui_theme.colors.background
 import ru.maksonic.beresta.common.ui_theme.colors.onSurface
-import ru.maksonic.beresta.common.ui_theme.colors.onTertiaryContainer
 import ru.maksonic.beresta.common.ui_theme.colors.surface
-import ru.maksonic.beresta.common.ui_theme.colors.tertiaryContainer
 import ru.maksonic.beresta.common.ui_theme.provide.dp12
 import ru.maksonic.beresta.common.ui_theme.provide.dp16
 import ru.maksonic.beresta.common.ui_theme.provide.dp4
+import ru.maksonic.beresta.feature.ui.edit_note.core.ColorByWallpaperCreator
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.screen.Send
@@ -50,43 +48,44 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.screen.Send
 @Composable
 internal fun EditorBottomBar(
     send: Send,
+    barColorCreatorState: State<ColorByWallpaperCreator>,
     isScrollUp: State<Boolean>,
     isBlankNote: Boolean,
     isHiddenNote: Boolean,
-    backgroundColor: State<Color>,
     modifier: Modifier = Modifier,
 ) {
+    val bottomBarColor = barColorCreatorState.value.bottomBarColor()
+    val fabColor = barColorCreatorState.value.fabSaveNoteColor(isBlankNote)
 
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
-        val fabUnselectedColor = tertiaryContainer.copy(alpha = 0.35f).compositeOver(background)
-        val fabColor = animateColorAsState(
-            if (isBlankNote) fabUnselectedColor else tertiaryContainer, label = ""
-        )
         val fabElevation = animateDpAsState(
             if (isScrollUp.value) Theme.tonal.level0 else Theme.tonal.level3,
             animationSpec = tween(Theme.animVelocity.common), label = ""
         )
         val fabIconColor = animateColorAsState(
-            if (isBlankNote) onTertiaryContainer.copy(alpha = 0.5f)
-                .compositeOver(fabUnselectedColor)
-            else onTertiaryContainer, label = ""
+            if (isBlankNote) Color.White.copy(alpha = 0.7f)
+            else Color.White, label = ""
         )
         val fabShape = if (isHiddenNote) 50.dp else dp16
-
         val barContent = movableContentOf { EditorBottomBarContent(send) }
+        val offset = Theme.size.bottomMainBarHeight.plus(SystemNavigationBarHeight)
+        val transition = animateDpAsState(
+            if (isScrollUp.value) 0.dp else offset,
+            tween(Theme.animVelocity.common),
+            label = ""
+        )
+        val barModifier = modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                translationY = transition.value.toPx()
+            }
 
-        if (backgroundColor.value != surface) {
-            SurfacePro(
-                color = backgroundColor.value,
-                modifier = modifier.fillMaxWidth()
-            ) {
+        if (bottomBarColor.value != surface) {
+            SurfacePro(color = bottomBarColor.value, modifier = barModifier) {
                 barContent()
             }
         } else {
-            SurfacePro(
-                tonalElevation = Theme.tonal.level4,
-                modifier = modifier.fillMaxWidth()
-            ) {
+            SurfacePro(tonalElevation = Theme.tonal.level4, modifier = barModifier) {
                 barContent()
             }
         }

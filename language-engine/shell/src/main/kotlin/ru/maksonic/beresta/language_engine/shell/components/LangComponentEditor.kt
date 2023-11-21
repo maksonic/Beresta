@@ -21,6 +21,7 @@ data class LangComponentEditor(
     @SerialName("note_wallpaper_category_image") val noteWallpaperCategoryImage: String,
     @SerialName("hint_wallpaper_picker_background") val hintWallpaperPickerBackground: String,
     @SerialName("hint_wallpaper_picker_style") val hintWallpaperPickerStyle: String,
+    @SerialName("error_wallpaper_gradients_not_found") val errorWallpaperGradientsNotFound: String,
 
     @SerialName("dialog_title_marker_color_picker") val dialogTitleMarkerColorPicker: String,
     @SerialName("dialog_title_wallpaper_picker") val dialogTitleWallpaperPicker: String,
@@ -43,6 +44,7 @@ data class LangComponentEditor(
             noteWallpaperCategoryImage = "Wallpaper",
             hintWallpaperPickerBackground = "Background",
             hintWallpaperPickerStyle = "Ready style",
+            errorWallpaperGradientsNotFound = "Failed to load gradients.",
             dialogTitleMarkerColorPicker = "Select marker color",
             dialogTitleWallpaperPicker = "Select background",
             dialogTitleWallpaperTextureStylePicker = "Select style",

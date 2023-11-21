@@ -28,7 +28,9 @@ class NoteUiMapperImpl : NoteUiMapper {
             wallpaperTypeId = i.wallpaperTypeId,
             wallpaperId = i.wallpaperId,
             wallpaperTintId = i.wallpaperTintId,
+            wallpaperTintAlpha = i.wallpaperTintAlpha,
             wallpaperBackgroundColorId = i.wallpaperBackgroundColorId,
+            wallpaperBackgroundColorAlpha = i.wallpaperBackgroundColorAlpha,
             isTextureStyle = i.isTextureStyle,
             isDarkWallpaper = i.isDarkWallpaper
         ),
@@ -51,7 +53,9 @@ class NoteUiMapperImpl : NoteUiMapper {
         wallpaperTypeId = o.style.wallpaperTypeId,
         wallpaperId = o.style.wallpaperId,
         wallpaperTintId = o.style.wallpaperTintId,
+        wallpaperTintAlpha = o.style.wallpaperTintAlpha,
         wallpaperBackgroundColorId = o.style.wallpaperBackgroundColorId,
+        wallpaperBackgroundColorAlpha = o.style.wallpaperBackgroundColorAlpha,
         isTextureStyle = o.style.isTextureStyle,
         isDarkWallpaper = o.style.isDarkWallpaper,
         tagsIds = o.tags.data.map { it.id }

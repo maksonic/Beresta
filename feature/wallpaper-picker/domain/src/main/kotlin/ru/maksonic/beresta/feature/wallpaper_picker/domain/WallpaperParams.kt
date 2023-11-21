@@ -7,7 +7,9 @@ data class WallpaperParams(
     val type: WallpaperType.Value,
     val id: Long,
     val tintColorId: Long = 0,
+    val tintColorAlpha: Float = 1f,
     val backgroundColorId: Long = 0,
+    val backgroundColorAlpha: Float = 1f,
     val isTextureStyle: Boolean = false,
 ) {
     companion object {
@@ -15,7 +17,9 @@ data class WallpaperParams(
             type = WallpaperType.Value.NONE,
             id = 0,
             tintColorId = 0,
+            tintColorAlpha = 1f,
             backgroundColorId = 0,
+            backgroundColorAlpha = 1f,
             isTextureStyle = false,
         )
 

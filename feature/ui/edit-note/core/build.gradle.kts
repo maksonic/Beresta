@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.palette:palette:1.0.0")
     implementation(project(module.Common.Core.path))
     implementation(project(module.Common.Domain.path))
     implementation(project(module.Common.UiKit.path))

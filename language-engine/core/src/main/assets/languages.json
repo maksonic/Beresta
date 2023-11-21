@@ -23,6 +23,7 @@
       "dialog_title_wallpaper_texture_style_picker": "Цвет текстуры",
       "hint_wallpaper_picker_background": "Фон",
       "hint_wallpaper_picker_style": "Готовый стиль",
+      "error_wallpaper_gradients_not_found": "Не удалось загрузить градиенты.",
       "tab_title_marker_color_category_bright": "Яркий",
       "tab_title_marker_color_category_normal": "Нормальный",
       "tab_title_marker_color_category_neutral": "Нейтральный"
@@ -204,6 +205,7 @@
       "dialog_title_wallpaper_texture_style_picker": "Texture color",
       "hint_wallpaper_picker_background": "Background",
       "hint_wallpaper_picker_style": "Ready style",
+      "error_wallpaper_gradients_not_found": "Failed to load gradients.",
       "tab_title_marker_color_category_bright": "Bright",
       "tab_title_marker_color_category_normal": "Normal",
       "tab_title_marker_color_category_neutral": "Neutral"
@@ -385,6 +387,7 @@
       "dialog_title_wallpaper_texture_style_picker": "纹理颜色",
       "hint_wallpaper_picker_background": "纹理背景",
       "hint_wallpaper_picker_style": "准备好纹理样式",
+      "error_wallpaper_gradients_not_found": "无法加载渐变。",
       "tab_title_marker_color_category_bright": "色泽鲜艳",
       "tab_title_marker_color_category_normal": "正常颜色",
       "tab_title_marker_color_category_neutral": "中性色"
@@ -567,6 +570,7 @@
       "dialog_title_wallpaper_texture_style_picker": "紋理顏色",
       "hint_wallpaper_picker_background": "紋理背景",
       "hint_wallpaper_picker_style": "準備好紋理樣式",
+      "error_wallpaper_gradients_not_found": "無法載入漸層。",
       "tab_title_marker_color_category_bright": "色澤鮮豔",
       "tab_title_marker_color_category_normal": "正常顏色",
       "tab_title_marker_color_category_neutral": "中性色"

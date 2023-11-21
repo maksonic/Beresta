@@ -20,7 +20,9 @@ data class Style(
     val wallpaperTypeId: Int,
     val wallpaperId: Long,
     val wallpaperTintId: Long,
+    val wallpaperTintAlpha: Float,
     val wallpaperBackgroundColorId: Long,
+    val wallpaperBackgroundColorAlpha: Float,
     val isTextureStyle: Boolean,
     val isDarkWallpaper: Boolean
 ) {
@@ -32,7 +34,9 @@ data class Style(
             wallpaperTypeId = 0,
             wallpaperId = 0L,
             wallpaperTintId = 0L,
+            wallpaperTintAlpha = 1f,
             wallpaperBackgroundColorId = 0L,
+            wallpaperBackgroundColorAlpha = 1f,
             isTextureStyle = false,
             isDarkWallpaper = false
         )
