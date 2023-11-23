@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
-import coil.decode.SvgDecoder
+import coil.imageLoader
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import kotlinx.coroutines.delay
@@ -78,6 +78,7 @@ internal fun WallpaperTextureContent(
     }
 
     Box(modifier.drawBehind { drawRect(animatedTextureBackground.value) }) {
+        val context = LocalContext.current
         val animatedTint = animateColorAsState(
             if (texture.tintColor.id == 0L)
                 outline.copy(0.2f)
@@ -87,16 +88,18 @@ internal fun WallpaperTextureContent(
         )
 
         val tint = if (isPicker) rememberUpdatedState(outline) else animatedTint
-        val builder = ImageRequest.Builder(LocalContext.current)
+        val key = rememberUpdatedState("${texture.id}-${texture.resId}")
+        val builder = ImageRequest.Builder(context)
             .data(texture.resId)
             .crossfade(true)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .diskCachePolicy(CachePolicy.ENABLED)
-            .decoderFactory(SvgDecoder.Factory())
-
+            .memoryCacheKey(key.value)
+            .diskCacheKey(key.value)
 
         AsyncImage(
             model = builder.build(),
+            imageLoader = context.imageLoader,
             contentDescription = "",
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(tint.value),

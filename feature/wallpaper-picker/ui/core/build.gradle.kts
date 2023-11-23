@@ -47,7 +47,6 @@ android {
 }
 
 dependencies {
-    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation(project(module.Common.Core.path))
     implementation(project(module.Common.UiKit.path))
     implementation(project(module.Common.UiTheme.path))
@@ -57,7 +56,6 @@ dependencies {
     implementation(project(module.Feature.WallpaperPicker.Ui.Api.path))
     implementation(libs.activity.compose)
     implementation(libs.coil)
-    implementation(libs.coil.svg)
     implementation(libs.compose.lifecycle)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
