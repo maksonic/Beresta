@@ -117,7 +117,11 @@ internal fun ContentExpanded(
         }
 
         Box(Modifier.fillMaxSize()) {
-            wallpaper.Widget(model.currentWallpaper, Modifier.fillMaxSize())
+            wallpaper.Widget(
+                wallpaper = model.currentWallpaper,
+                isCardContainer = false,
+                modifier = Modifier.fillMaxSize()
+            )
 
             Box(
                 modifier

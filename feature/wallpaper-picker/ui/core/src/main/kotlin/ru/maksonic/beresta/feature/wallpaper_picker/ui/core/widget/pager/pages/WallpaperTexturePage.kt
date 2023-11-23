@@ -16,8 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
+import coil.imageLoader
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.outline
@@ -73,6 +78,7 @@ internal fun WallpaperTextureContent(
     }
 
     Box(modifier.drawBehind { drawRect(animatedTextureBackground.value) }) {
+        val context = LocalContext.current
         val animatedTint = animateColorAsState(
             if (texture.tintColor.id == 0L)
                 outline.copy(0.2f)
@@ -82,12 +88,22 @@ internal fun WallpaperTextureContent(
         )
 
         val tint = if (isPicker) rememberUpdatedState(outline) else animatedTint
+        val key = rememberUpdatedState("${texture.id}-${texture.resId}")
+        val builder = ImageRequest.Builder(context)
+            .data(texture.resId)
+            .crossfade(true)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .memoryCacheKey(key.value)
+            .diskCacheKey(key.value)
 
         AsyncImage(
-            model = texture.resId,
+            model = builder.build(),
+            imageLoader = context.imageLoader,
             contentDescription = "",
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(tint.value),
+            filterQuality = if (isPicker) FilterQuality.Low else FilterQuality.None,
             modifier = modifier.fillMaxSize()
         )
     }

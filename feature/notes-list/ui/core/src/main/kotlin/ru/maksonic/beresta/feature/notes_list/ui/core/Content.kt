@@ -2,6 +2,7 @@ package ru.maksonic.beresta.feature.notes_list.ui.core
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -42,7 +43,7 @@ internal fun Content(
     updateCanScrollBackwardValue: (Boolean) -> Unit,
     updateChipsOffset: (Float) -> Unit,
     chipsOffset: State<Float>,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
     cardBackground: @Composable (wallpaper: BaseWallpaper<Color>) -> Unit
 ) {
@@ -94,27 +95,27 @@ internal fun Content(
         if (isBottomScroll.value) updateScrollUpValue(true)
     }
 
-    OverscrollBehavior {
-        LazyVerticalStaggeredGrid(
-            state = scrollState,
-            columns = StaggeredGridCells.Fixed(gridCells),
-            contentPadding = contentPadding,
-            modifier = modifier
-                .fillMaxSize()
-                .nestedScroll(scrollConnection)
-        ) {
-            items(
-                items = sorter.value.sortedByFilterList,
-                key = { it.id }
-            ) { note ->
+    Box(Modifier.nestedScroll(scrollConnection)) {
+        OverscrollBehavior {
+            LazyVerticalStaggeredGrid(
+                state = scrollState,
+                columns = StaggeredGridCells.Fixed(gridCells),
+                contentPadding = contentPadding,
+                modifier = modifier.fillMaxSize()
+            ) {
+                items(
+                    items = sorter.value.sortedByFilterList,
+                    key = { it.id }
+                ) { note ->
 
-                CardContent(
-                    note = note,
-                    onNoteClicked = onNoteClicked,
-                    onNoteLongClicked = onNoteLongClicked,
-                    modifier = Modifier.animateItemPlacement(tween(Theme.animVelocity.common)),
-                    cardBackground = cardBackground
-                )
+                    CardContent(
+                        note = note,
+                        onNoteClicked = onNoteClicked,
+                        onNoteLongClicked = onNoteLongClicked,
+                        modifier = Modifier.animateItemPlacement(tween(Theme.animVelocity.common)),
+                        cardBackground = cardBackground
+                    )
+                }
             }
         }
     }

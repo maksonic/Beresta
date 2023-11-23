@@ -146,7 +146,8 @@ internal fun TopControlBar(
             tags = model.editableNote.tags,
             colorCreator = colorCreator,
             isExpanded = isExpanded,
-            onAddNoteTagClicked = { send(Msg.Inner.UpdatedTagPickerSheetState(true)) }
+            onAddNoteTagClicked = { send(Msg.Inner.UpdatedTagPickerSheetState(true)) },
+            chipColorAnimVelocity = animVelocity
         )
     }
 }
@@ -158,6 +159,7 @@ private fun ExpandableTagsContainer(
     colorCreator: State<ColorByWallpaperCreator>,
     isExpanded: Boolean,
     onAddNoteTagClicked: () -> Unit,
+    chipColorAnimVelocity: Int,
     modifier: Modifier = Modifier
 ) {
     val height = if (isExpanded) Modifier.wrapContentHeight() else Modifier.height(0.dp)
@@ -182,7 +184,7 @@ private fun ExpandableTagsContainer(
                 verticalArrangement = Arrangement.Center
             ) {
                 CompositionLocalProvider(LocalRippleTheme provides NoRipple) {
-                    val backgroundColor = colorCreator.value.tagChipBarColor()
+                    val backgroundColor = colorCreator.value.tagChipBarColor(chipColorAnimVelocity)
 
                     ButtonAddTagCircle(
                         icon = AppIcon.Add,

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -71,10 +70,13 @@ internal fun NotesList(
             modifier = modifier
                 .statusBarsPadding()
                 .padding(top = Theme.size.topBarSmallHeight),
-            loadingModifier = modifier
-                .systemBarsPadding()
-                .padding(top = Theme.size.topBarSmallHeight.plus(dp12)),
-            cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
+            cardBackground = {
+                wallpaperUiApi.Widget(
+                    it,
+                    isCardContainer = true,
+                    Modifier.matchParentSize()
+                )
+            }
         )
 
         SnackBarHost(

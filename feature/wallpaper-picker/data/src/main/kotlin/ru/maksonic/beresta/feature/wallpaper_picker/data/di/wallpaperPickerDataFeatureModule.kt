@@ -18,8 +18,8 @@ import ru.maksonic.beresta.feature.wallpaper_picker.domain.usecase.FindWallpaper
  * @Author maksonic on 30.10.2023
  */
 val wallpaperPickerDataFeatureModule = module {
-    factory { TextureStyleStore() }
-    factory {
+    single { TextureStyleStore() }
+    single {
         TextureColorsStore(
             json = get(),
             jsonConverter = get(),
@@ -28,11 +28,11 @@ val wallpaperPickerDataFeatureModule = module {
     }
 
     single { WallpaperColorsStore() }
-    factory { WallpaperGradientsStore(json = get(), jsonConverter = get(), colorConverter = get()) }
+    single { WallpaperGradientsStore(json = get(), jsonConverter = get(), colorConverter = get()) }
     single { WallpaperImagesStore() }
-    factory { WallpaperTexturesStore(textureStyleStore = get(), textureColorsStore = get()) }
+    single { WallpaperTexturesStore(textureStyleStore = get(), textureColorsStore = get()) }
 
-    factory {
+    single {
         WallpapersStore(
             colorsStore = get(),
             gradientsStore = get(),
@@ -40,8 +40,8 @@ val wallpaperPickerDataFeatureModule = module {
             imagesStore = get()
         )
     }
-    factory<WallpaperRepository<Color>> { WallpapersRepositoryImpl(store = get()) }
-    factory<FindWallpaperByParamsUseCase<Color>> {
+    single<WallpaperRepository<Color>> { WallpapersRepositoryImpl(store = get()) }
+    single<FindWallpaperByParamsUseCase<Color>> {
         FindWallpaperByParamsUseCaseImpl(repository = get())
     }
 }

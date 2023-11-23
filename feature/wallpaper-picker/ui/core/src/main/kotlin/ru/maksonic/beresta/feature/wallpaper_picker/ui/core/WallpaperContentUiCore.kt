@@ -19,17 +19,21 @@ import ru.maksonic.beresta.feature.wallpaper_picker.ui.core.widget.pager.pages.W
  */
 class WallpaperContentUiCore : WallpaperPickerUiApi.Wallpaper {
     @Composable
-    override fun Widget(wallpaper: BaseWallpaper<Color>, modifier: Modifier) {
-        Content(wallpaper, modifier)
+    override fun Widget(
+        wallpaper: BaseWallpaper<Color>,
+        isCardContainer: Boolean,
+        modifier: Modifier
+    ) {
+        Content(wallpaper, isCardContainer, modifier)
     }
 }
 
 @Composable
-private fun Content(wallpaper: BaseWallpaper<Color>, modifier: Modifier) {
+private fun Content(wallpaper: BaseWallpaper<Color>, isMainCard: Boolean, modifier: Modifier) {
     when (wallpaper) {
         is WallpaperColor<Color> -> WallpaperColorContent(wallpaper, modifier)
         is WallpaperGradient<Color> -> WallpaperGradientContent(wallpaper, modifier)
         is WallpaperTexture<Color> -> WallpaperTextureContent(wallpaper, modifier)
-        is WallpaperImage<Color> -> WallpaperImageContent(wallpaper, modifier)
+        is WallpaperImage<Color> -> WallpaperImageContent(wallpaper, isMainCard, modifier)
     }
 }

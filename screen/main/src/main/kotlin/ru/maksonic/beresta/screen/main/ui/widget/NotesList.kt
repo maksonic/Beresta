@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -43,7 +42,6 @@ internal fun NotesList(
 ) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         val sorter = rememberNotesSorter(model.notes.collection.data)
-        val padding = with(Theme.size) { topBarSmallHeight.plus(noteChipsContainerHeight) }
         val bottomSnackHostPadding = Theme.size.bottomMainBarHeight.plus(dp8)
 
         api.ListPrimary(
@@ -65,10 +63,13 @@ internal fun NotesList(
             modifier = modifier
                 .statusBarsPadding()
                 .padding(top = Theme.size.topBarSmallHeight),
-            loadingModifier = modifier
-                .systemBarsPadding()
-                .padding(top = padding.plus(dp8)),
-            cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
+            cardBackground = {
+                wallpaperUiApi.Widget(
+                    wallpaper = it,
+                    isCardContainer = true,
+                    modifier = Modifier.matchParentSize()
+                )
+            }
         )
 
         SnackBarHost(

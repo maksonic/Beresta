@@ -21,6 +21,7 @@ import ru.maksonic.beresta.common.ui_kit.icons.Colors
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.provide.dp6
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
+import ru.maksonic.beresta.feature.wallpaper_picker.ui.core.TextureAlphaKey
 import ru.maksonic.beresta.feature.wallpaper_picker.ui.core.WallpaperPickerContent
 import ru.maksonic.beresta.language_engine.shell.provider.text
 
@@ -31,18 +32,25 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 internal fun TopBar(
     currentContent: State<WallpaperPickerContent>,
     isTexturePage: Boolean,
+    textureAlphaKey: TextureAlphaKey,
     onCloseClicked: () -> Unit,
     onSetTextureBackgroundClicked: () -> Unit,
     onInitialContentClicked: () -> Unit,
+    onCloseAlphaPickerDialog: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(contentAlignment = Alignment.Center) {
         val title = when (currentContent.value) {
-            WallpaperPickerContent.IDLE -> {
-                text.editor.dialogTitleWallpaperPicker
-            }
+            WallpaperPickerContent.IDLE -> text.editor.dialogTitleWallpaperPicker
+
             WallpaperPickerContent.TEXTURE_SETTINGS -> {
-                text.editor.dialogTitleWallpaperTextureStylePicker
+                with(text.editor) {
+                    when (textureAlphaKey) {
+                        TextureAlphaKey.BACKGROUND -> dialogTitleWallpaperTextureAlphaBackgroundPicker
+                        TextureAlphaKey.TINT -> dialogTitleWallpaperTextureAlphaTintPicker
+                        TextureAlphaKey.NOTHING -> dialogTitleWallpaperTextureStylePicker
+                    }
+                }
             }
         }
 
@@ -62,7 +70,14 @@ internal fun TopBar(
                     ButtonIcon(
                         icon = if (it) AppIcon.ArrowBack else AppIcon.Colors,
                         onClick = {
-                            if (it) onInitialContentClicked() else onSetTextureBackgroundClicked()
+                            if (it) if (textureAlphaKey != TextureAlphaKey.NOTHING) {
+                                onCloseAlphaPickerDialog()
+                            } else {
+                                onInitialContentClicked()
+                            }
+                            else {
+                                onSetTextureBackgroundClicked()
+                            }
                         }
                     )
                 }

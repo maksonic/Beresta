@@ -136,6 +136,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.navigation)
+    implementation(libs.coil)
     implementation(libs.splash.screen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.junit.ext)

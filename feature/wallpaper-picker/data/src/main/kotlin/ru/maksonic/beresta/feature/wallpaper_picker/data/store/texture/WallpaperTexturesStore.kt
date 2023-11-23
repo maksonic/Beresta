@@ -15,7 +15,7 @@ import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperTe
  */
 class WallpaperTexturesStore(
     private val textureStyleStore: TextureStyleStore,
-    private val textureColorsStore: TextureColorsStore
+    private val textureColorsStore: TextureColorsStore,
 ) : BaseWallpaperStore<WallpaperTexture<Color>> {
 
     private val _textures = listOf(
@@ -24,14 +24,15 @@ class WallpaperTexturesStore(
         textureDefault.copy(id = 300002L, resId = R.drawable.line_column_small),
         textureDefault.copy(id = 300003L, resId = R.drawable.line_column_medium),
         textureDefault.copy(id = 300004L, resId = R.drawable.line_row_small),
-        textureDefault.copy(id = 300005L, resId = R.drawable.line_row_medium),
         textureDefault.copy(id = 300101L, resId = R.drawable.pattern_001),
         textureDefault.copy(id = 300102L, resId = R.drawable.pattern_002),
+        textureDefault.copy(id = 300103L, resId = R.drawable.pattern_003),
         textureDefault.copy(id = 300104L, resId = R.drawable.pattern_004),
         textureDefault.copy(id = 300105L, resId = R.drawable.pattern_005),
         textureDefault.copy(id = 300106L, resId = R.drawable.pattern_006),
         textureDefault.copy(id = 300107L, resId = R.drawable.pattern_007),
         textureDefault.copy(id = 300108L, resId = R.drawable.pattern_008),
+        textureDefault.copy(id = 300109L, resId = R.drawable.pattern_009),
         textureDefault.copy(id = 300110L, resId = R.drawable.pattern_010),
         textureDefault.copy(id = 300111L, resId = R.drawable.pattern_011),
         textureDefault.copy(id = 300112L, resId = R.drawable.pattern_012),
@@ -55,6 +56,9 @@ class WallpaperTexturesStore(
         textureDefault.copy(id = 300131L, resId = R.drawable.pattern_031),
         textureDefault.copy(id = 300132L, resId = R.drawable.pattern_032),
         textureDefault.copy(id = 300133L, resId = R.drawable.pattern_033),
+        textureDefault.copy(id = 300134L, resId = R.drawable.pattern_034),
+        textureDefault.copy(id = 300135L, resId = R.drawable.pattern_035),
+        textureDefault.copy(id = 300136L, resId = R.drawable.pattern_036)
     )
 
     override val data: List<WallpaperTexture<Color>> = _textures

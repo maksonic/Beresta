@@ -130,7 +130,6 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
             setOf(Eff.CollapseFab)
         else setOf(Eff.ShowNoteUpdateSnackBar)
 
-
         return ElmUpdate(
             model = model.copy(
                 editableNote = if (model.isEntryPoint) note else NoteUi.Default,

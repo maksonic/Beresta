@@ -13,10 +13,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +33,7 @@ import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.helpers.TextureStyle
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperTexture
 import ru.maksonic.beresta.feature.wallpaper_picker.ui.api.helpers.findById
+import ru.maksonic.beresta.feature.wallpaper_picker.ui.core.widget.DialogTextureAlphaPicker
 import ru.maksonic.beresta.language_engine.shell.provider.text
 
 /**
@@ -45,7 +43,11 @@ import ru.maksonic.beresta.language_engine.shell.provider.text
 internal fun ContentTextureColorPicker(
     state: WallpapersUiState,
     texture: WallpaperTexture<Color>?,
+    isVisibleAlphaSlider: Boolean,
+    textureAlphaKey: TextureAlphaKey,
     updateWallpaper: (WallpaperTexture<Color>) -> Unit,
+    updateAlphaPickerVisibility: (Boolean) -> Unit,
+    updateAlphaPickerKey: (TextureAlphaKey) -> Unit,
     onAcceptClicked: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -53,7 +55,11 @@ internal fun ContentTextureColorPicker(
         TextureSettingsContent(
             state = state,
             texture = texture,
+            isVisibleAlphaSlider = isVisibleAlphaSlider,
+            textureAlphaKey = textureAlphaKey,
             updateWallpaper = updateWallpaper,
+            updateAlphaPickerVisibility = updateAlphaPickerVisibility,
+            updateAlphaPickerKey = updateAlphaPickerKey,
             onAcceptClicked = onAcceptClicked,
         )
     } else {
@@ -63,109 +69,140 @@ internal fun ContentTextureColorPicker(
 
 @Composable
 private fun TextureSettingsContent(
+    isVisibleAlphaSlider: Boolean,
+    textureAlphaKey: TextureAlphaKey,
     state: WallpapersUiState,
     texture: WallpaperTexture<Color>,
     updateWallpaper: (WallpaperTexture<Color>) -> Unit,
+    updateAlphaPickerVisibility: (Boolean) -> Unit,
+    updateAlphaPickerKey: (TextureAlphaKey) -> Unit,
     onAcceptClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier
-            .fillMaxSize()
-            .navigationBarsPadding()
-            .padding(bottom = dp24)
-    ) {
-        val tintRowState = rememberLazyListState()
-        val backgroundColorRowState = rememberLazyListState()
-        val scope = rememberCoroutineScope()
+    Box {
 
-        LaunchedEffect(Unit) {
-            val tIndex = with(state.tints) { indexOf(findById(texture.tintColor.id)) }
-            val bIndex = with(state.backgrounds) { indexOf(findById(texture.backgroundColor.id)) }
-
-            scope.launch {
-                if (tIndex >= 0) tintRowState.animateScrollToItem(tIndex)
-            }
-            scope.launch {
-                if (bIndex >= 0) backgroundColorRowState.animateScrollToItem(bIndex)
-            }
-        }
-
-        TextureStyleScrollableItem(
-            readyTextureStyles = state.styles,
-            texture = texture,
-            updateWallpaper = updateWallpaper,
-            scrollState = rememberLazyListState(),
-            modifier = modifier.weight(1f)
-        )
-
-        HorizontalDivider(
-            color = onSecondaryContainer,
-            modifier = Modifier.padding(top = dp16, bottom = dp8)
-        )
-
-        TextureScrollableItem(
-            state = state,
-            scrollState = tintRowState,
-            currentSelectedColorId = texture.tintColor.id,
-            title = text.editor.noteWallpaperCategoryColor,
-            modifier = modifier.weight(1f),
-            onClicked = { tintId ->
-                updateWallpaper(
-                    texture.copy(
-                        tintColor = texture.tintColor.copy(tintId), isTextureStyle = false
-                    )
-                )
-            }
-        )
-
-        TextureScrollableItem(
-            isTintColors = false,
-            state = state,
-            scrollState = backgroundColorRowState,
-            currentSelectedColorId = texture.backgroundColor.id,
-            title = text.editor.hintWallpaperPickerBackground,
-            modifier = modifier.weight(1f),
-            onClicked = { backgroundId ->
-                updateWallpaper(
-                    texture.copy(
-                        backgroundColor = texture.backgroundColor.copy(backgroundId),
-                        isTextureStyle = false
-                    )
-                )
-            }
-        )
-
-        Row(
+        Column(
             modifier
-                .fillMaxWidth()
-                .padding(top = dp24, start = dp16, end = dp16),
-            horizontalArrangement = Arrangement.spacedBy(dp16)
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .padding(bottom = dp24)
         ) {
-            ButtonDialogSecondary(
-                title = text.shared.btnTitleByDefault,
-                onClick = {
+            val tintRowState = rememberLazyListState()
+            val backgroundColorRowState = rememberLazyListState()
+            val scope = rememberCoroutineScope()
+
+            LaunchedEffect(Unit) {
+                val tIndex = with(state.tints) { indexOf(findById(texture.tintColor.id)) }
+                val bIndex =
+                    with(state.backgrounds) { indexOf(findById(texture.backgroundColor.id)) }
+
+                scope.launch {
+                    if (tIndex >= 0) tintRowState.animateScrollToItem(tIndex)
+                }
+                scope.launch {
+                    if (bIndex >= 0) backgroundColorRowState.animateScrollToItem(bIndex)
+                }
+            }
+
+            TextureStyleScrollableItem(
+                readyTextureStyles = state.styles,
+                texture = texture,
+                updateWallpaper = updateWallpaper,
+                scrollState = rememberLazyListState(),
+                modifier = modifier.weight(1f)
+            )
+
+            HorizontalDivider(
+                color = onSecondaryContainer,
+                modifier = Modifier.padding(top = dp16, bottom = dp8)
+            )
+
+            TextureScrollableItem(
+                state = state,
+                scrollState = tintRowState,
+                currentSelectedColorId = texture.tintColor.id,
+                title = text.editor.noteWallpaperCategoryColor,
+                modifier = modifier.weight(1f),
+                onClicked = { tintId ->
                     updateWallpaper(
                         texture.copy(
-                            tintColor = texture.tintColor.copy(0L),
-                            backgroundColor = texture.backgroundColor.copy(0)
+                            tintColor = texture.tintColor.copy(tintId), isTextureStyle = false
                         )
-                    ).run {
-                        scope.launch {
-                            tintRowState.animateScrollToItem(0)
-                            backgroundColorRowState.animateScrollToItem(0)
-                        }
-                    }
+                    )
                 },
-                modifier = Modifier.weight(1f)
+                onLongClicked = {
+                    if (it == texture.tintColor.value) {
+                        updateAlphaPickerVisibility(true)
+                        updateAlphaPickerKey(TextureAlphaKey.TINT)
+                    }
+                }
             )
-            ButtonDialogPrimary(
-                title = text.shared.btnTitleAccept,
-                onClick = onAcceptClicked,
-                modifier = Modifier.weight(1f)
+
+            TextureScrollableItem(
+                isTintColors = false,
+                state = state,
+                scrollState = backgroundColorRowState,
+                currentSelectedColorId = texture.backgroundColor.id,
+                title = text.editor.hintWallpaperPickerBackground,
+                modifier = modifier.weight(1f),
+                onClicked = { backgroundId ->
+                    updateWallpaper(
+                        texture.copy(
+                            backgroundColor = texture.backgroundColor.copy(backgroundId),
+                            isTextureStyle = false
+                        )
+                    )
+                },
+                onLongClicked = {
+                    if (it == texture.backgroundColor.value) {
+                        updateAlphaPickerVisibility(true)
+                        updateAlphaPickerKey(TextureAlphaKey.BACKGROUND)
+                    }
+                }
             )
+
+            Row(
+                modifier
+                    .fillMaxWidth()
+                    .padding(top = dp24, start = dp16, end = dp16),
+                horizontalArrangement = Arrangement.spacedBy(dp16)
+            ) {
+                ButtonDialogSecondary(
+                    title = text.shared.btnTitleByDefault,
+                    onClick = {
+                        updateWallpaper(
+                            texture.copy(
+                                tintColor = texture.tintColor.copy(0L),
+                                backgroundColor = texture.backgroundColor.copy(0)
+                            )
+                        ).run {
+                            scope.launch {
+                                tintRowState.animateScrollToItem(0)
+                                backgroundColorRowState.animateScrollToItem(0)
+                            }
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+                ButtonDialogPrimary(
+                    title = text.shared.btnTitleAccept,
+                    onClick = onAcceptClicked,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
+
+    DialogTextureAlphaPicker(
+        isVisible = isVisibleAlphaSlider,
+        hideDialog = {
+            updateAlphaPickerVisibility(false)
+            updateAlphaPickerKey(TextureAlphaKey.NOTHING)
+        },
+        key = textureAlphaKey,
+        texture = texture,
+        update = updateWallpaper
+    )
 }
 
 @Composable
@@ -175,14 +212,6 @@ private fun UnselectedTextureContent(onBack: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ColorsOpacityTextureContent(onBack: () -> Unit, modifier: Modifier = Modifier) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        val state = SliderState()
-        Slider(state, modifier = modifier.fillMaxWidth())
-    }
-}
 
 @Composable
 private fun TextureScrollableItem(
@@ -192,7 +221,8 @@ private fun TextureScrollableItem(
     currentSelectedColorId: Long,
     title: String,
     modifier: Modifier,
-    onClicked: (Long) -> Unit
+    onClicked: (Long) -> Unit,
+    onLongClicked: (Color) -> Unit,
 ) {
     Column(modifier) {
         Text(
@@ -213,6 +243,8 @@ private fun TextureScrollableItem(
                         primaryColor = color.value,
                         isSelected = color.id == currentSelectedColorId,
                         onClick = { onClicked(color.id) },
+                        isEnabledLongClick = true,
+                        onLongClick = { onLongClicked(color.value) },
                         modifier = modifier
                     )
                 }
@@ -222,6 +254,8 @@ private fun TextureScrollableItem(
                         primaryColor = color.value,
                         isSelected = color.id == currentSelectedColorId,
                         onClick = { onClicked(color.id) },
+                        isEnabledLongClick = true,
+                        onLongClick = { onLongClicked(color.value) },
                         modifier = modifier
                     )
                 }

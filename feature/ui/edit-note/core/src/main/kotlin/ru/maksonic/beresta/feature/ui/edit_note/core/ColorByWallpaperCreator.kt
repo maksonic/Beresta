@@ -24,6 +24,7 @@ import ru.maksonic.beresta.common.ui_theme.colors.secondaryContainer
 import ru.maksonic.beresta.common.ui_theme.colors.surface
 import ru.maksonic.beresta.common.ui_theme.colors.surfaceVariant
 import ru.maksonic.beresta.common.ui_theme.colors.tertiaryContainer
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperType
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperColor
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.WallpaperGradient
@@ -46,7 +47,6 @@ class ColorByWallpaperCreator(
     private val wallpaper: BaseWallpaper<Color>,
     private val canNoteScrollBackward: State<Boolean>,
 ) {
-
     private fun getWallpaperColorFromImage(
         @DrawableRes resId: Int,
         context: Context,
@@ -65,7 +65,13 @@ class ColorByWallpaperCreator(
             when (this) {
                 is WallpaperColor -> if (id == DEF_WALLPAPER_COLOR_ID) defColor else value
                 is WallpaperGradient -> value.first()
-                is WallpaperTexture -> with(backgroundColor) { if (id == 0L) defColor else value }
+                is WallpaperTexture -> {
+                    with(backgroundColor) {
+                        val colorByAlpha = value.copy(backgroundColorAlpha).compositeOver(defColor)
+                        if (id == 0L) defColor else colorByAlpha
+                    }
+                }
+
                 is WallpaperImage -> {
                     val context = LocalContext.current
                     var mutableColor by remember { mutableStateOf(Color.Transparent) }
@@ -86,15 +92,21 @@ class ColorByWallpaperCreator(
     private val isInitialColor @Composable get() = fetchedColor == surface
 
     @Composable
-    fun topBarColor(animVelocity: Int) = animateColorAsState(
-        if (canNoteScrollBackward.value)
+    fun topBarColor(animVelocity: Int): State<Color> {
+        val colorResult = if (canNoteScrollBackward.value)
             if (isInitialColor) {
                 surfaceVariant.copy(0.5f).compositeOver(fetchedColor)
             } else {
                 Color.Black.copy(0.1f).compositeOver(fetchedColor)
             }
-        else fetchedColor, tween(animVelocity), label = ""
-    )
+        else fetchedColor
+
+        return if (wallpaper.getType() == WallpaperType.Value.IMAGE) {
+            rememberUpdatedState(colorResult)
+        } else {
+            animateColorAsState(colorResult, tween(animVelocity), label = "")
+        }
+    }
 
     @Composable
     fun bottomBarColor(): State<Color> {
@@ -111,22 +123,32 @@ class ColorByWallpaperCreator(
     }
 
     @Composable
-    fun controlBarColor(animVelocity: Int) = animateColorAsState(
-        if (isInitialColor) surface else fetchedColor,
-        tween(animVelocity), label = ""
-    )
+    fun controlBarColor(animVelocity: Int): State<Color> {
+        val colorResult = if (isInitialColor) surface else fetchedColor
+
+        return if (wallpaper.getType() == WallpaperType.Value.IMAGE) {
+            rememberUpdatedState(colorResult)
+        } else {
+            animateColorAsState(colorResult, tween(animVelocity), label = "")
+        }
+    }
 
     @Composable
-    fun tagChipBarColor() = animateColorAsState(
-        if (isInitialColor) secondaryContainer else {
+    fun tagChipBarColor(animVelocity: Int): State<Color> {
+        val colorResult = if (isInitialColor) secondaryContainer else {
             if (wallpaper.isDark) {
                 fetchedColor.copy(0.75f).compositeOver(Color.White)
             } else {
                 fetchedColor.copy(0.8f).compositeOver(primary)
             }
-        },
-        tween(Theme.animVelocity.common), label = ""
-    )
+        }
+
+        return if (wallpaper.getType() == WallpaperType.Value.IMAGE) {
+            rememberUpdatedState(colorResult)
+        } else {
+            animateColorAsState(colorResult, tween(animVelocity), label = "")
+        }
+    }
 
     @Composable
     fun fabSaveNoteColor(isBlankNote: Boolean) = if (isInitialColor) {

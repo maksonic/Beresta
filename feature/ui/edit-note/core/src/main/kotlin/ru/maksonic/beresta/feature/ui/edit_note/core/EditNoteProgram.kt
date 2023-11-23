@@ -1,5 +1,6 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -71,6 +72,8 @@ class EditNoteProgram(
                     isVisibleDialog = false,
                     colors = markerColorsList
                 )
+
+                Log.e("AAA", "fetched alpha${note.style.wallpaperBackgroundColorAlpha}")
 
                 consumer(
                     Msg.Inner.FetchedPassedNoteResult(
