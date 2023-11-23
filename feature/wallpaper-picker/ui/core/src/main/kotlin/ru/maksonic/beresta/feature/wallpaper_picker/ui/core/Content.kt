@@ -11,10 +11,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +50,8 @@ internal fun Content(
         if (this.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.9f else 0.55f
     }
     val currentContent = rememberSaveable { mutableStateOf(WallpaperPickerContent.IDLE) }
+    var isVisibleAlphaSlider by rememberSaveable { mutableStateOf(false) }
+    var textureAlphaKey by rememberSaveable { mutableStateOf(TextureAlphaKey.NOTHING) }
     val pagerState = rememberPagerState(
         initialPage = WallpaperPickerPagerPage.COLORS,
         initialPageOffsetFraction = 0f,
@@ -81,11 +85,16 @@ internal fun Content(
         TopBar(
             currentContent = currentContent,
             isTexturePage = pagerState.currentPage == WallpaperPickerPagerPage.TEXTURES,
+            textureAlphaKey = textureAlphaKey,
             onCloseClicked = onCloseClicked,
             onSetTextureBackgroundClicked = {
                 currentContent.value = WallpaperPickerContent.TEXTURE_SETTINGS
             },
-            onInitialContentClicked = { currentContent.value = WallpaperPickerContent.IDLE }
+            onInitialContentClicked = { currentContent.value = WallpaperPickerContent.IDLE },
+            onCloseAlphaPickerDialog = {
+                isVisibleAlphaSlider = false
+                textureAlphaKey = TextureAlphaKey.NOTHING
+            }
         )
 
         AnimateContent(currentContent.value) {
@@ -106,7 +115,11 @@ internal fun Content(
                     ContentTextureColorPicker(
                         state = wallpapersUiState,
                         texture = texture,
+                        isVisibleAlphaSlider = isVisibleAlphaSlider,
+                        textureAlphaKey = textureAlphaKey,
                         updateWallpaper = updateWallpaper,
+                        updateAlphaPickerVisibility = { visible -> isVisibleAlphaSlider = visible },
+                        updateAlphaPickerKey = { key -> textureAlphaKey = key },
                         onBack = { currentContent.value = WallpaperPickerContent.IDLE },
                         onAcceptClicked = onCloseClicked
                     )

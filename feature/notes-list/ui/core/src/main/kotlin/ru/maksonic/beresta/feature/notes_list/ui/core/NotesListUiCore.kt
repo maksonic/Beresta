@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ru.maksonic.beresta.common.core.ui.sorting.FilterDataSorter
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
-import ru.maksonic.beresta.feature.notes_list.ui.api.card.noteUiCardState
 import ru.maksonic.beresta.feature.notes_list.ui.api.list.NotesListUiApi
 import ru.maksonic.beresta.feature.notes_list.ui.api.list.NotesListUiState
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
@@ -31,7 +30,6 @@ class NotesListUiCore : NotesListUiApi {
         updateChipsOffset: (Float) -> Unit,
         contentPadding: PaddingValues,
         modifier: Modifier,
-        loadingModifier: Modifier,
         cardBackground: @Composable (wallpaper: BaseWallpaper<Color>) -> Unit
     ) {
         Container(
@@ -47,7 +45,6 @@ class NotesListUiCore : NotesListUiApi {
             updateChipsOffset = updateChipsOffset,
             contentPadding = contentPadding,
             modifier = modifier,
-            loadingModifier = loadingModifier,
             emptyListPlaceholder = {},
             cardBackground = cardBackground,
         )
@@ -80,7 +77,6 @@ class NotesListUiCore : NotesListUiApi {
             updateChipsOffset = {},
             contentPadding = contentPadding,
             modifier = modifier,
-            loadingModifier = loadingModifier,
             emptyListPlaceholder = emptyListPlaceholder,
             cardBackground = cardBackground
         )

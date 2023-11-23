@@ -19,6 +19,6 @@ interface WallpaperPickerUiApi {
 
     interface Wallpaper {
         @Composable
-        fun Widget(wallpaper: BaseWallpaper<Color>, modifier: Modifier)
+        fun Widget(wallpaper: BaseWallpaper<Color>, isCardContainer: Boolean, modifier: Modifier)
     }
 }

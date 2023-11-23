@@ -1,6 +1,10 @@
 package ru.maksonic.beresta.core
 
 import android.app.Application
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -50,7 +54,9 @@ import ru.maksonic.beresta.screen.trash.notes.di.trashNotesScreenModule
 /**
  * @Author maksonic on 27.09.2023
  */
-class BerestaApplication : Application() {
+private const val IMAGE_RELATIVE = "beresta_image_cache"
+
+class BerestaApplication : Application(), ImageLoaderFactory {
     private val modules = listOf(
         appModule,
         databaseModule,
@@ -105,5 +111,21 @@ class BerestaApplication : Application() {
             androidContext(this@BerestaApplication)
             modules(modules)
         }
+    }
+
+    override fun newImageLoader(): ImageLoader {
+        return ImageLoader.Builder(this)
+            .memoryCache {
+                MemoryCache.Builder(this)
+                    .maxSizePercent(0.25)
+                    .build()
+            }
+            .diskCache {
+                DiskCache.Builder()
+                    .directory(filesDir.resolve(IMAGE_RELATIVE))
+                    .maxSizeBytes(5 * 1024 * 1024)
+                    .build()
+            }
+            .build()
     }
 }

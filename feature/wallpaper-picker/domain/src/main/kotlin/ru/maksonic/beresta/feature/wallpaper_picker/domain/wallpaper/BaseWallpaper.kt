@@ -34,7 +34,9 @@ abstract class BaseWallpaper<T> {
                 type = WallpaperType.Value.TEXTURE,
                 id = this.id,
                 tintColorId = this.tintColor.id,
+                tintColorAlpha = this.tintColorAlpha,
                 backgroundColorId = this.backgroundColor.id,
+                backgroundColorAlpha = this.backgroundColorAlpha,
                 isTextureStyle = this.isTextureStyle
             )
         }

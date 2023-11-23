@@ -16,8 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import kotlinx.coroutines.delay
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.outline
@@ -82,12 +87,20 @@ internal fun WallpaperTextureContent(
         )
 
         val tint = if (isPicker) rememberUpdatedState(outline) else animatedTint
+        val builder = ImageRequest.Builder(LocalContext.current)
+            .data(texture.resId)
+            .crossfade(true)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .diskCachePolicy(CachePolicy.ENABLED)
+            .decoderFactory(SvgDecoder.Factory())
+
 
         AsyncImage(
-            model = texture.resId,
+            model = builder.build(),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(tint.value),
+            filterQuality = if (isPicker) FilterQuality.Low else FilterQuality.None,
             modifier = modifier.fillMaxSize()
         )
     }

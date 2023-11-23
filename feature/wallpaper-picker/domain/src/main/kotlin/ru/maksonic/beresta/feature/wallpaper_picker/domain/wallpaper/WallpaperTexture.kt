@@ -12,7 +12,7 @@ data class WallpaperTexture<T>(
     val tintColorAlpha: Float = 1f,
     val backgroundColor: BackgroundColor<T>,
     val backgroundColorAlpha: Float = 1f,
-    val resId: Int,
+    val resId: Any,
     override val isDark: Boolean = false,
     val isTextureStyle: Boolean = false
 ) : BaseWallpaper<T>()

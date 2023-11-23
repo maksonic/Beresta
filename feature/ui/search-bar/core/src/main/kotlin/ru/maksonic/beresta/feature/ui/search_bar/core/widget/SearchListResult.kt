@@ -58,7 +58,13 @@ internal fun SearchListResult(
                     onNoteClicked = onNoteClicked,
                     onNoteLongClicked = onNoteClicked,
                     modifier = Modifier.animateItemPlacement(tween(Theme.animVelocity.common)),
-                    cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
+                    cardBackground = {
+                        wallpaperUiApi.Widget(
+                            wallpaper = it,
+                            isCardContainer = true,
+                            modifier = Modifier.matchParentSize()
+                        )
+                    }
                 )
             }
         }

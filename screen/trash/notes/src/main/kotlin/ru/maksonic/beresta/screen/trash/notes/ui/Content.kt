@@ -85,7 +85,13 @@ internal fun Content(
                             message = text.trash.messageEmptyTrashNotesList
                         )
                     },
-                    cardBackground = { wallpaperUiApi.Widget(it, Modifier.matchParentSize()) }
+                    cardBackground = {
+                        wallpaperUiApi.Widget(
+                            wallpaper = it,
+                            isCardContainer = true,
+                            modifier = Modifier.matchParentSize()
+                        )
+                    }
                 )
             }
         }

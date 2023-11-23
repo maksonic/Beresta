@@ -26,7 +26,6 @@ interface NotesListUiApi {
         updateChipsOffset: (Float) -> Unit,
         contentPadding: PaddingValues,
         modifier: Modifier,
-        loadingModifier: Modifier,
         cardBackground: @Composable (wallpaper: BaseWallpaper<Color>) -> Unit
     )
 

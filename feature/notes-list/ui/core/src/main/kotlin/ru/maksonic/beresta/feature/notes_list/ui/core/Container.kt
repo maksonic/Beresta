@@ -35,14 +35,11 @@ internal fun Container(
     updateChipsOffset: (Float) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier,
-    loadingModifier: Modifier,
     emptyListPlaceholder: @Composable () -> Unit,
     cardBackground: @Composable (wallpaper: BaseWallpaper<Color>) -> Unit
 ) {
-    Box {
-        if (state.state.isLoading) {
-            PlaceholderNotesLoading(gridCells, noteUiCardState.shape.dp, loadingModifier)
-        }
+
+    Box(modifier) {
         if (state.state.successAfterLoading) {
             if (sorter.value.isEmptyList) {
                 emptyListPlaceholder()
@@ -58,7 +55,6 @@ internal fun Container(
                     chipsOffset = chipsRowOffset,
                     updateChipsOffset = updateChipsOffset,
                     contentPadding = contentPadding,
-                    modifier = modifier,
                     cardBackground = cardBackground
                 )
             }
@@ -71,6 +67,10 @@ internal fun Container(
                     message = text.shared.hintNoNotes
                 )
             }
+        }
+
+        if (state.state.isLoading) {
+            PlaceholderNotesLoading(gridCells, noteUiCardState.shape.dp, state.isHidden)
         }
     }
 }

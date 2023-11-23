@@ -122,7 +122,9 @@ data class NoteUi(
                         wallpaperTypeId = wallpaper.getType().id,
                         wallpaperId = wallpaper.id,
                         wallpaperTintId = wallpaper.tintColor.id,
+                        wallpaperTintAlpha = wallpaper.tintColorAlpha,
                         wallpaperBackgroundColorId = wallpaper.backgroundColor.id,
+                        wallpaperBackgroundColorAlpha = wallpaper.backgroundColorAlpha,
                         isTextureStyle = wallpaper.isTextureStyle,
                         isDarkWallpaper = wallpaper.isDark
                     )
