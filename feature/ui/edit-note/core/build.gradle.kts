@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    implementation ("androidx.palette:palette:1.0.0")
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
     implementation(project(module.Common.Core.path))
     implementation(project(module.Common.Domain.path))
     implementation(project(module.Common.UiKit.path))
@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
+    implementation(libs.coil)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.koin.android)

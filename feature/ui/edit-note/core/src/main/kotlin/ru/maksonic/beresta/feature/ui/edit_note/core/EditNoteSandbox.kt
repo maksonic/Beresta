@@ -1,5 +1,7 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core
 
+import okhttp3.internal.toImmutableList
+import ru.maksonic.beresta.feature.notes_list.ui.api.NoteImageUi
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedSuccess
@@ -55,6 +57,7 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
 
         is Msg.Inner.UpdatedNoteWallpaper -> updatedNoteWallpaper(model, msg)
         is Msg.Inner.FetchedNoteWallpaperResult -> fetchedNoteWallpaperResult(model, msg)
+        is Msg.Ui.UpdateNoteImageInCarouselPosition -> updateNoteImageInCarouselPosition(model, msg)
     }
 
     private fun updatedEntryPointValue(
@@ -258,4 +261,31 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
         model: Model,
         msg: Msg.Inner.FetchedNoteWallpaperResult
     ): Update = ElmUpdate(model.copy(currentWallpaper = msg.value))
+
+    private fun updateNoteImageInCarouselPosition(
+        model: Model,
+        msg: Msg.Ui.UpdateNoteImageInCarouselPosition
+    ): Update {
+      //  val from = model.editableNote.images.data[msg.fromIndex].id
+      //  val to = model.editableNote.images.data[msg.toIndex].id
+
+        val zzzz = NoteImageUi.Collection(model.editableNote.images.data.toMutableList().apply {
+            add(msg.toIndex.index, removeAt(msg.fromIndex.index))
+        }.toImmutableList())
+
+        return ElmUpdate(
+            model.copy(
+                editableNote = model.editableNote.copy(
+                    images = zzzz
+                )
+            )
+        )
+    }
+
+    fun <T> swapElements(list: MutableList<T>, index1: Int, index2: Int): List<T> {
+        val temp = list[index1]
+        list[index1] = list[index2]
+        list[index2] = temp
+        return list
+    }
 }

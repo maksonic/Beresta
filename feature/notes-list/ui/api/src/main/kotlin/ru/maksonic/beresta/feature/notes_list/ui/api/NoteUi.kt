@@ -13,6 +13,23 @@ import java.time.LocalDateTime
 /**
  * @Author maksonic on 21.02.2023
  */
+
+data class NoteImageUi(
+    val id: Long,
+    val resId: Int
+) {
+    companion object {
+        val Default = NoteImageUi(0, 0)
+        val Empty = NoteImageUi(0, 0)
+    }
+
+    data class Collection(val data: List<NoteImageUi>) {
+        companion object {
+            val Empty = Collection(emptyList())
+        }
+    }
+}
+
 data class Style(
     val isPinned: Boolean,
     val markerColorId: Long,
@@ -62,6 +79,7 @@ data class NoteUi(
     val wallpaper: BaseWallpaper<Color> = BaseWallpaper.empty(),
     val tagsIds: List<Long> = emptyList(),
     val tags: NoteTagUi.Collection = NoteTagUi.Collection.Empty,
+    val images: NoteImageUi.Collection = NoteImageUi.Collection.Empty,
 ) {
 
     companion object {

@@ -3,6 +3,7 @@ package ru.maksonic.beresta.feature.ui.edit_note.core
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import org.burnoutcrew.reorderable.ItemPosition
 import ru.maksonic.beresta.feature.folders_list.ui.api.FolderUi
 import ru.maksonic.beresta.feature.marker_color_picker.ui.api.MarkerPickerUiState
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
@@ -94,6 +95,7 @@ sealed class Msg : ElmMessage {
         data object OnStartRecordVoiceClicked : Ui()
         data object OnAddImagesClicked : Ui()
         data object OnAddCameraSnapshotClicked : Ui()
+
         // Top bar actions
         data object OnPinClicked : Ui()
         data object OnAddNewFolderClicked : Ui()
@@ -102,6 +104,7 @@ sealed class Msg : ElmMessage {
         data object OnSelectColorMarkerClicked : Ui()
         data object HiddenMarkerColorPickerDialog : Ui()
         data class UpdatedWallpaperPickerSheetVisibility(val isVisible: Boolean) : Ui()
+        data class UpdateNoteImageInCarouselPosition(val fromIndex: ItemPosition, val toIndex: ItemPosition) : Ui()
     }
 
     sealed class Inner : Msg() {
@@ -149,6 +152,4 @@ sealed class Eff : ElmEffect {
     data object HideKeyboard : Eff()
     data object ShowAddNewChipDialog : Eff()
     data object CollapseFab : Eff()
-    data class UpdateCurrentFolder(val id: Long) : Eff()
-    data class ShowMarkerColorPickerDialog(val colorId: Long) : Eff()
 }
