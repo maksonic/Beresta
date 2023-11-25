@@ -211,13 +211,6 @@ private fun HandleUiEffects(
                 }
             }
 
-            is Eff.UpdateCurrentFolder -> {/*foldersListApi.updateCurrent(eff.id)*/
-            }
-
-            is Eff.ShowMarkerColorPickerDialog -> {
-                /*markerColorPickerApi.showWithColor(eff.colorId)*/
-            }
-
             is Eff.ShowModalSheet -> scope.launch { modalBottomSheetState.show() }
             is Eff.HideModalSheet -> {
                 scope.launch { modalBottomSheetState.hide() }.invokeOnCompletion {

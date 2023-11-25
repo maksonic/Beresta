@@ -1,15 +1,12 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core.widget
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
-import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.typography.TextDesign
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.editorColors
@@ -25,8 +22,6 @@ internal fun NoteMessageInputFieldWidget(
     send: Send,
     modifier: Modifier = Modifier,
 ) {
-    val bottomPadding = Theme.size.bottomMainBarHeight.plus(SystemNavigationBarHeight)
-
 
     TextField(
         value = message,
@@ -42,8 +37,6 @@ internal fun NoteMessageInputFieldWidget(
         keyboardActions = KeyboardActions.Default,
         keyboardOptions = KeyboardOptions.Default,
         maxLines = 1000,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = bottomPadding)
+        modifier = modifier.fillMaxWidth()
     )
 }

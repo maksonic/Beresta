@@ -4,9 +4,12 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,9 +37,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.koin.compose.koinInject
+import ru.maksonic.beresta.common.ui_kit.bar.system.SystemNavigationBarHeight
 import ru.maksonic.beresta.common.ui_kit.sheet.ModalBottomSheetContainer
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.provide.dp24
+import ru.maksonic.beresta.common.ui_theme.provide.dp8
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersChipsRowUiApi
 import ru.maksonic.beresta.feature.folders_list.ui.api.FoldersFeature
 import ru.maksonic.beresta.feature.folders_list.ui.api.LocalCurrentSelectedFolderState
@@ -48,6 +53,7 @@ import ru.maksonic.beresta.feature.ui.edit_note.core.Model
 import ru.maksonic.beresta.feature.ui.edit_note.core.Msg
 import ru.maksonic.beresta.feature.ui.edit_note.core.provideEditorColors
 import ru.maksonic.beresta.feature.ui.edit_note.core.rememberColorCreator
+import ru.maksonic.beresta.feature.ui.edit_note.core.widget.ImagesCarousel
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.MultipleModalBottomSheetContent
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteMessageInputFieldWidget
 import ru.maksonic.beresta.feature.ui.edit_note.core.widget.NoteTitleInputFieldWidget
@@ -123,11 +129,13 @@ internal fun ContentExpanded(
                 modifier = Modifier.fillMaxSize()
             )
 
-            Box(
+            BoxWithConstraints(
                 modifier
                     .fillMaxSize()
-                    .imePadding()
+                //  .imePadding()
             ) {
+                val maxHeight = this.maxHeight
+
                 val nestedScrollConnection = remember {
                     object : NestedScrollConnection {
                         override fun onPreScroll(
@@ -160,6 +168,16 @@ internal fun ContentExpanded(
                             .nestedScroll(nestedScrollConnection)
                             .verticalScroll(scrollState)
                     ) {
+                        val messageModifier = if (model.editableNote.images.data.isNotEmpty())
+                            Modifier.padding(bottom = dp8) else
+                            Modifier
+                                .imePadding()
+                                .padding(
+                                    bottom = Theme.size.bottomMainBarHeight.plus(
+                                        SystemNavigationBarHeight
+                                    )
+                                )
+
                         TopControlBar(
                             model = model,
                             send = send,
@@ -169,7 +187,19 @@ internal fun ContentExpanded(
 
                         NoteTitleInputFieldWidget(model.editableNote.title, send, focusRequester)
 
-                        NoteMessageInputFieldWidget(model.editableNote.message, send)
+                        NoteMessageInputFieldWidget(
+                            message = model.editableNote.message,
+                            send = send,
+                            modifier = messageModifier
+                        )
+
+                        ImagesCarousel(
+                            images = model.editableNote.images,
+                            onPositionChanged = { from, to ->
+                                send(Msg.Ui.UpdateNoteImageInCarouselPosition(from, to))
+                            },
+                            modifier = Modifier.heightIn(max = maxHeight)
+                        )
                     }
 
                     TopWithBottomBars(
@@ -225,6 +255,7 @@ internal fun ContentExpanded(
         }
     }
 }
+
 
 @Composable
 private fun SystemBarColorEffect(model: Model, isNoneWallpaper: Boolean) {
