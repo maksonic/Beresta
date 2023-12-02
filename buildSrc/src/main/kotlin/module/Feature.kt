@@ -94,6 +94,25 @@ object Feature {
         }
     }
 
+    object ImageViewer {
+        object Domain : AbstractModule(
+            path = ":feature:image-viewer:domain",
+            namespace = "ru.maksonic.beresta.feature.image_viewer.domain"
+        )
+
+        object Ui {
+            object Api : AbstractModule(
+                path = ":feature:image-viewer:ui:api",
+                namespace = "ru.maksonic.beresta.feature.image_viewer.ui.api"
+            )
+
+            object Core : AbstractModule(
+                path = ":feature:image-viewer:ui:core",
+                namespace = "ru.maksonic.beresta.feature.image_viewer.ui.core"
+            )
+        }
+    }
+
     object Onboarding {
         object Data : AbstractModule(
             path = ":feature:onboarding:data",
