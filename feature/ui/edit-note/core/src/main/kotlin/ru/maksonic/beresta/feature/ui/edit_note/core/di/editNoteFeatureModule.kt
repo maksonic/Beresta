@@ -6,26 +6,28 @@ import ru.maksonic.beresta.feature.ui.edit_note.api.EditNoteUiApi
 import ru.maksonic.beresta.feature.ui.edit_note.core.EditNoteProgram
 import ru.maksonic.beresta.feature.ui.edit_note.core.EditNoteSandbox
 import ru.maksonic.beresta.feature.ui.edit_note.core.EditNoteUiCore
+import ru.maksonic.beresta.feature.ui.edit_note.core.MapperStore
+import ru.maksonic.beresta.feature.ui.edit_note.core.ProgramProxy
 
 /**
  * @Author maksonic on 26.04.2023
  */
 val editNoteUiFeatureModule = module {
+
     single {
-        EditNoteProgram(
-            fetchFoldersUseCase = get(),
+        ProgramProxy(
             fetchNoteByIdUseCase = get(),
             fetchNoteTagsUseCase = get(),
+            fetchFoldersUseCase = get(),
             fetchMarkerColorsUseCase = get(),
-            wallpaperRepository = get(),
+            findWallpaperByParamsUseCase = get(),
             foldersChipsRowUiApi = get(),
             notesInteractor = get(),
-            mapper = get(),
-            tagUiMapper = get(),
-            foldersMapper = get(),
-            navigator = get()
         )
     }
+
+    single { MapperStore(note = get(), tag = get(), folder = get()) }
+    single { EditNoteProgram(proxy = get(), mapper = get(), navigator = get()) }
     single<EditNoteUiApi> { EditNoteUiCore() }
     viewModel { EditNoteSandbox(program = get()) }
 }
