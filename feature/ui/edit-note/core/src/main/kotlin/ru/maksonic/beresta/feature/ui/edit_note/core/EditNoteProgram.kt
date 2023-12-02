@@ -32,12 +32,21 @@ import java.time.LocalDateTime
  * @Author maksonic on 26.04.2023
  */
 
-val dataImages = NoteImageUi.Collection(
-    listOf(
-        R.drawable.wp_001, R.drawable.wp_002, R.drawable.wp_003, R.drawable.wp_004, R.drawable.wp_005,
-        R.drawable.wp_006, R.drawable.wp_007, R.drawable.wp_008
-    ).map { NoteImageUi(it.toLong(), it) } + NoteImageUi(0, R.drawable.wp_001)
-)
+val dataImages = listOf(
+    R.drawable.wp_001,
+    R.drawable.wp_002,
+    R.drawable.wp_003,
+    R.drawable.wp_004,
+    R.drawable.wp_005,
+    R.drawable.wp_006,
+    R.drawable.wp_007,
+    R.drawable.wp_008,
+    R.drawable.wp_009,
+    R.drawable.wp_010,
+    R.drawable.wp_011,
+    R.drawable.wp_012,
+    R.drawable.wp_013,
+).map { NoteImageUi(it.toLong(), it) }
 
 class EditNoteProgram(
     private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
@@ -74,6 +83,7 @@ class EditNoteProgram(
             ) { noteDomain, tagsDomain ->
                 val tags = tagsDomain.filter { tag -> noteDomain.tagsIds.any { tag.id == it } }
                 val tagsUi = NoteTagUi.Collection(tagUiMapper.mapListTo(tags))
+
                 val note = mapper.mapTo(noteDomain).copy(tags = tagsUi, images = dataImages)
                 val markerState = MarkerPickerUiState(
                     currentSelectedColorId = note.style.markerColorId,

@@ -29,6 +29,7 @@ import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyGridState
 import org.burnoutcrew.reorderable.reorderable
+import ru.maksonic.beresta.common.ui_kit.helpers.modifier.rippledClick
 import ru.maksonic.beresta.common.ui_kit.surface.SurfacePro
 import ru.maksonic.beresta.common.ui_theme.Theme
 import ru.maksonic.beresta.common.ui_theme.colors.primary
@@ -42,13 +43,15 @@ import ru.maksonic.beresta.feature.notes_list.ui.api.NoteImageUi
  */
 @Composable
 internal fun ImagesCarousel(
-    images: NoteImageUi.Collection,
+    images: List<NoteImageUi>,
+    count: Int,
     onPositionChanged: (ItemPosition, ItemPosition) -> Unit,
     modifier: Modifier
 ) {
-    val state = rememberReorderableLazyGridState(onMove = { from, to ->
-        onPositionChanged(from, to)
-    })
+    val state = rememberReorderableLazyGridState(
+        onMove = { from, to -> onPositionChanged(from, to) },
+        canDragOver = { itemPosition, _ ->  itemPosition.index != 8 }
+    )
 
     Box(
         modifier
@@ -65,7 +68,7 @@ internal fun ImagesCarousel(
             modifier = Modifier.reorderable(state),
         ) {
 
-            itemsIndexed(images.data, key = { _, item -> item.id }) { index, imageItem ->
+            itemsIndexed(images, key = { _, item -> item.id }) { index, imageItem ->
                 ReorderableItem(state, key = imageItem.id) { isDragging ->
                     val elevation = if (isDragging) 8.dp else 0.dp
 
@@ -74,13 +77,13 @@ internal fun ImagesCarousel(
                         shape = Theme.shape.cornerNormal,
                         modifier = Modifier.padding(dp4)
                     ) {
-                        if (imageItem.id == 0L) {
+                        if (index == 8) {
                             Box {
                                 Item(
                                     item = imageItem,
-                                    modifier = Modifier.detectReorderAfterLongPress(state)
+                                    modifier = Modifier
                                 )
-                                OverFlowItem()
+                                OverFlowItem(count)
                             }
                         } else {
                             Item(
@@ -96,7 +99,7 @@ internal fun ImagesCarousel(
 }
 
 @Composable
-fun OverFlowItem() {
+fun OverFlowItem(count: Int) {
     Box(
         Modifier
             .fillMaxWidth()
@@ -107,7 +110,7 @@ fun OverFlowItem() {
             .border(2.dp, primary, Theme.shape.cornerSmall),
         contentAlignment = Alignment.Center
     ) {
-        Text("10+", style = TextDesign.displaySmall.copy(primary))
+        Text("$count+", style = TextDesign.displaySmall.copy(primary))
     }
 }
 
@@ -147,5 +150,6 @@ internal fun Item(item: NoteImageUi, modifier: Modifier = Modifier) {
             .aspectRatio(1f)
             .padding(dp4)
             .clip(Theme.shape.cornerSmall)
+            .rippledClick(primary) {  }
     )
 }

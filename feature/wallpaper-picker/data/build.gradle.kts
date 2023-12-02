@@ -32,14 +32,6 @@ android {
         jvmTarget = AndroidConfig.JVM_TARGET
     }
 
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = AndroidConfig.KOTLIN_COMPILER_EXT
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
