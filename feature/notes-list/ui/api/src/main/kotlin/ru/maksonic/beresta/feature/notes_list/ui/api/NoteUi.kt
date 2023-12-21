@@ -22,12 +22,6 @@ data class NoteImageUi(
         val Default = NoteImageUi(0, 0)
         val Empty = NoteImageUi(0, 0)
     }
-
-    data class Collection(val data: List<NoteImageUi>) {
-        companion object {
-            val Empty = Collection(emptyList())
-        }
-    }
 }
 
 data class Style(
@@ -79,7 +73,7 @@ data class NoteUi(
     val wallpaper: BaseWallpaper<Color> = BaseWallpaper.empty(),
     val tagsIds: List<Long> = emptyList(),
     val tags: NoteTagUi.Collection = NoteTagUi.Collection.Empty,
-    val images: NoteImageUi.Collection = NoteImageUi.Collection.Empty,
+    val images: List<NoteImageUi> = emptyList(),
 ) {
 
     companion object {

@@ -20,8 +20,8 @@ import ru.maksonic.beresta.feature.tags_list.domain.FetchNoteTagsUseCase
 import ru.maksonic.beresta.feature.tags_list.ui.api.NoteTagUi
 import ru.maksonic.beresta.feature.tags_list.ui.api.TagUiMapper
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperParams
-import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperRepository
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.WallpaperType
+import ru.maksonic.beresta.feature.wallpaper_picker.domain.usecase.FindWallpaperByParamsUseCase
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.navigation.router.core.AbstractNavigator
 import ru.maksonic.beresta.navigation.router.core.Destination
@@ -31,25 +31,41 @@ import java.time.LocalDateTime
 /**
  * @Author maksonic on 26.04.2023
  */
-
-val dataImages = NoteImageUi.Collection(
-    listOf(
-        R.drawable.wp_001, R.drawable.wp_002, R.drawable.wp_003, R.drawable.wp_004, R.drawable.wp_005,
-        R.drawable.wp_006, R.drawable.wp_007, R.drawable.wp_008
-    ).map { NoteImageUi(it.toLong(), it) } + NoteImageUi(0, R.drawable.wp_001)
+data class ProgramProxy(
+    val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
+    val fetchNoteTagsUseCase: FetchNoteTagsUseCase,
+    val fetchFoldersUseCase: FetchFoldersUseCase,
+    val fetchMarkerColorsUseCase: FetchMarkerColorsUseCase<ColorContainer>,
+    val findWallpaperByParamsUseCase: FindWallpaperByParamsUseCase<Color>,
+    val foldersChipsRowUiApi: FoldersChipsRowUiApi.CurrentSelectedFolderStore,
+    val notesInteractor: NotesInteractor,
 )
 
+data class MapperStore(
+    val note: NoteUiMapper,
+    val tag: TagUiMapper,
+    val folder: FolderUiMapper,
+)
+
+val dataImages = listOf(
+    R.drawable.wp_001,
+    R.drawable.wp_002,
+    R.drawable.wp_003,
+    R.drawable.wp_004,
+    R.drawable.wp_005,
+    R.drawable.wp_006,
+    R.drawable.wp_007,
+    R.drawable.wp_008,
+    R.drawable.wp_009,
+    R.drawable.wp_010,
+    R.drawable.wp_011,
+    R.drawable.wp_012,
+    R.drawable.wp_013,
+).map { NoteImageUi(it.toLong(), it) }
+
 class EditNoteProgram(
-    private val fetchNoteByIdUseCase: FetchNoteByIdUseCase,
-    private val fetchNoteTagsUseCase: FetchNoteTagsUseCase,
-    private val fetchFoldersUseCase: FetchFoldersUseCase,
-    private val fetchMarkerColorsUseCase: FetchMarkerColorsUseCase<ColorContainer>,
-    private val wallpaperRepository: WallpaperRepository<Color>,
-    private val foldersChipsRowUiApi: FoldersChipsRowUiApi.CurrentSelectedFolderStore,
-    private val notesInteractor: NotesInteractor,
-    private val mapper: NoteUiMapper,
-    private val tagUiMapper: TagUiMapper,
-    private val foldersMapper: FolderUiMapper,
+    private val proxy: ProgramProxy,
+    private val mapper: MapperStore,
     private val navigator: AbstractNavigator,
 ) : ElmProgram<Msg, Cmd> {
 
@@ -65,16 +81,17 @@ class EditNoteProgram(
 
     private suspend fun fetchNote(consumer: (Msg) -> Unit) {
         val args = navigator.getNoteEditorArgs(Destination.EditNote.passedKeysList)
-        val markerColorsList = fetchMarkerColorsUseCase()
+        val markerColorsList = proxy.fetchMarkerColorsUseCase()
 
         runCatching {
             combine(
-                fetchNoteByIdUseCase(args.second),
-                fetchNoteTagsUseCase()
+                proxy.fetchNoteByIdUseCase(args.second),
+                proxy.fetchNoteTagsUseCase()
             ) { noteDomain, tagsDomain ->
                 val tags = tagsDomain.filter { tag -> noteDomain.tagsIds.any { tag.id == it } }
-                val tagsUi = NoteTagUi.Collection(tagUiMapper.mapListTo(tags))
-                val note = mapper.mapTo(noteDomain).copy(tags = tagsUi, images = dataImages)
+                val tagsUi = NoteTagUi.Collection(mapper.tag.mapListTo(tags))
+
+                val note = mapper.note.mapTo(noteDomain).copy(tags = tagsUi, images = dataImages)
                 val markerState = MarkerPickerUiState(
                     currentSelectedColorId = note.style.markerColorId,
                     isVisibleDialog = false,
@@ -104,8 +121,8 @@ class EditNoteProgram(
     }
 
     private suspend fun fetchFolders(consumer: (Msg) -> Unit) = runCatching {
-        fetchFoldersUseCase().collect { foldersDomain ->
-            val folders = foldersMapper.mapListTo(foldersDomain).filter { !it.isStickyToStart }
+        proxy.fetchFoldersUseCase().collect { foldersDomain ->
+            val folders = mapper.folder.mapListTo(foldersDomain).filter { !it.isStickyToStart }
 
             consumer(Msg.Inner.FetchedFoldersSuccess(folders))
         }
@@ -113,12 +130,12 @@ class EditNoteProgram(
 
     private suspend fun saveOrUpdateNote(note: NoteUi, wallpaper: BaseWallpaper<Color>) {
         val currentRawTime = LocalDateTime.now()
-        val noteDomain = mapper.mapFrom(note.addWallpaperParams(wallpaper))
+        val noteDomain = mapper.note.mapFrom(note.addWallpaperParams(wallpaper))
         val pinTime = if (note.style.isPinned) currentRawTime else null
 
-        with(notesInteractor) {
+        with(proxy.notesInteractor) {
             if (note.isDefaultId()) {
-                foldersChipsRowUiApi.updateId(note.folderId)
+                proxy.foldersChipsRowUiApi.updateId(note.folderId)
                 add(noteDomain.copy(dateCreationRaw = currentRawTime, pinTime = pinTime))
             } else {
                 update(
@@ -133,10 +150,10 @@ class EditNoteProgram(
     }
 
     private suspend fun updateMarkerColorId(note: NoteUi) =
-        notesInteractor.update(mapper.mapFrom(note))
+        proxy.notesInteractor.update(mapper.note.mapFrom(note))
 
     private fun fetchWallpaperByStyle(noteStyle: Style): BaseWallpaper<Color> = with(noteStyle) {
-        wallpaperRepository.findWallpaper(
+        proxy.findWallpaperByParamsUseCase(
             WallpaperParams(
                 type = WallpaperType.idToType(wallpaperTypeId),
                 id = wallpaperId,
@@ -150,7 +167,7 @@ class EditNoteProgram(
     }
 
     private fun fetchWallpaper(wallpaper: BaseWallpaper<Color>, consumer: (Msg) -> Unit) {
-        val data = wallpaperRepository.findWallpaper(wallpaper.getParams())
+        val data = proxy.findWallpaperByParamsUseCase(wallpaper.getParams())
         consumer(Msg.Inner.FetchedNoteWallpaperResult(data))
     }
 }

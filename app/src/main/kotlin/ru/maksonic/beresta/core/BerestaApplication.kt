@@ -17,6 +17,7 @@ import ru.maksonic.beresta.feature.folders_list.data.di.foldersListLocalDataModu
 import ru.maksonic.beresta.feature.folders_list.ui.core.di.foldersListUiFeatureModule
 import ru.maksonic.beresta.feature.hidden_notes_dialog.data.di.hiddenNotesDialogDataFeatureModule
 import ru.maksonic.beresta.feature.hidden_notes_dialog.ui.core.di.hiddenNotesDialogUiFeatureModule
+import ru.maksonic.beresta.feature.image_viewer.ui.core.di.imageViewerUiFeatureModule
 import ru.maksonic.beresta.feature.marker_color_picker.data.di.markerColorPickerFeatureDataModule
 import ru.maksonic.beresta.feature.marker_color_picker.ui.core.di.markerColorPickerFeatureUiModule
 import ru.maksonic.beresta.feature.notes_list.data.di.notesListDataModule
@@ -86,6 +87,7 @@ class BerestaApplication : Application(), ImageLoaderFactory {
         foldersListUiFeatureModule,
         hiddenNotesDialogDataFeatureModule,
         hiddenNotesDialogUiFeatureModule,
+        imageViewerUiFeatureModule,
         languagePickerUiFeatureModule,
         markerColorPickerFeatureDataModule,
         markerColorPickerFeatureUiModule,

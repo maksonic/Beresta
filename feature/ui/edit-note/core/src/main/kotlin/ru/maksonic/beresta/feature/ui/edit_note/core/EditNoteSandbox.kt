@@ -1,7 +1,6 @@
 package ru.maksonic.beresta.feature.ui.edit_note.core
 
 import okhttp3.internal.toImmutableList
-import ru.maksonic.beresta.feature.notes_list.ui.api.NoteImageUi
 import ru.maksonic.beresta.feature.notes_list.ui.api.NoteUi
 import ru.maksonic.beresta.feature.wallpaper_picker.domain.wallpaper.BaseWallpaper
 import ru.maksonic.beresta.platform.elm.core.ElmBaseModel.Companion.loadedSuccess
@@ -269,9 +268,9 @@ class EditNoteSandbox(program: EditNoteProgram) : Sandbox<Model, Msg, Cmd, Eff>(
       //  val from = model.editableNote.images.data[msg.fromIndex].id
       //  val to = model.editableNote.images.data[msg.toIndex].id
 
-        val zzzz = NoteImageUi.Collection(model.editableNote.images.data.toMutableList().apply {
+        val zzzz = model.editableNote.images.toMutableList().apply {
             add(msg.toIndex.index, removeAt(msg.fromIndex.index))
-        }.toImmutableList())
+        }.toImmutableList()
 
         return ElmUpdate(
             model.copy(

@@ -129,11 +129,7 @@ internal fun ContentExpanded(
                 modifier = Modifier.fillMaxSize()
             )
 
-            BoxWithConstraints(
-                modifier
-                    .fillMaxSize()
-                //  .imePadding()
-            ) {
+            BoxWithConstraints(modifier.fillMaxSize()) {
                 val maxHeight = this.maxHeight
 
                 val nestedScrollConnection = remember {
@@ -168,7 +164,7 @@ internal fun ContentExpanded(
                             .nestedScroll(nestedScrollConnection)
                             .verticalScroll(scrollState)
                     ) {
-                        val messageModifier = if (model.editableNote.images.data.isNotEmpty())
+                        val messageModifier = if (model.editableNote.images.isNotEmpty())
                             Modifier.padding(bottom = dp8) else
                             Modifier
                                 .imePadding()
@@ -195,6 +191,7 @@ internal fun ContentExpanded(
 
                         ImagesCarousel(
                             images = model.editableNote.images,
+                            count = if (model.editableNote.images.count() > 9) model.editableNote.images.count() - 9 else model.editableNote.images.count(),
                             onPositionChanged = { from, to ->
                                 send(Msg.Ui.UpdateNoteImageInCarouselPosition(from, to))
                             },

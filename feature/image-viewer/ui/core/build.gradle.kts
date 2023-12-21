@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = module.Platform.Navigation.GraphBuilder.namespace
+    namespace = module.Feature.ImageViewer.Ui.Core.namespace
     compileSdk = AndroidConfig.COMPILE_SDK
 
     defaultConfig {
@@ -47,23 +47,18 @@ android {
 }
 
 dependencies {
+    implementation(project(module.Common.UiKit.path))
     implementation(project(module.Common.UiTheme.path))
+    implementation(project(module.LanguageEngine.Shell.path))
+    implementation(project(module.Platform.Elm.path))
     implementation(project(module.Platform.Navigation.Router.path))
-    implementation(project(module.Screen.Folders.path))
-    implementation(project(module.Screen.HiddenNotes.path))
-    implementation(project(module.Screen.Main.path))
-    implementation(project(module.Screen.Settings.Appearance.path))
-    implementation(project(module.Screen.Settings.Main.path))
-    implementation(project(module.Screen.Settings.Notifications.path))
-    implementation(project(module.Screen.Settings.Security.path))
-    implementation(project(module.Screen.Settings.Tags.path))
-    implementation(project(module.Screen.Splash.path))
-    implementation(project(module.Screen.Trash.Folders.path))
-    implementation(project(module.Screen.Trash.Notes.path))
-    implementation(project(module.Feature.Onboarding.Ui.Api.path))
-    implementation(project(module.Feature.EditNote.Ui.Api.path))
     implementation(project(module.Feature.ImageViewer.Ui.Api.path))
-    implementation(project(module.Feature.TagsList.Ui.Api.path))
-    implementation(libs.compose.navigation)
+    implementation(libs.compose.lifecycle)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.koin.android)
 }

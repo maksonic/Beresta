@@ -57,6 +57,10 @@ include(":feature:hidden-notes-dialog:domain")
 include(":feature:hidden-notes-dialog:ui:api")
 include(":feature:hidden-notes-dialog:ui:core")
 
+include(":feature:image-viewer:domain")
+include(":feature:image-viewer:ui:api")
+include(":feature:image-viewer:ui:core")
+
 include(":feature:marker-color-picker:data")
 include(":feature:marker-color-picker:domain")
 include(":feature:marker-color-picker:ui:api")
